@@ -1,3 +1,0 @@
-CRASH: 
- /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_03-datatypes.lhs:45:39: Error: GHC Error
-     Not in scope: type constructor or class `Btwn'
