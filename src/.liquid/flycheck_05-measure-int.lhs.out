@@ -1,0 +1,181 @@
+UNSAFE
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:88:30-31: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : [a] | VV == ys && len VV >= 0 && 0 <= size VV}
+ 
+  not a subtype of Required type
+    VV : {VV : [a] | size VV == size xs}
+ 
+  In Context
+    VV : {VV : [a] | VV == ys && len VV >= 0 && 0 <= size VV}
+    xs : {v : [a] | len v >= 0 && 0 <= size v}
+    ys : {ys : [a] | len ys >= 0 && 0 <= size ys}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:103:28-31: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : (NumericMeasures.Vector a) | vDim VV == ?a && vDim VV == vDim ys && vDim VV > 0}
+ 
+  not a subtype of Required type
+    VV : {VV : (NumericMeasures.Vector a) | vDim VV == cy}
+ 
+  In Context
+    VV : {VV : (NumericMeasures.Vector a) | vDim VV == ?a && vDim VV == vDim ys && vDim VV > 0}
+    cy : {cy : GHC.Types.Int | 0 < cy}
+    ys : {ys : (NumericMeasures.Vector (NumericMeasures.Vector a)) | vDim ys == ?a}
+    ?a : {fix##63#a : GHC.Types.Int | 0 < ?a}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:295:34-35: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : [a] | VV == ?a && len VV >= 0 && 0 <= size VV}
+ 
+  not a subtype of Required type
+    VV : {VV : [a] | size VV == size ?b}
+ 
+  In Context
+    VV : {VV : [a] | VV == ?a && len VV >= 0 && 0 <= size VV}
+    ?b : {fix##63#b : [a] | len ?b >= 0 && 0 <= size ?b}
+    ?a : {fix##63#a : [a] | len ?a >= 0 && 0 <= size ?a}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:298:13-42: Error: Liquid Type Mismatch
+  Inferred type
+    VV : [(GHC.Integer.Type.Integer, GHC.Types.Bool)]
+ 
+  not a subtype of Required type
+    VV : {VV : [(GHC.Integer.Type.Integer, GHC.Types.Bool)] | size VV == 2}
+ 
+  In Context
+    VV : {VV : [(GHC.Integer.Type.Integer, GHC.Types.Bool)] | len VV >= 0 && 0 <= size VV}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:301:13-38: Error: Liquid Type Mismatch
+  Inferred type
+    VV : [(a, GHC.Types.Bool)]
+ 
+  not a subtype of Required type
+    VV : {VV : [(a, GHC.Types.Bool)] | size VV == 0}
+ 
+  In Context
+    VV : {VV : [(a, GHC.Types.Bool)] | len VV >= 0 && 0 <= size VV}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:304:13-39: Error: Liquid Type Mismatch
+  Inferred type
+    VV : [([GHC.Types.Char], a)]
+ 
+  not a subtype of Required type
+    VV : {VV : [([GHC.Types.Char], a)] | size VV == 0}
+ 
+  In Context
+    VV : {VV : [([GHC.Types.Char], a)] | len VV >= 0 && 0 <= size VV}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:316:21-28: Error: Liquid Type Mismatch
+  Inferred type
+    VV : [a]
+ 
+  not a subtype of Required type
+    VV : {VV : [a] | size VV == size xs}
+ 
+  In Context
+    VV : {VV : [a] | len VV >= 0 && 0 <= size VV}
+    xs : {v : [a] | len v >= 0 && 0 <= size v}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:348:21-34: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : [GHC.Types.Char] | VV == ?a && len VV >= 0 && 0 <= size VV}
+ 
+  not a subtype of Required type
+    VV : {VV : [GHC.Types.Char] | false}
+ 
+  In Context
+    VV : {VV : [GHC.Types.Char] | VV == ?a && len VV >= 0 && 0 <= size VV}
+    ?a : {fix##63#a : [GHC.Types.Char] | len ?a >= 0 && 0 <= size ?a}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:351:9-38: Error: Liquid Type Mismatch
+  Inferred type
+    VV : [[GHC.Types.Char]]
+ 
+  not a subtype of Required type
+    VV : {VV : [[GHC.Types.Char]] | size VV == 2}
+ 
+  In Context
+    VV : {VV : [[GHC.Types.Char]] | len VV >= 0 && 0 <= size VV}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:(365,9)-(366,42): Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : [[GHC.Types.Char]] | len VV >= 0 && len VV >= len ?b && len VV >= len ?a && len VV >= len ?c}
+ 
+  not a subtype of Required type
+    VV : {VV : [[GHC.Types.Char]] | size VV == 2}
+ 
+  In Context
+    VV : {VV : [[GHC.Types.Char]] | len VV >= 0 && len VV >= len ?b && len VV >= len ?a && len VV >= len ?c && 0 <= size VV}
+    ?b : {fix##63#b : [[GHC.Types.Char]] | notEmpty ?b <=> false && null ?b <=> true && size ?b == 0 && len ?b == 0 && len ?b >= 0 && 0 <= size ?b}
+    ?a : {fix##63#a : [[GHC.Types.Char]] | notEmpty ?a <=> false && null ?a <=> true && size ?a == 0 && len ?a == 0 && len ?a >= 0 && 0 <= size ?a}
+    ?c : {fix##63#c : [[[GHC.Types.Char]]] | notEmpty ?c <=> false && null ?c <=> true && size ?c == 0 && len ?c == 0 && len ?c >= 0 && 0 <= size ?c}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:439:14-25: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : [GHC.Integer.Type.Integer] | notEmpty VV <=> true && null VV <=> false && VV == ?c && xListSelector VV == ?a && size VV == 1 + size ?b && len VV == 1 + len ?b && xsListSelector VV == ?b && len VV >= 0 && 0 <= size VV}
+ 
+  not a subtype of Required type
+    VV : {VV : [GHC.Integer.Type.Integer] | size VV == ?g}
+ 
+  In Context
+    VV : {VV : [GHC.Integer.Type.Integer] | notEmpty VV <=> true && null VV <=> false && VV == ?c && xListSelector VV == ?a && size VV == 1 + size ?b && len VV == 1 + len ?b && xsListSelector VV == ?b && len VV >= 0 && 0 <= size VV}
+    ?b : {fix##63#b : [GHC.Integer.Type.Integer] | notEmpty ?b <=> true && null ?b <=> false && xListSelector ?b == ?e && size ?b == 1 + size ?h && len ?b == 1 + len ?h && xsListSelector ?b == ?h && len ?b >= 0 && 0 <= size ?b}
+    ?e : {fix##63#e : GHC.Integer.Type.Integer | ?e == 20}
+    ?d : {fix##63#d : [GHC.Integer.Type.Integer] | notEmpty ?d <=> false && null ?d <=> true && size ?d == 0 && len ?d == 0 && len ?d >= 0 && 0 <= size ?d}
+    ?a : {fix##63#a : GHC.Integer.Type.Integer | ?a == 10}
+    ?c : {fix##63#c : [GHC.Integer.Type.Integer] | notEmpty ?c <=> true && null ?c <=> false && xListSelector ?c == ?a && size ?c == 1 + size ?b && len ?c == 1 + len ?b && xsListSelector ?c == ?b && len ?c >= 0 && 0 <= size ?c}
+    ?g : {fix##63#g : GHC.Types.Int | ?g == (2  :  int)}
+    ?f : {fix##63#f : GHC.Integer.Type.Integer | ?f == 30}
+    ?h : {fix##63#h : [GHC.Integer.Type.Integer] | notEmpty ?h <=> true && null ?h <=> false && xListSelector ?h == ?f && size ?h == 1 + size ?d && len ?h == 1 + len ?d && xsListSelector ?h == ?d && len ?h >= 0 && 0 <= size ?h}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:497:24-25: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : (NumericMeasures.Vector GHC.Integer.Type.Integer) | VV == vy}
+ 
+  not a subtype of Required type
+    VV : {VV : (NumericMeasures.Vector GHC.Integer.Type.Integer) | vDim VV == vDim vx}
+ 
+  In Context
+    VV : {VV : (NumericMeasures.Vector GHC.Integer.Type.Integer) | VV == vy}
+    vx : (NumericMeasures.Vector GHC.Integer.Type.Integer)
+    vy : (NumericMeasures.Vector GHC.Integer.Type.Integer)
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:549:25-33: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : [GHC.Types.Int] | notEmpty VV <=> true && null VV <=> false && VV == ?d && xListSelector VV == ?f && size VV == 1 + size ?b && len VV == 1 + len ?b && xsListSelector VV == ?b && len VV >= 0 && 0 <= size VV}
+ 
+  not a subtype of Required type
+    VV : {VV : [GHC.Types.Int] | size VV == ?e}
+ 
+  In Context
+    VV : {VV : [GHC.Types.Int] | notEmpty VV <=> true && null VV <=> false && VV == ?d && xListSelector VV == ?f && size VV == 1 + size ?b && len VV == 1 + len ?b && xsListSelector VV == ?b && len VV >= 0 && 0 <= size VV}
+    ?b : {fix##63#b : [GHC.Types.Int] | notEmpty ?b <=> true && null ?b <=> false && xListSelector ?b == ?c && size ?b == 1 + size ?a && len ?b == 1 + len ?a && xsListSelector ?b == ?a && len ?b >= 0 && 0 <= size ?b}
+    ?e : {fix##63#e : GHC.Types.Int | ?e == (3  :  int)}
+    ?d : {fix##63#d : [GHC.Types.Int] | notEmpty ?d <=> true && null ?d <=> false && xListSelector ?d == ?f && size ?d == 1 + size ?b && len ?d == 1 + len ?b && xsListSelector ?d == ?b && len ?d >= 0 && 0 <= size ?d}
+    ?a : {fix##63#a : [GHC.Types.Int] | notEmpty ?a <=> false && null ?a <=> true && size ?a == 0 && len ?a == 0 && len ?a >= 0 && 0 <= size ?a}
+    ?c : {fix##63#c : GHC.Types.Int | ?c == (2  :  int)}
+    ?f : {fix##63#f : GHC.Types.Int | ?f == (1  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:(553,15)-(554,32): Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : (NumericMeasures.Vector GHC.Types.Int) | vDim VV == ?l && vDim VV == ?a && vDim VV == ?b && vDim VV == ?m && vDim VV == ?i && vDim VV == vDim ?o && vDim VV == vDim ?k && vDim VV > 0}
+ 
+  not a subtype of Required type
+    VV : {VV : (NumericMeasures.Vector GHC.Types.Int) | vDim VV == ?f}
+ 
+  In Context
+    VV : {VV : (NumericMeasures.Vector GHC.Types.Int) | vDim VV == ?l && vDim VV == ?a && vDim VV == ?b && vDim VV == ?m && vDim VV == ?i && vDim VV == vDim ?o && vDim VV == vDim ?k && vDim VV > 0}
+    ?k : {fix##63#k : (NumericMeasures.Vector GHC.Types.Int) | vElts ?k == ?q && vDim ?k == ?a}
+    ?q : {fix##63#q : [GHC.Types.Int] | notEmpty ?q <=> true && null ?q <=> false && xListSelector ?q == ?d && size ?q == 1 + size ?n && len ?q == 1 + len ?n && xsListSelector ?q == ?n && len ?q >= 0 && 0 <= size ?q}
+    ?b : {fix##63#b : GHC.Types.Int | ?b == (2  :  int)}
+    ?o : {fix##63#o : (NumericMeasures.Vector GHC.Types.Int) | vElts ?o == ?c && vDim ?o == ?m}
+    ?e : {fix##63#e : [GHC.Types.Int] | notEmpty ?e <=> false && null ?e <=> true && size ?e == 0 && len ?e == 0 && len ?e >= 0 && 0 <= size ?e}
+    ?i : {fix##63#i : GHC.Types.Int | ?i == (2  :  int)}
+    ?d : {fix##63#d : GHC.Types.Int | ?d == (4  :  int)}
+    ?a : {fix##63#a : GHC.Types.Int | ?a == (2  :  int)}
+    ?c : {fix##63#c : [GHC.Types.Int] | notEmpty ?c <=> true && null ?c <=> false && xListSelector ?c == ?g && size ?c == 1 + size ?h && len ?c == 1 + len ?h && xsListSelector ?c == ?h && len ?c >= 0 && 0 <= size ?c}
+    ?g : {fix##63#g : GHC.Types.Int | ?g == (1  :  int)}
+    ?j : {fix##63#j : [GHC.Types.Int] | notEmpty ?j <=> false && null ?j <=> true && size ?j == 0 && len ?j == 0 && len ?j >= 0 && 0 <= size ?j}
+    ?f : {fix##63#f : GHC.Types.Int | ?f == (3  :  int)}
+    ?h : {fix##63#h : [GHC.Types.Int] | notEmpty ?h <=> true && null ?h <=> false && xListSelector ?h == ?b && size ?h == 1 + size ?e && len ?h == 1 + len ?e && xsListSelector ?h == ?e && len ?h >= 0 && 0 <= size ?h}
+    ?n : {fix##63#n : [GHC.Types.Int] | notEmpty ?n <=> true && null ?n <=> false && xListSelector ?n == ?p && size ?n == 1 + size ?j && len ?n == 1 + len ?j && xsListSelector ?n == ?j && len ?n >= 0 && 0 <= size ?n}
+    ?p : {fix##63#p : GHC.Types.Int | ?p == (5  :  int)}
+    ?l : {fix##63#l : GHC.Types.Int | ?l == (2  :  int)}
+    ?m : {fix##63#m : GHC.Types.Int | ?m == (2  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_05-measure-int.lhs:(579,13)-(580,34): Error: Liquid Type Mismatch
+  Inferred type
+    VV : (NumericMeasures.Matrix GHC.Integer.Type.Integer)
+ 
+  not a subtype of Required type
+    VV : {VV : (NumericMeasures.Matrix GHC.Integer.Type.Integer) | mRow VV == 2 && mCol VV == 2}
+ 
+  In Context
+    VV : (NumericMeasures.Matrix GHC.Integer.Type.Integer)

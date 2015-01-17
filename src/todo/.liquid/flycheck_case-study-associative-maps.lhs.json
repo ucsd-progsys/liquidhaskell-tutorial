@@ -1,0 +1,1 @@
+{"status":"safe","types":{"9":{"15":{"ann":"{v : () | v == GHC.Tuple.()}","ident":"GHC.Tuple.()","row":9,"col":15},"1":{"ann":"(GHC.Types.IO ())","ident":"AssociativeMaps.main","row":9,"col":1},"8":{"ann":"() -> (GHC.Types.IO ())","ident":"_","row":9,"col":8}}},"errors":[]}

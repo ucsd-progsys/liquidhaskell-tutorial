@@ -1,0 +1,51 @@
+UNSAFE
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_01-basic.lhs:64:8: Error: Liquid Type Mismatch
+   Inferred type
+     VV : Int | VV == (1  :  int)
+  
+   not a subtype of Required type
+     VV : Int | VV == 0
+  
+   In Context
+     VV : Int | VV == (1  :  int)
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_01-basic.lhs:200:21-36: Error: Liquid Type Mismatch
+   Inferred type
+     VV : [Char] | VV == ?a && len VV >= 0
+  
+   not a subtype of Required type
+     VV : [Char] | false
+  
+   In Context
+     VV : [Char] | VV == ?a && len VV >= 0
+     ?a : [Char] | len ?a >= 0
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_01-basic.lhs:218:19-34: Error: Liquid Type Mismatch
+   Inferred type
+     VV : [Char] | VV == ?a && len VV >= 0
+  
+   not a subtype of Required type
+     VV : [Char] | false
+  
+   In Context
+     VV : [Char] | VV == ?a && len VV >= 0
+     ?a : [Char] | len ?a >= 0
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_01-basic.lhs:266:26: Error: Liquid Type Mismatch
+   Inferred type
+     VV : Int | VV == n && VV == len xs
+  
+   not a subtype of Required type
+     VV : Int | VV /= 0
+  
+   In Context
+     VV : Int | VV == n && VV == len xs
+     n  : Int | n == len xs
+     xs : [Int] | len v >= 0
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_01-basic.lhs:370:23-47: Error: Liquid Type Mismatch
+   Inferred type
+     VV : [Char] | VV == ?a && len VV >= 0
+  
+   not a subtype of Required type
+     VV : [Char] | false
+  
+   In Context
+     VV : [Char] | VV == ?a && len VV >= 0
+     ?a : [Char] | len ?a >= 0

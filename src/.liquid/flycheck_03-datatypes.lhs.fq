@@ -1,0 +1,195 @@
+qualif VecEmpty(v: Vector a)              : vlen([v]) [ = ; > ; >= ]  0 
+qualif Vlen(v:int, ~A: Vector a)          : v [ = ; <= ; < ]  vlen([~A]) 
+qualif CmpVlen(v: Vector a, ~A: Vector b) : vlen([v]) [ < ; <= ; > ; >= ; = ] vlen([~A]) 
+//qualif NonNull(v: [a])        : (? (nonnull([v])))
+//qualif Null(v: [a])           : (~ (? (nonnull([v]))))
+//qualif EqNull(v:Bool, ~A: [a]): (Prop(v) <=> (? (nonnull([~A]))))
+
+qualif IsEmp(v:GHC.Types.Bool, ~A: [a]) : (Prop(v) <=> len([~A]) [ > ;  = ] 0)
+qualif ListZ(v: [a])          : len([v]) [ = ; >= ; > ] 0 
+qualif CmpLen(v:[a], ~A:[b])  : len([v]) [= ; >=; >; <=; <] len([~A]) 
+qualif EqLen(v:int, ~A: [a])  : v = len([~A]) 
+qualif LenEq(v:[a], ~A: int)  : ~A = len([v]) 
+qualif LenAcc(v:int, ~A:[a], ~B: int): v = len([~A]) + ~B
+qualif LenDiff(v:[a], ~A:int): len([v]) = (~A [ +; - ] 1)
+//BOT: Do not delete EVER!
+
+qualif Bot(v:@(0))    : 0 = 1 
+qualif Bot(v:obj)     : 0 = 1 
+qualif Bot(v:a)       : 0 = 1 
+qualif Bot(v:bool)    : 0 = 1 
+qualif Bot(v:int)     : 0 = 1 
+qualif CmpZ(v:a)      : v [ < ; <= ; > ; >= ; = ; != ] 0
+qualif Cmp(v:a,~A:a)  : v [ < ; <= ; > ; >= ; = ; != ] ~A
+qualif Cmp(v:int,~A:int)  : v [ < ; <= ; > ; >= ; = ; != ] ~A
+qualif One(v:int)     : v = 1
+qualif True(v:bool)   : (? v) 
+qualif False(v:bool)  : ~ (? v) 
+qualif True1(v:GHC.Types.Bool)   : Prop(v)
+qualif False1(v:GHC.Types.Bool)  : ~ Prop(v)
+
+
+qualif Papp(v:a,~P:Pred a) : papp1(~P, v)
+constant papp1 : func(1, [Pred @(0); @(0); bool])
+
+qualif Papp2(v:a,~X:b,~P:Pred a b) : papp2(~P, v, ~X)
+constant papp2 : func(4, [Pred @(0) @(1); @(2); @(3); bool])
+
+qualif Papp3(v:a,~X:b, ~Y:c, ~P:Pred a b c) : papp3(~P, v, ~X, ~Y)
+constant papp3 : func(6, [Pred @(0) @(1) @(2); @(3); @(4); @(5); bool])
+
+constant Prop : func(0, [GHC.Types.Bool; bool])
+qualif Fst(v : a, fix##126#Y : b): (v = fst([fix##126#Y]))
+qualif Snd(v : a, fix##126#Y : b): (v = snd([fix##126#Y]))
+qualif Auto(v : FAppTy RefinedDatatypes.Sparse  int): (spDim([v]) = 3)
+qualif Auto(v : FAppTy RefinedDatatypes.Sparse  int, fix##126#A0 : FAppTy Data.Vector.Vector  int): (spDim([v]) = vlen([fix##126#A0]))
+qualif Auto(v : FAppTy RefinedDatatypes.Sparse  int, fix##126#A0 : FAppTy Data.Vector.Vector  int): (spDim([v]) = vlen([fix##126#A0]))
+qualif Auto(v : FAppTy RefinedDatatypes.Sparse  ([GHC.Types.Char])): (spDim([v]) = 3)
+qualif Auto(v : [GHC.Types.Char]): false
+
+constant spDim : func(1, [FAppTy RefinedDatatypes.Sparse  @(0);
+                          int])
+constant Prop : func(0, [GHC.Types.Bool; bool])
+constant x_Tuple54 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(3)])
+constant xListSelector : func(1, [[@(0)]; @(0)])
+constant minElt : func(1, [FAppTy RefinedDatatypes.MinPair  @(0);
+                           @(0)])
+constant addrLen : func(0, [int; int])
+constant rest : func(1, [FAppTy RefinedDatatypes.MinPair  @(0);
+                         FAppTy RefinedDatatypes.BST  @(0)])
+constant left : func(1, [FAppTy RefinedDatatypes.BST  @(0);
+                         FAppTy RefinedDatatypes.BST  @(0)])
+constant x_Tuple52 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(1)])
+constant vlen : func(1, [FAppTy Data.Vector.Vector  @(0); int])
+constant x_Tuple75 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(4)])
+constant hd : func(1, [FAppTy RefinedDatatypes.IncList  @(0);
+                       @(0)])
+constant x_Tuple64 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(3)])
+constant x_Tuple44 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(3)])
+constant x_Tuple41 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(0)])
+constant fst : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                        @(0)])
+constant x_Tuple73 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(2)])
+constant x_Tuple76 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(5)])
+constant x_Tuple55 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(4)])
+constant x_Tuple31 : func(3, [FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2);
+                              @(0)])
+constant root : func(1, [FAppTy RefinedDatatypes.BST  @(0); @(0)])
+constant x_Tuple65 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(4)])
+constant x_Tuple32 : func(3, [FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2);
+                              @(1)])
+constant right : func(1, [FAppTy RefinedDatatypes.BST  @(0);
+                          FAppTy RefinedDatatypes.BST  @(0)])
+constant x_Tuple63 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(2)])
+constant x_Tuple51 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(0)])
+constant spElems : func(1, [FAppTy RefinedDatatypes.Sparse  @(0);
+                            [FAppTy (FAppTy fix##40##41#  int)  @(0)]])
+constant xsListSelector : func(1, [[@(0)]; [@(0)]])
+constant null : func(1, [[@(0)]; bool])
+constant x_Tuple53 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(2)])
+constant x_Tuple33 : func(3, [FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2);
+                              @(2)])
+constant x_Tuple22 : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                              @(1)])
+constant fromJust : func(1, [FAppTy Data.Maybe.Maybe  @(0); @(0)])
+constant snd : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                        @(1)])
+constant x_Tuple62 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(1)])
+constant x_Tuple43 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(2)])
+constant x_Tuple74 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(3)])
+constant cmp : func(0, [GHC.Types.Ordering; GHC.Types.Ordering])
+constant GHC.Types.False#68 : GHC.Types.Bool
+constant x_Tuple72 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(1)])
+constant len : func(1, [[@(0)]; int])
+constant tl : func(1, [FAppTy RefinedDatatypes.IncList  @(0);
+                       FAppTy RefinedDatatypes.IncList  @(0)])
+constant x_Tuple21 : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                              @(0)])
+constant x_Tuple61 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(0)])
+constant x_Tuple71 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(0)])
+constant x_Tuple66 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(5)])
+constant x_Tuple42 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(1)])
+constant isJust : func(1, [FAppTy Data.Maybe.Maybe  @(0); bool])
+constant x_Tuple77 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(6)])
+constant GHC.Types.True#6u : GHC.Types.Bool
+constant fix#GHC.Types.#58##35#64 : func(1, [@(0); [@(0)]; [@(0)]])
+constant RefinedDatatypes.Leaf#r29B : func(1, [FAppTy RefinedDatatypes.BST  @(0)])
+constant fix#RefinedDatatypes.#58##60##35#r29D : func(1, [@(0);
+                                                          FAppTy RefinedDatatypes.IncList  @(0);
+                                                          FAppTy RefinedDatatypes.IncList  @(0)])
+constant RefinedDatatypes.Emp#r29G : func(1, [FAppTy RefinedDatatypes.IncList  @(0)])
+constant RefinedDatatypes.Node#r29x : func(1, [@(0);
+                                               FAppTy RefinedDatatypes.BST  @(0);
+                                               FAppTy RefinedDatatypes.BST  @(0);
+                                               FAppTy RefinedDatatypes.BST  @(0)])
+constant RefinedDatatypes.SP#r29I : func(1, [int;
+                                             [FAppTy (FAppTy fix##40##41#  int)  @(0)];
+                                             FAppTy RefinedDatatypes.Sparse  @(0)])
+constant fix#GHC.Tuple.#40##44##41##35#74 : func(2, [@(0);
+                                                     @(1);
+                                                     FAppTy (FAppTy fix##40##41#  @(0))  @(1)])
+constant fix#GHC.Types.#91##93##35#6m : func(1, [[@(0)]])
+constant RefinedDatatypes.MP#r29t : func(1, [@(0);
+                                             FAppTy RefinedDatatypes.BST  @(0);
+                                             FAppTy RefinedDatatypes.MinPair  @(0)])
+bind 0 GHC.CString.unpackCString##0k : {VV : func(0, [int;
+                                                      [GHC.Types.Char]]) | []}
+bind 1 GHC.Prim.void##0l : {VV#566 : GHC.Prim.Void# | []}
+bind 2 GHC.Types.False#68 : {VV#572 : GHC.Types.Bool | []}
+bind 3 GHC.Types.I##6c : {VV : func(0, [int; int]) | []}
+bind 4 GHC.Types.True#6u : {VV#575 : GHC.Types.Bool | []}
+bind 5 fix#GHC.Num.#36#fNumInt#35#rxS : {VV#586 : FAppTy GHC.Num.Num  int | []}
+bind 6 GHC.Types.EQ#6U : {VV#593 : GHC.Types.Ordering | []}
+bind 7 GHC.Types.LT#6S : {VV#594 : GHC.Types.Ordering | []}
+bind 8 GHC.Types.GT#6W : {VV#595 : GHC.Types.Ordering | []}
+bind 9 GHC.Types.True#6u : {v : GHC.Types.Bool | [(? Prop([v]))]}
+bind 10 GHC.Types.False#68 : {v : GHC.Types.Bool | [(~ ((? Prop([v]))))]}
+bind 11 GHC.Integer.Type.smallInteger#0Z : {VV : func(0, [int;
+                                                          int]) | []}
+bind 12 GHC.Types.I##6c : {VV : func(0, [int; int]) | []}
+bind 13 fix#GHC.Prim.#43##35##35#98 : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 14 fix#GHC.Prim.#45##35##35#99 : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 15 fix#GHC.Prim.#61##61##35##35#9o : {VV : func(0, [int;
+                                                         int;
+                                                         int]) | []}
+bind 16 fix#GHC.Prim.#62##61##35##35#9n : {VV : func(0, [int;
+                                                         int;
+                                                         int]) | []}
+bind 17 fix#GHC.Prim.#60##61##35##35#9r : {VV : func(0, [int;
+                                                         int;
+                                                         int]) | []}
+bind 18 fix#GHC.Prim.#60##35##35#9q : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 19 fix#GHC.Prim.#62##35##35#9m : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 20 GHC.Types.GT#6W : {VV#630 : GHC.Types.Ordering | [(cmp([VV#630]) = GHC.Types.GT#6W)]}
+bind 21 GHC.Types.LT#6S : {VV#634 : GHC.Types.Ordering | [(cmp([VV#634]) = GHC.Types.LT#6S)]}
+bind 22 GHC.Types.EQ#6U : {VV#640 : GHC.Types.Ordering | [(cmp([VV#640]) = GHC.Types.EQ#6U)]}

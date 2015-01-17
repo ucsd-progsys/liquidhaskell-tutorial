@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>/Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/templates/flycheck_inside.hs</title>
+</head>
+<head>
+<link type='text/css' rel='stylesheet' href='liquid.css' />
+</head>
+
+<body>
+<hr>
+Put mouse over identifiers to see inferred types
+<pre><span class=hs-linenum> 1: </span><span class='hs-comment'>{-# LANGUAGE ViewPatterns #-}</span>
+<span class=hs-linenum> 2: </span><span class='hs-keyword'>module</span> <span class='hs-conid'>InTex</span> <span class='hs-keyword'>where</span>
+<span class=hs-linenum> 3: </span>
+<span class=hs-linenum> 4: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Text</span><span class='hs-varop'>.</span><span class='hs-conid'>Pandoc</span><span class='hs-varop'>.</span><span class='hs-conid'>JSON</span>
+<span class=hs-linenum> 5: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Text</span><span class='hs-varop'>.</span><span class='hs-conid'>Pandoc</span>
+<span class=hs-linenum> 6: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>List</span>
+<span class=hs-linenum> 7: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Debug</span><span class='hs-varop'>.</span><span class='hs-conid'>Trace</span>
+<span class=hs-linenum> 8: </span>
+<span class=hs-linenum> 9: </span><span class='hs-definition'>main</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<span class=hs-linenum>10: </span><a class=annot href="#"><span class=annottext>(GHC.Types.IO ())</span><span class='hs-definition'>main</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Text.Pandoc.Definition.Inline -&gt; Text.Pandoc.Definition.Inline)
+-&gt; (GHC.Types.IO ())</span><span class='hs-varid'>toJSONFilter</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Definition.Inline -&gt; Text.Pandoc.Definition.Inline</span><span class='hs-varid'>readFootnotes</span></a>
+<span class=hs-linenum>11: </span>
+<span class=hs-linenum>12: </span><span class='hs-comment'>-- gimme :: String -&gt; String</span>
+<span class=hs-linenum>13: </span><a class=annot href="#"><span class=annottext>[GHC.Types.Char] -&gt; [GHC.Types.Char]</span><span class='hs-definition'>gimme</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-varid'>s</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.WriterOptions
+-&gt; Text.Pandoc.Definition.Pandoc -&gt; [GHC.Types.Char]</span><span class='hs-varid'>writeLaTeX</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.WriterOptions</span><span class='hs-varid'>def</span></a> <a class=annot href="#"><span class=annottext>(Text.Pandoc.Definition.Pandoc -&gt; [GHC.Types.Char])
+-&gt; Text.Pandoc.Definition.Pandoc -&gt; [GHC.Types.Char]</span><span class='hs-varop'>$</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.ReaderOptions
+-&gt; [GHC.Types.Char] -&gt; Text.Pandoc.Definition.Pandoc</span><span class='hs-varid'>readMarkdown</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.ReaderOptions</span><span class='hs-varid'>def</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == s &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>s</span></a>
+<span class=hs-linenum>14: </span>
+<span class=hs-linenum>15: </span><span class='hs-definition'>readFootnotes</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Inline</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Inline</span>
+<span class=hs-linenum>16: </span><a class=annot href="#"><span class=annottext>Text.Pandoc.Definition.Inline -&gt; Text.Pandoc.Definition.Inline</span><span class='hs-definition'>readFootnotes</span></a> <span class='hs-layout'>(</span><a class=annot href="#"><span class=annottext>Text.Pandoc.Definition.Inline
+-&gt; (Data.Maybe.Maybe [GHC.Types.Char])</span><span class='hs-varid'>footnoteText</span></a> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>Text.Pandoc.Definition.Format
+-&gt; [GHC.Types.Char] -&gt; Text.Pandoc.Definition.Inline</span><span class='hs-conid'>RawInline</span></a> <span class='hs-layout'>(</span><a class=annot href="#"><span class=annottext>[GHC.Types.Char] -&gt; Text.Pandoc.Definition.Format</span><span class='hs-conid'>Format</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | len v &gt;= 0}</span><span class='hs-str'>"tex"</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == res &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>res</span></a>
+<span class=hs-linenum>17: </span>  <span class='hs-keyword'>where</span>
+<span class=hs-linenum>18: </span>    <a class=annot href="#"><span class=annottext>[GHC.Types.Char]
+-&gt; exists [Text.Pandoc.Definition.Pandoc].[GHC.Types.Char]</span><span class='hs-varid'>parsed</span></a>   <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.WriterOptions
+-&gt; Text.Pandoc.Definition.Pandoc -&gt; [GHC.Types.Char]</span><span class='hs-varid'>writeLaTeX</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.WriterOptions</span><span class='hs-varid'>def</span></a> <a class=annot href="#"><span class=annottext>(Text.Pandoc.Definition.Pandoc -&gt; [GHC.Types.Char])
+-&gt; ([GHC.Types.Char] -&gt; Text.Pandoc.Definition.Pandoc)
+-&gt; [GHC.Types.Char]
+-&gt; exists [Text.Pandoc.Definition.Pandoc].[GHC.Types.Char]</span><span class='hs-varop'>.</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.ReaderOptions
+-&gt; [GHC.Types.Char] -&gt; Text.Pandoc.Definition.Pandoc</span><span class='hs-varid'>readMarkdown</span></a> <a class=annot href="#"><span class=annottext>Text.Pandoc.Options.ReaderOptions</span><span class='hs-varid'>def</span></a>
+<span class=hs-linenum>19: </span>    <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-varid'>res</span></a>     <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == InTex.fnString &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>fnString</span></a> <a class=annot href="#"><span class=annottext>x1:[GHC.Types.Char]
+-&gt; x2:[GHC.Types.Char]
+-&gt; {v : [GHC.Types.Char] | len v == len x1 + len v}</span><span class='hs-varop'>++</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]
+-&gt; exists [Text.Pandoc.Definition.Pandoc].[GHC.Types.Char]</span><span class='hs-varid'>parsed</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == args &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>args</span></a> <a class=annot href="#"><span class=annottext>x1:[GHC.Types.Char]
+-&gt; x2:[GHC.Types.Char]
+-&gt; {v : [GHC.Types.Char] | len v == len x1 + len v}</span><span class='hs-varop'>++</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | null v &lt;=&gt; false &amp;&amp; len v &gt;= 0}</span><span class='hs-str'>"}"</span></a>
+<span class=hs-linenum>20: </span>    <span class='hs-comment'>-- res      = trace (msg args res') res' </span>
+<span class=hs-linenum>21: </span>    <span class='hs-comment'>-- msg s s' = unlines ["Transforming:", s, "To:", s']</span>
+<span class=hs-linenum>22: </span>
+<span class=hs-linenum>23: </span><span class='hs-definition'>readFootnotes</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>Text.Pandoc.Definition.Inline</span><span class='hs-varid'>i</span></a>
+<span class=hs-linenum>24: </span>
+<span class=hs-linenum>25: </span><a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-definition'>fnString</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>GHC.Prim.Addr# -&gt; [GHC.Types.Char]</span><span class='hs-str'>"\\footnotetext{"</span></a>
+<span class=hs-linenum>26: </span>
+<span class=hs-linenum>27: </span><span class='hs-definition'>footnoteText</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Inline</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>String</span>
+<span class=hs-linenum>28: </span><a class=annot href="#"><span class=annottext>Text.Pandoc.Definition.Inline
+-&gt; (Data.Maybe.Maybe [GHC.Types.Char])</span><span class='hs-definition'>footnoteText</span></a> <span class='hs-layout'>(</span><span class='hs-conid'>RawInline</span> <span class='hs-layout'>(</span><span class='hs-conid'>Format</span> <span class='hs-str'>"tex"</span><span class='hs-layout'>)</span> <span class='hs-varid'>s</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span>
+<span class=hs-linenum>29: </span>  <span class='hs-keyword'>if</span> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == InTex.fnString &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>fnString</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char] -&gt; [GHC.Types.Char] -&gt; GHC.Types.Bool</span><span class='hs-varop'>`isPrefixOf`</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == s &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>s</span></a>
+<span class=hs-linenum>30: </span>    <span class='hs-keyword'>then</span> <a class=annot href="#"><span class=annottext>x1:[GHC.Types.Char]
+-&gt; {v : (Data.Maybe.Maybe [GHC.Types.Char]) | isJust v &lt;=&gt; true &amp;&amp; fromJust v == x1}</span><span class='hs-conid'>Just</span></a> <a class=annot href="#"><span class=annottext>([GHC.Types.Char] -&gt; (Data.Maybe.Maybe [GHC.Types.Char]))
+-&gt; ({v : [GHC.Types.Char] | v == s &amp;&amp; len v == len s &amp;&amp; len v &gt;= 0}
+    -&gt; [GHC.Types.Char])
+-&gt; {v : [GHC.Types.Char] | v == s &amp;&amp; len v == len s &amp;&amp; len v &gt;= 0}
+-&gt; exists [[GHC.Types.Char]].(Data.Maybe.Maybe [GHC.Types.Char])</span><span class='hs-varop'>.</span></a> <span class=hs-error><a class=annot href="#"><span class=annottext>x1:{v : [GHC.Types.Char] | len v &gt; 0}
+-&gt; {v : [GHC.Types.Char] | len v == len x1 - 1}</span><span class='hs-varid'>init</span></a></span> <a class=annot href="#"><span class=annottext>({v : [GHC.Types.Char] | len v &gt;= 0 &amp;&amp; len v &lt;= len s}
+ -&gt; [GHC.Types.Char])
+-&gt; (x4:{v : [GHC.Types.Char] | v == s &amp;&amp; len v == len s &amp;&amp; len v &gt;= 0}
+    -&gt; {v : [GHC.Types.Char] | len v &gt;= 0 &amp;&amp; len v &lt;= len s &amp;&amp; len v &lt;= len x4})
+-&gt; x5:{v : [GHC.Types.Char] | v == s &amp;&amp; len v == len s &amp;&amp; len v &gt;= 0}
+-&gt; exists [{v : [GHC.Types.Char] | len v &gt;= 0 &amp;&amp; len v &lt;= len s &amp;&amp; len v &lt;= len x5}].[GHC.Types.Char]</span><span class='hs-varop'>.</span></a> <a class=annot href="#"><span class=annottext>x1:GHC.Types.Int
+-&gt; x2:[GHC.Types.Char]
+-&gt; {v : [GHC.Types.Char] | not (x1 &gt;= 0) =&gt; len v == len x2 &amp;&amp; x1 &gt;= 0 =&gt; len v == if (len x2 &lt; x1) then 0 else len x2 - x1}</span><span class='hs-varid'>drop</span></a> <span class='hs-layout'>(</span><a class=annot href="#"><span class=annottext>x1:[GHC.Types.Char] -&gt; {v : GHC.Types.Int | v == len x1}</span><span class='hs-varid'>length</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == InTex.fnString &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>fnString</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>({v : [GHC.Types.Char] | v == s &amp;&amp; len v == len s &amp;&amp; len v &gt;= 0}
+ -&gt; (Data.Maybe.Maybe [GHC.Types.Char]))
+-&gt; {v : [GHC.Types.Char] | v == s &amp;&amp; len v == len s &amp;&amp; len v &gt;= 0}
+-&gt; (Data.Maybe.Maybe [GHC.Types.Char])</span><span class='hs-varop'>$</span></a> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Char] | v == s &amp;&amp; len v &gt;= 0}</span><span class='hs-varid'>s</span></a> <span class='hs-comment'>-- Remove closing brace</span>
+<span class=hs-linenum>31: </span>    <span class='hs-keyword'>else</span> <a class=annot href="#"><span class=annottext>forall a. {v : (Data.Maybe.Maybe a) | isJust v &lt;=&gt; false}</span><span class='hs-conid'>Nothing</span></a>
+<span class=hs-linenum>32: </span><span class='hs-definition'>footnoteText</span> <span class='hs-varid'>x</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>forall a. {v : (Data.Maybe.Maybe a) | isJust v &lt;=&gt; false}</span><span class='hs-conid'>Nothing</span></a>
+<span class=hs-linenum>33: </span>
+</pre>
+</body>
+</html>

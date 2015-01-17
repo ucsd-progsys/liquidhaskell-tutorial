@@ -1,0 +1,154 @@
+UNSAFE
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:89:33: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == ?c && VV == (5  :  int)}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV <= plen p}
+ 
+  In Context
+    zero : {zero : GHC.Word.Word8 | zero == ?b}
+    VV   : {VV : GHC.Types.Int | VV == ?c && VV == (5  :  int)}
+    fp   : {fp : (GHC.ForeignPtr.ForeignPtr a) | fplen fp == ?a}
+    p    : {p : (GHC.Ptr.Ptr a) | fplen fp == plen p && ?b <= plen p && ?a <= plen p && zero <= plen p}
+    ?b   : {fix##63#b : GHC.Integer.Type.Integer | ?b == 0}
+    ?a   : {fix##63#a : GHC.Types.Int | ?a == (4  :  int)}
+    ?c   : {fix##63#c : GHC.Types.Int | ?c == (5  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:135:28-29: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == ?b && VV == (10  :  int)}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV >= 0 && VV + ?c <= fplen fp}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == ?b && VV == (10  :  int)}
+    fp : {fp : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8) | fplen fp == ?a && fp /= Memory.nullForeignPtr}
+    Memory.nullForeignPtr
+       : {Memory.nullForeignPtr : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8) | fplen Memory.nullForeignPtr == 0}
+    ?b : {fix##63#b : GHC.Types.Int | ?b == (10  :  int)}
+    ?a : {fix##63#a : GHC.Types.Int | ?a == (3  :  int)}
+    ?c : {fix##63#c : GHC.Types.Int | ?c == (0  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:138:28: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == ?b && VV == (2  :  int)}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV >= 0 && VV + ?c <= fplen fp}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == ?b && VV == (2  :  int)}
+    fp : {fp : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8) | fplen fp == ?a && fp /= Memory.nullForeignPtr}
+    Memory.nullForeignPtr
+       : {Memory.nullForeignPtr : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8) | fplen Memory.nullForeignPtr == 0}
+    ?b : {fix##63#b : GHC.Types.Int | ?b == (2  :  int)}
+    ?a : {fix##63#a : GHC.Types.Int | ?a == (3  :  int)}
+    ?c : {fix##63#c : GHC.Types.Int | ?c == (2  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:147:32: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == n}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV >= 0}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == n}
+    n  : GHC.Types.Int
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:149:19: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == ?a && VV == (0  :  int)}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV >= 0 && VV <= fplen fp}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == ?a && VV == (0  :  int)}
+    fp : {fp : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8) | fplen fp == n}
+    n  : GHC.Types.Int
+    ?a : {fix##63#a : GHC.Types.Int | ?a == (0  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:149:21: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == n}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV >= 0 && VV + ?a <= fplen fp}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == n}
+    fp : {fp : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8) | fplen fp == n}
+    n  : GHC.Types.Int
+    ?a : {fix##63#a : GHC.Types.Int | ?a == (0  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:156:34: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == n}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV >= 0 && VV + s <= fplen x}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == n}
+    s  : {s : GHC.Types.Int | s >= 0 && s <= fplen x}
+    n  : GHC.Types.Int
+    x  : (GHC.ForeignPtr.ForeignPtr GHC.Word.Word8)
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:167:22: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : (GHC.Ptr.Ptr a) | VV == p}
+ 
+  not a subtype of Required type
+    VV : {VV : (GHC.Ptr.Ptr a) | 0 < plen VV}
+ 
+  In Context
+    VV : {VV : (GHC.Ptr.Ptr a) | VV == p}
+    p  : (GHC.Ptr.Ptr a)
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:167:41: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : (GHC.Ptr.Ptr a) | VV == p}
+ 
+  not a subtype of Required type
+    VV : {VV : (GHC.Ptr.Ptr a) | 0 <= plen VV}
+ 
+  In Context
+    VV : {VV : (GHC.Ptr.Ptr a) | VV == p}
+    p  : (GHC.Ptr.Ptr a)
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:167:43: Error: Liquid Type Mismatch
+  Inferred type
+    VV : {VV : GHC.Types.Int | VV == ?a && VV == (1  :  int)}
+ 
+  not a subtype of Required type
+    VV : {VV : GHC.Types.Int | VV <= plen p}
+ 
+  In Context
+    VV : {VV : GHC.Types.Int | VV == ?a && VV == (1  :  int)}
+    p  : (GHC.Ptr.Ptr a)
+    ?a : {fix##63#a : GHC.Types.Int | ?a == (1  :  int)}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:(261,28)-(262,24): Error: Liquid Type Mismatch
+  Inferred type
+    VV : Memory.ByteString
+ 
+  not a subtype of Required type
+    VV : {VV : Memory.ByteString | bLen x12 + bLen VV == bLen ps}
+ 
+  In Context
+    VV  : {VV : Memory.ByteString | bLen VV >= 0}
+    x12 : {v : Memory.ByteString | bLen v >= 0}
+    ps  : {ps : Memory.ByteString | bLen ps >= 0}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:329:20-29: Error: Liquid Type Mismatch
+  Inferred type
+    VV : Memory.ByteString
+ 
+  not a subtype of Required type
+    VV : {VV : Memory.ByteString | bLen VV == n}
+ 
+  In Context
+    VV : {VV : Memory.ByteString | bLen VV >= 0}
+    n  : {n : GHC.Types.Int | n >= 0}
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_case-study-pointers.lhs:329:29: Error: Liquid Type Mismatch
+  Inferred type
+    VV : (GHC.Ptr.Ptr GHC.Word.Word8)
+ 
+  not a subtype of Required type
+    VV : {VV : (GHC.Ptr.Ptr GHC.Word.Word8) | plen VV == n && 0 <= plen VV}
+ 
+  In Context
+    VV : (GHC.Ptr.Ptr GHC.Word.Word8)
+    n  : {n : GHC.Types.Int | n >= 0}

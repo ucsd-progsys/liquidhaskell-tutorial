@@ -1,0 +1,143 @@
+SAT 
+ 
+ 
+ 
+//QUALIFIERS 
+
+qualif Auto(v:int, fix##126#A0:FAppTy (List ) (GHC.Types.Char )):(v <= len([fix##126#A0]))
+
+qualif Auto0(VV:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0)):(0 <= fplen([VV]))
+
+qualif Auto1(v:int):(v >= 0)
+
+qualif Auto10(VV:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0), fix##126#A0:int):(fplen([VV]) = fix##126#A0)
+
+qualif Auto11(v:Memory.ByteString , fix##126#A0:Memory.ByteString ):(bLen([v]) = (bLen([fix##126#A0]) + 1))
+
+qualif Auto12(v:int, fix##126#A0:Memory.ByteString ):(v = bLen([fix##126#A0]))
+
+qualif Auto13(v:Memory.ByteString ):(bLen([v]) = 0)
+
+qualif Auto14(v:FAppTy (FAppTy @(0) (Memory.ByteString )) (Memory.ByteString ), fix##126#A0:Memory.ByteString ):((bLen([fst([v])]) + bLen([snd([v])])) = bLen([fix##126#A0]))
+
+qualif Auto15(v:Memory.ByteString , fix##126#A0:Memory.ByteString ):(bLen([v]) = (bLen([fix##126#A0]) - 1))
+
+qualif Auto16(v:Memory.ByteString ):(bLen([v]) != 0)
+
+qualif Auto17(VV:int, fix##126#A0:FAppTy (List ) (Memory.ByteString )):(VV = bLens([fix##126#A0]))
+
+qualif Auto18(v:FAppTy (List ) (GHC.Types.Char )):true
+
+qualif Auto19(v:GHC.Types.Bool , fix##126#A0:Memory.ByteString ):(Prop(v) <=> (bLen([fix##126#A0]) = 0))
+
+qualif Auto2(v:Memory.ByteString ):(bLen([v]) = 2)
+
+qualif Auto20(v:Memory.ByteString ):(bLen([v]) = 5)
+
+qualif Auto21(size:int, fix##126#A0:FAppTy (GHC.Ptr.Ptr ) int):(size <= plen([fix##126#A0]))
+
+qualif Auto3(v:Memory.ByteString , fix##126#A0:Memory.ByteString , fix##126#A1:int):(bLen([v]) = (bLen([fix##126#A0]) - fix##126#A1))
+
+qualif Auto4(v:Memory.ByteString , fix##126#A0:int):(bLen([v]) = fix##126#A0)
+
+qualif Auto5(v:GHC.Types.Bool ):Prop(v)
+
+qualif Auto6(VV:FAppTy (GHC.Ptr.Ptr ) int):(0 <= plen([VV]))
+
+qualif Auto7(v:FAppTy (GHC.ForeignPtr.ForeignPtr ) int):(fplen([v]) = 0)
+
+qualif Auto8(VV:FAppTy (GHC.Ptr.Ptr ) int, fix##126#A0:int):(plen([VV]) = fix##126#A0)
+
+qualif Auto9(v:FAppTy (List ) (Memory.ByteString ), fix##126#A0:Memory.ByteString ):(bLens([v]) = bLen([fix##126#A0]))
+
+qualif Bot(v:@(0)):(0 = 1)
+qualif Bot0(v:obj):(0 = 1)
+
+qualif Bot1(v:bool):(0 = 1)
+qualif Bot2(v:int):(0 = 1)
+
+qualif Cmp(v:@(0), ~A:@(0)):(v > ~A)
+qualif Cmp0(v:int, ~A:int):(v = ~A)
+
+qualif Cmp1(v:@(0), ~A:@(0)):(v <= ~A)
+qualif Cmp10(v:int, ~A:int):(v > ~A)
+
+qualif Cmp2(v:@(0), ~A:@(0)):(v < ~A)
+qualif Cmp3(v:@(0), ~A:@(0)):(v = ~A)
+
+qualif Cmp4(v:@(0), ~A:@(0)):(v >= ~A)
+qualif Cmp5(v:int, ~A:int):(v < ~A)
+
+qualif Cmp6(v:int, ~A:int):(v >= ~A)
+qualif Cmp7(v:@(0), ~A:@(0)):(v != ~A)
+
+qualif Cmp8(v:int, ~A:int):(v != ~A)
+qualif Cmp9(v:int, ~A:int):(v <= ~A)
+
+qualif CmpLen(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) = len([~A]))
+
+qualif CmpLen0(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) <= len([~A]))
+
+qualif CmpLen1(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) >= len([~A]))
+
+qualif CmpLen2(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) < len([~A]))
+
+qualif CmpLen3(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) > len([~A]))
+
+qualif CmpZ(v:@(0)):(v <= 0)
+qualif CmpZ0(v:@(0)):(v != 0)
+
+qualif CmpZ1(v:@(0)):(v >= 0)
+qualif CmpZ2(v:@(0)):(v = 0)
+
+qualif CmpZ3(v:@(0)):(v > 0)
+qualif CmpZ4(v:@(0)):(v < 0)
+
+qualif EqLen(v:int, ~A:FAppTy (List ) @(0)):(v = len([~A]))
+
+qualif FPLenPLen(v:FAppTy (GHC.Ptr.Ptr ) @(0), fix##126#Fp:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0)):(fplen([fix##126#Fp]) = plen([v]))
+
+qualif False(v:bool):(~ ((Bexp v)))
+
+qualif False1(v:GHC.Types.Bool ):(~ (Prop(v)))
+
+qualif ForeignPtrN(v:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0), fix##126#N:int):(fplen([v]) = fix##126#N)
+
+qualif Fst(v:@(0), fix##126#Y:@(1)):(v = fst([fix##126#Y]))
+
+qualif IsEmp(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) = 0))
+
+qualif IsEmp0(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) > 0))
+
+qualif LenAcc(v:int, ~A:FAppTy (List ) @(0), ~B:int):(v = (len([~A]) + ~B))
+
+qualif LenDiff(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A - 1))
+
+qualif LenDiff0(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A + 1))
+
+qualif LenEq(v:FAppTy (List ) @(0), ~A:int):(~A = len([v]))
+
+qualif ListZ(v:FAppTy (List ) @(0)):(len([v]) > 0)
+
+qualif ListZ0(v:FAppTy (List ) @(0)):(len([v]) = 0)
+
+qualif ListZ1(v:FAppTy (List ) @(0)):(len([v]) >= 0)
+
+qualif One(v:int):(v = 1)
+
+qualif PLLen(v:@(0), fix##126#P:@(1)):(len([v]) <= plen([fix##126#P]))
+
+qualif Papp(v:@(0), ~P:FAppTy (Pred ) @(0)):papp1(~P, v)
+
+qualif Papp2(v:@(0), ~X:@(1), ~P:FAppTy (FAppTy (Pred ) @(0)) @(1)):papp2(~P, v, ~X)
+
+qualif Papp3(v:@(0), ~X:@(1), ~Y:@(2), ~P:FAppTy (FAppTy (FAppTy (Pred ) @(0)) @(1)) @(2)):papp3(~P, v, ~X, ~Y)
+
+qualif PlenEq(v:FAppTy (GHC.Ptr.Ptr ) @(0), fix##126#X:int):(fix##126#X <= plen([v]))
+
+qualif PtrLen(v:FAppTy (GHC.Ptr.Ptr ) @(0), fix##126#Xs:FAppTy (List ) @(1)):(plen([v]) = len([fix##126#Xs]))
+
+qualif Snd(v:@(0), fix##126#Y:@(1)):(v = snd([fix##126#Y]))
+
+qualif True(v:bool):(Bexp v) 
+

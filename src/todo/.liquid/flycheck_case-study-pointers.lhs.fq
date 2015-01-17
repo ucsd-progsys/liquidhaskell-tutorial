@@ -1,0 +1,282 @@
+//qualif NonNull(v: [a])        : (? (nonnull([v])))
+//qualif Null(v: [a])           : (~ (? (nonnull([v]))))
+//qualif EqNull(v:Bool, ~A: [a]): (Prop(v) <=> (? (nonnull([~A]))))
+
+qualif IsEmp(v:GHC.Types.Bool, ~A: [a]) : (Prop(v) <=> len([~A]) [ > ;  = ] 0)
+qualif ListZ(v: [a])          : len([v]) [ = ; >= ; > ] 0 
+qualif CmpLen(v:[a], ~A:[b])  : len([v]) [= ; >=; >; <=; <] len([~A]) 
+qualif EqLen(v:int, ~A: [a])  : v = len([~A]) 
+qualif LenEq(v:[a], ~A: int)  : ~A = len([v]) 
+qualif LenAcc(v:int, ~A:[a], ~B: int): v = len([~A]) + ~B
+qualif LenDiff(v:[a], ~A:int): len([v]) = (~A [ +; - ] 1)
+//BOT: Do not delete EVER!
+
+qualif Bot(v:@(0))    : 0 = 1 
+qualif Bot(v:obj)     : 0 = 1 
+qualif Bot(v:a)       : 0 = 1 
+qualif Bot(v:bool)    : 0 = 1 
+qualif Bot(v:int)     : 0 = 1 
+qualif CmpZ(v:a)      : v [ < ; <= ; > ; >= ; = ; != ] 0
+qualif Cmp(v:a,~A:a)  : v [ < ; <= ; > ; >= ; = ; != ] ~A
+qualif Cmp(v:int,~A:int)  : v [ < ; <= ; > ; >= ; = ; != ] ~A
+qualif One(v:int)     : v = 1
+qualif True(v:bool)   : (? v) 
+qualif False(v:bool)  : ~ (? v) 
+qualif True1(v:GHC.Types.Bool)   : Prop(v)
+qualif False1(v:GHC.Types.Bool)  : ~ Prop(v)
+
+
+qualif Papp(v:a,~P:Pred a) : papp1(~P, v)
+constant papp1 : func(1, [Pred @(0); @(0); bool])
+
+qualif Papp2(v:a,~X:b,~P:Pred a b) : papp2(~P, v, ~X)
+constant papp2 : func(4, [Pred @(0) @(1); @(2); @(3); bool])
+
+qualif Papp3(v:a,~X:b, ~Y:c, ~P:Pred a b c) : papp3(~P, v, ~X, ~Y)
+constant papp3 : func(6, [Pred @(0) @(1) @(2); @(3); @(4); @(5); bool])
+
+constant Prop : func(0, [GHC.Types.Bool; bool])
+qualif Unpack(v : a, fix##126#Acc : b, fix##126#N : int): (len([v]) = ((1 + fix##126#N) + len([fix##126#Acc])))
+qualif PLLen(v : a, fix##126#P : b): (len([v]) <= plen([fix##126#P]))
+qualif ForeignPtrN(v : FAppTy GHC.ForeignPtr.ForeignPtr  a, fix##126#N : int): (fplen([v]) = fix##126#N)
+qualif FPLenPLen(v : FAppTy GHC.Ptr.Ptr  a, fix##126#Fp : FAppTy GHC.ForeignPtr.ForeignPtr  a): (fplen([fix##126#Fp]) = plen([v]))
+qualif PtrLen(v : FAppTy GHC.Ptr.Ptr  a, fix##126#Xs : FAppTy List  b): (plen([v]) = len([fix##126#Xs]))
+qualif PlenEq(v : FAppTy GHC.Ptr.Ptr  a, fix##126#X : int): (fix##126#X <= plen([v]))
+qualif Fst(v : a, fix##126#Y : b): (v = fst([fix##126#Y]))
+qualif Snd(v : a, fix##126#Y : b): (v = snd([fix##126#Y]))
+qualif Auto(VV : Memory.ByteString, fix##126#A0 : Memory.ByteString, fix##126#A1 : Memory.ByteString): ((bLen([fix##126#A0]) + bLen([VV])) = bLen([fix##126#A1]))
+qualif Auto(v : int): (v >= 0)
+qualif Auto(VV : FAppTy GHC.Ptr.Ptr  int): (0 <= plen([VV]))
+qualif Auto(VV : FAppTy GHC.Ptr.Ptr  int, fix##126#A0 : int): (plen([VV]) = fix##126#A0)
+qualif Auto(v : Memory.ByteString, fix##126#A0 : int): (bLen([v]) = fix##126#A0)
+qualif Auto(v : Memory.ByteString): (bLen([v]) > 0)
+qualif Auto(v : Memory.ByteString): (bLen([v]) > 0)
+qualif Auto(v : Memory.ByteString, fix##126#A0 : Memory.ByteString): (bLen([v]) = (bLen([fix##126#A0]) - 1))
+qualif Auto(v : [Memory.ByteString], fix##126#A0 : Memory.ByteString): (bLens([v]) = bLen([fix##126#A0]))
+qualif Auto(v : Memory.ByteString): (bLen([v]) > 0)
+qualif Auto(VV : FAppTy GHC.Ptr.Ptr  int): (0 <= plen([VV]))
+qualif Auto(VV : FAppTy GHC.Ptr.Ptr  int): (0 <= plen([VV]))
+qualif Auto(v : int, fix##126#A0 : FAppTy GHC.Ptr.Ptr  int): (v <= plen([fix##126#A0]))
+qualif Auto(v : int, fix##126#A0 : FAppTy GHC.Ptr.Ptr  int): (v <= plen([fix##126#A0]))
+qualif Auto(v : GHC.Types.Bool, fix##126#A0 : Memory.ByteString): ((? Prop([v])) <=> (bLen([fix##126#A0]) = 0))
+qualif Auto(v : Memory.ByteString): (bLen([v]) = 5)
+qualif Auto(v : int): (v >= 0)
+qualif Auto(v : Memory.ByteString, fix##126#A0 : int): (fix##126#A0 <= bLen([v]))
+qualif Auto(v : Memory.ByteString, fix##126#A0 : Memory.ByteString, fix##126#A1 : int): (bLen([v]) = (bLen([fix##126#A0]) - fix##126#A1))
+qualif Auto(v : Memory.ByteString): (bLen([v]) = 3)
+qualif Auto(v : Memory.ByteString, fix##126#A0 : Memory.ByteString): (bLen([v]) = (1 + bLen([fix##126#A0])))
+qualif Auto(v : Memory.ByteString): (bLen([v]) = 0)
+qualif Auto(VV : FAppTy GHC.Ptr.Ptr  int): (0 <= plen([VV]))
+qualif Auto(VV : FAppTy GHC.Ptr.Ptr  int): (0 <= plen([VV]))
+qualif Auto(v : int, fix##126#A0 : FAppTy GHC.Ptr.Ptr  int): (v <= plen([fix##126#A0]))
+qualif Auto(v : int, fix##126#A0 : FAppTy GHC.Ptr.Ptr  int): (v <= plen([fix##126#A0]))
+qualif Auto(v : FAppTy GHC.ForeignPtr.ForeignPtr  int): (fplen([v]) = 0)
+
+constant Prop : func(0, [GHC.Types.Bool; bool])
+constant x_Tuple54 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(3)])
+constant x_Tuple44 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(3)])
+constant xListSelector : func(1, [[@(0)]; @(0)])
+constant pbase : func(1, [FAppTy GHC.Ptr.Ptr  @(0); int])
+constant plen : func(1, [FAppTy GHC.Ptr.Ptr  @(0); int])
+constant x_Tuple41 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(0)])
+constant bLen : func(0, [Memory.ByteString; int])
+constant bOff : func(0, [Memory.ByteString; int])
+constant x_Tuple52 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(1)])
+constant bPtr : func(0, [Memory.ByteString;
+                         FAppTy GHC.ForeignPtr.ForeignPtr  int])
+constant x_Tuple33 : func(3, [FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2);
+                              @(2)])
+constant x_Tuple76 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(5)])
+constant x_Tuple55 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(4)])
+constant x_Tuple31 : func(3, [FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2);
+                              @(0)])
+constant x_Tuple43 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(2)])
+constant deref : func(1, [FAppTy GHC.Ptr.Ptr  @(0); @(0)])
+constant GHC.Types.False#68 : GHC.Types.Bool
+constant x_Tuple75 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(4)])
+constant len : func(1, [[@(0)]; int])
+constant x_Tuple64 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(3)])
+constant null : func(1, [[@(0)]; bool])
+constant fromJust : func(1, [FAppTy Data.Maybe.Maybe  @(0); @(0)])
+constant fst : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                        @(0)])
+constant isNullPtr : func(1, [FAppTy GHC.Ptr.Ptr  @(0); bool])
+constant addrLen : func(0, [int; int])
+constant x_Tuple71 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(0)])
+constant x_Tuple65 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(4)])
+constant bLens : func(0, [[Memory.ByteString]; int])
+constant x_Tuple32 : func(3, [FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2);
+                              @(1)])
+constant x_Tuple42 : func(4, [FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3);
+                              @(1)])
+constant x_Tuple72 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(1)])
+constant x_Tuple51 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(0)])
+constant xsListSelector : func(1, [[@(0)]; [@(0)]])
+constant x_Tuple53 : func(5, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4);
+                              @(2)])
+constant x_Tuple22 : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                              @(1)])
+constant snd : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                        @(1)])
+constant x_Tuple73 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(2)])
+constant x_Tuple62 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(1)])
+constant x_Tuple74 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(3)])
+constant fix#GHC.Tuple.#40##41##35#70 : fix##40##41#
+constant fplen : func(1, [FAppTy GHC.ForeignPtr.ForeignPtr  @(0);
+                          int])
+constant GHC.Types.True#6u : GHC.Types.Bool
+constant x_Tuple63 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(2)])
+constant x_Tuple21 : func(2, [FAppTy (FAppTy fix##40##41#  @(0))  @(1);
+                              @(0)])
+constant x_Tuple61 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(0)])
+constant cmp : func(0, [GHC.Types.Ordering; GHC.Types.Ordering])
+constant isJust : func(1, [FAppTy Data.Maybe.Maybe  @(0); bool])
+constant x_Tuple66 : func(6, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5);
+                              @(5)])
+constant x_Tuple77 : func(7, [FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy (FAppTy fix##40##41#  @(0))  @(1))  @(2))  @(3))  @(4))  @(5))  @(6);
+                              @(6)])
+constant fix#GHC.Types.#58##35#64 : func(1, [@(0); [@(0)]; [@(0)]])
+constant GHC.Ptr.Ptr#r2wD : func(1, [int;
+                                     FAppTy GHC.Ptr.Ptr  @(0)])
+constant fix#GHC.Prim.#40##35##44##35##41##35#84 : func(2, [@(0);
+                                                            @(1);
+                                                            FAppTy (FAppTy fix##40##41#  @(0))  @(1)])
+constant fix#GHC.Types.#91##93##35#6m : func(1, [[@(0)]])
+constant fix#GHC.Tuple.#40##44##41##35#74 : func(2, [@(0);
+                                                     @(1);
+                                                     FAppTy (FAppTy fix##40##41#  @(0))  @(1)])
+bind 0 GHC.Prim.void##0l : {VV#592 : GHC.Prim.Void# | []}
+bind 1 GHC.Types.C##62 : {VV : func(0, [GHC.Prim.Char#;
+                                        GHC.Types.Char]) | []}
+bind 2 GHC.Types.False#68 : {VV#604 : GHC.Types.Bool | []}
+bind 3 GHC.Types.I##6c : {VV : func(0, [int; int]) | []}
+bind 4 GHC.Types.True#6u : {VV#607 : GHC.Types.Bool | []}
+bind 5 fix#GHC.Tuple.#40##41##35#70 : {VV#608 : fix##40##41# | []}
+bind 6 fix##123#__pkg_ccall#32#main#32#memcpy#32#GHC.Prim.Addr#35##10##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##45##62##32#GHC.Prim.Addr#35##10##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##45##62##32#GHC.Prim.Word#35##10##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##45##62##32#GHC.Prim.State#35##32#GHC.Prim.RealWorld#10##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##32##45##62##32##40##35##32#GHC.Prim.State#35##32#GHC.Prim.RealWorld#44##32#GHC.Prim.Addr#35##32##35##41##125##35#d3XC : {VV : func(0, [int;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    int;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    int;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    FAppTy GHC.Prim.State#  GHC.Prim.RealWorld;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    FAppTy (FAppTy fix##40##41#  (FAppTy GHC.Prim.State#  GHC.Prim.RealWorld))  int]) | []}
+bind 7 fix#GHC.Classes.#38##38##35#r1e : {VV : func(0, [GHC.Types.Bool;
+                                                        GHC.Types.Bool;
+                                                        GHC.Types.Bool]) | []}
+bind 8 fix#GHC.Base.#36#fMonadIO#35#r2L : {VV#619 : FAppTy GHC.Base.Monad  GHC.Types.IO | []}
+bind 9 fix#GHC.Real.#36#fIntegralInt#35#r6u : {VV#620 : FAppTy GHC.Real.Integral  int | []}
+bind 10 fix#GHC.Classes.#36#fOrdInt#35#rhx : {VV#621 : FAppTy GHC.Classes.Ord  int | []}
+bind 11 fix#GHC.Num.#36#fNumInt#35#rhy : {VV#622 : FAppTy GHC.Num.Num  int | []}
+bind 12 fix#GHC.Word.#36#fNumWord8#35#r1az : {VV#625 : FAppTy GHC.Num.Num  int | []}
+bind 13 fix#Foreign.C.Types.#36#fNumCSize#35#r1mc : {VV#626 : FAppTy GHC.Num.Num  int | []}
+bind 14 fix#Foreign.Storable.#36#fStorableWord8#35#r2DV : {VV#633 : FAppTy Foreign.Storable.Storable  int | []}
+bind 15 GHC.Word.W64##r2Fb : {VV : func(0, [int; int]) | []}
+bind 16 Data.ByteString.Internal.w2c#r2Nm : {VV : func(0, [int;
+                                                           GHC.Types.Char]) | []}
+bind 17 Data.ByteString.Internal.c2w#r2NY : {VV : func(0, [GHC.Types.Char;
+                                                           int]) | []}
+bind 18 fix#GHC.Word.#36#fEqWord8#35#r2Vm : {VV#641 : FAppTy GHC.Classes.Eq  int | []}
+bind 19 fix#Memory.#36#WPS#35#r39U : {VV : func(0, [FAppTy GHC.ForeignPtr.ForeignPtr  int;
+                                                    int;
+                                                    int;
+                                                    Memory.ByteString]) | []}
+bind 20 Memory.PS#r2Qa : {VV : func(0, [FAppTy GHC.ForeignPtr.ForeignPtr  int;
+                                        int;
+                                        int;
+                                        Memory.ByteString]) | []}
+bind 21 GHC.Types.EQ#6U : {VV#644 : GHC.Types.Ordering | []}
+bind 22 GHC.Types.LT#6S : {VV#645 : GHC.Types.Ordering | []}
+bind 23 GHC.Types.GT#6W : {VV#646 : GHC.Types.Ordering | []}
+bind 24 fix#GHC.Classes.#38##38##35#r1e : {VV : func(0, [GHC.Types.Bool;
+                                                         GHC.Types.Bool;
+                                                         GHC.Types.Bool]) | []}
+bind 25 GHC.Types.True#6u : {v : GHC.Types.Bool | [(? Prop([v]))]}
+bind 26 GHC.Types.False#68 : {v : GHC.Types.Bool | [(~ ((? Prop([v]))))]}
+bind 27 Memory.c_memcpy#r2Qe : {VV : func(0, [FAppTy GHC.Ptr.Ptr  int;
+                                              FAppTy GHC.Ptr.Ptr  int;
+                                              int;
+                                              FAppTy GHC.Types.IO  (FAppTy GHC.Ptr.Ptr  int)]) | []}
+bind 28 Memory.nullForeignPtr#r2QB : {v : FAppTy GHC.ForeignPtr.ForeignPtr  int | [(fplen([v]) = 0)]}
+bind 29 Language.Haskell.Liquid.Prelude.plus#rou : {VV : func(0, [int;
+                                                                  int;
+                                                                  int]) | []}
+bind 30 Language.Haskell.Liquid.Prelude.minus#rpv : {VV : func(0, [int;
+                                                                   int;
+                                                                   int]) | []}
+bind 31 Language.Haskell.Liquid.Prelude.times#rpw : {VV : func(0, [int;
+                                                                   int;
+                                                                   int]) | []}
+bind 32 Language.Haskell.Liquid.Prelude.eq#rpx : {VV : func(0, [int;
+                                                                int;
+                                                                GHC.Types.Bool]) | []}
+bind 33 Language.Haskell.Liquid.Prelude.neq#rpy : {VV : func(0, [int;
+                                                                 int;
+                                                                 GHC.Types.Bool]) | []}
+bind 34 Language.Haskell.Liquid.Prelude.leq#rpz : {VV : func(0, [int;
+                                                                 int;
+                                                                 GHC.Types.Bool]) | []}
+bind 35 Language.Haskell.Liquid.Prelude.geq#rpA : {VV : func(0, [int;
+                                                                 int;
+                                                                 GHC.Types.Bool]) | []}
+bind 36 Language.Haskell.Liquid.Prelude.lt#rpB : {VV : func(0, [int;
+                                                                int;
+                                                                GHC.Types.Bool]) | []}
+bind 37 Language.Haskell.Liquid.Prelude.gt#rpC : {VV : func(0, [int;
+                                                                int;
+                                                                GHC.Types.Bool]) | []}
+bind 38 Language.Haskell.Liquid.Prelude.liquidAssertB#rpD : {VV : func(0, [GHC.Types.Bool;
+                                                                           GHC.Types.Bool]) | []}
+bind 39 Language.Haskell.Liquid.Prelude.isEven#rpL : {VV : func(0, [int;
+                                                                    GHC.Types.Bool]) | []}
+bind 40 Language.Haskell.Liquid.Prelude.isOdd#rpM : {VV : func(0, [int;
+                                                                   GHC.Types.Bool]) | []}
+bind 41 GHC.Integer.Type.smallInteger#0Z : {VV : func(0, [int;
+                                                          int]) | []}
+bind 42 GHC.Types.I##6c : {VV : func(0, [int; int]) | []}
+bind 43 fix#GHC.Prim.#43##35##35#98 : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 44 fix#GHC.Prim.#45##35##35#99 : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 45 fix#GHC.Prim.#61##61##35##35#9o : {VV : func(0, [int;
+                                                         int;
+                                                         int]) | []}
+bind 46 fix#GHC.Prim.#62##61##35##35#9n : {VV : func(0, [int;
+                                                         int;
+                                                         int]) | []}
+bind 47 fix#GHC.Prim.#60##61##35##35#9r : {VV : func(0, [int;
+                                                         int;
+                                                         int]) | []}
+bind 48 fix#GHC.Prim.#60##35##35#9q : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 49 fix#GHC.Prim.#62##35##35#9m : {VV : func(0, [int;
+                                                     int;
+                                                     int]) | []}
+bind 50 GHC.Types.EQ#6U : {VV#701 : GHC.Types.Ordering | [(cmp([VV#701]) = GHC.Types.EQ#6U)]}
+bind 51 GHC.Types.LT#6S : {VV#703 : GHC.Types.Ordering | [(cmp([VV#703]) = GHC.Types.LT#6S)]}
+bind 52 GHC.Types.GT#6W : {VV#704 : GHC.Types.Ordering | [(cmp([VV#704]) = GHC.Types.GT#6W)]}
+bind 53 Memory.PS#r2Qa : {VV : func(0, [FAppTy GHC.ForeignPtr.ForeignPtr  int;
+                                        int;
+                                        int;
+                                        Memory.ByteString]) | []}
+bind 54 fix#Memory.#36#WPS#35#r39U : {VV : func(0, [FAppTy GHC.ForeignPtr.ForeignPtr  int;
+                                                    int;
+                                                    int;
+                                                    Memory.ByteString]) | []}

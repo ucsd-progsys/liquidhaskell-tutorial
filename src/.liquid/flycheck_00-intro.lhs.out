@@ -1,0 +1,12 @@
+UNSAFE
+ /Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/flycheck_00-intro.lhs:37:27-35: Error: Liquid Type Mismatch
+   Inferred type
+     VV : Int | VV == ?a && VV == len xs
+  
+   not a subtype of Required type
+     VV : Int | VV /= 0
+  
+   In Context
+     VV : Int | VV == ?a && VV == len xs
+     ?a : Int | ?a == len xs
+     xs : [Int] | len v >= 0

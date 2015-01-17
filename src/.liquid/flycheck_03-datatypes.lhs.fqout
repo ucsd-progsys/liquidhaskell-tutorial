@@ -1,0 +1,118 @@
+SAT 
+ 
+ 
+ 
+//QUALIFIERS 
+
+qualif Auto(v:FAppTy (RefinedDatatypes.Sparse ) int, fix##126#A0:FAppTy (Data.Vector.Vector ) int):(spDim([v]) = vlen([fix##126#A0]))
+
+qualif Auto0(v:FAppTy (List ) (GHC.Types.Char )):false
+
+qualif Auto1(v:FAppTy (RefinedDatatypes.Sparse ) (FAppTy (List ) (GHC.Types.Char ))):(spDim([v]) = 3)
+
+qualif Auto2(v:FAppTy (RefinedDatatypes.Sparse ) int):(spDim([v]) = 3)
+
+qualif Bot(v:@(0)):(0 = 1)
+qualif Bot0(v:obj):(0 = 1)
+
+qualif Bot1(v:bool):(0 = 1)
+qualif Bot2(v:int):(0 = 1)
+
+qualif Cmp(v:@(0), ~A:@(0)):(v >= ~A)
+qualif Cmp0(v:@(0), ~A:@(0)):(v != ~A)
+
+qualif Cmp1(v:@(0), ~A:@(0)):(v <= ~A)
+qualif Cmp10(v:int, ~A:int):(v = ~A)
+
+qualif Cmp2(v:@(0), ~A:@(0)):(v < ~A)
+qualif Cmp3(v:int, ~A:int):(v <= ~A)
+
+qualif Cmp4(v:@(0), ~A:@(0)):(v = ~A)
+qualif Cmp5(v:int, ~A:int):(v != ~A)
+
+qualif Cmp6(v:int, ~A:int):(v >= ~A)
+qualif Cmp7(v:int, ~A:int):(v > ~A)
+
+qualif Cmp8(v:int, ~A:int):(v < ~A)
+qualif Cmp9(v:@(0), ~A:@(0)):(v > ~A)
+
+qualif CmpLen(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) > len([~A]))
+
+qualif CmpLen0(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) >= len([~A]))
+
+qualif CmpLen1(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) < len([~A]))
+
+qualif CmpLen2(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) = len([~A]))
+
+qualif CmpLen3(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) <= len([~A]))
+
+qualif CmpVlen(v:FAppTy (Vector ) @(0), ~A:FAppTy (Vector ) @(1)):(vlen([v]) < vlen([~A]))
+
+qualif CmpVlen0(v:FAppTy (Vector ) @(0), ~A:FAppTy (Vector ) @(1)):(vlen([v]) <= vlen([~A]))
+
+qualif CmpVlen1(v:FAppTy (Vector ) @(0), ~A:FAppTy (Vector ) @(1)):(vlen([v]) >= vlen([~A]))
+
+qualif CmpVlen2(v:FAppTy (Vector ) @(0), ~A:FAppTy (Vector ) @(1)):(vlen([v]) = vlen([~A]))
+
+qualif CmpVlen3(v:FAppTy (Vector ) @(0), ~A:FAppTy (Vector ) @(1)):(vlen([v]) > vlen([~A]))
+
+qualif CmpZ(v:@(0)):(v > 0)
+qualif CmpZ0(v:@(0)):(v != 0)
+
+qualif CmpZ1(v:@(0)):(v = 0)
+qualif CmpZ2(v:@(0)):(v < 0)
+
+qualif CmpZ3(v:@(0)):(v <= 0)
+qualif CmpZ4(v:@(0)):(v >= 0)
+
+qualif EqLen(v:int, ~A:FAppTy (List ) @(0)):(v = len([~A]))
+
+qualif False(v:bool):(~ ((Bexp v)))
+
+qualif False1(v:GHC.Types.Bool ):(~ (Prop(v)))
+
+qualif Fst(v:@(0), fix##126#Y:@(1)):(v = fst([fix##126#Y]))
+
+qualif IsEmp(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) = 0))
+
+qualif IsEmp0(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) > 0))
+
+qualif LenAcc(v:int, ~A:FAppTy (List ) @(0), ~B:int):(v = (len([~A]) + ~B))
+
+qualif LenDiff(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A - 1))
+
+qualif LenDiff0(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A + 1))
+
+qualif LenEq(v:FAppTy (List ) @(0), ~A:int):(~A = len([v]))
+
+qualif ListZ(v:FAppTy (List ) @(0)):(len([v]) >= 0)
+
+qualif ListZ0(v:FAppTy (List ) @(0)):(len([v]) > 0)
+
+qualif ListZ1(v:FAppTy (List ) @(0)):(len([v]) = 0)
+
+qualif One(v:int):(v = 1)
+
+qualif Papp(v:@(0), ~P:FAppTy (Pred ) @(0)):papp1(~P, v)
+
+qualif Papp2(v:@(0), ~X:@(1), ~P:FAppTy (FAppTy (Pred ) @(0)) @(1)):papp2(~P, v, ~X)
+
+qualif Papp3(v:@(0), ~X:@(1), ~Y:@(2), ~P:FAppTy (FAppTy (FAppTy (Pred ) @(0)) @(1)) @(2)):papp3(~P, v, ~X, ~Y)
+
+qualif Snd(v:@(0), fix##126#Y:@(1)):(v = snd([fix##126#Y]))
+
+qualif True(v:bool):(Bexp v)
+qualif True1(v:GHC.Types.Bool ):Prop(v)
+
+qualif VecEmpty(v:FAppTy (Vector ) @(0)):(vlen([v]) >= 0)
+
+qualif VecEmpty0(v:FAppTy (Vector ) @(0)):(vlen([v]) = 0)
+
+qualif VecEmpty1(v:FAppTy (Vector ) @(0)):(vlen([v]) > 0)
+
+qualif Vlen(v:int, ~A:FAppTy (Vector ) @(0)):(v < vlen([~A]))
+
+qualif Vlen0(v:int, ~A:FAppTy (Vector ) @(0)):(v = vlen([~A]))
+
+qualif Vlen1(v:int, ~A:FAppTy (Vector ) @(0)):(v <= vlen([~A])) 
+

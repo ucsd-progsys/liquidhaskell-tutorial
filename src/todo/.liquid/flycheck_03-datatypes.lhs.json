@@ -1,0 +1,1 @@
+{"status":"error","types":{},"errors":[{"start":{"line":45,"column":39},"stop":{"line":45,"column":39},"message":"/Users/rjhala/research/liquid/liquidhaskell/docs/tutorial/src/todo/flycheck_03-datatypes.lhs:45:39: Error: GHC Error\n    Not in scope: type constructor or class `Btwn'"}]}

@@ -1,0 +1,468 @@
+UNSAT [676,662,597,92] 
+ 
+ 
+ 
+solution: k_1013 := [((VV#1012 != Memory.nullForeignPtr#r2QC), Cmp(VV#1012, Memory.nullForeignPtr#r2QC));((fplen([VV#1012]) = lq_anf__d3Ys), Auto11(VV#1012, lq_anf__d3Ys));((0 <= fplen([VV#1012])), Auto2(VV#1012))] 
+
+solution: k_1052 := [((fplen([VV#1051]) = lq_anf__d3Yy), Auto11(VV#1051, lq_anf__d3Yy));((0 <= fplen([VV#1051])), Auto2(VV#1051));((VV#1051 != Memory.nullForeignPtr#r2QC), Cmp(VV#1051, Memory.nullForeignPtr#r2QC))] 
+
+solution: k_1056 := [((bLen([VV#1055]) = 3), Auto14(VV#1055));((VV#1055 != Memory.empty#r2Qz), Cmp(VV#1055, Memory.empty#r2Qz))] 
+
+solution: k_1059 := [] 
+
+solution: k_1099 := [((bLen([VV#1098]) = 3), Auto14(VV#1098));((lq_anf__d3YA <= bLen([VV#1098])), Auto20(VV#1098, lq_anf__d3YA));(((bLen([Memory.empty#r2Qz]) + bLen([VV#1098])) = bLen([lq_anf__d3YC])), Auto8(VV#1098, Memory.empty#r2Qz, lq_anf__d3YC));((VV#1098 != Memory.empty#r2Qz), Cmp(VV#1098, Memory.empty#r2Qz));((bLen([VV#1098]) = lq_anf__d3YB), Auto17(VV#1098, lq_anf__d3YB));((VV#1098 = lq_anf__d3YC), Cmp2(VV#1098, lq_anf__d3YC))] 
+
+solution: k_1121 := [((VV#1120 != Memory.nullForeignPtr#r2QC), Cmp(VV#1120, Memory.nullForeignPtr#r2QC));((fplen([VV#1120]) = lq_anf__d3Yy), Auto11(VV#1120, lq_anf__d3Yy));((0 <= fplen([VV#1120])), Auto2(VV#1120))] 
+
+solution: k_1126 := [((bLen([VV#1125]) = 3), Auto14(VV#1125));((VV#1125 != Memory.empty#r2Qz), Cmp(VV#1125, Memory.empty#r2Qz))] 
+
+solution: k_1160 := [((fplen([VV#1159]) = lq_anf__d3YE), Auto11(VV#1159, lq_anf__d3YE));((0 <= fplen([VV#1159])), Auto2(VV#1159));((VV#1159 != Memory.nullForeignPtr#r2QC), Cmp(VV#1159, Memory.nullForeignPtr#r2QC))] 
+
+solution: k_1164 := [((bLen([VV#1163]) = lq_anf__d3YE), Auto17(VV#1163, lq_anf__d3YE));((bLen([VV#1163]) = 5), Auto18(VV#1163));((VV#1163 != Memory.empty#r2Qz), Cmp(VV#1163, Memory.empty#r2Qz))] 
+
+solution: k_1167 := [] 
+
+solution: k_1207 := [((bLen([VV#1206]) = lq_anf__d3YE), Auto17(VV#1206, lq_anf__d3YE));((bLen([VV#1206]) = 5), Auto18(VV#1206));((bLen([VV#1206]) = (bLen([lq_anf__d3YI]) - lq_anf__d3YG)), Auto19(VV#1206, lq_anf__d3YI, lq_anf__d3YG));((lq_anf__d3YG <= bLen([VV#1206])), Auto20(VV#1206, lq_anf__d3YG));(((bLen([Memory.empty#r2Qz]) + bLen([VV#1206])) = bLen([lq_anf__d3YI])), Auto8(VV#1206, Memory.empty#r2Qz, lq_anf__d3YI));((VV#1206 != Memory.empty#r2Qz), Cmp(VV#1206, Memory.empty#r2Qz));((bLen([VV#1206]) = lq_anf__d3YH), Auto17(VV#1206, lq_anf__d3YH));((VV#1206 = lq_anf__d3YI), Cmp2(VV#1206, lq_anf__d3YI))] 
+
+solution: k_1229 := [((VV#1228 != Memory.nullForeignPtr#r2QC), Cmp(VV#1228, Memory.nullForeignPtr#r2QC));((fplen([VV#1228]) = lq_anf__d3YE), Auto11(VV#1228, lq_anf__d3YE));((0 <= fplen([VV#1228])), Auto2(VV#1228))] 
+
+solution: k_1234 := [((bLen([VV#1233]) = lq_anf__d3YE), Auto17(VV#1233, lq_anf__d3YE));((bLen([VV#1233]) = 5), Auto18(VV#1233));((VV#1233 != Memory.empty#r2Qz), Cmp(VV#1233, Memory.empty#r2Qz))] 
+
+solution: k_1281 := [((fplen([VV#1280]) = lq_anf__d3YL), Auto11(VV#1280, lq_anf__d3YL));((0 <= fplen([VV#1280])), Auto2(VV#1280))] 
+
+solution: k_1316 := [((fplen([fp#a3L9]) = plen([VV#1315])), FPLenPLen(VV#1315, fp#a3L9));((lq_anf__d3YK <= plen([VV#1315])), PlenEq(VV#1315, lq_anf__d3YK));((lq_anf__d3YL <= plen([VV#1315])), PlenEq(VV#1315, lq_anf__d3YL));((zero#a3L8 <= plen([VV#1315])), PlenEq(VV#1315, zero#a3L8))] 
+
+solution: k_1575 := [((fplen([fp#a3L9]) = plen([VV#1574])), FPLenPLen(VV#1574, fp#a3L9));((lq_anf__d3YK <= plen([VV#1574])), PlenEq(VV#1574, lq_anf__d3YK));((lq_anf__d3YL <= plen([VV#1574])), PlenEq(VV#1574, lq_anf__d3YL));((zero#a3L8 <= plen([VV#1574])), PlenEq(VV#1574, zero#a3L8))] 
+
+solution: k_1673 := [((fplen([VV#1672]) = lq_anf__d3YL), Auto11(VV#1672, lq_anf__d3YL));((0 <= fplen([VV#1672])), Auto2(VV#1672))] 
+
+solution: k_1725 := [((fplen([VV#1724]) = lq_anf__d3Z7), Auto11(VV#1724, lq_anf__d3Z7));((0 <= fplen([VV#1724])), Auto2(VV#1724))] 
+
+solution: k_1760 := [((fplen([fp#a3L6]) = plen([VV#1759])), FPLenPLen(VV#1759, fp#a3L6));((lq_anf__d3Z6 <= plen([VV#1759])), PlenEq(VV#1759, lq_anf__d3Z6));((lq_anf__d3Z7 <= plen([VV#1759])), PlenEq(VV#1759, lq_anf__d3Z7));((zero#a3L5 <= plen([VV#1759])), PlenEq(VV#1759, zero#a3L5))] 
+
+solution: k_2019 := [((fplen([fp#a3L6]) = plen([VV#2018])), FPLenPLen(VV#2018, fp#a3L6));((lq_anf__d3Z6 <= plen([VV#2018])), PlenEq(VV#2018, lq_anf__d3Z6));((lq_anf__d3Z7 <= plen([VV#2018])), PlenEq(VV#2018, lq_anf__d3Z7));((zero#a3L5 <= plen([VV#2018])), PlenEq(VV#2018, zero#a3L5))] 
+
+solution: k_2117 := [((fplen([VV#2116]) = lq_anf__d3Z7), Auto11(VV#2116, lq_anf__d3Z7));((0 <= fplen([VV#2116])), Auto2(VV#2116))] 
+
+solution: k_2507 := [((VV#2506 = GHC.Prim.void##0l), Cmp2(VV#2506, GHC.Prim.void##0l))] 
+
+solution: k_2518 := [((len([VV#2517]) = ds_d3Xp), Auto4(VV#2517, ds_d3Xp));((len([VV#2517]) = ds_d3Xq), Auto4(VV#2517, ds_d3Xq));((len([VV#2517]) = lq_anf__d3ZE), Auto4(VV#2517, lq_anf__d3ZE));((len([VV#2517]) = lq_anf__d3ZF), Auto4(VV#2517, lq_anf__d3ZF));((len([VV#2517]) = bLen([ds_d3Xm])), Auto9(VV#2517, ds_d3Xm));((len([VV#2517]) = bLen([lq_anf__d3ZD])), Auto9(VV#2517, lq_anf__d3ZD));((ds_d3Xp = len([VV#2517])), LenEq(VV#2517, ds_d3Xp));((ds_d3Xq = len([VV#2517])), LenEq(VV#2517, ds_d3Xq));((lq_anf__d3ZE = len([VV#2517])), LenEq(VV#2517, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#2517])), LenEq(VV#2517, lq_anf__d3ZF));((len([VV#2517]) > 0), ListZ(VV#2517))] 
+
+solution: k_2524 := [((0 <= plen([VV#2523])), Auto16(VV#2523));((lq_anf__d3ZF <= plen([VV#2523])), PlenEq(VV#2523, lq_anf__d3ZF));((lq_anf__d3ZE <= plen([VV#2523])), PlenEq(VV#2523, lq_anf__d3ZE));((ds_d3Xq <= plen([VV#2523])), PlenEq(VV#2523, ds_d3Xq));((ds_d3Xp <= plen([VV#2523])), PlenEq(VV#2523, ds_d3Xp))] 
+
+solution: k_2527 := [((VV#2526 >= 0), CmpZ3(VV#2526));((VV#2526 < lq_anf__d3ZF), Cmp9(VV#2526, lq_anf__d3ZF));((VV#2526 < lq_anf__d3ZE), Cmp9(VV#2526, lq_anf__d3ZE));((VV#2526 < ds_d3Xq), Cmp9(VV#2526, ds_d3Xq));((VV#2526 < ds_d3Xp), Cmp9(VV#2526, ds_d3Xp));((VV#2526 < lq_anf__d3ZF), Cmp3(VV#2526, lq_anf__d3ZF));((VV#2526 < lq_anf__d3ZE), Cmp3(VV#2526, lq_anf__d3ZE));((VV#2526 < ds_d3Xq), Cmp3(VV#2526, ds_d3Xq));((VV#2526 < ds_d3Xp), Cmp3(VV#2526, ds_d3Xp));((VV#2526 <= plen([p#a3Ly])), Auto12(VV#2526, p#a3Ly));((VV#2526 >= 0), Auto0(VV#2526))] 
+
+solution: k_2537 := [((len([VV#2536]) >= 0), ListZ0(VV#2536))] 
+
+solution: k_2547 := [((len([VV#2546]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2546, acc#a3Lz, ds_d3Xr));((len([VV#2546]) > 0), ListZ(VV#2546));((len([VV#2546]) > len([acc#a3Lz])), CmpLen1(VV#2546, acc#a3Lz));((VV#2546 != acc#a3Lz), Cmp(VV#2546, acc#a3Lz))] 
+
+solution: k_2550 := [] 
+
+solution: k_2577 := [((VV#2576 = ds_d3Xw), Cmp2(VV#2576, ds_d3Xw));((VV#2576 = GHC.Prim.void##0l), Cmp2(VV#2576, GHC.Prim.void##0l))] 
+
+solution: k_2588 := [((VV#2587 != acc#a3Lz), Cmp(VV#2587, acc#a3Lz));((len([VV#2587]) > len([acc#a3Lz])), CmpLen1(VV#2587, acc#a3Lz));((len([VV#2587]) > 0), ListZ(VV#2587));((len([VV#2587]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2587, acc#a3Lz, ds_d3Xr));((len([VV#2587]) = ((1 + ds_d3Xs) + len([acc#a3Lz]))), Unpack(VV#2587, acc#a3Lz, ds_d3Xs));((len([VV#2587]) = ((1 + lq_anf__d3ZG) + len([acc#a3Lz]))), Unpack(VV#2587, acc#a3Lz, lq_anf__d3ZG));((len([VV#2587]) = ((1 + lq_anf__d3ZH) + len([acc#a3Lz]))), Unpack(VV#2587, acc#a3Lz, lq_anf__d3ZH))] 
+
+solution: k_2591 := [] 
+
+solution: k_2627 := [] 
+
+solution: k_2638 := [((VV#2637 != acc#a3Lz), Cmp(VV#2637, acc#a3Lz));((len([VV#2637]) > len([acc#a3Lz])), CmpLen1(VV#2637, acc#a3Lz));((len([VV#2637]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2637, acc#a3Lz, ds_d3Xr));((len([VV#2637]) = ((1 + ds_d3Xs) + len([acc#a3Lz]))), Unpack(VV#2637, acc#a3Lz, ds_d3Xs));((len([VV#2637]) = ((1 + lq_anf__d3ZG) + len([acc#a3Lz]))), Unpack(VV#2637, acc#a3Lz, lq_anf__d3ZG));((len([VV#2637]) = ((1 + lq_anf__d3ZH) + len([acc#a3Lz]))), Unpack(VV#2637, acc#a3Lz, lq_anf__d3ZH));((len([VV#2637]) > 0), ListZ(VV#2637))] 
+
+solution: k_2641 := [] 
+
+solution: k_2732 := [] 
+
+solution: k_2743 := [((VV#2742 != acc#a3Lz), Cmp(VV#2742, acc#a3Lz));((len([VV#2742]) > len([acc#a3Lz])), CmpLen1(VV#2742, acc#a3Lz));((len([VV#2742]) > 0), ListZ(VV#2742));((len([VV#2742]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2742, acc#a3Lz, ds_d3Xr));((len([VV#2742]) = ((1 + ds_d3Xs) + len([acc#a3Lz]))), Unpack(VV#2742, acc#a3Lz, ds_d3Xs));((len([VV#2742]) = ((1 + lq_anf__d3ZG) + len([acc#a3Lz]))), Unpack(VV#2742, acc#a3Lz, lq_anf__d3ZG));((len([VV#2742]) = ((1 + lq_anf__d3ZH) + len([acc#a3Lz]))), Unpack(VV#2742, acc#a3Lz, lq_anf__d3ZH))] 
+
+solution: k_2777 := [] 
+
+solution: k_2788 := [((VV#2787 != acc#a3Lz), Cmp(VV#2787, acc#a3Lz));((len([VV#2787]) > len([acc#a3Lz])), CmpLen1(VV#2787, acc#a3Lz));((len([VV#2787]) > 0), ListZ(VV#2787));((len([VV#2787]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2787, acc#a3Lz, ds_d3Xr));((len([VV#2787]) = ((1 + ds_d3Xs) + len([acc#a3Lz]))), Unpack(VV#2787, acc#a3Lz, ds_d3Xs));((len([VV#2787]) = ((1 + lq_anf__d3ZG) + len([acc#a3Lz]))), Unpack(VV#2787, acc#a3Lz, lq_anf__d3ZG));((len([VV#2787]) = ((1 + lq_anf__d3ZH) + len([acc#a3Lz]))), Unpack(VV#2787, acc#a3Lz, lq_anf__d3ZH))] 
+
+solution: k_2791 := [] 
+
+solution: k_2839 := [((VV#2838 != acc#a3Lz), Cmp(VV#2838, acc#a3Lz));((len([VV#2838]) > len([acc#a3Lz])), CmpLen1(VV#2838, acc#a3Lz));((len([VV#2838]) = len([lq_anf__d3ZR])), CmpLen3(VV#2838, lq_anf__d3ZR));((len([VV#2838]) > 0), ListZ(VV#2838));((len([VV#2838]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2838, acc#a3Lz, ds_d3Xr));((len([VV#2838]) = ((1 + ds_d3Xs) + len([acc#a3Lz]))), Unpack(VV#2838, acc#a3Lz, ds_d3Xs));((len([VV#2838]) = ((1 + lq_anf__d3ZG) + len([acc#a3Lz]))), Unpack(VV#2838, acc#a3Lz, lq_anf__d3ZG));((len([VV#2838]) = ((1 + lq_anf__d3ZH) + len([acc#a3Lz]))), Unpack(VV#2838, acc#a3Lz, lq_anf__d3ZH));((VV#2838 = lq_anf__d3ZR), Cmp2(VV#2838, lq_anf__d3ZR))] 
+
+solution: k_2864 := [] 
+
+solution: k_2875 := [((VV#2874 != acc#a3Lz), Cmp(VV#2874, acc#a3Lz));((len([VV#2874]) > len([acc#a3Lz])), CmpLen1(VV#2874, acc#a3Lz));((len([VV#2874]) > 0), ListZ(VV#2874));((len([VV#2874]) = ((1 + ds_d3Xr) + len([acc#a3Lz]))), Unpack(VV#2874, acc#a3Lz, ds_d3Xr));((len([VV#2874]) = ((1 + ds_d3Xs) + len([acc#a3Lz]))), Unpack(VV#2874, acc#a3Lz, ds_d3Xs));((len([VV#2874]) = ((1 + lq_anf__d3ZG) + len([acc#a3Lz]))), Unpack(VV#2874, acc#a3Lz, lq_anf__d3ZG));((len([VV#2874]) = ((1 + lq_anf__d3ZH) + len([acc#a3Lz]))), Unpack(VV#2874, acc#a3Lz, lq_anf__d3ZH))] 
+
+solution: k_2921 := [((len([VV#2920]) = ds_d3Xp), Auto4(VV#2920, ds_d3Xp));((len([VV#2920]) = ds_d3Xq), Auto4(VV#2920, ds_d3Xq));((len([VV#2920]) = lq_anf__d3ZE), Auto4(VV#2920, lq_anf__d3ZE));((len([VV#2920]) = lq_anf__d3ZF), Auto4(VV#2920, lq_anf__d3ZF));((len([VV#2920]) = bLen([ds_d3Xm])), Auto9(VV#2920, ds_d3Xm));((len([VV#2920]) = bLen([lq_anf__d3ZD])), Auto9(VV#2920, lq_anf__d3ZD));((ds_d3Xp = len([VV#2920])), LenEq(VV#2920, ds_d3Xp));((ds_d3Xq = len([VV#2920])), LenEq(VV#2920, ds_d3Xq));((lq_anf__d3ZE = len([VV#2920])), LenEq(VV#2920, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#2920])), LenEq(VV#2920, lq_anf__d3ZF));((len([VV#2920]) > 0), ListZ(VV#2920))] 
+
+solution: k_2950 := [((len([VV#2949]) = ds_d3Xp), Auto4(VV#2949, ds_d3Xp));((len([VV#2949]) = ds_d3Xq), Auto4(VV#2949, ds_d3Xq));((len([VV#2949]) = lq_anf__d3ZE), Auto4(VV#2949, lq_anf__d3ZE));((len([VV#2949]) = lq_anf__d3ZF), Auto4(VV#2949, lq_anf__d3ZF));((len([VV#2949]) = bLen([ds_d3Xm])), Auto9(VV#2949, ds_d3Xm));((len([VV#2949]) = bLen([lq_anf__d3ZD])), Auto9(VV#2949, lq_anf__d3ZD));((ds_d3Xp = len([VV#2949])), LenEq(VV#2949, ds_d3Xp));((ds_d3Xq = len([VV#2949])), LenEq(VV#2949, ds_d3Xq));((lq_anf__d3ZE = len([VV#2949])), LenEq(VV#2949, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#2949])), LenEq(VV#2949, lq_anf__d3ZF));((len([VV#2949]) > 0), ListZ(VV#2949))] 
+
+solution: k_2963 := [((0 <= plen([VV#2962])), Auto16(VV#2962));((fplen([ds_d3Xn]) = plen([VV#2962])), FPLenPLen(VV#2962, ds_d3Xn));((ds_d3Xo <= plen([VV#2962])), PlenEq(VV#2962, ds_d3Xo));((ds_d3Xp <= plen([VV#2962])), PlenEq(VV#2962, ds_d3Xp));((ds_d3Xq <= plen([VV#2962])), PlenEq(VV#2962, ds_d3Xq));((lq_anf__d3ZE <= plen([VV#2962])), PlenEq(VV#2962, lq_anf__d3ZE));((lq_anf__d3ZF <= plen([VV#2962])), PlenEq(VV#2962, lq_anf__d3ZF))] 
+
+solution: k_2974 := [((len([VV#2973]) = ds_d3Xp), Auto4(VV#2973, ds_d3Xp));((len([VV#2973]) = ds_d3Xq), Auto4(VV#2973, ds_d3Xq));((len([VV#2973]) = lq_anf__d3ZE), Auto4(VV#2973, lq_anf__d3ZE));((len([VV#2973]) = lq_anf__d3ZF), Auto4(VV#2973, lq_anf__d3ZF));((len([VV#2973]) = bLen([ds_d3Xm])), Auto9(VV#2973, ds_d3Xm));((len([VV#2973]) = bLen([lq_anf__d3ZD])), Auto9(VV#2973, lq_anf__d3ZD));((ds_d3Xp = len([VV#2973])), LenEq(VV#2973, ds_d3Xp));((ds_d3Xq = len([VV#2973])), LenEq(VV#2973, ds_d3Xq));((lq_anf__d3ZE = len([VV#2973])), LenEq(VV#2973, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#2973])), LenEq(VV#2973, lq_anf__d3ZF));((len([VV#2973]) <= plen([p#a3LF])), PLLen(VV#2973, p#a3LF));((len([VV#2973]) > 0), ListZ(VV#2973))] 
+
+solution: k_2977 := [] 
+
+solution: k_3067 := [((fplen([ds_d3Xn]) = plen([VV#3066])), FPLenPLen(VV#3066, ds_d3Xn));((ds_d3Xo <= plen([VV#3066])), PlenEq(VV#3066, ds_d3Xo));((ds_d3Xp <= plen([VV#3066])), PlenEq(VV#3066, ds_d3Xp));((ds_d3Xq <= plen([VV#3066])), PlenEq(VV#3066, ds_d3Xq));((lq_anf__d3ZE <= plen([VV#3066])), PlenEq(VV#3066, lq_anf__d3ZE));((lq_anf__d3ZF <= plen([VV#3066])), PlenEq(VV#3066, lq_anf__d3ZF));((0 <= plen([VV#3066])), Auto16(VV#3066))] 
+
+solution: k_3077 := [((len([VV#3076]) = ds_d3Xp), Auto4(VV#3076, ds_d3Xp));((len([VV#3076]) = ds_d3Xq), Auto4(VV#3076, ds_d3Xq));((len([VV#3076]) = lq_anf__d3ZE), Auto4(VV#3076, lq_anf__d3ZE));((len([VV#3076]) = lq_anf__d3ZF), Auto4(VV#3076, lq_anf__d3ZF));((len([VV#3076]) = bLen([ds_d3Xm])), Auto9(VV#3076, ds_d3Xm));((len([VV#3076]) = bLen([lq_anf__d3ZD])), Auto9(VV#3076, lq_anf__d3ZD));((ds_d3Xp = len([VV#3076])), LenEq(VV#3076, ds_d3Xp));((ds_d3Xq = len([VV#3076])), LenEq(VV#3076, ds_d3Xq));((lq_anf__d3ZE = len([VV#3076])), LenEq(VV#3076, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#3076])), LenEq(VV#3076, lq_anf__d3ZF));((len([VV#3076]) > 0), ListZ(VV#3076));((len([VV#3076]) <= plen([lq_tmp_x3062])), PLLen(VV#3076, lq_tmp_x3062))] 
+
+solution: k_3080 := [] 
+
+solution: k_3098 := [((len([VV#3097]) = ds_d3Xp), Auto4(VV#3097, ds_d3Xp));((len([VV#3097]) = ds_d3Xq), Auto4(VV#3097, ds_d3Xq));((len([VV#3097]) = lq_anf__d3ZE), Auto4(VV#3097, lq_anf__d3ZE));((len([VV#3097]) = lq_anf__d3ZF), Auto4(VV#3097, lq_anf__d3ZF));((len([VV#3097]) = bLen([ds_d3Xm])), Auto9(VV#3097, ds_d3Xm));((len([VV#3097]) = bLen([lq_anf__d3ZD])), Auto9(VV#3097, lq_anf__d3ZD));((ds_d3Xp = len([VV#3097])), LenEq(VV#3097, ds_d3Xp));((ds_d3Xq = len([VV#3097])), LenEq(VV#3097, ds_d3Xq));((lq_anf__d3ZE = len([VV#3097])), LenEq(VV#3097, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#3097])), LenEq(VV#3097, lq_anf__d3ZF));((len([VV#3097]) > 0), ListZ(VV#3097))] 
+
+solution: k_3101 := [] 
+
+solution: k_3148 := [((len([VV#3147]) = ds_d3Xp), Auto4(VV#3147, ds_d3Xp));((len([VV#3147]) = ds_d3Xq), Auto4(VV#3147, ds_d3Xq));((len([VV#3147]) = lq_anf__d3ZE), Auto4(VV#3147, lq_anf__d3ZE));((len([VV#3147]) = lq_anf__d3ZF), Auto4(VV#3147, lq_anf__d3ZF));((len([VV#3147]) = bLen([ds_d3Xm])), Auto9(VV#3147, ds_d3Xm));((len([VV#3147]) = bLen([lq_anf__d3ZD])), Auto9(VV#3147, lq_anf__d3ZD));((ds_d3Xp = len([VV#3147])), LenEq(VV#3147, ds_d3Xp));((ds_d3Xq = len([VV#3147])), LenEq(VV#3147, ds_d3Xq));((lq_anf__d3ZE = len([VV#3147])), LenEq(VV#3147, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#3147])), LenEq(VV#3147, lq_anf__d3ZF));((len([VV#3147]) > 0), ListZ(VV#3147))] 
+
+solution: k_3151 := [((VV#3150 = lq_anf__d400), Cmp2(VV#3150, lq_anf__d400))] 
+
+solution: k_3166 := [((len([VV#3165]) = ds_d3Xp), Auto4(VV#3165, ds_d3Xp));((len([VV#3165]) = ds_d3Xq), Auto4(VV#3165, ds_d3Xq));((len([VV#3165]) = lq_anf__d3ZE), Auto4(VV#3165, lq_anf__d3ZE));((len([VV#3165]) = lq_anf__d3ZF), Auto4(VV#3165, lq_anf__d3ZF));((len([VV#3165]) = bLen([ds_d3Xm])), Auto9(VV#3165, ds_d3Xm));((len([VV#3165]) = bLen([lq_anf__d3ZD])), Auto9(VV#3165, lq_anf__d3ZD));((ds_d3Xp = len([VV#3165])), LenEq(VV#3165, ds_d3Xp));((ds_d3Xq = len([VV#3165])), LenEq(VV#3165, ds_d3Xq));((lq_anf__d3ZE = len([VV#3165])), LenEq(VV#3165, lq_anf__d3ZE));((lq_anf__d3ZF = len([VV#3165])), LenEq(VV#3165, lq_anf__d3ZF));((len([VV#3165]) > 0), ListZ(VV#3165))] 
+
+solution: k_3261 := [((Prop(VV#3260) <=> (bLen([ds_d3Xe]) = 0)), Auto5(VV#3260, ds_d3Xe));((Prop(VV#3260) <=> (bLen([lq_anf__d401]) = 0)), Auto5(VV#3260, lq_anf__d401))] 
+
+solution: k_3296 := [((Prop(VV#3295) <=> (bLen([ds_d3Xe]) = 0)), Auto5(VV#3295, ds_d3Xe));((Prop(VV#3295) <=> (bLen([lq_anf__d401]) = 0)), Auto5(VV#3295, lq_anf__d401));((VV#3295 = lq_anf__d406), Cmp2(VV#3295, lq_anf__d406))] 
+
+solution: k_3300 := [((Prop(VV#3299) <=> (bLen([ds_d3Xe]) = 0)), Auto5(VV#3299, ds_d3Xe));((Prop(VV#3299) <=> (bLen([lq_anf__d401]) = 0)), Auto5(VV#3299, lq_anf__d401))] 
+
+solution: k_3367 := [((lq_anf__d408 <= bLen([VV#3366])), Auto20(VV#3366, lq_anf__d408));((bLen([VV#3366]) = (bLen([ds_d3Xi]) - 1)), Auto21(VV#3366, ds_d3Xi));((bLen([VV#3366]) = (bLen([lq_anf__d407]) - 1)), Auto21(VV#3366, lq_anf__d407));((VV#3366 != ds_d3Xi), Cmp(VV#3366, ds_d3Xi));((VV#3366 != lq_anf__d407), Cmp(VV#3366, lq_anf__d407))] 
+
+solution: k_3435 := [((bLen([VV#3434]) = (bLen([lq_anf__d40f]) - lq_anf__d408)), Auto19(VV#3434, lq_anf__d40f, lq_anf__d408));((bLen([VV#3434]) = (bLen([lq_anf__d407]) - lq_anf__d40b)), Auto19(VV#3434, lq_anf__d407, lq_anf__d40b));((bLen([VV#3434]) = (bLen([lq_anf__d407]) - lq_anf__d40d)), Auto19(VV#3434, lq_anf__d407, lq_anf__d40d));((bLen([VV#3434]) = (bLen([ds_d3Xi]) - lq_anf__d40b)), Auto19(VV#3434, ds_d3Xi, lq_anf__d40b));((bLen([VV#3434]) = (bLen([ds_d3Xi]) - lq_anf__d40d)), Auto19(VV#3434, ds_d3Xi, lq_anf__d40d));((lq_anf__d408 <= bLen([VV#3434])), Auto20(VV#3434, lq_anf__d408));((bLen([VV#3434]) = (bLen([ds_d3Xi]) - 1)), Auto21(VV#3434, ds_d3Xi));((bLen([VV#3434]) = (bLen([lq_anf__d407]) - 1)), Auto21(VV#3434, lq_anf__d407));(((bLen([Memory.empty#r2Qz]) + bLen([VV#3434])) = bLen([lq_anf__d40f])), Auto8(VV#3434, Memory.empty#r2Qz, lq_anf__d40f));((VV#3434 != ds_d3Xi), Cmp(VV#3434, ds_d3Xi));((VV#3434 != lq_anf__d407), Cmp(VV#3434, lq_anf__d407));((bLen([VV#3434]) = lq_anf__d40e), Auto17(VV#3434, lq_anf__d40e));((VV#3434 = lq_anf__d40f), Cmp2(VV#3434, lq_anf__d40f))] 
+
+solution: k_3439 := [((bLen([VV#3438]) = lq_anf__d40e), Auto17(VV#3438, lq_anf__d40e));((bLen([VV#3438]) = (bLen([lq_anf__d40f]) - lq_anf__d408)), Auto19(VV#3438, lq_anf__d40f, lq_anf__d408));((bLen([VV#3438]) = (bLen([lq_anf__d407]) - lq_anf__d40b)), Auto19(VV#3438, lq_anf__d407, lq_anf__d40b));((bLen([VV#3438]) = (bLen([lq_anf__d407]) - lq_anf__d40d)), Auto19(VV#3438, lq_anf__d407, lq_anf__d40d));((bLen([VV#3438]) = (bLen([ds_d3Xi]) - lq_anf__d40b)), Auto19(VV#3438, ds_d3Xi, lq_anf__d40b));((bLen([VV#3438]) = (bLen([ds_d3Xi]) - lq_anf__d40d)), Auto19(VV#3438, ds_d3Xi, lq_anf__d40d));(((bLen([Memory.empty#r2Qz]) + bLen([VV#3438])) = bLen([lq_anf__d40f])), Auto8(VV#3438, Memory.empty#r2Qz, lq_anf__d40f));((lq_anf__d408 <= bLen([VV#3438])), Auto20(VV#3438, lq_anf__d408));((bLen([VV#3438]) = (bLen([ds_d3Xi]) - 1)), Auto21(VV#3438, ds_d3Xi));((bLen([VV#3438]) = (bLen([lq_anf__d407]) - 1)), Auto21(VV#3438, lq_anf__d407));((VV#3438 != ds_d3Xi), Cmp(VV#3438, ds_d3Xi));((VV#3438 != lq_anf__d407), Cmp(VV#3438, lq_anf__d407))] 
+
+solution: k_3544 := [((0 <= plen([VV#3543])), Auto16(VV#3543));((fplen([x#a3M4]) = plen([VV#3543])), FPLenPLen(VV#3543, x#a3M4));((l#a3M6 <= plen([VV#3543])), PlenEq(VV#3543, l#a3M6));((lq_anf__d40h <= plen([VV#3543])), PlenEq(VV#3543, lq_anf__d40h));((s#a3M5 <= plen([VV#3543])), PlenEq(VV#3543, s#a3M5))] 
+
+solution: k_3578 := [((fplen([x#a3M4]) = plen([VV#3577])), FPLenPLen(VV#3577, x#a3M4));((l#a3M6 <= plen([VV#3577])), PlenEq(VV#3577, l#a3M6));((lq_anf__d40h <= plen([VV#3577])), PlenEq(VV#3577, lq_anf__d40h));((s#a3M5 <= plen([VV#3577])), PlenEq(VV#3577, s#a3M5));((0 <= plen([VV#3577])), Auto16(VV#3577))] 
+
+solution: k_3749 := [((bLen([VV#3748]) = (bLen([lq_anf__d40p]) - n#a3Mc)), Auto19(VV#3748, lq_anf__d40p, n#a3Mc));((bLen([VV#3748]) = (bLen([ds_d3Xc]) - n#a3Mc)), Auto19(VV#3748, ds_d3Xc, n#a3Mc));((lq_anf__d40q <= bLen([VV#3748])), Auto20(VV#3748, lq_anf__d40q))] 
+
+solution: k_3805 := [((bLen([VV#3804]) = (bLen([lq_anf__d40x]) - lq_anf__d40q)), Auto19(VV#3804, lq_anf__d40x, lq_anf__d40q));((bLen([VV#3804]) = (bLen([lq_anf__d40p]) - n#a3Mc)), Auto19(VV#3804, lq_anf__d40p, n#a3Mc));((bLen([VV#3804]) = (bLen([ds_d3Xc]) - n#a3Mc)), Auto19(VV#3804, ds_d3Xc, n#a3Mc));((lq_anf__d40q <= bLen([VV#3804])), Auto20(VV#3804, lq_anf__d40q));(((bLen([Memory.empty#r2Qz]) + bLen([VV#3804])) = bLen([lq_anf__d40x])), Auto8(VV#3804, Memory.empty#r2Qz, lq_anf__d40x));((bLen([VV#3804]) = lq_anf__d40w), Auto17(VV#3804, lq_anf__d40w));((VV#3804 = lq_anf__d40x), Cmp2(VV#3804, lq_anf__d40x))] 
+
+solution: k_3809 := [((bLen([VV#3808]) = lq_anf__d40w), Auto17(VV#3808, lq_anf__d40w));((bLen([VV#3808]) = (bLen([lq_anf__d40x]) - lq_anf__d40q)), Auto19(VV#3808, lq_anf__d40x, lq_anf__d40q));(((bLen([Memory.empty#r2Qz]) + bLen([VV#3808])) = bLen([lq_anf__d40x])), Auto8(VV#3808, Memory.empty#r2Qz, lq_anf__d40x));((bLen([VV#3808]) = (bLen([lq_anf__d40p]) - n#a3Mc)), Auto19(VV#3808, lq_anf__d40p, n#a3Mc));((bLen([VV#3808]) = (bLen([ds_d3Xc]) - n#a3Mc)), Auto19(VV#3808, ds_d3Xc, n#a3Mc));((lq_anf__d40q <= bLen([VV#3808])), Auto20(VV#3808, lq_anf__d40q))] 
+
+solution: k_3854 := [((l#a3LW <= plen([VV#3853])), PlenEq(VV#3853, l#a3LW))] 
+
+solution: k_3858 := [((VV#3857 >= 0), Auto0(VV#3857));((VV#3857 <= l#a3LW), Cmp0(VV#3857, l#a3LW));((VV#3857 <= s#a3LV), Cmp0(VV#3857, s#a3LV));((VV#3857 <= l#a3LW), Cmp5(VV#3857, l#a3LW));((VV#3857 <= s#a3LV), Cmp5(VV#3857, s#a3LV));((VV#3857 = 0), CmpZ2(VV#3857))] 
+
+solution: k_3868 := [((lq_tmp_x3856 <= bLen([VV#3867])), Auto20(VV#3867, lq_tmp_x3856));(((bLen([lq_tmp_x3866]) + bLen([VV#3867])) = bLen([lq_anf__d40y])), Auto8(VV#3867, lq_tmp_x3866, lq_anf__d40y));(((bLen([lq_tmp_x3866]) + bLen([VV#3867])) = bLen([ps#a3LT])), Auto8(VV#3867, lq_tmp_x3866, ps#a3LT))] 
+
+solution: k_3871 := [] 
+
+solution: k_3874 := [] 
+
+solution: k_3880 := [((l#a3LW <= plen([VV#3879])), PlenEq(VV#3879, l#a3LW))] 
+
+solution: k_3883 := [((VV#3882 >= 0), Auto0(VV#3882));((VV#3882 <= l#a3LW), Cmp0(VV#3882, l#a3LW));((VV#3882 <= l#a3LW), Cmp5(VV#3882, l#a3LW));((VV#3882 >= 0), CmpZ3(VV#3882))] 
+
+solution: k_3893 := [(((bLen([lq_tmp_x3891]) + bLen([VV#3892])) = bLen([ps#a3LT])), Auto8(VV#3892, lq_tmp_x3891, ps#a3LT));(((bLen([lq_tmp_x3891]) + bLen([VV#3892])) = bLen([lq_anf__d40y])), Auto8(VV#3892, lq_tmp_x3891, lq_anf__d40y))] 
+
+solution: k_3896 := [] 
+
+solution: k_3899 := [] 
+
+solution: k_3931 := [((VV#3930 = GHC.Prim.void##0l), Cmp2(VV#3930, GHC.Prim.void##0l))] 
+
+solution: k_3942 := [(((bLen([lq_tmp_x3940]) + bLen([VV#3941])) = bLen([lq_anf__d40y])), Auto8(VV#3941, lq_tmp_x3940, lq_anf__d40y));(((bLen([lq_tmp_x3940]) + bLen([VV#3941])) = bLen([ps#a3LT])), Auto8(VV#3941, lq_tmp_x3940, ps#a3LT))] 
+
+solution: k_3945 := [] 
+
+solution: k_3948 := [] 
+
+solution: k_3969 := [] 
+
+solution: k_3980 := [(((bLen([lq_tmp_x3978]) + bLen([VV#3979])) = bLen([lq_anf__d40y])), Auto8(VV#3979, lq_tmp_x3978, lq_anf__d40y));(((bLen([lq_tmp_x3978]) + bLen([VV#3979])) = bLen([ps#a3LT])), Auto8(VV#3979, lq_tmp_x3978, ps#a3LT))] 
+
+solution: k_3983 := [] 
+
+solution: k_3986 := [] 
+
+solution: k_4082 := [((bLen([VV#4081]) > 0), Auto10(VV#4081));((bLen([VV#4081]) = (bLen([ps#a3LT]) - i#a3LZ)), Auto19(VV#4081, ps#a3LT, i#a3LZ));(((bLen([lq_anf__d40G]) + bLen([VV#4081])) = bLen([lq_anf__d40y])), Auto8(VV#4081, lq_anf__d40G, lq_anf__d40y));(((bLen([lq_anf__d40G]) + bLen([VV#4081])) = bLen([ps#a3LT])), Auto8(VV#4081, lq_anf__d40G, ps#a3LT));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4081])) = bLen([lq_anf__d40H])), Auto8(VV#4081, Memory.empty#r2Qz, lq_anf__d40H));((VV#4081 != Memory.empty#r2Qz), Cmp(VV#4081, Memory.empty#r2Qz));((bLen([VV#4081]) = (bLen([lq_anf__d40y]) - i#a3LZ)), Auto19(VV#4081, lq_anf__d40y, i#a3LZ));((VV#4081 = lq_anf__d40H), Cmp2(VV#4081, lq_anf__d40H))] 
+
+solution: k_4086 := [((bLen([VV#4085]) > 0), Auto10(VV#4085));((bLen([VV#4085]) = (bLen([ps#a3LT]) - i#a3LZ)), Auto19(VV#4085, ps#a3LT, i#a3LZ));(((bLen([lq_tmp_x4088]) + bLen([VV#4085])) = bLen([lq_anf__d40y])), Auto8(VV#4085, lq_tmp_x4088, lq_anf__d40y));(((bLen([lq_tmp_x4088]) + bLen([VV#4085])) = bLen([ps#a3LT])), Auto8(VV#4085, lq_tmp_x4088, ps#a3LT));(((bLen([lq_anf__d40G]) + bLen([VV#4085])) = bLen([lq_anf__d40y])), Auto8(VV#4085, lq_anf__d40G, lq_anf__d40y));(((bLen([lq_anf__d40G]) + bLen([VV#4085])) = bLen([ps#a3LT])), Auto8(VV#4085, lq_anf__d40G, ps#a3LT));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4085])) = bLen([lq_anf__d40H])), Auto8(VV#4085, Memory.empty#r2Qz, lq_anf__d40H));((VV#4085 != Memory.empty#r2Qz), Cmp(VV#4085, Memory.empty#r2Qz));((bLen([VV#4085]) = (bLen([lq_anf__d40y]) - i#a3LZ)), Auto19(VV#4085, lq_anf__d40y, i#a3LZ));((VV#4085 = lq_anf__d40H), Cmp2(VV#4085, lq_anf__d40H))] 
+
+solution: k_4110 := [((VV#4109 = snd([lq_anf__d40I])), Snd(VV#4109, lq_anf__d40I));((bLen([VV#4109]) > 0), Auto10(VV#4109));((bLen([VV#4109]) = (bLen([ps#a3LT]) - i#a3LZ)), Auto19(VV#4109, ps#a3LT, i#a3LZ));((bLen([VV#4109]) = (bLen([lq_anf__d40y]) - i#a3LZ)), Auto19(VV#4109, lq_anf__d40y, i#a3LZ));(((bLen([lq_tmp_x4108]) + bLen([VV#4109])) = bLen([lq_anf__d40y])), Auto8(VV#4109, lq_tmp_x4108, lq_anf__d40y));(((bLen([lq_tmp_x4108]) + bLen([VV#4109])) = bLen([ps#a3LT])), Auto8(VV#4109, lq_tmp_x4108, ps#a3LT));(((bLen([lq_anf__d40G]) + bLen([VV#4109])) = bLen([lq_anf__d40y])), Auto8(VV#4109, lq_anf__d40G, lq_anf__d40y));(((bLen([lq_anf__d40G]) + bLen([VV#4109])) = bLen([ps#a3LT])), Auto8(VV#4109, lq_anf__d40G, ps#a3LT));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4109])) = bLen([lq_anf__d40H])), Auto8(VV#4109, Memory.empty#r2Qz, lq_anf__d40H));((VV#4109 != Memory.empty#r2Qz), Cmp(VV#4109, Memory.empty#r2Qz));((VV#4109 = lq_anf__d40H), Cmp2(VV#4109, lq_anf__d40H))] 
+
+solution: k_4113 := [((VV#4112 = lq_anf__d40I), Cmp2(VV#4112, lq_anf__d40I))] 
+
+solution: k_4140 := [] 
+
+solution: k_4151 := [(((bLen([lq_tmp_x4149]) + bLen([VV#4150])) = bLen([lq_anf__d40y])), Auto8(VV#4150, lq_tmp_x4149, lq_anf__d40y));(((bLen([lq_tmp_x4149]) + bLen([VV#4150])) = bLen([ps#a3LT])), Auto8(VV#4150, lq_tmp_x4149, ps#a3LT))] 
+
+solution: k_4154 := [] 
+
+solution: k_4189 := [((bLen([VV#4188]) = (bLen([ps#a3LT]) - i#a3LZ)), Auto19(VV#4188, ps#a3LT, i#a3LZ));((bLen([VV#4188]) = (bLen([ps#a3LT]) - l#a3LW)), Auto19(VV#4188, ps#a3LT, l#a3LW));((bLen([VV#4188]) = (bLen([lq_anf__d40y]) - i#a3LZ)), Auto19(VV#4188, lq_anf__d40y, i#a3LZ));((bLen([VV#4188]) = (bLen([lq_anf__d40y]) - l#a3LW)), Auto19(VV#4188, lq_anf__d40y, l#a3LW));(((bLen([ps#a3LT]) + bLen([VV#4188])) = bLen([lq_anf__d40y])), Auto8(VV#4188, ps#a3LT, lq_anf__d40y));(((bLen([ps#a3LT]) + bLen([VV#4188])) = bLen([ps#a3LT])), Auto8(VV#4188, ps#a3LT, ps#a3LT));(((bLen([lq_anf__d40y]) + bLen([VV#4188])) = bLen([lq_anf__d40y])), Auto8(VV#4188, lq_anf__d40y, lq_anf__d40y));(((bLen([lq_anf__d40y]) + bLen([VV#4188])) = bLen([ps#a3LT])), Auto8(VV#4188, lq_anf__d40y, ps#a3LT));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4188])) = bLen([Memory.empty#r2Qz])), Auto8(VV#4188, Memory.empty#r2Qz, Memory.empty#r2Qz));((bLen([VV#4188]) = 0), Auto15(VV#4188));((VV#4188 = Memory.empty#r2Qz), Cmp2(VV#4188, Memory.empty#r2Qz))] 
+
+solution: k_4193 := [((bLen([VV#4192]) = (bLen([ps#a3LT]) - i#a3LZ)), Auto19(VV#4192, ps#a3LT, i#a3LZ));((bLen([VV#4192]) = (bLen([ps#a3LT]) - l#a3LW)), Auto19(VV#4192, ps#a3LT, l#a3LW));((bLen([VV#4192]) = (bLen([lq_tmp_x4195]) - i#a3LZ)), Auto19(VV#4192, lq_tmp_x4195, i#a3LZ));((bLen([VV#4192]) = (bLen([lq_tmp_x4195]) - l#a3LW)), Auto19(VV#4192, lq_tmp_x4195, l#a3LW));((bLen([VV#4192]) = (bLen([lq_anf__d40y]) - i#a3LZ)), Auto19(VV#4192, lq_anf__d40y, i#a3LZ));((bLen([VV#4192]) = (bLen([lq_anf__d40y]) - l#a3LW)), Auto19(VV#4192, lq_anf__d40y, l#a3LW));(((bLen([ps#a3LT]) + bLen([VV#4192])) = bLen([lq_anf__d40y])), Auto8(VV#4192, ps#a3LT, lq_anf__d40y));(((bLen([ps#a3LT]) + bLen([VV#4192])) = bLen([lq_tmp_x4195])), Auto8(VV#4192, ps#a3LT, lq_tmp_x4195));(((bLen([ps#a3LT]) + bLen([VV#4192])) = bLen([ps#a3LT])), Auto8(VV#4192, ps#a3LT, ps#a3LT));(((bLen([lq_tmp_x4195]) + bLen([VV#4192])) = bLen([lq_anf__d40y])), Auto8(VV#4192, lq_tmp_x4195, lq_anf__d40y));(((bLen([lq_tmp_x4195]) + bLen([VV#4192])) = bLen([lq_tmp_x4195])), Auto8(VV#4192, lq_tmp_x4195, lq_tmp_x4195));(((bLen([lq_tmp_x4195]) + bLen([VV#4192])) = bLen([ps#a3LT])), Auto8(VV#4192, lq_tmp_x4195, ps#a3LT));(((bLen([lq_anf__d40y]) + bLen([VV#4192])) = bLen([lq_anf__d40y])), Auto8(VV#4192, lq_anf__d40y, lq_anf__d40y));(((bLen([lq_anf__d40y]) + bLen([VV#4192])) = bLen([lq_tmp_x4195])), Auto8(VV#4192, lq_anf__d40y, lq_tmp_x4195));(((bLen([lq_anf__d40y]) + bLen([VV#4192])) = bLen([ps#a3LT])), Auto8(VV#4192, lq_anf__d40y, ps#a3LT));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4192])) = bLen([Memory.empty#r2Qz])), Auto8(VV#4192, Memory.empty#r2Qz, Memory.empty#r2Qz));((bLen([VV#4192]) = 0), Auto15(VV#4192));((VV#4192 = Memory.empty#r2Qz), Cmp2(VV#4192, Memory.empty#r2Qz))] 
+
+solution: k_4217 := [((VV#4216 = snd([lq_anf__d40K])), Snd(VV#4216, lq_anf__d40K));((bLen([VV#4216]) = 0), Auto15(VV#4216));((bLen([VV#4216]) = (bLen([ps#a3LT]) - i#a3LZ)), Auto19(VV#4216, ps#a3LT, i#a3LZ));((bLen([VV#4216]) = (bLen([ps#a3LT]) - l#a3LW)), Auto19(VV#4216, ps#a3LT, l#a3LW));((bLen([VV#4216]) = (bLen([lq_tmp_x4215]) - i#a3LZ)), Auto19(VV#4216, lq_tmp_x4215, i#a3LZ));((bLen([VV#4216]) = (bLen([lq_tmp_x4215]) - l#a3LW)), Auto19(VV#4216, lq_tmp_x4215, l#a3LW));((bLen([VV#4216]) = (bLen([lq_anf__d40y]) - i#a3LZ)), Auto19(VV#4216, lq_anf__d40y, i#a3LZ));((bLen([VV#4216]) = (bLen([lq_anf__d40y]) - l#a3LW)), Auto19(VV#4216, lq_anf__d40y, l#a3LW));(((bLen([ps#a3LT]) + bLen([VV#4216])) = bLen([lq_anf__d40y])), Auto8(VV#4216, ps#a3LT, lq_anf__d40y));(((bLen([ps#a3LT]) + bLen([VV#4216])) = bLen([lq_tmp_x4215])), Auto8(VV#4216, ps#a3LT, lq_tmp_x4215));(((bLen([ps#a3LT]) + bLen([VV#4216])) = bLen([ps#a3LT])), Auto8(VV#4216, ps#a3LT, ps#a3LT));(((bLen([lq_tmp_x4215]) + bLen([VV#4216])) = bLen([lq_anf__d40y])), Auto8(VV#4216, lq_tmp_x4215, lq_anf__d40y));(((bLen([lq_tmp_x4215]) + bLen([VV#4216])) = bLen([lq_tmp_x4215])), Auto8(VV#4216, lq_tmp_x4215, lq_tmp_x4215));(((bLen([lq_tmp_x4215]) + bLen([VV#4216])) = bLen([ps#a3LT])), Auto8(VV#4216, lq_tmp_x4215, ps#a3LT));(((bLen([lq_anf__d40y]) + bLen([VV#4216])) = bLen([lq_anf__d40y])), Auto8(VV#4216, lq_anf__d40y, lq_anf__d40y));(((bLen([lq_anf__d40y]) + bLen([VV#4216])) = bLen([lq_tmp_x4215])), Auto8(VV#4216, lq_anf__d40y, lq_tmp_x4215));(((bLen([lq_anf__d40y]) + bLen([VV#4216])) = bLen([ps#a3LT])), Auto8(VV#4216, lq_anf__d40y, ps#a3LT));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4216])) = bLen([Memory.empty#r2Qz])), Auto8(VV#4216, Memory.empty#r2Qz, Memory.empty#r2Qz));((VV#4216 = Memory.empty#r2Qz), Cmp2(VV#4216, Memory.empty#r2Qz))] 
+
+solution: k_4220 := [((VV#4219 = lq_anf__d40K), Cmp2(VV#4219, lq_anf__d40K))] 
+
+solution: k_4256 := [(((bLen([lq_tmp_x4254]) + bLen([VV#4255])) = bLen([lq_anf__d40y])), Auto8(VV#4255, lq_tmp_x4254, lq_anf__d40y));(((bLen([lq_tmp_x4254]) + bLen([VV#4255])) = bLen([ps#a3LT])), Auto8(VV#4255, lq_tmp_x4254, ps#a3LT))] 
+
+solution: k_4259 := [] 
+
+solution: k_4289 := [(((bLen([lq_tmp_x4287]) + bLen([VV#4288])) = bLen([lq_anf__d40y])), Auto8(VV#4288, lq_tmp_x4287, lq_anf__d40y));(((bLen([lq_tmp_x4287]) + bLen([VV#4288])) = bLen([ps#a3LT])), Auto8(VV#4288, lq_tmp_x4287, ps#a3LT))] 
+
+solution: k_4292 := [] 
+
+solution: k_4306 := [((0 <= plen([VV#4305])), Auto16(VV#4305));((fplen([x#a3LU]) = plen([VV#4305])), FPLenPLen(VV#4305, x#a3LU));((l#a3LW <= plen([VV#4305])), PlenEq(VV#4305, l#a3LW));((s#a3LV <= plen([VV#4305])), PlenEq(VV#4305, s#a3LV))] 
+
+solution: k_4317 := [(((bLen([lq_tmp_x4315]) + bLen([VV#4316])) = bLen([lq_anf__d40y])), Auto8(VV#4316, lq_tmp_x4315, lq_anf__d40y));(((bLen([lq_tmp_x4315]) + bLen([VV#4316])) = bLen([ps#a3LT])), Auto8(VV#4316, lq_tmp_x4315, ps#a3LT))] 
+
+solution: k_4320 := [] 
+
+solution: k_4323 := [] 
+
+solution: k_4390 := [((fplen([x#a3LU]) = plen([VV#4389])), FPLenPLen(VV#4389, x#a3LU));((l#a3LW <= plen([VV#4389])), PlenEq(VV#4389, l#a3LW));((s#a3LV <= plen([VV#4389])), PlenEq(VV#4389, s#a3LV));((0 <= plen([VV#4389])), Auto16(VV#4389))] 
+
+solution: k_4400 := [(((bLen([lq_tmp_x4398]) + bLen([VV#4399])) = bLen([lq_anf__d40y])), Auto8(VV#4399, lq_tmp_x4398, lq_anf__d40y));(((bLen([lq_tmp_x4398]) + bLen([VV#4399])) = bLen([ps#a3LT])), Auto8(VV#4399, lq_tmp_x4398, ps#a3LT))] 
+
+solution: k_4403 := [] 
+
+solution: k_4406 := [] 
+
+solution: k_4425 := [(((bLen([lq_tmp_x4423]) + bLen([VV#4424])) = bLen([lq_anf__d40y])), Auto8(VV#4424, lq_tmp_x4423, lq_anf__d40y));(((bLen([lq_tmp_x4423]) + bLen([VV#4424])) = bLen([ps#a3LT])), Auto8(VV#4424, lq_tmp_x4423, ps#a3LT))] 
+
+solution: k_4428 := [] 
+
+solution: k_4431 := [] 
+
+solution: k_4482 := [(((bLen([lq_tmp_x4480]) + bLen([VV#4481])) = bLen([lq_anf__d40y])), Auto8(VV#4481, lq_tmp_x4480, lq_anf__d40y));(((bLen([lq_tmp_x4480]) + bLen([VV#4481])) = bLen([ps#a3LT])), Auto8(VV#4481, lq_tmp_x4480, ps#a3LT))] 
+
+solution: k_4485 := [] 
+
+solution: k_4488 := [((VV#4487 = lq_anf__d40Q), Cmp2(VV#4487, lq_anf__d40Q))] 
+
+solution: k_4504 := [(((bLen([lq_tmp_x4502]) + bLen([VV#4503])) = bLen([lq_anf__d40y])), Auto8(VV#4503, lq_tmp_x4502, lq_anf__d40y));(((bLen([lq_tmp_x4502]) + bLen([VV#4503])) = bLen([ps#a3LT])), Auto8(VV#4503, lq_tmp_x4502, ps#a3LT))] 
+
+solution: k_4507 := [] 
+
+solution: k_4543 := [((bLen([VV#4542]) = n#a3Lf), Auto17(VV#4542, n#a3Lf))] 
+
+solution: k_4562 := [((fplen([VV#4561]) = n#a3Lf), Auto11(VV#4561, n#a3Lf));((0 <= fplen([VV#4561])), Auto2(VV#4561))] 
+
+solution: k_4566 := [((bLen([VV#4565]) = n#a3Lf), Auto17(VV#4565, n#a3Lf))] 
+
+solution: k_4569 := [] 
+
+solution: k_4630 := [((bLen([VV#4629]) = (bLen([lq_anf__d40V]) - lq_anf__d40U)), Auto19(VV#4629, lq_anf__d40V, lq_anf__d40U));((lq_anf__d40U <= bLen([VV#4629])), Auto20(VV#4629, lq_anf__d40U));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4629])) = bLen([lq_anf__d40V])), Auto8(VV#4629, Memory.empty#r2Qz, lq_anf__d40V));((bLen([VV#4629]) = n#a3Lf), Auto17(VV#4629, n#a3Lf));((VV#4629 = lq_anf__d40V), Cmp2(VV#4629, lq_anf__d40V))] 
+
+solution: k_4652 := [((bLen([VV#4651]) = n#a3Lf), Auto17(VV#4651, n#a3Lf));((bLen([VV#4651]) = (bLen([lq_anf__d40V]) - lq_anf__d40U)), Auto19(VV#4651, lq_anf__d40V, lq_anf__d40U));((lq_anf__d40U <= bLen([VV#4651])), Auto20(VV#4651, lq_anf__d40U));(((bLen([Memory.empty#r2Qz]) + bLen([VV#4651])) = bLen([lq_anf__d40V])), Auto8(VV#4651, Memory.empty#r2Qz, lq_anf__d40V));((VV#4651 = lq_anf__d40V), Cmp2(VV#4651, lq_anf__d40V))] 
+
+solution: k_4677 := [((fplen([VV#4676]) = n#a3Lf), Auto11(VV#4676, n#a3Lf));((0 <= fplen([VV#4676])), Auto2(VV#4676))] 
+
+solution: k_4682 := [((bLen([VV#4681]) = n#a3Lf), Auto17(VV#4681, n#a3Lf))] 
+
+solution: k_4702 := [((bLen([VV#4701]) = n#a3Lf), Auto17(VV#4701, n#a3Lf))] 
+
+solution: k_4705 := [((VV#4704 = lq_anf__d40Y), Cmp2(VV#4704, lq_anf__d40Y))] 
+
+solution: k_4710 := [((bLen([VV#4709]) = n#a3Lf), Auto17(VV#4709, n#a3Lf))] 
+
+solution: k_4729 := [((plen([VV#4728]) = len([str#a3Li])), PtrLen(VV#4728, str#a3Li))] 
+
+solution: k_4733 := [] 
+
+solution: k_4737 := [] 
+
+solution: k_4740 := [((len([VV#4739]) <= plen([lq_tmp_x4724])), PLLen(VV#4739, lq_tmp_x4724));((len([VV#4739]) = len([str#a3Li])), CmpLen3(VV#4739, str#a3Li));((len([VV#4739]) >= 0), ListZ0(VV#4739))] 
+
+solution: k_4752 := [] 
+
+solution: k_4755 := [] 
+
+solution: k_4759 := [] 
+
+solution: k_4762 := [((len([VV#4761]) <= len([str#a3Li])), CmpLen0(VV#4761, str#a3Li));((len([VV#4761]) <= plen([p#a3Lm])), PLLen(VV#4761, p#a3Lm));((len([VV#4761]) >= 0), ListZ0(VV#4761))] 
+
+solution: k_4914 := [] 
+
+solution: k_4918 := [] 
+
+solution: k_4962 := [((0 <= plen([VV#4961])), Auto16(VV#4961));((plen([VV#4961]) = n#a3Lj), Auto7(VV#4961, n#a3Lj));((n#a3Lj <= plen([VV#4961])), PlenEq(VV#4961, n#a3Lj));((plen([VV#4961]) = len([str#a3Li])), PtrLen(VV#4961, str#a3Li));((plen([VV#4961]) = len([xs#a3Lk])), PtrLen(VV#4961, xs#a3Lk))] 
+
+solution: k_4999 := [((n#a3Lj <= plen([VV#4998])), PlenEq(VV#4998, n#a3Lj));((plen([VV#4998]) = len([str#a3Li])), PtrLen(VV#4998, str#a3Li));((plen([VV#4998]) = len([xs#a3Lk])), PtrLen(VV#4998, xs#a3Lk));((0 <= plen([VV#4998])), Auto16(VV#4998));((plen([VV#4998]) = n#a3Lj), Auto7(VV#4998, n#a3Lj))] 
+
+solution: k_5013 := [((bLen([VV#5012]) = len([str#a3Li])), Auto1(VV#5012, str#a3Li));((bLen([VV#5012]) = n#a3Lj), Auto17(VV#5012, n#a3Lj))] 
+
+solution: k_5600 := [((0 <= plen([VV#5599])), Auto16(VV#5599));((plen([VV#5599]) = lq_anf__d41q), Auto7(VV#5599, lq_anf__d41q));((l#a3Mj <= plen([VV#5599])), PlenEq(VV#5599, l#a3Mj));((lq_anf__d41p <= plen([VV#5599])), PlenEq(VV#5599, lq_anf__d41p));((lq_anf__d41q <= plen([VV#5599])), PlenEq(VV#5599, lq_anf__d41q))] 
+
+solution: k_5634 := [((0 <= plen([VV#5633])), Auto16(VV#5633));((fplen([x#a3Mh]) = plen([VV#5633])), FPLenPLen(VV#5633, x#a3Mh));((l#a3Mj <= plen([VV#5633])), PlenEq(VV#5633, l#a3Mj));((s#a3Mi <= plen([VV#5633])), PlenEq(VV#5633, s#a3Mi))] 
+
+solution: k_5778 := [((fplen([x#a3Mh]) = plen([VV#5777])), FPLenPLen(VV#5777, x#a3Mh));((l#a3Mj <= plen([VV#5777])), PlenEq(VV#5777, l#a3Mj));((s#a3Mi <= plen([VV#5777])), PlenEq(VV#5777, s#a3Mi));((0 <= plen([VV#5777])), Auto16(VV#5777))] 
+
+solution: k_5827 := [((l#a3Mj <= plen([VV#5826])), PlenEq(VV#5826, l#a3Mj));((lq_anf__d41p <= plen([VV#5826])), PlenEq(VV#5826, lq_anf__d41p));((lq_anf__d41q <= plen([VV#5826])), PlenEq(VV#5826, lq_anf__d41q));((0 <= plen([VV#5826])), Auto16(VV#5826));((plen([VV#5826]) = lq_anf__d41q), Auto7(VV#5826, lq_anf__d41q))] 
+
+solution: k_5841 := [((bLen([VV#5840]) = (1 + bLen([ds_d3XE]))), Auto(VV#5840, ds_d3XE));((bLen([VV#5840]) = (1 + bLen([lq_anf__d41o]))), Auto(VV#5840, lq_anf__d41o));((bLen([VV#5840]) > 0), Auto10(VV#5840));((l#a3Mj <= bLen([VV#5840])), Auto20(VV#5840, l#a3Mj));((lq_anf__d41p <= bLen([VV#5840])), Auto20(VV#5840, lq_anf__d41p));((VV#5840 != Memory.empty#r2Qz), Cmp(VV#5840, Memory.empty#r2Qz));((VV#5840 != ds_d3XE), Cmp(VV#5840, ds_d3XE));((VV#5840 != lq_anf__d41o), Cmp(VV#5840, lq_anf__d41o));((bLen([VV#5840]) = lq_anf__d41q), Auto17(VV#5840, lq_anf__d41q))] 
+
+solution: k_5877 := [((VV#5876 = GHC.Prim.void##0l), Cmp2(VV#5876, GHC.Prim.void##0l))] 
+
+solution: k_5881 := [((bLen([VV#5880]) > 0), Auto10(VV#5880));((VV#5880 != Memory.empty#r2Qz), Cmp(VV#5880, Memory.empty#r2Qz))] 
+
+solution: k_5888 := [((bLens([VV#5887]) = bLen([xs#a3LO])), Auto13(VV#5887, xs#a3LO));((len([VV#5887]) > 0), ListZ(VV#5887))] 
+
+solution: k_5917 := [((VV#5916 != xs#a3LO), Cmp(VV#5916, xs#a3LO));((VV#5916 = fst([ds_d3XG])), Fst(VV#5916, ds_d3XG))] 
+
+solution: k_5947 := [((VV#5946 != xs#a3LO), Cmp(VV#5946, xs#a3LO));((VV#5946 = snd([ds_d3XG])), Snd(VV#5946, ds_d3XG));(((bLen([ys#a3Sr]) + bLen([VV#5946])) = bLen([lq_anf__d41E])), Auto8(VV#5946, ys#a3Sr, lq_anf__d41E))] 
+
+solution: k_5983 := [(((bLen([zs#a3Ss]) + bLen([VV#5982])) = bLen([lq_anf__d41E])), Auto8(VV#5982, zs#a3Ss, lq_anf__d41E));(((bLen([Memory.empty#r2Qz]) + bLen([VV#5982])) = bLen([ys#a3Sr])), Auto8(VV#5982, Memory.empty#r2Qz, ys#a3Sr));((VV#5982 != xs#a3LO), Cmp(VV#5982, xs#a3LO));((VV#5982 = ys#a3Sr), Cmp2(VV#5982, ys#a3Sr));((VV#5982 = fst([ds_d3XG])), Fst(VV#5982, ds_d3XG))] 
+
+solution: k_5987 := [(((bLen([Memory.empty#r2Qz]) + bLen([VV#5986])) = bLen([zs#a3Ss])), Auto8(VV#5986, Memory.empty#r2Qz, zs#a3Ss));(((bLen([ys#a3Sr]) + bLen([VV#5986])) = bLen([lq_anf__d41E])), Auto8(VV#5986, ys#a3Sr, lq_anf__d41E));((VV#5986 != xs#a3LO), Cmp(VV#5986, xs#a3LO));((VV#5986 = zs#a3Ss), Cmp2(VV#5986, zs#a3Ss));((VV#5986 = snd([ds_d3XG])), Snd(VV#5986, ds_d3XG))] 
+
+solution: k_5991 := [(((bLen([Memory.empty#r2Qz]) + bLen([VV#5990])) = bLen([zs#a3Ss])), Auto8(VV#5990, Memory.empty#r2Qz, zs#a3Ss));(((bLen([ys#a3Sr]) + bLen([VV#5990])) = bLen([lq_anf__d41E])), Auto8(VV#5990, ys#a3Sr, lq_anf__d41E));(((bLen([lq_tmp_x5993]) + bLen([VV#5990])) = bLen([lq_anf__d41E])), Auto8(VV#5990, lq_tmp_x5993, lq_anf__d41E));((VV#5990 != xs#a3LO), Cmp(VV#5990, xs#a3LO));((VV#5990 = zs#a3Ss), Cmp2(VV#5990, zs#a3Ss));((VV#5990 = snd([ds_d3XG])), Snd(VV#5990, ds_d3XG))] 
+
+solution: k_5999 := [((VV#5998 = fst([ds_d3XI])), Fst(VV#5998, ds_d3XI));(((bLen([zs#a3Ss]) + bLen([VV#5998])) = bLen([lq_anf__d41E])), Auto8(VV#5998, zs#a3Ss, lq_anf__d41E));(((bLen([Memory.empty#r2Qz]) + bLen([VV#5998])) = bLen([ys#a3Sr])), Auto8(VV#5998, Memory.empty#r2Qz, ys#a3Sr));((VV#5998 != xs#a3LO), Cmp(VV#5998, xs#a3LO));((VV#5998 = ys#a3Sr), Cmp2(VV#5998, ys#a3Sr));((VV#5998 = fst([ds_d3XG])), Fst(VV#5998, ds_d3XG))] 
+
+solution: k_6029 := [(((bLen([ys#a3LQ]) + bLen([VV#6028])) = bLen([lq_anf__d41E])), Auto8(VV#6028, ys#a3LQ, lq_anf__d41E));((VV#6028 = snd([ds_d3XI])), Snd(VV#6028, ds_d3XI));(((bLen([ys#a3Sr]) + bLen([VV#6028])) = bLen([lq_anf__d41E])), Auto8(VV#6028, ys#a3Sr, lq_anf__d41E));(((bLen([Memory.empty#r2Qz]) + bLen([VV#6028])) = bLen([zs#a3Ss])), Auto8(VV#6028, Memory.empty#r2Qz, zs#a3Ss));((VV#6028 != xs#a3LO), Cmp(VV#6028, xs#a3LO));((VV#6028 = zs#a3Ss), Cmp2(VV#6028, zs#a3Ss));((VV#6028 = snd([ds_d3XG])), Snd(VV#6028, ds_d3XG))] 
+
+solution: k_6092 := [((VV#6091 != Memory.empty#r2Qz), Cmp(VV#6091, Memory.empty#r2Qz));((bLen([VV#6091]) > 0), Auto10(VV#6091))] 
+
+solution: k_6096 := [((VV#6095 != Memory.empty#r2Qz), Cmp(VV#6095, Memory.empty#r2Qz));((bLen([VV#6095]) > 0), Auto10(VV#6095))] 
+
+solution: k_6114 := [(false, BOT())] 
+
+solution: k_836 := [((fplen([VV#835]) = lq_anf__d3Ym), Auto11(VV#835, lq_anf__d3Ym));((0 <= fplen([VV#835])), Auto2(VV#835));((VV#835 != Memory.nullForeignPtr#r2QC), Cmp(VV#835, Memory.nullForeignPtr#r2QC))] 
+
+solution: k_905 := [((VV#904 != Memory.nullForeignPtr#r2QC), Cmp(VV#904, Memory.nullForeignPtr#r2QC));((fplen([VV#904]) = lq_anf__d3Ym), Auto11(VV#904, lq_anf__d3Ym));((0 <= fplen([VV#904])), Auto2(VV#904))] 
+
+solution: k_944 := [((fplen([VV#943]) = lq_anf__d3Ys), Auto11(VV#943, lq_anf__d3Ys));((0 <= fplen([VV#943])), Auto2(VV#943));((VV#943 != Memory.nullForeignPtr#r2QC), Cmp(VV#943, Memory.nullForeignPtr#r2QC))] 
+
+//QUALIFIERS 
+
+qualif Auto(v:Memory.ByteString , fix##126#A0:Memory.ByteString ):(bLen([v]) = (1 + bLen([fix##126#A0])))
+
+qualif Auto0(v:int):(v >= 0)
+
+qualif Auto1(v:Memory.ByteString , fix##126#A0:FAppTy (List ) (GHC.Types.Char )):(bLen([v]) = len([fix##126#A0]))
+
+qualif Auto10(v:Memory.ByteString ):(bLen([v]) > 0)
+
+qualif Auto11(VV:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0), fix##126#A0:int):(fplen([VV]) = fix##126#A0)
+
+qualif Auto12(v:int, fix##126#A0:FAppTy (GHC.Ptr.Ptr ) int):(v <= plen([fix##126#A0]))
+
+qualif Auto13(v:FAppTy (List ) (Memory.ByteString ), fix##126#A0:Memory.ByteString ):(bLens([v]) = bLen([fix##126#A0]))
+
+qualif Auto14(v:Memory.ByteString ):(bLen([v]) = 3)
+
+qualif Auto15(v:Memory.ByteString ):(bLen([v]) = 0)
+
+qualif Auto16(VV:FAppTy (GHC.Ptr.Ptr ) int):(0 <= plen([VV]))
+
+qualif Auto17(v:Memory.ByteString , fix##126#A0:int):(bLen([v]) = fix##126#A0)
+
+qualif Auto18(v:Memory.ByteString ):(bLen([v]) = 5)
+
+qualif Auto19(v:Memory.ByteString , fix##126#A0:Memory.ByteString , fix##126#A1:int):(bLen([v]) = (bLen([fix##126#A0]) - fix##126#A1))
+
+qualif Auto2(VV:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0)):(0 <= fplen([VV]))
+
+qualif Auto20(b:Memory.ByteString , fix##126#A0:int):(fix##126#A0 <= bLen([b]))
+
+qualif Auto21(v:Memory.ByteString , fix##126#A0:Memory.ByteString ):(bLen([v]) = (bLen([fix##126#A0]) - 1))
+
+qualif Auto22(v:FAppTy (GHC.ForeignPtr.ForeignPtr ) int):(fplen([v]) = 0)
+
+qualif Auto3(v:Memory.ByteString , fix##126#A0:int):(fix##126#A0 <= bLen([v]))
+
+qualif Auto4(VV:FAppTy (List ) (GHC.Types.Char ), fix##126#A0:int):(len([VV]) = fix##126#A0)
+
+qualif Auto5(v:GHC.Types.Bool , fix##126#A0:Memory.ByteString ):(Prop(v) <=> (bLen([fix##126#A0]) = 0))
+
+qualif Auto6(v:int, fix##126#A0:FAppTy (List ) (GHC.Types.Char )):(v <= len([fix##126#A0]))
+
+qualif Auto7(VV:FAppTy (GHC.Ptr.Ptr ) int, fix##126#A0:int):(plen([VV]) = fix##126#A0)
+
+qualif Auto8(VV:Memory.ByteString , fix##126#A0:Memory.ByteString , fix##126#A1:Memory.ByteString ):((bLen([fix##126#A0]) + bLen([VV])) = bLen([fix##126#A1]))
+
+qualif Auto9(VV:FAppTy (List ) (GHC.Types.Char ), fix##126#A0:Memory.ByteString ):(len([VV]) = bLen([fix##126#A0]))
+
+qualif Bot(v:@(0)):(0 = 1)
+qualif Bot0(v:obj):(0 = 1)
+
+qualif Bot1(v:bool):(0 = 1)
+qualif Bot2(v:int):(0 = 1)
+
+qualif Cmp(v:@(0), ~A:@(0)):(v != ~A)
+qualif Cmp0(v:int, ~A:int):(v <= ~A)
+
+qualif Cmp1(v:int, ~A:int):(v > ~A)
+qualif Cmp10(v:@(0), ~A:@(0)):(v >= ~A)
+
+qualif Cmp2(v:@(0), ~A:@(0)):(v = ~A)
+qualif Cmp3(v:int, ~A:int):(v < ~A)
+
+qualif Cmp4(v:int, ~A:int):(v = ~A)
+qualif Cmp5(v:@(0), ~A:@(0)):(v <= ~A)
+
+qualif Cmp6(v:@(0), ~A:@(0)):(v > ~A)
+qualif Cmp7(v:int, ~A:int):(v >= ~A)
+
+qualif Cmp8(v:int, ~A:int):(v != ~A)
+qualif Cmp9(v:@(0), ~A:@(0)):(v < ~A)
+
+qualif CmpLen(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) >= len([~A]))
+
+qualif CmpLen0(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) <= len([~A]))
+
+qualif CmpLen1(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) > len([~A]))
+
+qualif CmpLen2(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) < len([~A]))
+
+qualif CmpLen3(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) = len([~A]))
+
+qualif CmpZ(v:@(0)):(v < 0)
+qualif CmpZ0(v:@(0)):(v > 0)
+
+qualif CmpZ1(v:@(0)):(v != 0)
+qualif CmpZ2(v:@(0)):(v = 0)
+
+qualif CmpZ3(v:@(0)):(v >= 0)
+qualif CmpZ4(v:@(0)):(v <= 0)
+
+qualif EqLen(v:int, ~A:FAppTy (List ) @(0)):(v = len([~A]))
+
+qualif FPLenPLen(v:FAppTy (GHC.Ptr.Ptr ) @(0), fix##126#Fp:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0)):(fplen([fix##126#Fp]) = plen([v]))
+
+qualif False(v:bool):(~ ((Bexp v)))
+
+qualif False1(v:GHC.Types.Bool ):(~ (Prop(v)))
+
+qualif ForeignPtrN(v:FAppTy (GHC.ForeignPtr.ForeignPtr ) @(0), fix##126#N:int):(fplen([v]) = fix##126#N)
+
+qualif Fst(v:@(0), fix##126#Y:@(1)):(v = fst([fix##126#Y]))
+
+qualif IsEmp(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) = 0))
+
+qualif IsEmp0(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) > 0))
+
+qualif LenAcc(v:int, ~A:FAppTy (List ) @(0), ~B:int):(v = (len([~A]) + ~B))
+
+qualif LenDiff(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A + 1))
+
+qualif LenDiff0(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A - 1))
+
+qualif LenEq(v:FAppTy (List ) @(0), ~A:int):(~A = len([v]))
+
+qualif ListZ(v:FAppTy (List ) @(0)):(len([v]) > 0)
+
+qualif ListZ0(v:FAppTy (List ) @(0)):(len([v]) >= 0)
+
+qualif ListZ1(v:FAppTy (List ) @(0)):(len([v]) = 0)
+
+qualif One(v:int):(v = 1)
+
+qualif PLLen(v:@(0), fix##126#P:@(1)):(len([v]) <= plen([fix##126#P]))
+
+qualif Papp(v:@(0), ~P:FAppTy (Pred ) @(0)):papp1(~P, v)
+
+qualif Papp2(v:@(0), ~X:@(1), ~P:FAppTy (FAppTy (Pred ) @(0)) @(1)):papp2(~P, v, ~X)
+
+qualif Papp3(v:@(0), ~X:@(1), ~Y:@(2), ~P:FAppTy (FAppTy (FAppTy (Pred ) @(0)) @(1)) @(2)):papp3(~P, v, ~X, ~Y)
+
+qualif PlenEq(v:FAppTy (GHC.Ptr.Ptr ) @(0), fix##126#X:int):(fix##126#X <= plen([v]))
+
+qualif PtrLen(v:FAppTy (GHC.Ptr.Ptr ) @(0), fix##126#Xs:FAppTy (List ) @(1)):(plen([v]) = len([fix##126#Xs]))
+
+qualif Snd(v:@(0), fix##126#Y:@(1)):(v = snd([fix##126#Y]))
+
+qualif True(v:bool):(Bexp v)
+qualif True1(v:GHC.Types.Bool ):Prop(v)
+
+qualif Unpack(v:@(0), fix##126#Acc:@(1), fix##126#N:int):(len([v]) = ((1 + fix##126#N) + len([fix##126#Acc]))) 
+

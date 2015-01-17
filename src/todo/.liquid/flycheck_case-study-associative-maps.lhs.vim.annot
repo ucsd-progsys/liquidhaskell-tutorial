@@ -1,0 +1,3 @@
+9:1-9:5::AssociativeMaps.main :: "(GHC.Types.IO ())"
+9:8-9:14::_ :: "() -> (GHC.Types.IO ())"
+9:15-9:17::GHC.Tuple.() :: "{v : () | v == GHC.Tuple.()}"

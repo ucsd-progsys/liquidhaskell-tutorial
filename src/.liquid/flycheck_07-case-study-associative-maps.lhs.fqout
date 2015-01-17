@@ -1,0 +1,183 @@
+UNSAT [240,207,152,146,48] 
+ 
+ 
+ 
+solution: k_1279 := [(false, BOT())] 
+
+solution: k_1319 := [(false, BOT())] 
+
+solution: k_1371 := [(false, BOT())] 
+
+solution: k_1411 := [(false, BOT())] 
+
+solution: k_1451 := [(false, BOT())] 
+
+solution: k_1503 := [(false, BOT())] 
+
+solution: k_1575 := [((VV#1574 = GHC.Prim.void##0l), Cmp6(VV#1574, GHC.Prim.void##0l))] 
+
+solution: k_1602 := [((VV#1601 = ds_d1ui), Cmp6(VV#1601, ds_d1ui));((VV#1601 = GHC.Prim.void##0l), Cmp6(VV#1601, GHC.Prim.void##0l))] 
+
+solution: k_1740 := [((VV#1739 = GHC.Prim.void##0l), Cmp6(VV#1739, GHC.Prim.void##0l))] 
+
+solution: k_1767 := [((VV#1766 = ds_d1un), Cmp6(VV#1766, ds_d1un));((VV#1766 = GHC.Prim.void##0l), Cmp6(VV#1766, GHC.Prim.void##0l))] 
+
+solution: k_1977 := [(val(VV#1976), Auto4(VV#1976))] 
+
+solution: k_1980 := [] 
+
+solution: k_1983 := [(Set_sub(free([VV#1982]), keys([ds_d1uo])), Auto1(VV#1982, ds_d1uo))] 
+
+solution: k_1986 := [(val(VV#1985), Auto4(VV#1985))] 
+
+solution: k_2047 := [((VV#2046 != i#a1lB), Auto13(VV#2046, i#a1lB));((VV#2046 != lq_anf__d1vR), Auto13(VV#2046, lq_anf__d1vR));(val(VV#2046), Auto4(VV#2046))] 
+
+solution: k_2242 := [((VV#2241 != lq_anf__d1vR), Cmp5(VV#2241, lq_anf__d1vR));((VV#2241 != i#a1lB), Cmp5(VV#2241, i#a1lB));(val(VV#2241), Auto4(VV#2241))] 
+
+solution: k_2311 := [(false, BOT())] 
+
+solution: k_2516 := [(false, BOT())] 
+
+solution: k_2520 := [(false, BOT())] 
+
+solution: k_2537 := [(false, BOT())] 
+
+solution: k_2550 := [(false, BOT())] 
+
+solution: k_2581 := [(false, BOT())] 
+
+solution: k_2585 := [(false, BOT())] 
+
+solution: k_2588 := [(false, BOT())] 
+
+solution: k_527 := [(false, BOT())] 
+
+solution: k_600 := [((VV#599 = GHC.Prim.void##0l), Cmp6(VV#599, GHC.Prim.void##0l))] 
+
+solution: k_604 := [] 
+
+solution: k_829 := [((VV#828 = GHC.Prim.void##0l), Cmp6(VV#828, GHC.Prim.void##0l))] 
+
+solution: k_839 := [(Set_mem(fix#k#39##35#a1m6, keys([VV#838])), Auto7(VV#838, fix#k#39##35#a1m6))] 
+
+solution: k_941 := [(false, BOT())] 
+
+solution: k_949 := [(false, BOT())] 
+
+solution: k_981 := [(false, BOT())] 
+
+//QUALIFIERS 
+
+qualif Auto(m:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1)):Set_emp(keys([m]))
+
+qualif Auto0(VV:GHC.Types.Bool , fix##126#A0:AssocativeMap.Expr ):(Prop(VV) <=> val(fix##126#A0))
+
+qualif Auto1(v:AssocativeMap.Expr , fix##126#A0:FAppTy (FAppTy (AssocativeMap.Map ) (FAppTy (List ) (GHC.Types.Char ))) (AssocativeMap.Expr )):Set_sub(free([v]), keys([fix##126#A0]))
+
+qualif Auto10(n:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1), fix##126#A0:@(0), fix##126#A1:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1)):(keys([n]) = Set_cup([Set_sng([fix##126#A0]); keys([fix##126#A1])]))
+
+qualif Auto11(v:GHC.Types.Bool , fix##126#A0:@(0), fix##126#A1:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1)):(~ (Set_mem(fix##126#A0, keys([fix##126#A1]))))
+
+qualif Auto12(VV:FAppTy (Set_Set ) @(0), fix##126#A0:FAppTy (List ) @(0)):(VV = elems([fix##126#A0]))
+
+qualif Auto13(VV:@(0), fix##126#A0:@(0)):(VV != fix##126#A0)
+
+qualif Auto2(v:int, fix##126#A0:FAppTy (List ) int):(~ (Set_mem(v, elems([fix##126#A0]))))
+
+qualif Auto3(v:FAppTy (List ) (GHC.Types.Char )):false
+
+qualif Auto4(v:AssocativeMap.Expr ):val(v)
+
+qualif Auto5(v:AssocativeMap.Expr ):Set_emp(free([v]))
+
+qualif Auto6(VV:FAppTy (Set_Set ) (FAppTy (List ) (GHC.Types.Char )), fix##126#A0:AssocativeMap.Expr ):(VV = free([fix##126#A0]))
+
+qualif Auto7(m:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1), fix##126#A0:@(0)):Set_mem(fix##126#A0, keys([m]))
+
+qualif Auto8(VV:FAppTy (Set_Set ) @(0), fix##126#A0:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1)):(VV = keys([fix##126#A0]))
+
+qualif Auto9(v:GHC.Types.Bool , fix##126#A0:@(0), fix##126#A1:FAppTy (FAppTy (AssocativeMap.Map ) @(0)) @(1)):(Prop(v) <=> Set_mem(fix##126#A0, keys([fix##126#A1])))
+
+qualif Bot(v:@(0)):(0 = 1)
+qualif Bot0(v:obj):(0 = 1)
+
+qualif Bot1(v:bool):(0 = 1)
+qualif Bot2(v:int):(0 = 1)
+
+qualif Cmp(v:@(0), ~A:@(0)):(v <= ~A)
+qualif Cmp0(v:int, ~A:int):(v = ~A)
+
+qualif Cmp1(v:int, ~A:int):(v != ~A)
+qualif Cmp10(v:@(0), ~A:@(0)):(v >= ~A)
+
+qualif Cmp2(v:int, ~A:int):(v <= ~A)
+qualif Cmp3(v:@(0), ~A:@(0)):(v > ~A)
+
+qualif Cmp4(v:@(0), ~A:@(0)):(v < ~A)
+qualif Cmp5(v:@(0), ~A:@(0)):(v != ~A)
+
+qualif Cmp6(v:@(0), ~A:@(0)):(v = ~A)
+qualif Cmp7(v:int, ~A:int):(v > ~A)
+
+qualif Cmp8(v:int, ~A:int):(v >= ~A)
+qualif Cmp9(v:int, ~A:int):(v < ~A)
+
+qualif CmpLen(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) <= len([~A]))
+
+qualif CmpLen0(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) > len([~A]))
+
+qualif CmpLen1(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) < len([~A]))
+
+qualif CmpLen2(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) = len([~A]))
+
+qualif CmpLen3(v:FAppTy (List ) @(0), ~A:FAppTy (List ) @(1)):(len([v]) >= len([~A]))
+
+qualif CmpZ(v:@(0)):(v != 0)
+qualif CmpZ0(v:@(0)):(v < 0)
+
+qualif CmpZ1(v:@(0)):(v > 0)
+qualif CmpZ2(v:@(0)):(v = 0)
+
+qualif CmpZ3(v:@(0)):(v <= 0)
+qualif CmpZ4(v:@(0)):(v >= 0)
+
+qualif EqLen(v:int, ~A:FAppTy (List ) @(0)):(v = len([~A]))
+
+qualif False(v:bool):(~ ((Bexp v)))
+
+qualif False1(v:GHC.Types.Bool ):(~ (Prop(v)))
+
+qualif Fst(v:@(0), fix##126#Y:@(1)):(v = fst([fix##126#Y]))
+
+qualif IsEmp(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) = 0))
+
+qualif IsEmp0(v:GHC.Types.Bool , ~A:FAppTy (List ) @(0)):(Prop(v) <=> (len([~A]) > 0))
+
+qualif LenAcc(v:int, ~A:FAppTy (List ) @(0), ~B:int):(v = (len([~A]) + ~B))
+
+qualif LenDiff(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A + 1))
+
+qualif LenDiff0(v:FAppTy (List ) @(0), ~A:int):(len([v]) = (~A - 1))
+
+qualif LenEq(v:FAppTy (List ) @(0), ~A:int):(~A = len([v]))
+
+qualif ListZ(v:FAppTy (List ) @(0)):(len([v]) >= 0)
+
+qualif ListZ0(v:FAppTy (List ) @(0)):(len([v]) > 0)
+
+qualif ListZ1(v:FAppTy (List ) @(0)):(len([v]) = 0)
+
+qualif One(v:int):(v = 1)
+
+qualif Papp(v:@(0), ~P:FAppTy (Pred ) @(0)):papp1(~P, v)
+
+qualif Papp2(v:@(0), ~X:@(1), ~P:FAppTy (FAppTy (Pred ) @(0)) @(1)):papp2(~P, v, ~X)
+
+qualif Papp3(v:@(0), ~X:@(1), ~Y:@(2), ~P:FAppTy (FAppTy (FAppTy (Pred ) @(0)) @(1)) @(2)):papp3(~P, v, ~X, ~Y)
+
+qualif Snd(v:@(0), fix##126#Y:@(1)):(v = snd([fix##126#Y]))
+
+qualif True(v:bool):(Bexp v)
+
+qualif True1(v:GHC.Types.Bool ):Prop(v) 
+
