@@ -114,14 +114,21 @@
 \newcommand\myfootnote[1]{\footnotetext{#1}} 
 
 
-
-
 %% EXERCISE: HANDROLLED
 \usepackage{chngcntr}
 \newcounter{theexercise} \setcounter{theexercise}{0}
 \newcommand\exercise{\stepcounter{theexercise} \medskip \noindent\textsc{Exercise \arabic{chapter}.\arabic{theexercise}.}\ }
+\newcommand\exercisen[1]{\stepcounter{theexercise} \medskip \noindent\textsc{Exercise \arabic{chapter}.\arabic{theexercise}. [#1]}\ }
 \counterwithin{theexercise}{chapter}
 \newcommand\hint{\medskip\noindent\emph{Hint:}\xspace}
+\newcommand\singlestar{\ensuremath{\star} \xspace}
+\newcommand\doublestar{\ensuremath{\star\star} \xspace}
+\newcommand\todo{\medskip\noindent\emph{\textbf{TODO}}\xspace}
+\newcommand\tcap[2]{(\mathtt{intersection}\ #1\ #2)}
+\newcommand\tcup[2]{(\mathtt{union}\ #1\ #2)}
+\newcommand\tsng[1]{(\mathtt{singleton}\ #1)}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
 
 
 % spec 
@@ -187,8 +194,16 @@ under the License.\index{license}
 
 \listoffigures
 
+
 \input{00-intro}
-\input{01-install}
-\input{02-basic}
+\input{01-basic}
+\input{02-poly}
+\input{03-datatypes}
+\input{04-measure-bool}
+\input{05-measure-int}
+\input{06-measure-sets}
+\input{07-case-study-associative-maps}
+\input{08-case-study-pointers}
+
 
 \end{document}

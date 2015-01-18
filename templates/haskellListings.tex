@@ -1,0 +1,131 @@
+\usepackage{listings}
+\usepackage{color}
+% uncomment next line to restore colors
+\def\withcolor{}
+
+\ifdefined\withcolor
+	\definecolor{haskellblue}{rgb}{0.0, 0.0, 1.0}
+	\definecolor{haskellstr}{rgb}{0.2, 0.2, 0.6}
+	\definecolor{haskellred}{rgb}{1.0, 0.0, 0.0}
+	\definecolor{gray_ulisses}{gray}{0.55}
+	\definecolor{castanho_ulisses}{rgb}{0.71,0.33,0.14}
+	\definecolor{preto_ulisses}{rgb}{0.41,0.20,0.04}
+	\definecolor{green_ulisses}{rgb}{0.0,0.4,0.0}
+\else
+	\definecolor{haskellblue}{gray}{0.1}
+	\definecolor{haskellstr}{gray}{0.1}
+	\definecolor{haskellred}{gray}{0.1}
+	\definecolor{gray_ulisses}{gray}{0.1}
+	\definecolor{castanho_ulisses}{gray}{0.1}
+	\definecolor{preto_ulisses}{gray}{0.1}
+	\definecolor{green_ulisses}{gray}{0.1}
+\fi
+
+
+\def\codesize{\normalsize}
+
+\lstdefinelanguage{HaskellUlisses}{
+	basicstyle=\codesize\ttfamily,
+	sensitive=true,
+	morecomment=[l][\color{gray_ulisses}\ttfamily\codesize]{--},
+	morecomment=[s][\color{gray_ulisses}\ttfamily\codesize]{\{-}{-\}},
+	morestring=[b]",
+	stringstyle=\color{haskellstr},
+	showstringspaces=false,
+	numberstyle=\codesize,
+	numberblanklines=true,
+	showspaces=false,
+	breaklines=true,
+	showtabs=false,
+        % mathescape=true,
+	emph=
+	{[1]
+		FilePath,IOError,abs,acos,acosh,and,any,appendFile,approxRational,asTypeOf,asin,
+		asinh,atan,atan2,atanh,basicIORun,break,catch,ceiling,chr,compare,concat,concatMap,
+		const,cos,cosh,curry,cycle,decodeFloat,denominator,digitToInt,div,divMod,drop,
+		dropWhile,either,elem,encodeFloat,enumFrom,enumFromThen,enumFromThenTo,enumFromTo,
+		error,even,exp,exponent,fail,filter,flip,floatDigits,floatRadix,floatRange,floor,
+		fmap,foldl,foldl1,foldr,foldr1,fromDouble,fromEnum,fromInt,fromInteger,
+		fromRational,fst,gcd,getChar,getContents,getLine,head,id,inRange,index,init,intToDigit,
+		interact,ioError,isAlpha,isAlphaNum,isAscii,isControl,isDenormalized,isDigit,isHexDigit,
+		isIEEE,isInfinite,isLower,isNaN,isNegativeZero,isOctDigit,isPrint,isSpace,isUpper,iterate,
+		last,lcm,length,lex,lexDigits,lexLitChar,lines,log,logBase,lookup,map,mapM,mapM_,max,
+		maxBound,maximum,maybe,min,minBound,minimum,mod,negate,not,notElem,numerator,odd,
+		or,pi,primExitWith,print,product,properFraction,putChar,putStr,putStrLn,quot,
+		quotRem,range,rangeSize,read,readDec,readFile,readFloat,readHex,readIO,readInt,readList,readLitChar,
+		readLn,readOct,readParen,readSigned,reads,readsPrec,realToFrac,recip,rem,repeat,replicate,
+		reverse,round,scaleFloat,scanl,scanl1,scanr,scanr1,seq,sequence,sequence_,show,showChar,showInt,
+		showList,showLitChar,showParen,showSigned,showString,shows,showsPrec,significand,signum,sin,
+		sinh,snd,span,splitAt,sqrt,subtract,succ,sum,tail,take,takeWhile,tan,tanh,threadToIOResult,toEnum,
+		toInt,toInteger,toLower,toRational,toUpper,truncate,uncurry,undefined,unlines,until,unwords,unzip,
+		unzip3,userError,words,writeFile,zip,zip3,zipWith,zipWith3,listArray,doParse,for,initTo,
+                create,get,set,div,rescale,add,delete,insert,prop_focus_left_master,average,best,insert,union,split,size,fromList,copy,group,good,bad,foo,explode,singleton,difference,fromJust,sort,unfold,
+                target, query, decode, encode, check, refuteSMT, binder,
+                subst,unapply,apply,proxy,refinement,fresh,guard,constrain,oneOf, 
+                queryList,queryCtor,queryField,ctors,decodeCtor,whichOf,ctorArity,eval,
+                mkCtor,gCtors,gEncode,gEncodeFields,gDecode,gDecodeFields,reproxyRep,empty,splitCtor,checkField,scanM, 
+                padAverage,focusUp,execute,checkSMT,inputTypes,outputType,toReft,app
+                %, inTypes, inputTypes, outputType, execute, smtFindModel, smtRefuteModel 
+	},
+	emphstyle={[1]\color{haskellblue}},
+	emph=
+	{[2]
+		OkMap,OkRBT,OkStackSet,TTrue,Map,Bool,Char,Double,Either,Float,IO,Integer,Int,Maybe,Ordering,Rational,Ratio,ReadS,ShowS,String,Word8,Nat,Pos,Rng,Score,
+                Ptr,ForeignPtr,CSize,InPacket,Tree,Prop,TreeEq,TreeLt,Vec,
+                NullTerm,IncrList,DecrList,UniqList,BST,MinHeap,MaxHeap,
+                PtrN,ByteStringN,ByteStringEq,VO,ByteStringsEq,ByteStringNE,OrdList,Var,RType,Constrain,Gen,Var,Proxy,SMT,Targetable,RefType,Refinement,Ctor,C1,Rep,Rec0,U1,
+                GCtors,GDecode,GDecodeFields,GEncode,GEncodeFields,OrdMap,MinusKey,
+                len,isBH,isBal,bh,isRB,keys,List,Sorted,RBT,Col,isBlack,OrdRBT,Set,sz,
+                StackSet,NoDuplicates,Data,RBTree,XMonad,Generic,true
+	},
+	emphstyle={[2]\color{castanho_ulisses}},
+	emph=
+	{[3]
+		case,class,data,deriving,do,else,if,return,def,import,in,infixl,infixr,instance,let,tmapM,for2M,forM,zipWithM,otherwise,
+		module,measure,pred,predicate,of,primitive,then,type,where,lazy,throw,when
+	},
+	emphstyle={[3]\color{preto_ulisses}\textbf},
+	emph=
+	{[4]
+		quot,rem,div,mod,elem,notElem,seq
+	},
+	emphstyle={[4]\color{castanho_ulisses}\textbf},
+	emph=
+	{[5]
+		PS,Tip,Node,Black,Red,EQ,False,GT,Just,LT,Left,Nothing,Right,True,Show,Eq,Ord,Num,C,N,Leaf,Bin,CounterExample
+	},
+	emphstyle={[5]\color{green_ulisses}},
+	emph=
+	{[6]
+		patError, irrefutPatError, nonExhaustiveGuardsError, recSelError, errorOut, 
+		noMethodBinding
+	},
+	emphstyle={[6]\color{haskellred}}
+}
+
+%%%ORIG
+%%%\lstnewenvironment{code}
+%%%{\textbf{Haskell Code} \hspace{1cm} \hrulefill \lstset{language=HaskellUlisses}}
+%%%{\hrule\smallskip}
+
+%V1
+%\lstnewenvironment{code}
+%{\smallskip \lstset{language=HaskellUlisses}}
+%{\smallskip}
+
+\lstdefinelanguage{HaskellUlissesMath}[]{HaskellUlisses}{mathescape=true}
+
+\lstnewenvironment{code}
+{\lstset{language=HaskellUlisses}}
+{}
+
+\lstnewenvironment{mcode}
+{\lstset{language=HaskellUlissesMath}}
+{}
+
+\lstnewenvironment{fcode}
+{\lstset{language=HaskellUlisses, frame=L}}
+{}
+
+%% \lstMakeShortInline[language=HaskellUlisses]@
+%% \lstMakeShortInline[language=HaskellUlissesMath]|

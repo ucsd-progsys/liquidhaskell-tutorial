@@ -12,7 +12,6 @@
 
 %% EXERCISE: HANDROLLED
 \usepackage{chngcntr}
-
 \newcounter{theexercise} \setcounter{theexercise}{0}
 \newcommand\exercise{\stepcounter{theexercise} \medskip \noindent\textsc{Exercise \arabic{chapter}.\arabic{theexercise}.}\ }
 \newcommand\exercisen[1]{\stepcounter{theexercise} \medskip \noindent\textsc{Exercise \arabic{chapter}.\arabic{theexercise}. [#1]}\ }
@@ -21,15 +20,25 @@
 \newcommand\singlestar{\ensuremath{\star} \xspace}
 \newcommand\doublestar{\ensuremath{\star\star} \xspace}
 \newcommand\todo{\medskip\noindent\emph{\textbf{TODO}}\xspace}
-
 \newcommand\tcap[2]{(\mathtt{intersection}\ #1\ #2)}
 \newcommand\tcup[2]{(\mathtt{union}\ #1\ #2)}
 \newcommand\tsng[1]{(\mathtt{singleton}\ #1)}
-
-
-
 \usepackage{fancyvrb}
 \usepackage{xcolor}
+
+%% HSCOLOR
+% \usepackage[usenames]{color}
+% \usepackage{hyperref}
+\newsavebox{\spaceb}
+\newsavebox{\tabb}
+\savebox{\spaceb}[1ex]{~}
+\savebox{\tabb}[4ex]{~}
+\newcommand{\hsspace}{\usebox{\spaceb}}
+\newcommand{\hstab}{\usebox{\tabb}}
+\newcommand{\conceal}[1]{}
+
+\newcommand{\donothing}[1]{#1}
+
 
 
 % spec 
@@ -198,6 +207,10 @@ $endfor$
 
 % \newcommand\footnotetext[1]{#1} 
 % \newcommand\myfootnote[1]{\footnotetext{#1}} 
+
+
+\input{templates/haskellListings}
+
 
 \begin{document}
 

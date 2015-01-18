@@ -1,8 +1,9 @@
 # LiquidHaskell Tutorial
 
-0. Install
 
---- Part I: Refinement Types
+## Part I: Refinement Types
+
+0. Install
 
 1. Refinement Types
 
@@ -10,7 +11,7 @@
 
 3. Refining Datatypes
 
---- Part II: Measures
+## Part II: Measures
 
 4. Propositions
 
@@ -18,17 +19,17 @@
 
 6. Sets
 
---- Part III : Case Studies
+## Part III : Case Studies
 
 7. Case Study: Associative Maps
 
-8. Case Study: Pointers without Overflows **<--- HEREHEREHEREHERE** 
+8. Case Study: Pointers without Overflows
 
 9. Case Study: Balanced Heaps
    + Weighted Biased Heaps
    + EX: AVL TREE (insert/delete/member)
  
---- Part IV : Abstract Refinements 
+## Part IV : Abstract Refinements 
 
 10. Abstract Refinements I (code)
   + Copy from FLOPS/IHP talk sequence
@@ -43,7 +44,7 @@
   + filter
   + state 
 
---- Part IV: Tips and Tricks
+## Part IV: Tips and Tricks
 
 13. Tips:
      + Inductive strengthening 
@@ -56,18 +57,25 @@
   + Copy from BLOG/PAPER sequence
   + HW Exercises
 
---- Stuff
+## Perhaps Someday
 
 + Case Study 1: AlphaConvert (tests/pos/alphaconvert-List.hs) 
 + Case Study 2: Kmeans
 
-TODO 
+## TODO 
 
-+ subtyping exercises
++ Filter
+    - ranjit --> larrydavid 
+
+
++ Subtyping exercises
     - div by zero
     - array-bounds
     - create (bytestring)
 
-+ gotchas
++ Gotchas
     - hs sig vs. lh sig
-    - module/import story
+    - module and import story
+
+
+

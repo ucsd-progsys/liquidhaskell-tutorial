@@ -1,4 +1,4 @@
-PANDOC=pandoc --from=markdown+lhs --biblio templates/sw.bib --chapters --latex-engine=pdflatex --template=templates/default.latex --filter templates/inside.hs
+PANDOC=pandoc --highlight-style=tango --from=markdown+lhs --biblio templates/sw.bib --chapters --latex-engine=pdflatex --template=templates/default.latex --filter templates/inside.hs
 
 LHS2TEX=pandoc \
 	--from=markdown+lhs \
@@ -18,13 +18,20 @@ pbook: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
 	$(PANDOC) dist/pbook.lhs -o dist/pbook.pdf
 
+json: $(lhsObjects)
+	cat $(lhsObjects) > dist/pbook.lhs
+	$(PANDOC) dist/pbook.lhs -t json
+
+
 book: templates/book.tex $(texObjects) 
 	cp templates/book.tex dist/
-	cp src/*.tex dist/
+	mv src/*.tex dist/
 	cd dist/ && pdflatex book.tex && cd ..
 
 src/%.tex: src/%.lhs
 	-$(LHS2TEX) $? -o $@ 
 
 clean:
-	rm -rf dist/*
+	rm -rf dist/* && rm -rf src/*.tex
+
+

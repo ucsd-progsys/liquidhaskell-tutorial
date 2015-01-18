@@ -15,14 +15,39 @@ main = putStrLn "Intro"
 \end{code}
 \end{comment}
 
+
+
 Introduction {#intro}
 ============
 
 
+\begin{comment}
+\begin{mcode}
+main :: IO ()
+main = return ()
+
+fac   :: Int -> Int
+fac 0 = 1
+fac n = n * fac (n-1)
+
+average    :: [Int] -> Int
+average xs = sum xs `div` length xs
+\end{mcode}
+
+This is the `main` function
+
+\textcolor{blue}{main}\hsspace \textcolor{red}{::}\hsspace {\texttt{}IO}\hsspace {\texttt{}()}\\ \textcolor{blue}{main}\hsspace \textcolor{red}{=}\hsspace {\texttt{}return}\hsspace {\texttt{}()}\\
+
+and this is `fac`
+
+\textcolor{blue}{fac}\hsspace \hsspace \hsspace \textcolor{red}{::}\hsspace {\texttt{}Int}\hsspace \textcolor{red}{\ensuremath{\rightarrow}}\hsspace {\texttt{}Int}\\ \textcolor{blue}{fac}\hsspace \textcolor{magenta}{0}\hsspace \textcolor{red}{=}\hsspace \textcolor{magenta}{1}\\ \textcolor{blue}{fac}\hsspace {\texttt{}n}\hsspace \textcolor{red}{=}\hsspace {\texttt{}n}\hsspace \textcolor{cyan}{*}\hsspace {\texttt{}fac}\hsspace \textcolor{cyan}{(}{\texttt{}n}\textcolor{blue}{{\it{}-}}\textcolor{magenta}{1}\textcolor{cyan}{)}\\
+
+\end{comment}
 
 One of the great things about Haskell is its brainy type system that
 allows one to enforce a variety of invariants at compile time, thereby
 nipping, in the bud, a large swathe of run-time errors.
+
 
 Well-Typed Programs Do Go Wrong
 -------------------------------
@@ -46,14 +71,12 @@ ghci> average [10, 20, 30, 40]
 \end{verbatim}
 
 However, if we call it with an empty list, we get a rather unpleasant crash:
-\footnotetext{
-We might solve this problem by writing \cc{average} more \emph{defensively},
-perhaps returning a \cc{Maybe} or \cc{Either} value.
-However, this merely kicks the can down the road.
-Ultimately, we will 
-want to extract the \cc{Int} from the \cc{Maybe} and if the inputs were
-invalid to start with, then at that point we would be stuck with the same issue.
-}
+<span class="footnotetext"> We might solve this problem by writing `average`
+more *defensively*, perhaps returning a `Maybe` or `Either` value.
+However, this merely kicks the can down the road. Ultimately, we will 
+want to extract the `Int` from the `Maybe` and if the inputs were
+invalid to start with, then at that point we would be stuck.</span>
+
 \begin{verbatim}
 ghci> average []
 *** Exception: divide by zero
@@ -81,7 +104,7 @@ ghci> m ! "javascript"
 "*** Exception: key is not in the map
 \end{verbatim}
 
-\footnotetext{Again, one could use a `Maybe` but its just deferring the inevitable.}
+<span class="footnotetext">Again, one could use a `Maybe` but its just deferring the inevitable.<span>
 
 \newthought{Segmentation Faults}
 Say what? How can one possibly get a segmentation fault with a *safe*
@@ -104,13 +127,13 @@ ghci> unsafeIndex v 3
 'ghci' terminated by signal SIGSEGV ...
 \end{verbatim}
 
-\footnotetext{Why use a function marked \cc{unsafe}?
+<span class="footnotetext">Why use a function marked `unsafe`?
 First we have to thank the developers for carefully marking
 it as such, because in general, given the many layers of abstraction,
 it is hard to know which functions are indeed safe".
 Second, because its very fast. Third, even if we used
-the safe variant, we'd get a \emph{run-time} exception
-which is only marginally better.}
+the safe variant, we'd get a *run-time* exception
+which is only marginally better.</span>
 
 \newthought{Heart Bleeds}
 Finally, for certain kinds of programs, there is a fate worse than death.
@@ -159,11 +182,11 @@ the above calamities *cannot occur at run-time*.
 this document we'll describe how you can use it to make programs
 better and programming even more fun.
 
-\footnotetext{If you are familiar with the notion of Dependent Types,
+<span class="footnotetext">If you are familiar with the notion of Dependent Types,
 for example, as in the Coq proof assistant, then Refinement Types
 can be thought of as restricted class of the former where the logic
 is restricted, at the cost of expressiveness, but with the reward of
-a considerable amount of automation.}
+a considerable amount of automation.</span>
 
 Audience
 --------
@@ -227,10 +250,10 @@ Hence we *strongly recommend* these over the command line option.
 Sample Code
 -----------
 
-This entire tutorial is written in literate Haskell.
-All the code for it is available [on github][liquid-tutorial].
-We *strongly* recommend you grab the code, and follow along
-at home, and especially, that you do the various exercises.
+This tutorial is written in literate Haskell and
+the code for it is available [here][liquid-tutorial].
+We *strongly* recommend you grab the code, and follow
+along, and especially that you do the exercises.
 
 [dml]:             http://www.cs.bu.edu/~hwxi/DML/DML.html
 [vecspec]:         https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/Data/Vector.spec

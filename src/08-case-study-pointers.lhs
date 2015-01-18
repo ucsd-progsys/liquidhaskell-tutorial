@@ -828,6 +828,14 @@ that API.  It is important to note that in the entire case study, it
 is only the above FFI signatures that are *trusted*; the rest are all
 verified by LiquidHaskell.
 
+\begin{code}
+ranjit :: Int
+ranjit = 12 + flibbertypopp 
+
+flibbertypopp :: Int
+flibbertypopp = 42
+\end{code}
+
 \begin{comment}
 \begin{code}
 -----------------------------------------------------------------------
