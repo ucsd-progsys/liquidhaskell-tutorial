@@ -64,9 +64,16 @@
 
 ## TODO 
 
-+ Filter
-    - ranjit --> larrydavid 
++ add table of exercises?
+  \begin{exercise}{NAME}
+  ...
+  \end{exercise}
 
++ pass over each chapter
+    - proofread
+    - squish code into box
+    - fix footnotetext/links
+    - fix exercises 
 
 + Subtyping exercises
     - div by zero
