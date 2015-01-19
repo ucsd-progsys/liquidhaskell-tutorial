@@ -29,11 +29,11 @@ main = toJSONFilter readFootnotes
 --     tex   = fnString ++ writeLaTeX def para ++ "}" 
 --     para  = Pandoc mempty [Para is]
     
-readFootnotes (Div (id, [cls], _) bs) = trace ("Div: " ++ cls ++ " " ++ id) $ RawBlock (Format "tex") $ toLaTeX cls id bs
+readFootnotes (Div (id, [cls], _) bs) = RawBlock (Format "tex") $ toLaTeX cls id bs
 readFootnotes i                       = i
 toLaTeX cls id                        = wrapLatex cls id . writeLaTeX def . Pandoc mempty 
 wrapLatex "footnotetext" _ str        = printf "\\footnotetext{%s}" str
-wrapLatex "hwex" name str             = trace ("HWEX:" ++ str) printf "\\begin{hwex}[%s]\n%s\n\\end{hwex}" name str
+wrapLatex "hwex" name str             = printf "\\begin{hwex}[%s]\n%s\n\\end{hwex}" name str
 wrapLatex cls name str                = error $ printf "WrapLatex: %s %s" cls name
 
 

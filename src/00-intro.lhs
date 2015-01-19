@@ -63,8 +63,7 @@ average    :: [Int] -> Int
 average xs = sum xs `div` length xs
 \end{code}
 
-When run with a non-empty list of numbers, we get the
-desired result:
+We get the desired result on a non-empty list of numbers:
 
 \begin{verbatim}
 ghci> average [10, 20, 30, 40]
@@ -72,11 +71,11 @@ ghci> average [10, 20, 30, 40]
 \end{verbatim}
 
 However, if we call it with an empty list, we get a rather unpleasant crash:
-<span class="footnotetext"> We might solve this problem by writing `average`
+<div class="footnotetext"> We might solve this problem by writing `average`
 more *defensively*, perhaps returning a `Maybe` or `Either` value.
 However, this merely kicks the can down the road. Ultimately, we will 
 want to extract the `Int` from the `Maybe` and if the inputs were
-invalid to start with, then at that point we would be stuck.</span>
+invalid to start with, then at that point we'd be stuck.</div>
 
 \begin{verbatim}
 ghci> average []
@@ -100,12 +99,13 @@ ghci> m ! "haskell"
 Alas, maps are another source of vexing errors that are tickled
 when we try to find the value of an absent key: 
 
+<div class="footnotetext">Again, one could use a `Maybe` but its just deferring the inevitable.</div>
+
 \begin{verbatim} 
 ghci> m ! "javascript"
 "*** Exception: key is not in the map
 \end{verbatim}
 
-<span class="footnotetext">Again, one could use a `Maybe` but its just deferring the inevitable.<span>
 
 \newthought{Segmentation Faults}
 Say what? How can one possibly get a segmentation fault with a *safe*
@@ -128,13 +128,13 @@ ghci> unsafeIndex v 3
 'ghci' terminated by signal SIGSEGV ...
 \end{verbatim}
 
-<span class="footnotetext">Why use a function marked `unsafe`?
-First we have to thank the developers for carefully marking
-it as such, because in general, given the many layers of abstraction,
+<div class="footnotetext">Why use a function marked `unsafe`?
+First, thank the developers for carefully marking
+it as such. In general, given the many layers of abstraction,
 it is hard to know which functions are indeed safe".
 Second, because its very fast. Third, even if we used
 the safe variant, we'd get a *run-time* exception
-which is only marginally better.</span>
+which is only marginally better.</div>
 
 \newthought{Heart Bleeds}
 Finally, for certain kinds of programs, there is a fate worse than death.
@@ -180,14 +180,14 @@ their contracts. That is, you can rest assured that
 the above calamities *cannot occur at run-time*.
 
 \newthought{LiquidHaskell} is a Refinement Type Checker for Haskell, and in
-this document we'll describe how you can use it to make programs
+this tutorial we'll describe how you can use it to make programs
 better and programming even more fun.
 
-<span class="footnotetext">If you are familiar with the notion of Dependent Types,
+<div class="footnotetext">If you are familiar with the notion of Dependent Types,
 for example, as in the Coq proof assistant, then Refinement Types
 can be thought of as restricted class of the former where the logic
 is restricted, at the cost of expressiveness, but with the reward of
-a considerable amount of automation.</span>
+a considerable amount of automation.</div>
 
 Audience
 --------
@@ -210,26 +210,19 @@ Getting Started
 
 First things first; lets see how to install and run LiquidHaskell.
 
-\newthought{Dependencies}
-LiquidHaskell requires, in addition to the cabal dependencies
-the binary executable for an `SMTLIB2` compatible solver, e.g.
-one of
+\newthought{LiquidHaskell Requires} in addition to the cabal
+dependencies the binary executable for an `SMTLIB2` compatible
+solver, e.g. one of
 
 + [Z3][z3]
 + [CVC4][cvc4]
 + [MathSat][mathsat]
    
-\newthought{Install}
-Once you have the above on your system, simply do:
+\newthought{To Install} LiquidHaskell, just do:
 
 \begin{shell}
 $ cabal install liquidhaskell
 \end{shell}
-
-\newthought{Run}
-Once you have installed LiquidHaskell -- i.e. the binary `liquid` --
-on your system, you can either use it at the command line, or
-from within Emacs or Vim.
 
 \newthought{Command Line} execution simply requires you type:
 

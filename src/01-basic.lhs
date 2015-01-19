@@ -10,13 +10,15 @@ module Intro where
 
 import Prelude hiding                   (abs)
 divide     :: Int -> Int -> Int
+zero'''' :: Int
+die     :: String -> a
 \end{code}
 \end{comment}
 
 \newthought{What is a Refinement Type?} In a nutshell, 
+$$\mbox{Refinement Types} = \mbox{Types} + \mbox{Predicates}$$
 
-$$\mbox{Refinement Types} = \mbox{Types} + \mbox{Logical Predicates}$$
-
+\noindent
 That is, refinement types allow us to decorate types with 
 *logical predicates*, which you can think of as *boolean-valued*
 Haskell expressions, that constrain the set of values described
@@ -33,11 +35,11 @@ Let us define some refinement types:
 {-@ type NonZero = {v:Int | v /= 0} @-}
 \end{code}
 
-The binder `v` is called the *value variable*.
-Hence, `Zero` describes the *set of* `Int` values that are equal to `0`,
-that is, the singleton set containing just `0`, and `NonZero` describes
-the set of `Int` values that are *not* equal to `0`, that is, the set
-`1, -1, 2, -2, ...` and so on.
+\newthought{The Value Variable} `v` denotes the set of valid inhabitants
+of each refinement type. Hence, `Zero` describes the *set of* `Int` values
+that are equal to `0`, that is, the singleton set containing just `0`, and
+`NonZero` describes the set of `Int` values that are *not* equal to `0`,
+that is, the set `1, -1, 2, -2, ...` and so on.
 <div class="footnotetext">We will use `@`-marked comments to write refinement type 
 annotations the Haskell source file, making these types, quite literally,
 machine-checked comments!</div>
@@ -65,7 +67,7 @@ one' = 1 :: Int
 \end{code}
 
 \noindent
-LH will complain with an error message:
+LiquidHaskell will complain with an error message:
 
 \begin{verbatim}
     02-basic.lhs:58:8: Error: Liquid Type Mismatch
@@ -128,29 +130,27 @@ zero'''     = zero
 \end{code}
 
 \footnotetext{We use a different names `zero'`, `zero''` etc. as
-(currently) LH supports \emph{at most} one refinement type
+(currently) LiquidHaskell supports \emph{at most} one refinement type
 for each top-level name.}
 
 \newthought{Subtyping and Implication}
-`Zero` is the *most precise* type for `0::Int`.
-We say most precise because it is *subtype* of `Nat`, `Even` and `Lt100`.
-This is because the *set of values* defined by `Zero` is a *subset* of
-the values defined by `Nat`, `Even` and `Lt100`, as the following
-*logical implications* are valid:
+`Zero` is the most precise type for `0::Int`, as it is *subtype* of `Nat`,
+`Even` and `Lt100`. This is because the set of values defined by `Zero`
+is a *subset* of the values defined by `Nat`, `Even` and `Lt100`, as
+the following *logical implications* are valid:
 
 + $v = 0 \Rightarrow 0 \leq v$
 + $v = 0 \Rightarrow v \ \mbox{mod}\ 2 = 0$
 + $v = 0 \Rightarrow v < 100$
 
 \newthought{Composing Refinements}
-In logic, if $P \Rightarrow Q$ and $P \Rightarrow R$ then $P \Rightarrow Q \wedge R$.
+If $P \Rightarrow Q$ and $P \Rightarrow R$ then $P \Rightarrow Q \wedge R$.
 Thus, when a term satisfies multiple refinements, we can compose those
 refinements with `&&`:
 
 \begin{code}
-{-@ zero''' :: {v: Int | 0 <= v && v mod 2 == 0 && v < 100 } @-}
-zero'''' :: Int
-zero'''' = 0
+{-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
+zero''''     = 0
 \end{code}
 
 \newthought{In Summary} the key points about refinement types are:
@@ -159,30 +159,27 @@ zero'''' = 0
 2. A term can have *different* refinements for different properties.
 3. When we *erase* the predicates we get the standard Haskell types.
 
-\footnotetext{Dually, a standard Haskell type, has the trivial refinement `true`. For example, `Int` is equivalent to `{v:Int | true}`.}
+<div class="footnotetext">Dually, a standard Haskell type, has the trivial refinement `true`. For example, `Int` is equivalent to `{v:Int|true}`.</div>
 
 Writing Specifications
 ----------------------
 
 Lets write some more interesting specifications.
 
-\newthought{Typing Error} We can wrap the usual `error` function:
+\newthought{Typing Dead Code} We can wrap the usual `error` function in a function `die`
+with the type:
 
 \begin{code}
 {-@ die :: {v:String | false} -> a  @-}
-die     :: String -> a
 die msg = error msg
 \end{code}
 
-The interesting thing about `die` is that the
-input type has the refinement `false`, meaning
-the function must only be called with `String`s
-that satisfy the predicate `false`.
-
+The interesting thing about `die` is that the input type has the
+refinement `false`, meaning the function must only be called with
+`String`s that satisfy the predicate `false`.
 This seems bizarre; isn't it *impossible* to satisfy `false`?
-Indeed! Thus, a program containing `die` typechecks
-*only* when LH can prove that `die` is *never called*.
-For example, LH will *accept*
+Indeed! Thus, a program containing `die` typechecks *only* when
+LiquidHaskell can prove that `die` is *never called*. For example, LiquidHaskell will *accept*
 
 \begin{code}
 cantDie = if 1 + 1 == 3
@@ -191,9 +188,8 @@ cantDie = if 1 + 1 == 3
 \end{code}
 
 \noindent
-by inferring that the branch condition is
-always `False` and so `die` cannot be called.
-However, LH will *reject* 
+by inferring that the branch condition is always `False` and so `die`
+cannot be called. However, LiquidHaskell will *reject* 
 
 \begin{code}
 canDie = if 1 + 1 == 2
@@ -220,7 +216,7 @@ divide' n d = n `div` d
 \end{code}
 
 From the above, it is clear to *us* that `div` is only
-called with non-zero divisors. However, LH reports an
+called with non-zero divisors. However, LiquidHaskell reports an
 error at the call to `"die"` because, what if `divide'`
 is actually invoked with a `0` divisor?
 
@@ -233,12 +229,12 @@ divide _ 0 = die "divide by zero"
 divide n d = n `div` d
 \end{code}
 
-\newthought{To Verify} that `divide` never calls `die`, LH infers
+\newthought{To Verify} that `divide` never calls `die`, LiquidHaskell infers
 that `"divide by zero"` is not merely of type `String`, but in fact
 has the the refined type `{v:String | false}` *in the context* in
-which the call to `die'` occurs. LH arrives at this conclusion by
+which the call to `die'` occurs. LiquidHaskell arrives at this conclusion by
 using the fact that in the first equation for `divide` the
-*denominator* parameter is in fact
+*denominator* is in fact
 
 \begin{verbatim}
     0 :: {v: Int | v == 0}
@@ -246,7 +242,7 @@ using the fact that in the first equation for `divide` the
 
 \noindent
 which *contradicts* the precondition (i.e. input) type.
-Thus, by contradition, LH deduces that the first equation is
+Thus, by contradition, LiquidHaskell deduces that the first equation is
 *dead code* and hence `die` will not be called at run-time.
 
 \newthought{Establishing Preconditions}
@@ -261,8 +257,10 @@ avg3 x y z = divide (x + y + z) 3
 
 <div class="hwex" id="List Average">
 Consider the function `avg`:
-1. Why does LH flag an error at `n` ?
-2. How can you change the code so LH verifies it?
+
+1. Why does LiquidHaskell flag an error at `n` ?
+2. How can you change the code so LiquidHaskell verifies it?
+
 </div>
 
 \begin{code}
@@ -294,13 +292,12 @@ returns non-negative values
 {-@ abs :: Int -> Nat @-}
 \end{code}
 
-LH *verifies* that `abs` indeed enjoys the above type by
+LiquidHaskell *verifies* that `abs` indeed enjoys the above type by
 deducing that `n` is trivially non-negative when `0 < n` and that in 
-the `otherwise` case, i.e. when `not (0 < n)` the value `0 - n` is
-indeed non-negative.
+the `otherwise` case, the value `0 - n` is indeed non-negative.
 
 <div class="footnotetext">
-LH is able to automatically make these arithmetic deductions
+LiquidHaskell is able to automatically make these arithmetic deductions
 by using an [SMT solver][smt-wiki] which has decision built-in
 procedures for arithmetic, to reason about the logical refinements.
 </div>
@@ -310,7 +307,7 @@ Testing Values: Booleans and Propositions
 
 In the above example, we *compute* a value that is guaranteed to be a `Nat`.
 Sometimes, we need to *test* if a value satisfies some property, e.g., is `NonZero`.
-For example, lets write a command-line "calculator" that takes two numbers and divides them.
+For example, lets write a command-line *calculator*:
 
 \begin{code}
 calc = do putStrLn "Enter numerator"
@@ -321,6 +318,7 @@ calc = do putStrLn "Enter numerator"
           calc 
 \end{code}
 
+\noindent which takes two numbers and divides them.
 The function `result` checks if `d` is strictly positive
 (and hence, non-zero), and does the division, or otherwise
 complains to the user:
@@ -331,7 +329,7 @@ result n d
   | otherwise    = "Humph, please enter positive denominator!"
 \end{code}
 
-In the above, `isPositive` is a test that returns a `True` if
+Finally, `isPositive` is a test that returns a `True` if
 its input is strictly greater than `0` or `False` otherwise:
 
 \begin{code}
@@ -340,18 +338,18 @@ isPositive x = x > 0
 \end{code}
 
 \newthought{To verify} the call to `divide` inside `result`
-we need to tell LH that the division only happens with a `NonZero`
+we need to tell LiquidHaskell that the division only happens with a `NonZero`
 value `d`. However, the non-zero-ness is established via the *test*
 that occurs inside the guard `isPositive d`. Hence, we require a
 *post-condition* that states that `isPositive` only returns `True`
-when the argument is strictly positive:
+when the argument is positive:
 
 \begin{code}
 {-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}
 \end{code}
 
 In the above signature, read `Prop v` as "`v` is `True`";
-dually, read `not (Prop v)` as "`v` is `False`.
+dually, read `not (Prop v)` as "`v` is `False`".
 Hence, the output type (postcondition) states that
 `isPositive x` returns `True` if and only if `x` was in
 fact strictly greater than `0`. In other words, we can
@@ -377,11 +375,8 @@ Write a suitable refinement type signature for `lAssert` so that
 lAssert True  x = x
 lAssert False _ = die "yikes, assertion fails!"
 
-yes :: ()
-yes = lAssert (1 + 1 == 2) ()
-
-no :: ()
-no = lAssert (1 + 1 == 3) ()
+yes = lAssert (1 + 1 == 2) () 
+no  = lAssert (1 + 1 == 3) ()
 \end{code}
 
 \hint You need a precondition that `lAssert` is only called with `True`.
@@ -402,15 +397,17 @@ truncate i max
       max'     = abs max 
 \end{code}
 
-`truncate i n` returns `i` if its absolute value is less the
-upper bound `max`, and otherwise *truncates* the value at the maximum.
-LH verifies that the use of `divide` is safe by inferring that:
+\noindent
+The expression `truncate i n` evaluates to `i` when the absolute value
+of `i` is less the upper bound `max`, and otherwise *truncates* the value
+at the maximum `n`. LiquidHaskell verifies that the use of `divide` is
+safe by inferring that:
 
 1. `max' < i'` from the branch condition,
 2. `0 <= i'`   from the `abs` postcondition, and
 3. `0 <= max'` from the `abs` postcondition. 
 
-From the above, LH infers that `i' /= 0`. That is, at the
+From the above, LiquidHaskell infers that `i' /= 0`. That is, at the
 call site `i' :: NonZero`, thereby satisfying the precondition
 for `divide` and verifying that the program has no pesky
 divide-by-zero errors.
@@ -429,4 +426,3 @@ LiquidHaskell. Hopefully you have some sense of how to
 3. **Verify** semantic properties of code by using automatic logic engines 
    (SMT solvers) to track and establish the key relationships between 
    program values.
-

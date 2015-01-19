@@ -1,3 +1,4 @@
+
 Polymorphism {#vectorbounds}
 ============
 
@@ -26,16 +27,17 @@ sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
 \end{code}
 \end{comment}
 
-Refinement types start to shine when we want to establish
-properties of *polymorphic*, datatypes and higher-order
-functions. Rather than discuss these notions abstractly,
-lets illustrate them with a [classic][dmlarray] use-case.
+Refinement types shine when we want to establish
+properties of *polymorphic* datatypes and higher-order
+functions. Rather than be abstract, lets illustrate this
+with a [classic][dmlarray] and concrete  use-case.
 
-\newthought{Array Bounds Checking} aims to ensure that the
-indices used to look up an array, are indeed *valid* for
-the array, i.e. are between `0` and the *size* of the array.
-For example, suppose we create an `array` with two elements,
-and then attempt to look it up at various indices:
+\newthought{Array Bounds Verification} aims to ensure
+that the indices used to look up an array, are indeed
+*valid* for the array, i.e. are between `0` and the
+*size* of the array. For example, suppose we create
+an `array` with two elements and then attempt to look
+it up at various indices:
 
 \begin{spec}
 twoLangs  = fromList ["haskell", "javascript"]
@@ -49,7 +51,9 @@ eeks      = [ok, yup, nono]
     nono  = twoLangs ! 3
 \end{code}
 
-If we try to *run* the above, we get a nasty shock:
+If we try to *run* the above, we get a nasty shock: an exception
+that says we're trying to look up `array` at index `3` whereas
+the size of `array` is just `2`.
 
 \begin{shell}
 Prelude> :l 03-poly.lhs
@@ -60,28 +64,26 @@ Loading package ... done.
 "*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)
 \end{shell}
 
-The exception says we're trying to look up `array` at
-index `3` whereas the size of `array` is just `2`.
-
-If you load this file in a suitably LH-configured editor
-(e.g. Vim or Emacs), you will literally see the error
-*without* running the code. Next, lets see how LH checks
-`ok` and `yup` but flags `nono`, and along the way,
-learn how LiquidHaskell reasons about *recursion*,
-*higher-order functions*, *data types*, and
-*polymorphism*.
+\newthought{In a suitable Editor} e.g. Vim or Emacs, you will
+you will literally see the error *without* running the code.
+Next, lets see how LiquidHaskell checks `ok` and `yup` but
+flags `nono`, and along the way, learn how LiquidHaskell
+reasons about *recursion*, *higher-order functions*,
+*data types*, and *polymorphism*.
 
 
 Specification: Vector Bounds {#vectorbounds}
 --------------------------------------------
 
 First, lets see how to *specify* array bounds safety by *refining* 
-the types for the [key functions][vecspec] exported by `Data.Vector`. 
-In particular we need a way to
+the types for the [key functions][vecspec] exported by `Data.Vector`,
+i.e. how to
 
 1. *define* the size of a `Vector`
 2. *compute* the size of a `Vector`
 3. *restrict* the indices to those that are valid for a given size.
+
+**HEREHEREHEREHERE**
 
 \newthought{Importing Specifications}
 We can write specifications for imported modules -- for which we *lack* --
@@ -198,28 +200,33 @@ and use an alias `NEVector` for non-empty `Vector`s
 startElem' vec = vec ! 0
 \end{code}
 
+<div class="hwex" id="Vector Head">
 \exercise Replace the `undefined` with an *implementation* of `startElem''`
 which accepts *all* `Vector`s but returns a value only when the input `vec`
 is not empty. 
+</div>
 
 \begin{code}
 startElem''     :: Vector a -> Maybe a 
 startElem'' vec = undefined
 \end{code}
 
-\exercise Consider `unsafeLookup` which is essentially a wrapper around the `(!)`
-with the arguments flipped:
+<div class="hwex" id="Unsafe Lookup"> The function `unsafeLookup` is
+a wrapper around the `(!)` with the arguments flipped. Modify the
+*specification* for `unsafeLookup` so that the *implementation* is
+accepted by LiquidHaskell.
+</div>
 
 \begin{code}
 {-@ unsafeLookup :: Int -> Vector a -> a @-}
 unsafeLookup index vec = vec ! index
 \end{code}
 
-Modify the *specification* for `unsafeLookup` (i.e. the text between `{-@ ... @-}`)
-to make the *implementation* typecheck.
-
-\exercise Write a `safeLookup` function that fills in the implementation of `ok`
-to performs a *bounds check* before the access.
+<div class="hwex" id="Safe Lookup">
+Complete the implementation of `safeLookup` by filling
+in the implementation of `ok` so that it performs a bounds
+check before the access.
+</div>
 
 \begin{code}
 {-@ safeLookup :: Vector a -> Int -> Maybe a @-}
