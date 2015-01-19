@@ -88,10 +88,12 @@ Second, every index in `spElems` must be valid, i.e.
 between `0` and the dimension. Unfortunately, Haskell's
 type system does not make it easy to ensure that
 *illegal vectors are not representable*.
-\footnotetext{The standard approach is to use abstract types and
+<div class="footnotetext">
+The standard approach is to use abstract types and
 [smart constructors](https://www.haskell.org/haskellwiki/Smart_constructors)
 but even then there is only the informal guarantee that the
-smart constructor establishes the right invariants.}
+smart constructor establishes the right invariants.
+</div>
 
 \newthought{Data Invariants} LiquidHaskell lets us enforce
 these invariants with a refined data definition:
@@ -460,8 +462,8 @@ one x = Node x Leaf Leaf
 
 \newthought{Insertion} Next, lets write a function that adds an
 element to a `BST`.
-\footnotetext{Amusingly, while typing out the below I swapped the
-`k` and `k'` which caused LiquidHaskell to complain.}
+<div class="footnotetext">Amusingly, while typing out the below I swapped the
+`k` and `k'` which caused LiquidHaskell to complain.</div>
 
 \begin{code}
 add                  :: (Ord a) => a -> BST a -> BST a
@@ -477,10 +479,11 @@ element from a `BST`. This function will return a *pair* of outputs --
 the smallest element and the remainder of the tree. We can say that the
 output element is indeed the smallest, by saying that the remainder's
 elements exceed the element. To this end, lets define a helper type:
-\footnotetext{This helper type approach is rather verbose. We should be able
-to just use plain old pairs and specify the above requirement as a
-*dependency* between the pairs' elements. Later, we will see how to
-do so using [abstract refinements](http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf).}
+<div class="footnotetext">This helper type approach is rather verbose.
+We should be able to just use plain old pairs and specify the above
+requirement as a *dependency* between the pairs' elements. Later,
+we will see how to do so using [abstract refinements](http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf).</div>
+
 
 \begin{code}
 data MinPair a = MP { minElt :: a, rest :: BST a }

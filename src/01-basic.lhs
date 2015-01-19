@@ -38,9 +38,9 @@ Hence, `Zero` describes the *set of* `Int` values that are equal to `0`,
 that is, the singleton set containing just `0`, and `NonZero` describes
 the set of `Int` values that are *not* equal to `0`, that is, the set
 `1, -1, 2, -2, ...` and so on.
-\footnotetext{We will use `@`-marked comments to write refinement type 
+<div class="footnotetext">We will use `@`-marked comments to write refinement type 
 annotations the Haskell source file, making these types, quite literally,
-machine-checked comments!}
+machine-checked comments!</div>
 
 \newthought{To use} these types we can write:
 
@@ -259,7 +259,11 @@ avg2 x y   = divide (x + y) 2
 avg3 x y z = divide (x + y + z) 3
 \end{code}
 
-\exercisen{List Average} Consider the general list-averaging function:
+<div class="hwex" id="List Average">
+Consider the function `avg`:
+1. Why does LH flag an error at `n` ?
+2. How can you change the code so LH verifies it?
+</div>
 
 \begin{code}
 avg       :: [Int] -> Int
@@ -269,8 +273,6 @@ avg xs    = divide total n
     n     = length xs
 \end{code}
 
-1. Why does LH flag an error at `n` ?
-2. How can you change the code so LH verifies it?
 
 Refining Function Types: Postconditions
 ---------------------------------------
@@ -295,13 +297,13 @@ returns non-negative values
 LH *verifies* that `abs` indeed enjoys the above type by
 deducing that `n` is trivially non-negative when `0 < n` and that in 
 the `otherwise` case, i.e. when `not (0 < n)` the value `0 - n` is
-indeed non-negative. \footnotetext{Lets not worry about underflows for the moment.}
+indeed non-negative.
 
-\footnotetext{
+<div class="footnotetext">
 LH is able to automatically make these arithmetic deductions
-by using an [SMT solver](http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories)
-which has decision built-in procedures for arithmetic, to reason about
-the logical refinements.}
+by using an [SMT solver][smt-wiki] which has decision built-in
+procedures for arithmetic, to reason about the logical refinements.
+</div>
 
 Testing Values: Booleans and Propositions
 -----------------------------------------
@@ -358,32 +360,29 @@ to establish that user-supplied values satisfy some desirable
 property (here, `Pos` and hence `NonZero`) in order to then
 safely perform some computation on it.
 
-\exercise What happens if you *delete* the type for `isPositive` ?
+<div class="hwex" id="Propositions">
+What happens if you *delete* the type for `isPositive` ?
 Can you *change* the type for `isPositive` (i.e. write some other type)
 to while preserving safety?
+</div>
 
-\exercisen{Assertions} Consider the following [assert](hoogle-assert) function:
+<div class="hwex" id="Assertions">
+Consider the following [assert][hoogle-assert] function, and two use sites.
+Write a suitable refinement type signature for `lAssert` so that
+`lAssert` and `yes` are accepted but `no` is rejected.
+</div>
 
 \begin{code}
 {-@ lAssert  :: Bool -> a -> a @-}
 lAssert True  x = x
 lAssert False _ = die "yikes, assertion fails!"
-\end{code}
 
-\noindent
-We can use the function as:
-
-\begin{code}
 yes :: ()
 yes = lAssert (1 + 1 == 2) ()
 
 no :: ()
 no = lAssert (1 + 1 == 3) ()
 \end{code}
-
-\noindent
-Write a suitable refinement type signature for `lAssert` so that
-`lAssert` and `yes` are accepted but `no` is rejected.
 
 \hint You need a precondition that `lAssert` is only called with `True`.
 

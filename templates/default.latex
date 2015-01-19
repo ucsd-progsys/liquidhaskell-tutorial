@@ -6,9 +6,17 @@
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 
 \usepackage{amssymb,amsmath}
+
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} 
 \usepackage{xspace} 
+
+%% EXERCISE: NEW
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\declaretheorem[numberwithin=chapter,name=Exercise]{hwex}
+
 
 %% EXERCISE: HANDROLLED
 \usepackage{chngcntr}
@@ -148,7 +156,10 @@ $endif$
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 
+\usepackage{nameref}
 \usepackage{hyperref}
+\usepackage{cleveref}
+
 \hypersetup{breaklinks=true,
             bookmarks=true,
             colorlinks=true,
@@ -184,9 +195,14 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
 $endif$
 
-$if(title)$
-\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
-$endif$
+\title[Programming With Refinement Types]{\ Programming With\\[0.5in] Refinement Types\\[0.7in]
+{\huge {An Introduction to LiquidHaskell}}
+}
+
+
+%% $if(title)$
+%% \title{$title$$if(subtitle)$\\\vspace{0.5em}{\huge $subtitle$}$endif$}
+%% $endif$
 
 $if(author)$
 \author{$for(author)$$author$$sep$ \and $endfor$}
@@ -215,6 +231,7 @@ $endfor$
 \begin{document}
 
 \maketitle
+
 
 \newpage
 
@@ -247,8 +264,10 @@ under the License.\index{license}
 }
 
 % \listoftables
-
 % \listoffigures
+
+\renewcommand{\listtheoremname}{List of Exercises}
+\listoftheorems[ignoreall, show={hwex}]
 
 \mainmatter
 

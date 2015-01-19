@@ -1,5 +1,6 @@
 ---
-title:          "Using LiquidHaskell"
+title:          "Programming with Refinement Types"
+subtitle:       "An Introduction to LiquidHaskell"
 author:         Ranjit Jhala, Niki Vazou, Eric Seidel
 date:           Sep 5th, 2014
 documentclass:  book

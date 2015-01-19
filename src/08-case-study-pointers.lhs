@@ -398,10 +398,9 @@ us to verify systems that use some modules for which we do not have
 the code. Here, we can *assume* a boundary specification, and then
 *guarantee* that the rest of the system is safe with respect to
 that specification.
-\footnotetext{If we so desire, we can also *check* the boundary
+<div class="footnotetext">If we so desire, we can also *check* the boundary
 specifications at [run-time](http://en.wikipedia.org/wiki/Design_by_contract),
-but that is outside the scope of LiquidHaskell}.
-
+but that is outside the scope of LiquidHaskell.</div>
 
 ByteString API
 --------------

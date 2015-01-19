@@ -42,7 +42,7 @@ Plan
 
 Many of the programs we have seen so far, for example those in
 [here](#vectorbounds), suffer from *indexitis*
-\footnotetext{A term coined by [Richard Bird](http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383)}
+<div class="footnotetext">A term coined by [Richard Bird](http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383)</div>
 a tendency to perform low-level manipulations to iterate over the
 indices into a collection, which opens the door to various off-by-one
 errors. Such errors can be entirely eliminated by instead programming
@@ -56,9 +56,8 @@ a fate worse than a crash, a *meaningless* result.
 Fortunately, LiquidHaskell can help. Lets see how we can use measures to
 specify dimensions and create a dimension-aware API for lists which can be
 used to implement wholemeal dimension-safe APIs.
-\footnotetext{In a [later chapter](#kmeans-case-study) we will use this
-API to implement K-means clustering.}
-
+<div class="footnotetext">In a [later chapter](#kmeans-case-study) we will use this
+API to implement K-means clustering.</div>
 
 Wholemeal Programming
 ---------------------
@@ -276,8 +275,7 @@ zip _  []         = []
 
 \noindent The output type uses the following which defines `X`
 to be the smaller of `Y` and `Z`.
-\footnotetext{Note that `if p then q else r` is simply an abbreviation for `p => q && not p => r`}
-
+<div class="footnotetext">Note that `if p then q else r` is simply an abbreviation for `p => q && not p => r`</div>
 \begin{code}
 {-@ predicate Min X Y Z = (if X < Y then X = Y else X = Z) @-}
 \end{code}
