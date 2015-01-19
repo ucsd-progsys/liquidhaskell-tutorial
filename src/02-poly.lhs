@@ -16,13 +16,16 @@ module VectorBounds
    , dotProduct
    , sparseProduct, sparseProduct'
    , eeks
-   , startElem, startElem'
+   , head, head', head''
    ) where
 
-import Prelude      hiding (abs, length)
+import Prelude      hiding (head, abs, length)
 import Data.List    (foldl')
-import Data.Vector  hiding (foldl') 
+import Data.Vector  hiding (head, foldl') 
 
+absoluteSum'     :: Vector Int -> Int
+dotProduct     :: Vector Int -> Vector Int -> Int
+absoluteSum     :: Vector Int -> Int
 sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
 \end{code}
 \end{comment}
@@ -83,14 +86,14 @@ i.e. how to
 2. *compute* the size of a `Vector`
 3. *restrict* the indices to those that are valid for a given size.
 
-**HEREHEREHEREHERE**
+<div class="toolinfo">
 
-\newthought{Importing Specifications}
-We can write specifications for imported modules -- for which we *lack* --
-the code either directly in the source file or better, in `.spec` files
-which can be reused by different client modules.
-For example, we can write specifications for `Data.Vector` inside
-`/include/Data/Vector.spec` which contains:
+\newthought{Imports}
+We can write specifications for imported modules -- for which we
+*lack* the code -- either directly in the client's source file or
+better, in `.spec` files which can be reused across multiple client
+modules. For example, we can write specifications for `Data.Vector`
+inside `/include/Data/Vector.spec` which contains:
 
 \begin{spec}
 -- | Define the size 
@@ -102,6 +105,8 @@ assume length :: x:Vector a -> {v:Int | v = vlen x}
 -- | Restrict the indices 
 assume !      :: x:Vector a -> {v:Nat | v < vlen x} -> a 
 \end{spec}
+
+</div>
 
 \newthought{Measures} are used to define *properties* of
 Haskell data values that are useful for specification and
@@ -120,20 +125,21 @@ size of the input vector `x`.
 signature for `length` names the input with the binder `x` that then
 appears in the output type to constrain the output `Int`. Similarly,
 the signature for `(!)` names the input vector `x` so that the index
-can be constrained to be valid for `x`.  Thus dependency is essential
+can be constrained to be valid for `x`.  Thus, dependency is essential
 for writing properties that connect different program values.
 
-\newthought{Aliases} are extremely useful for defining shorthands for
-commonly occuring types. Just as we enjoy abstractions when programming,
-we will find it handy to have abstractions in the specification mechanism.
-To this end, LiquidHaskell supports *type aliases*. For example, we can
-define `Vector`s of a given size `N` as:
+\newthought{Aliases} are extremely useful for defining
+*abbreviations* for commonly occuring types. Just as we
+enjoy abstractions when programming, we will find it
+handy to have abstractions in the specification mechanism.
+To this end, LiquidHaskell supports *type aliases*.
+For example, we can define `Vector`s of a given size `N` as:
 
 \begin{code}
 {-@ type VectorN a N = {v:Vector a | vlen v == N} @-}
 \end{code}
 
-and now use this to type `twoLangs` above as:
+\noindent and now use this to type `twoLangs` above as:
 
 \begin{code}
 {-@ twoLangs :: VectorN String 2 @-}
@@ -157,11 +163,11 @@ Verification: Vector Lookup
 ---------------------------
 
 Lets try write some functions to sanity check the specifications.
-First, find the starting element of a `Vector` 
+First, find the starting element -- or `head` of a `Vector` 
 
 \begin{code}
-startElem     :: Vector a -> a
-startElem vec = vec ! 0
+head     :: Vector a -> a
+head vec = vec ! 0
 \end{code}
 
 When we check the above, we get an error:
@@ -169,25 +175,25 @@ When we check the above, we get an error:
 \begin{liquiderror}
      src/03-poly.lhs:127:23: Error: Liquid Type Mismatch
        Inferred type
-         VV : Int | VV == ?a && VV == (0  :  int)
+         VV : Int | VV == ?a && VV == 0
       
        not a subtype of Required type
          VV : Int | VV >= 0 && VV < vlen vec
       
        In Context
-         VV  : Int | VV == ?a && VV == (0  :  int)
-         vec : (Vector a) | 0 <= vlen vec
+         VV  : Int | VV == ?a && VV == 0 
+         vec : Vector a | 0 <= vlen vec
          ?a  : Int | ?a == (0  :  int)
 \end{liquiderror}
 
 \noindent LiquidHaskell is saying that `0` is *not* a valid index
 as it is not between `0` and `vlen vec`. Say what? Well, what if
-`vec` had *no* elements! Fortunately, a formal verifier doesn't
+`vec` had *no* elements! A formal verifier doesn't
 make *off by one* errors.
 
-\newthought{Fix} We can fix the problem in one of two ways:
+\newthought{To Fix} the problem we can do one of two things. 
 
-1. *Require* that the input `vec` be non-empty.
+1. *Require* that the input `vec` be non-empty, or
 2. *Return* an output if `vec` is non-empty, or
 
 Here's an implementation of the first approach, where we define
@@ -196,24 +202,24 @@ and use an alias `NEVector` for non-empty `Vector`s
 \begin{code}
 {-@ type NEVector a = {v:Vector a | 0 < vlen v} @-}
 
-{-@ startElem' :: NEVector a -> a @-}
-startElem' vec = vec ! 0
+{-@ head' :: NEVector a -> a @-}
+head' vec = vec ! 0
 \end{code}
 
 <div class="hwex" id="Vector Head">
-\exercise Replace the `undefined` with an *implementation* of `startElem''`
+Replace the `undefined` with an *implementation* of `head''`
 which accepts *all* `Vector`s but returns a value only when the input `vec`
 is not empty. 
 </div>
 
 \begin{code}
-startElem''     :: Vector a -> Maybe a 
-startElem'' vec = undefined
+head''     :: Vector a -> Maybe a 
+head'' vec = undefined
 \end{code}
 
 <div class="hwex" id="Unsafe Lookup"> The function `unsafeLookup` is
 a wrapper around the `(!)` with the arguments flipped. Modify the
-*specification* for `unsafeLookup` so that the *implementation* is
+specification for `unsafeLookup` so that the *implementation* is
 accepted by LiquidHaskell.
 </div>
 
@@ -256,16 +262,19 @@ vectorSum vec     = go 0 0
     sz            = length vec
 \end{code}
 
-\exercise What happens if you *replace* the guard with `i <= sz`?
+<div class="hwex" id="Guards">
+What happens if you *replace* the guard with `i <= sz`?
+</div>
 
-\exercise Write a variant of the above function that computes the
- `absoluteSum` of the elements of the vector.
+<div class="hwex" id="Absolute Sum">
+Write a variant of the above function that computes the
+`absoluteSum` of the elements of the vector.
+</div>
 
 \begin{code}
 -- >>> absoluteSum (fromList [1, -2, 3])
 -- 6
 {-@ absoluteSum :: Vector Int -> Nat @-}
-absoluteSum     :: Vector Int -> Int
 absoluteSum     = undefined
 \end{code}
 
@@ -273,10 +282,13 @@ absoluteSum     = undefined
 \newthought{Inference}
 LiquidHaskell verifies `vectorSum` -- or, to be precise, the safety of
 the vector accesses `vec ! i`.  The verification works out because
-LiquidHaskell is able to *automatically infer* \footnotetext{In your editor, click on `go` to see the inferred type.}
+LiquidHaskell is able to *automatically infer*
+<div class="footnotetext">
+In your editor, click on `go` to see the inferred type.
+</div>
 
 \begin{spec}
-go :: Int -> {v:Int | v >= 0 && v <= sz} -> Int
+go :: Int -> {v:Int | 0 <= v && v <= sz} -> Int
 \end{spec}
 
 \noindent which states that the second parameter `i` is
@@ -284,8 +296,9 @@ between `0` and the length of `vec` (inclusive). LiquidHaskell
 uses these and the test that `i < sz` to establish that `i` is
 between `0` and `(vlen vec)` to prove safety. 
 
-\exercise Why does `go`'s type have `v <= sz` instead of `v < sz` ?
-
+<div class="hwex" id="Off by one?">
+Why does the type of `go` have `v <= sz` and not `v < sz` ?
+</div>
 
 Higher-Order Functions: Bottling Recursion in a `loop`
 ------------------------------------------------------
@@ -315,7 +328,7 @@ vectorSum' vec  = loop 0 n 0 body
 \newthought{Inference} is a convenient option. LiquidHaskell finds:
 
 \begin{spec}
-loop :: lo:Nat -> hi:{Nat | lo <= hi} -> a -> (Btwn lo hi -> a -> a) -> a
+loop :: lo:Nat -> hi:{Nat|lo <= hi} -> a -> (Btwn lo hi -> a -> a) -> a
 \end{spec}
 
 \noindent In english, the above type states that 
@@ -330,41 +343,44 @@ If we wanted to make `loop` a public or exported function, we
 could use the inferred type to generate an explicit signature.
 
 At the call `loop 0 n 0 body` the parameters `lo` and `hi` are
-instantiated with `0` and `n` respectively (which, by the way
-is where the inference engine deduces non-negativity from) and
-thus LiquidHaskell concludes that `body` is only called with
+instantiated with `0` and `n` respectively, which, by the way
+is where the inference engine deduces non-negativity.
+Thus LiquidHaskell concludes that `body` is only called with
 values of `i` that are *between* `0` and `(vlen vec)`, which
-shows the safety of the call `vec ! i`.
+verifies the safety of the call `vec ! i`.
 
-\exercise Complete the implementation of `absoluteSum'` below.
+<div class="hwex" id="Using Higher-Order Loops">
+Complete the implementation of `absoluteSum'` below.
 When you are done, what is the type that is inferred for `body`?
+</div>
 
 \begin{code}
 -- >>> absoluteSum' (fromList [1, -2, 3])
 -- 6
 {-@ absoluteSum' :: Vector Int -> Nat @-}
-absoluteSum'     :: Vector Int -> Int
 absoluteSum' vec = loop 0 n 0 body
   where
     n            = length vec
     body i acc   = undefined
 \end{code}
 
-\exercise Lets use `loop` to compute `dotProduct`s:
+<div class="hwex" id="Dot Product">
+The following function uses `loop` to compute
+`dotProduct`s. Why does LiquidHaskell flag an error?
+Fix the code or specification so that LiquidHaskell
+accepts it. </div>
+
+\vspace{1.0in}
 
 \begin{code}
 -- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
 -- 32 
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
-dotProduct     :: Vector Int -> Vector Int -> Int
 dotProduct x y = loop 0 sz 0 body 
   where
     sz         = length x
     body i acc = acc + (x ! i)  *  (y ! i)
 \end{code}
-
-\noindent Why does LiquidHaskell flag an error in the above?
-Fix the code or specification to get a correct `dotProduct`.
 
 Refinements and Polymorphism {#sparsetype}
 ----------------------------------------
@@ -392,11 +408,11 @@ is *not* indexed.
 Lets write a function to compute a sparse product
 
 \begin{code}
-{-@ sparseProduct        :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-sparseProduct x y        = go 0 y
+{-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+sparseProduct x y   = go 0 y
   where 
-    go sum ((i, v) : y') = go (sum + (x ! i) *  v) y' 
-    go sum []            = sum
+    go n ((i,v):y') = go (n + (x!i) * v) y' 
+    go n []         = n
 \end{code}
 
 LiquidHaskell verifies the above by using the specification
@@ -416,7 +432,7 @@ foldl' :: (a -> b -> a) -> a -> [b] -> a
 as we go along
 
 \begin{code}
-{-@ sparseProduct'  :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
+{-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct' x y  = foldl' body 0 y   
   where 
     body sum (i, v) = sum + (x ! i)  * v
@@ -424,7 +440,8 @@ sparseProduct' x y  = foldl' body 0 y
 
 \noindent
 LiquidHaskell digests this without difficulty. 
-The main trick is in how the polymorphism of `foldl'` is instantiated. 
+The main trick is in how the polymorphism of
+`foldl'` is instantiated. 
 
 1. GHC infers that at this site, the type variable `b` from the
    signature of `foldl'` is instantiated to the Haskell type `(Int, a)`. 
@@ -432,8 +449,9 @@ The main trick is in how the polymorphism of `foldl'` is instantiated.
 2. Correspondingly, LiquidHaskell infers that in fact `b`
    can be instantiated to the *refined* `(Btwn 0 v (vlen x), a)`. 
 
-Thus, the inference mechanism saves us a fair bit of typing and allows us to
-reuse existing polymorphic functions over containers and such without ceremony.
+Thus, the inference mechanism saves us a fair bit of typing and
+allows us to reuse existing polymorphic functions over containers
+and such without ceremony.
 
 Recap
 -----

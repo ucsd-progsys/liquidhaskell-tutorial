@@ -64,16 +64,23 @@
 
 ## TODO 
 
-+ add table of exercises?
-  \begin{exercise}{NAME}
-  ...
-  \end{exercise}
-
 + pass over each chapter
     - proofread
     - squish code into box
     - fix footnotetext/links
     - fix exercises 
+
+    + 00
+    + 01
+    + 02
+    - 03
+    - 04
+    - 05
+    - 06
+    - 07
+    * 08 <<< HEREHEREHEREHERE
+
+
 
 + Subtyping exercises
     - div by zero

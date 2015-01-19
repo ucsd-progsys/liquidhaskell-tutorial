@@ -36,10 +36,11 @@ need to, you can drop down to low-level pointer twiddling to squeeze the
 most performance out of your machine. But of course, that opens the door 
 to the heartbleeds.
 
-Wouldn't it be nice to have have our cake and eat it too? That is wouldn't
-it be great if we could twiddle pointers at a low-level and still get the
-nice safety assurances of high-level types? In this case study, lets see
-how LiquidHaskell lets us do exactly that.
+Wouldn't it be nice to have have our cake and eat it too?
+Wouldn't it be great if we could twiddle pointers at a
+low-level and still get the nice safety assurances of
+high-level types? Lets see how LiquidHaskell lets us
+have our cake and eat it too.
 
 
 HeartBleeds in Haskell
@@ -48,20 +49,17 @@ HeartBleeds in Haskell
 \newthought{Modern Languages} like Haskell are ultimately built upon the
 foundation of `C`. Thus, implementation errors could open up unpleasant
 vulnerabilities that could easily slither past the type system and even
-code inspection.
+code inspection. As a concrete example, lets look at a a function that
+uses the `ByteString` library to truncate strings:
 
-
-\newthought{Truncating Strings} As a concrete example, lets look at a
-a function that uses the `ByteString` library to truncate strings:
-
-\begin{spec}
-chop     :: String -> Int -> String
-chop s n = s'
+\begin{code}
+chop'     :: String -> Int -> String
+chop' s n = s'
   where 
-    b    = B.pack s          -- down to low-level
-    b'   = B.unsafeTake n b  -- grab n chars
-    s'   = B.unpack b'       -- up to high-level
-\end{spec}
+    b     = pack s          -- down to low-level
+    b'    = unsafeTake n b  -- grab n chars
+    s'    = unpack b'       -- up to high-level
+\end{code}
 
 \noindent First, the function `pack`s the string into a low-level
 bytestring `b`, then it grabs the first `n` `Char`acters from `b`
@@ -75,11 +73,11 @@ ghci> let ex = "Ranjit Loves Burritos"
 \noindent We get the right result when we `chop` a *valid* prefix:
 
 \begin{spec}
-ghci> chop ex 10
+ghci> chop' ex 10
 "Ranjit Lov"
 \end{spec}
 
-\noindent But, as illustrated in Figure~\ref{fig:overflow}, the
+\noindent But, as illustrated in \cref{fig:overflow}, the
 machine silently reveals (or more colorfully, *bleeds*) the contents
 of adjacent memory or if we use an *invalid* prefix:
 
@@ -97,58 +95,58 @@ ghci> heartBleed ex 30
 
 
 \newthought{Types against Overflows} Now that we have stared the problem
-straight in the eye, look at how we can use LiquidHaskell to *prevent* the
-above at compile time. To this end, we decompose the overall system into
-a hierarchy of *levels* (i.e. *modules*). In this case, we have three levels:
+straight in the eye, look at how we can use LiquidHaskell to prevent the
+above at compile time. To this end, we decompose the system into
+a hierarchy of levels (i.e. modules). Here, we have three levels:
 
-1. **Machine** level `Pointers`
-2. **Library** level `ByteString`
-3. **User**    level `Application`
+1. *Machine* level `Pointers`
+2. *Library* level `ByteString`
+3. *User*    level `Application`
 
-\noindent Now, our strategy, as before, is to develop an *refined API* for
-each level such that errors at *each* level are prevented by using the typed
-interfaces for the *lower* levels. Next, lets see how this strategy helps develop
-a safe means of manipulating pointers.
+\noindent Our strategy, as before, is to develop an *refined API* for
+each level such that errors at each level are prevented by using the typed
+interfaces for the lower levels. Next, lets see how this strategy lets us 
+safely manipulate pointers.
 
 Low-level Pointer API 
 ---------------------
 
 To get started, lets look at the low-level pointer API that is
-offered by GHC and the run-time. First, lets just see who the
-*dramatis personae* are, and how they might let heartbleeds in.
-Then, once we have come to grips with the problem, we will see
-how to batten down the hatches with LiquidHaskell.
+offered by GHC and the run-time. First, lets see who the
+*dramatis personae* are and how they might let heartbleeds in.
+Then we will see how to batten down the hatches with LiquidHaskell.
 
-\newthought{Pointers} are an (abstract) type implemented by GHC.
-To quote the documentation, "a value of type `Ptr a represents a
-pointer to an object, or an array of objects, which may be marshalled
-to or from Haskell values of type `a`.
+\newthought{Pointers} are an (abstract) type `Ptr a` implemented by GHC.
 
 \begin{spec}
+-- | A value of type `Ptr a` represents a pointer to an object,
+--   or an array of objects, which may be marshalled to or from
+--   Haskell values of type `a`.
+
 data Ptr a         
 \end{spec}
 
 \newthought{Foreign Pointers} are *wrapped* pointers that can be
-exported to and from C code via the [Foreign Function Interface](foreignptr).
+exported to and from C code via the [Foreign Function Interface][foreignptr].
 
 \begin{spec}
 data ForeignPtr a 
 \end{spec}
 
 \newthought{To Create} a pointer we use `mallocForeignPtrBytes n`
-which creates a `Ptr` to a buffer of size `n`, wraps it as a
-`ForeignPtr` and returns the result:
+which creates a `Ptr` to a buffer of size `n` and wraps it as a
+`ForeignPtr`
 
 \begin{spec}
-malloc :: Int -> ForeignPtr a
+mallocForeignPtrBytes :: Int -> ForeignPtr a
 \end{spec}
 
 \newthought{To Unwrap} and actually use the `ForeignPtr` we use 
 
 \begin{spec}
-withForeignPtr :: ForeignPtr a     -- ^ pointer 
-               -> (Ptr a -> IO b)  -- ^ action 
-               -> IO b             -- ^ result
+withForeignPtr :: ForeignPtr a     -- pointer 
+               -> (Ptr a -> IO b)  -- action 
+               -> IO b             -- result
 \end{spec}
 
 \noindent That is, `withForeignPtr fp act` lets us execute a
@@ -156,25 +154,23 @@ action `act` on the actual `Ptr` wrapped within the `fp`.
 These actions are typically sequences of *dereferences*,
 i.e. reads or writes.
 
-\newthought{To Derereference} a pointer, e.g. to read or update
+\newthought{To Dereference} a pointer, i.e. to read or update
 the contents at the corresponding memory location, we use
-the functions `peek` and `poke` respectively.
-\footnotetext{We elide the `Storable` type class constraint to
-strip the presentation down to the absolute essentials.}
+`peek` and `poke` respectively.
+<div class="footnotetext">
+We elide the `Storable` type class constraint to strip
+this presentation down to the absolute essentials.
+</div>
 
 \begin{spec}
--- | Read 
-peek :: Ptr a -> IO a           
-
--- | Write
-poke :: Ptr a -> a -> IO ()
+peek :: Ptr a -> IO a         -- Read  
+poke :: Ptr a -> a -> IO ()   -- Write
 \end{spec}
 
 \newthought{For Fine Grained Access} we can directly shift
-pointers to arbitrary offsets from the blocks obtained via `malloc`.
-This is done via the low-level *pointer arithmetic* operation `plusPtr p off`
-which takes a pointer `p` an integer `off` and returns the pointer (address)
-obtained shifting `p` by `off`:
+pointers to arbitrary offsets using the *pointer arithmetic*
+operation `plusPtr p off` which takes a pointer `p` an integer
+`off` and returns the address obtained shifting `p` by `off`:
 
 \begin{spec}
 plusPtr :: Ptr a -> Int -> Ptr b 
@@ -216,19 +212,18 @@ A Refined Pointer API
 ---------------------
 
 Wouldn't it be great if we had an assistant to helpfully point out
-the error above as soon as we *wrote* it? To turn LiquidHaskell into
-this friend, we will use the following strategy: 
+the error above as soon as we *wrote* it?
+\footnotetext{In Vim or Emacs, you'd see the error helpfully underlined.}
+We will use the following strategy to turn LiquidHaskell into such an assistant:
 
-1. **Refine pointers** with allocated buffer size
-2. **Track sizes** in pointer operations
+1. *Refine* pointers with allocated buffer size,
+2. *Track* sizes in pointer operations,
+3. *Enforce* pointer are valid at reads and writes.
 
-\newthought{To Refining Pointers} with the *size* of their associated
-buffers, we can use an *abstract measure*, i.e. a measure specification  
-*without* any underlying implementation.
-
-\footnotetext{These two measures, and the signatures for
-the associate API are defined and imported from in the
-LiquidHaskell [standard library](https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/GHC/Ptr.spec). We include them here for exposition.}
+\newthought{To Refine Pointers} with the *size* of their
+associated buffers, we can use an *abstract measure*,
+i.e. a measure specification *without* any underlying
+implementation.
 
 \begin{spec}
 -- | Size of `Ptr`
@@ -238,8 +233,7 @@ measure plen  :: Ptr a -> Int
 measure fplen :: ForeignPtr a -> Int 
 \end{spec}
 
-\noindent As before, it is helpful to define a few
-aliases for pointers of a given size `N`:
+\noindent It is helpful to define aliases for pointers of a given size `N`:
 
 \begin{spec}
 type PtrN a N        = {v:Ptr a        | plen v  = N} 
@@ -248,11 +242,14 @@ type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}
 
 \newthought{Abstract Measures} are extremely useful when we don't have
 a concrete implementation of the underlying value, but we know that
-the value *exists*.  \footnotetext{This is another example of a
-*ghost* specification} Here, we don't have the value -- inside Haskell
+the value *exists*.   Here, we don't have the value -- inside Haskell
 -- because the buffers are manipulated within C. However, this is no
-cause for alarm as we will simply use measures to refine the API (not
-to perform any computations.)
+cause for alarm as we will simply use measures to refine the API, not
+to perform any computations.
+<div class="footnotetext"> This is another example of a
+*ghost* specification. </div>
+
+**HEREHEREHEREHERE**
 
 \newthought{To Refine Allocation} we stipulate that
 the size parameter be non-negative, and that the returned
@@ -826,14 +823,6 @@ for those layers and verify the rest of the system with respect to
 that API.  It is important to note that in the entire case study, it
 is only the above FFI signatures that are *trusted*; the rest are all
 verified by LiquidHaskell.
-
-\begin{code}
-ranjit :: Int
-ranjit = 12 + flibbertypopp 
-
-flibbertypopp :: Int
-flibbertypopp = 42
-\end{code}
 
 \begin{comment}
 \begin{code}
