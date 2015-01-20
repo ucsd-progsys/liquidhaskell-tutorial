@@ -155,20 +155,35 @@ add a ticker@(Node v l r n) = case compare a v of
 
   z = t   || z = t + 1
 
--- | Z3 says the below is SAT.
+-- | Z3 says the below is SAT, WHY?!!!
 
 (declare-const l Int)
 (declare-const l1 Int)
 (declare-const r Int)
 (declare-const z Int)
 (declare-const t Int)
-(assert (> l1 r))
-(assert (or (= l1 l)  (= l1 (+ l 1))))
+
+(assert (<= l 0))
+(assert (<= r 0))
+
+;; t = node l r
 (assert (or (<= l r)  (= t (+ l 1))))
 (assert (or (> l r)   (= t (+ r 1))))
-(assert (or (= z l1)  (= z (+ l1 1))))
+
+;; l, r are balanced
 (assert (<= (- l r) 1))
 (assert (<= (- r l) 1))
+
+;; lets just assume
+(assert (> l r)) ;; t = l + 1
+
+;; result of insert
+(assert (or (= l1 l)  (= l1 (+ l 1))))
+
+;; output of 'junk/bal'
+(assert (or (= z l1)  (= z (+ l1 1))))
+
+;; goal
 (assert (not (or (= z t)  (= z (+ t 1)))))
 (check-sat)
 
