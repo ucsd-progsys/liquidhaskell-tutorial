@@ -4,10 +4,13 @@ Case Study: AVL Trees {#avltree}
 \begin{code}
 {- Example of AVL trees by michaelbeaumont -}
 
+{-  LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--totality" @-}
+{-@ LIQUID "--totality"       @-}
 
 module AVL (AVL, empty, singleton, insert) where
+
+import Language.Haskell.Liquid.Prelude (liquidAssume)
 
 -- Test
 main = do
@@ -26,8 +29,8 @@ data AVL a = Leaf | Node { key :: a, l::AVL a, r:: AVL a, ah :: Int } deriving S
 
 {-@ data AVL [ht] a = Leaf | Node { key :: a
                                   , l   :: AVLL a key
-                                  , r   :: AVLR a key
-                                  , ah  :: {v:Nat | HtBal l r && Ht v l r}
+                                  , r   :: {v: AVLR a key | HtBal l v 1}
+                                  , ah  :: {v:Nat | HtBal l r 1 && Ht v l r}
                                   }                                          @-}
 
 -- | Left and Right Tree Ordering --------------------------------------------------------- 
@@ -53,7 +56,7 @@ ht (Node _ l r _) = if ht l > ht r then 1 + ht l else 1 + ht r
 
 -- | Predicate Aliases -------------------------------------------------------------------- 
 
-{-@ predicate HtBal L R      = -1 <= ht L - ht R && ht L - ht R <= 1                  @-}
+{-@ predicate HtBal L R N    = 0 <= ht L - ht R + N && ht L - ht R <= N               @-}
 {-@ predicate Ht N L R       = N = if (ht L) > (ht R) then (1 + ht L) else (1 + ht R) @-}
 {-@ predicate HtDiff S T D   = ht S - ht T == D                                       @-}
 {-@ predicate EqHt S T       = HtDiff S T 0                                           @-}
@@ -69,7 +72,7 @@ ht (Node _ l r _) = if ht l > ht r then 1 + ht l else 1 + ht r
 
 -- | Smart Constructor (fills in height field) ---------------------------------------------
 
-{-@ tree   :: x:a -> l:AVLL a x -> r:{AVLR a x | HtBal l r} -> {v:AVL a | Ht (ht v) l r} @-}
+{-@ tree   :: x:a -> l:AVLL a x -> r:{AVLR a x | HtBal l r 1} -> {v:AVL a | Ht (ht v) l r} @-}
 tree v l r = Node v l r (mkHt l r)
 
 {-@ mkHt   :: l:_ -> r:_ -> {v:Nat | Ht v l r} @-}
@@ -118,34 +121,112 @@ singleton a = tree a empty empty
 -- | API: Insert --------------------------------------------------------------------------- 
 --------------------------------------------------------------------------------------------
 
-{-@ insert :: a -> s:AVL a -> {t: AVL a | EqHt t s || HtDiff t s 1 } @-}
+{-@ insert :: a -> s:AVL a -> {t: AVL a | Eq1 s t} @-}
 insert a Leaf             = singleton a
 insert a t@(Node v _ _ _) = case compare a v of
     LT -> insL a t 
     GT -> insR a t
     EQ -> t
 
-{-@ insL :: x:a -> s:{AVL a | x < key s && ht s > 0} -> {t: AVL a | EqHt t s || HtDiff t s 1 } @-}
+{-@ add :: a -> s:AVL a -> {t: AVL a | Eq1 s t} @-}
+add a Leaf             = singleton a
+add a ticker@(Node v l r n) = case compare a v of
+    LT -> let l'  = add a l
+              hl' = ht l'
+          in  liquidAssume (hl' > hr) $ junk l' --bal v l' r 
+    -- GT -> let r' = add a r in bal v l  r' 
+    -- EQ -> ticker
+    where
+      hl = ht l
+      hr = ht r
+
+{-
+
+  l1 > r
+  l1 = l  || l1 = l + 1
+  l <= r  || t  = l + 1
+  l > r   || t  = r + 1
+  z  = l1 || z  = l1 + 1
+
+  l - r <= 1
+  r - l <= 1
+
+  =>
+
+  z = t   || z = t + 1
+
+-- | Z3 says the below is SAT.
+
+(declare-const l Int)
+(declare-const l1 Int)
+(declare-const r Int)
+(declare-const z Int)
+(declare-const t Int)
+(assert (> l1 r))
+(assert (or (= l1 l)  (= l1 (+ l 1))))
+(assert (or (<= l r)  (= t (+ l 1))))
+(assert (or (> l r)   (= t (+ r 1))))
+(assert (or (= z l1)  (= z (+ l1 1))))
+(assert (<= (- l r) 1))
+(assert (<= (- r l) 1))
+(assert (not (or (= z t)  (= z (+ t 1)))))
+(check-sat)
+
+-- DESPERATELY SEEKING COUNTEREXAMPLES.
+
+-}
+    
+{-@ junk :: s:_ -> {t:_ | Eq1 s t} @-}
+junk :: AVL a -> AVL a
+junk = undefined
+
+{-@ predicate Eq1 S T    = EqHt T S || HtDiff T S 1 @-}
+{-@ predicate RBal L R T = if (ht L >= ht R) then (Eq1 L T) else Eq1 R T @-}
+    
+{- bal :: x:a -> l:AVLL a x -> r:{AVLR a x | HtBal l r 2} -> {t: AVL a | RBal l r t} @-}
+bal v l r
+  | leftBig  && bl > 0 = rebalanceLL v l r -- l
+  | leftBig  && bl < 0 = rebalanceLR v l r -- l 
+  | leftBig            = rebalanceL0 v l r -- l + 1
+  | rightBig && br > 0 = rebalanceRL v l r -- r
+  | rightBig && br < 0 = rebalanceRR v l r -- r
+  | rightBig           = rebalanceR0 v l r -- r + 1
+  | otherwise          = tree v l r
+  where
+    leftBig            = siblDiff     > 1
+    rightBig           = siblDiff + 1 < 0
+    siblDiff           = htDiff l r
+    bl                 = bFac l
+    br                 = bFac r
+
+
+
+{-@ lAssert    :: {v:Bool | Prop v} -> a -> a @-}
+lAssert True x = x
+
+{-@ insL :: x:a -> s:{AVL a | x < key s && ht s > 0} -> {t: AVL a | Eq1 s t} @-}
 insL a (Node v l r _)
-  | siblDiff > 1 && bl' > 0  = rebalanceLL v l' r
-  | siblDiff > 1 && bl' < 0  = rebalanceLR v l' r
-  | siblDiff > 1             = rebalanceL0 v l' r
-  | siblDiff <= 1            = tree v l' r
+  | leftBig && bl' > 0 = rebalanceLL v l' r
+  | leftBig && bl' < 0 = rebalanceLR v l' r
+  | leftBig            = rebalanceL0 v l' r
+  | otherwise          = tree v l' r
   where
-    l'                       = insert a l
-    siblDiff                 = htDiff l' r
-    bl'                      = bFac l'
+    leftBig            = siblDiff > 1
+    siblDiff           = htDiff l' r
+    l'                 = insert a l
+    bl'                = bFac l'
    
-{-@ insR :: x:a -> s:{AVL a | key s < x && ht s > 0} -> {t: AVL a | EqHt t s || HtDiff t s 1 } @-}
+{-@ insR :: x:a -> s:{AVL a | key s < x && ht s > 0} -> {t: AVL a | Eq1 s t} @-}
 insR a (Node v l r _)
-  | siblDiff > 1 && br' > 0  = rebalanceRL v l r'
-  | siblDiff > 1 && br' < 0  = rebalanceRR v l r'
-  | siblDiff > 1             = rebalanceR0 v l r'
-  | siblDiff <= 1            = tree v l r'
+  | rightBig && br' > 0  = rebalanceRL v l r'
+  | rightBig && br' < 0  = rebalanceRR v l r'
+  | rightBig             = rebalanceR0 v l r'
+  | otherwise            = tree v l r'
   where
-    siblDiff                 = htDiff r' l
-    r'                       = insert a r
-    br'                      = bFac r'
+    rightBig             = siblDiff > 1
+    siblDiff             = htDiff r' l
+    r'                   = insert a r
+    br'                  = bFac r'
 
 {-@ rebalanceL0 :: x:a -> l:{AVLL a x | NoHeavy l} -> r:{AVLR a x | HtDiff l r 2} -> {t:AVL a | ht t = ht l + 1 } @-}
 rebalanceL0 v (Node lv ll lr _) r                   = tree lv ll (tree v lr r)
