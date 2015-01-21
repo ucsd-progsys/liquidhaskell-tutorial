@@ -25,6 +25,9 @@ import Language.Haskell.Liquid.Prelude
 spanByte         :: Word8 -> ByteString -> (ByteString, ByteString)
 unsafeHead       :: ByteString -> Word8
 create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
+
+-- boilerplate                    
+{-@ type True  = {v:Bool | Prop v } @-}
 \end{code}
 \end{comment}
 
@@ -89,7 +92,7 @@ ghci> heartBleed ex 30
 
 \begin{figure}[h]
 \includegraphics[height=1.0in]{img/overflow.png}
-\caption{Can we prevent the program from leaking `secret`s?} 
+\caption{Can we prevent the program from leaking secrets?} 
 \label{fig:overflow}
 \end{figure}
 
@@ -246,10 +249,8 @@ the value *exists*.   Here, we don't have the value -- inside Haskell
 -- because the buffers are manipulated within C. However, this is no
 cause for alarm as we will simply use measures to refine the API, not
 to perform any computations.
-<div class="footnotetext"> This is another example of a
-*ghost* specification. </div>
+<div class="footnotetext"> This is another *ghost* specification. </div>
 
-**HEREHEREHEREHERE**
 
 \newthought{To Refine Allocation} we stipulate that
 the size parameter be non-negative, and that the returned
@@ -273,9 +274,23 @@ withForeignPtr :: fp:ForeignPtr a
 Consider a call `withForeignPtr fp act`. If the `act` requires a `Ptr`
 whose size *exceeds* that of `fp` then LiquidHaskell will flag a
 (subtyping) error indicating the overflow. If instead the `act`
-requires a buffer of size less than `fp` then via contra-variant
-function subtyping, the input type of `act` will be widened to
-the large size, and the code will be accepted.
+requires a buffer of size less than `fp` then it is always safe
+to run the `act` on a larger buffer. For example, the below
+variant of `zero4` where we only set the first three bytes
+is fine as the `act`, namely the function `\p -> ...`, can be
+typed with the requirement that the buffer `p` has size `4`,
+even though only `3` bytes are actually touched.
+
+\begin{code}
+zero3 = do fp <- mallocForeignPtrBytes 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero 
+             poke (p `plusPtr` 1) zero 
+             poke (p `plusPtr` 2) zero 
+           return fp
+        where
+           zero = 0 :: Word8
+\end{code}
 
 \newthought{To Refine Reads and Writes} we specify that they can
 only be done if the pointer refers to a non-empty (remaining) buffer.
@@ -295,31 +310,34 @@ poke :: OkPtr a -> a -> IO ()
 
 \noindent In essence the above type says that no matter how arithmetic
 was used to shift pointers around, when the actual dereference happens,
-the size "remaining" after the pointer must be non-negative (so that a
-byte can be safely read from or written to the underlying buffer.)
+the size *remaining* after the pointer must be non-negative, so that a
+byte can be safely read from or written to the underlying buffer.
 
 \newthought{To Refine the Shift} operations, we simply check that the
 pointer *remains* within the bounds of the buffer, and update the `plen`
 to reflect the size remaining after the shift:
-\footnotetext{This signature precludes "left" or "backward" shifts; for
-that there is an analogous `minusPtr` which we elide for simplicity}
+<div class="footnotetext">
+This signature precludes *left* or *backward* shifts; for
+that there is an analogous `minusPtr` which we elide for simplicity.
+</div>
 
 \begin{spec}
-plusPtr :: p:Ptr a -> off:NatLE (plen p) -> PtrN b (plen p - off)      
+plusPtr :: p:Ptr a -> off:BNat (plen p) -> PtrN b (plen p - off)      
 \end{spec}
 
-\noindent using the alias `NatLE`, defined as:
+\noindent using the alias `BNat`, defined as:
 
 \begin{spec}
-type NatLE N = {v:Nat | v <= N}
+type BNat N = {v:Nat | v <= N}
 \end{spec}
 
-\footnotetext{The alert reader will note that we have strengthened
-the type of `plusPtr` to prevent the pointer from wandering outside
-the boundary of the buffer. We could instead use a weaker requirement
-for `plusPtr` that omits this requirement, and instead have the error
-be flagged when the pointer was used to read or write memory.}
-
+<div class="footnotetext">
+Did you notice that we have strengthened the type of `plusPtr` to
+prevent the pointer from wandering outside the boundary of the buffer?
+We could instead use a weaker requirement for `plusPtr` that omits
+this requirement, and instead have the error be flagged when the
+pointer was used to read or write memory.
+</div>
 
 \newthought{Types Prevent Overflows} Lets revisit the zero-fill example
 from above to understand how the refinements help detect the error:
@@ -330,12 +348,11 @@ exBad = do fp <- mallocForeignPtrBytes 4
              poke (p `plusPtr` 0) zero 
              poke (p `plusPtr` 1) zero 
              poke (p `plusPtr` 2) zero 
-             poke (p `plusPtr` 5) zero 
+             poke (p `plusPtr` 5) zero     -- LH complains 
            return fp
         where
            zero = 0 :: Word8
 \end{code}
-
 
 \noindent Lets read the tea leaves to understand the above error:
 
@@ -368,18 +385,18 @@ be within the size of the buffer referred to by `p`, i.e.
 \end{liquiderror}
 
 \noindent that is, the size of `p`, namely `plen p` equals the size of
-`fp`, namely `fplen fp` (thanks to the `withForeignPtr` call), and
-finally the latter is equal to `?c` which is `4` bytes. Thus, since
-the offset `5` is not less than the buffer size `4`, LiquidHaskell
-cannot prove that the call to `plusPtr` is safe, hence the error.
+`fp`, namely `fplen fp` (thanks to the `withForeignPtr` call).  The
+latter equals to `?c` which is `4` bytes. Thus, since the offset `5`
+is not less than the buffer size `4`, LiquidHaskell cannot prove that
+the call to `plusPtr` is safe, hence the error.
 
 
 Assumptions vs Guarantees
 -------------------------
 
-At this point you ought to wonder: where is the *code* for `peek`,
-`poke` or `mallocForeignPtrBytes` and so on? How can we know that the
-types we assigned to them are in fact legitimate?
+At this point you ought to wonder: where is the code for `peek`,
+`poke` or `mallocForeignPtrBytes` and so on? How can we be sure
+that the types we assigned to them are in fact legitimate?
 
 \newthought{Frankly, we cannot} as those functions are *externally*
 implemented (in this case, in `C`), and hence, invisible to the
@@ -408,7 +425,7 @@ perform fast string operations without opening the door to
 overflows.
 
 
-\newthought{A ByteString} is implemented as a record
+\newthought{A ByteString} is implemented as a record of three fields:
 
 \begin{code}
 data ByteString = BS {
@@ -418,25 +435,21 @@ data ByteString = BS {
   }
 \end{code}
 
-\noindent comprising
++ `bPtr` is a *pointer* to a block of memory,
++ `bOff` is the *offset* in the block where the string begins,
++ `bLen` is the number of bytes from the offset that belong to the string.
 
-+ a *pointer* `bPtr` to a contiguous block of memory,
-+ an *offset* `bOff` that denotes the position inside
-  the block where the string begins, and
-+ a *length*  `bLen` that denotes the number of bytes
-  (from the offset) that belong to the string.
-
-\begin{figure}[h]
-\includegraphics[height=1.0in]{img/bytestring.png}
-\caption{Representing ByteStrings in memory.}
-\label{fig:bytestring}
-\end{figure}
-
-These entities are illustrated in Figure~\ref{fig:bytestring}; the
+These entities are illustrated in \cref{fig:bytestring}; the
 green portion represents the actual contents of a particular
 `ByteString`.  This representation makes it possible to implement
 various operations like computing prefixes and suffixes extremely
 quickly, simply by pointer arithmetic.
+
+\begin{figure}[t]
+\includegraphics[height=1.0in]{img/bytestring.png}
+\caption{Representing ByteStrings in memory.}
+\label{fig:bytestring}
+\end{figure}
 
 \newthought{In a Legal ByteString} the *start* (`bOff`) and *end*
 (`bOff + bLen`) offsets lie inside the buffer referred to by the
@@ -483,7 +496,9 @@ good1 = do fp <- mallocForeignPtrBytes 5
 
 \noindent creates a valid `ByteString` of size `5`; however we
 need not start at the beginning of the block, or use up all
-the buffer, and can instead do:
+the buffer, and can instead create `ByteString`s whose length
+is less than the size of the allocated block, as shown in `good2`
+whose length is `2` while the allocated block has size `5`.
 
 \begin{code}
 {-@ good2 :: IO (ByteStringN 2) @-}
@@ -491,11 +506,8 @@ good2 = do fp <- mallocForeignPtrBytes 5
            return (BS fp 3 2)
 \end{code}
 
-\noindent Note that the length of `good2` is just `2` which is
-*less than* allocated size `5`.
-
 \newthought{Illegal Bytestrings} are rejected by LiquidHaskell.
-For example, `bad1`'s length is rather more than the buffer
+For example, `bad1`'s length is exceeds its buffer
 size, and is flagged as such:
 
 \begin{code}
@@ -511,10 +523,24 @@ bad2 = do fp <- mallocForeignPtrBytes 3
           return (BS fp 2 2)
 \end{code}
 
-\exercisen{Fix the ByteString} Modify the definitions of `bad1`
-and `bad2` so they are *accepted* by LiquidHaskell.
+<div class="hwex" id="Legal ByteStrings">
+Modify the definitions of `bad1` and `bad2` so they are *accepted* by LiquidHaskell.
+</div>
 
-\newthought{To Flexibly but Safely Create} a `ByteString` the
+<div class="toolinfo">
+\newthought{Measures are generated from Fields} in the datatype
+definition.  As GHC lets us use the fields as accessor functions, we
+can *refine* the types of those functions to specify their behavior to
+LiquidHaskell. For example, we can type the (automatically generated)
+field-accessor function `bLen` so that it actually returns the exact
+size of the `ByteString` argument.
+</div>
+
+\begin{code}
+{-@ bLen :: b:ByteString -> {v: Nat | v = bLen b} @-}
+\end{code}
+
+\newthought{To Safely Create} a `ByteString` the
 implementation defines a higher order `create` function, that
 takes a size `n` and accepts a `fill` action, and runs the
 action after allocating the pointer. After running the action,
@@ -529,9 +555,10 @@ create n fill = unsafePerformIO $ do
   return (BS fp 0 n)
 \end{code}
 
-\exercisen{Create} \singlestar Why does LiquidHaskell *reject*
-the following function that creates a `ByteString` corresponding
-to `"GHC"`?
+<div class="hwex" id="Create">
+\singlestar Why does LiquidHaskell *reject* the following function
+that creates a `ByteString` corresponding to `"GHC"`?
+</div>
 
 \begin{code}
 bsGHC = create 3 $ \p -> do
@@ -549,14 +576,17 @@ relevant information about `p` becomes available within
 the `do`-block above? Make sure you figure out the above
 before proceeding.
 
-\newthought{To `pack`} a `String` into a `ByteString`
+\newthought{To Pack} a `String` into a `ByteString`
 we simply call `create` with the appropriate fill action:
-\footnotetext{The code uses `create'` which is just `create`
+
+<div class="footnotetext">
+The code uses `create'` which is just `create`
 with the *correct* signature in case you want to skip the previous
-exercise. (But don't!)}
+exercise. (But don't!)
+</div>
 
 \begin{code}
-pack str      =  create' n $ \p -> go p xs
+pack str      = create' n $ \p -> go p xs
   where
   n           = length str
   xs          = map c2w str
@@ -564,15 +594,15 @@ pack str      =  create' n $ \p -> go p xs
   go _ []     = return  ()
 \end{code}
 
-\exercisen{Pack} We can compute the size of a `ByteString` by using
-the function:
-
+<div class="hwex" id="Pack">
+We can compute the size of a `ByteString` by using the function:
 Fix the specification for `pack` so that (it still typechecks!)
-and furthermore, the following QuickCheck style *property* is
-proved by LiquidHaskell:
+and furthermore, the following [QuickCheck style property](#quickcheck)
+is proved.
+</div>
 
 \begin{code}
-{-@ prop_pack_length  :: [Char] -> {v:Bool | Prop v} @-}
+{-@ prop_pack_length  :: String -> True @-}
 prop_pack_length xs   = bLen (pack xs) == length xs
 \end{code}
 
@@ -586,10 +616,12 @@ just works. Notice there is a tricky little recursive loop
 and actually, it has a rather subtle type signature that
 LiquidHaskell is able to automatically infer.
 
-\exercise \singlestar Still, we're here to learn, so can you
+<div class="hwex" id="Pack Invariant">
+\singlestar Still, we're here to learn, so can you
 *write down* the type signature for the loop so that the below
 variant of `pack` is accepted by LiquidHaskell (Do this *without*
 cheating by peeping at the type inferred for `go` above!)
+</div>
 
 \begin{code}
 packEx str     = create' n $ \p -> pLoop p xs
@@ -604,44 +636,50 @@ pLoop _ []     = return ()
 
 \hint Remember that `len xs` denotes the size of the list `xs`.
 
-\exercisen{`unsafeTake` and `unsafeDrop`} respectively extract
+<div class="hwex" id="Unsafe Take and Drop">
+The functions `unsafeTake` and `unsafeDrop` respectively extract
 the prefix and suffix of a `ByteString` from a given position.
 They are really fast since we only have to change the offsets.
 But why does LiquidHaskell reject them? Can you fix the
 specifications so that they are accepted?
+</div>
 
 \begin{code}
-{-@ unsafeTake          :: n:Nat -> b:ByteString -> ByteStringN n @-}
+{-@ unsafeTake :: n:Nat -> b:_ -> ByteStringN n @-}
 unsafeTake n (BS x s _) = BS x s n
 
-{-@ unsafeDrop          :: n:Nat -> b:ByteString -> ByteStringN {bLen b - n} @-}
+{-@ unsafeDrop :: n:Nat -> b:_ -> ByteStringN {bLen b - n} @-}
 unsafeDrop n (BS x s l) = BS x (s + n) (l - n)
 \end{code}
 
 \hint Under what conditions are the returned `ByteString`s legal?
 
 
-\newthought{To `unpack`} a `ByteString` into a plain old `String`,
+\newthought{To Unpack} a `ByteString` into a plain old `String`,
 we essentially run `pack` in reverse, by walking over the pointer,
 and reading out the characters one by one till we reach the end:
 
 \begin{code}
 unpack              :: ByteString -> String 
 unpack (BS _  _ 0)  = []
-unpack (BS ps s l)  = unsafePerformIO $ withForeignPtr ps $ \p ->
-    go (p `plusPtr` s) (l - 1) []
+unpack (BS ps s l)  = unsafePerformIO
+                        $ withForeignPtr ps
+                        $ \p -> go (p `plusPtr` s) (l - 1) []
   where
     {-@ go     :: p:_ -> n:_ -> acc:_ -> IO {v:_ | true } @-}
-    go p 0 acc = peek p >>= \e -> return (w2c e : acc)
-    go p n acc = peek (p `plusPtr` n) >>=  \e -> go p (n-1) (w2c e : acc)
+    go p 0 acc = peekAt p 0 >>= \e -> return (w2c e : acc)
+    go p n acc = peekAt p n >>= \e -> go p (n-1) (w2c e : acc)
+    peekAt p n = peek (p `plusPtr` n)
 \end{code}
 
-\exercisen{Unpack} \singlestar Fix the specification for `unpack`
+<div class="hwex" id="Unpack">
+\singlestar Fix the specification for `unpack`
 so that the below QuickCheck style property is proved by LiquidHaskell.
+</div>
 
 \begin{code}
-{-@ prop_unpack_length :: ByteString -> {v:Bool | Prop v} @-}
-prop_unpack_length b   = bLen b  == length (unpack b)
+{-@ prop_unpack_length :: ByteString -> True  @-}
+prop_unpack_length b   = bLen b == length (unpack b)
 \end{code}
 
 \hint You will also have to fix the specification of the helper `go`.
@@ -652,21 +690,20 @@ How *big* is the output list in terms of `p`, `n` and `acc`.
 Application API 
 ---------------
 
-Finally, lets revisit our potentially  "bleeding" `chop` function to see
-how the refined `ByteString` API can prevent errors.
-
 \begin{comment}
 \begin{code}
 {-@ type StringN N = {v:String | len v = N} @-}
-{-@ type NatLE N   = {v:Nat    | v <= N}    @-}
+{-@ type BNat N    = {v:Nat    | v <= N}    @-}
 \end{code}
 \end{comment}
 
-\noindent The signature specifies that the prefix size `n` must be less than
-the size of the input string `s`.
+Finally, lets revisit our potentially "bleeding" `chop` function to
+see how the refined `ByteString` API can prevent errors.  We
+require that the prefix size `n` be less than the
+size of the input string `s`:
 
 \begin{code}
-{-@ chop :: s:String -> n:NatLE (len s) -> String @-} 
+{-@ chop :: s:String -> n:BNat (len s) -> String @-} 
 chop s n = s'
   where 
     b    = pack s          -- down to low-level
@@ -676,10 +713,11 @@ chop s n = s'
 
 \newthought{Overflows are prevented} by LiquidHaskell, as it
 rejects calls to `chop` where the prefix size is too large
-(which is what led to the overflow that spilled the contents
-of memory after the string, as illustrated in Figure~\ref{fig:overflow}).
-Thus, in the code below, the first use of `chop` which defines `ex6` is accepted
-as `6 <= len ex` but the second call is rejected because `30 > len ex`.
+which is what led to the overflow that spilled the contents
+of memory after the string (\cref{fig:overflow}).
+In the code below, the first use of `chop` which
+defines `ex6` is accepted as `6 <= len ex` but the second
+call is rejected as `30 > len ex`.
 
 \begin{code}
 demo     = [ex6, ex30]
@@ -689,15 +727,41 @@ demo     = [ex6, ex30]
     ex30 = chop ex 30  -- rejected by LH 
 \end{code}
 
-\exercisen{Chop} Fix the specification for `chop` so that
+<div class="hwex" id="Chop"> Fix the specification for `chop` so that
 the following property is proved:
+</div>
 
 \begin{code}
-{-@ prop_chop_length  :: String -> Nat -> {v:Bool | Prop v} @-}
+{-@ prop_chop_length  :: String -> Nat -> True @-}
 prop_chop_length s n
   | n <= length s     = length (chop s n) == n
   | otherwise         = True
 \end{code}
+
+<div class="hwex" id="Checked Chop"> In the above, we know statically
+that the string is longer than the prefix, but what if the string and prefix
+are obtained *dynamically*, e.g. as inputs from the user? Fill in the implementation
+of `ok` below to ensure that `chop` is called safely with user specified values:
+</div>
+
+\begin{code}
+safeChop      :: String -> Int -> String
+safeChop str n
+  | ok        = chop str n
+  | otherwise = ""
+  where
+    ok        = True 
+    
+queryAndChop  :: IO String
+queryAndChop  = do putStrLn "Give me a string:"
+                   str  <-  getLine   
+                   putStrLn "Now give me a number:"
+                   ns   <-  getLine
+                   let n =  read ns :: Int
+                   return $ safeChop str n
+\end{code}
+
+**HEREHEREHERE**
 
 Nested ByteStrings 
 ------------------
@@ -752,7 +816,7 @@ unsafeTail (BS ps s l) = BS ps (s + 1) (l - 1)
 the next group, and then returns the accumulated results:
 
 \begin{code}
-{-@ group :: b:ByteString -> {v: [ByteStringNE] | bLens v = bLen b} @-}
+{-@ group :: b:ByteString -> {v: [ByteStringNE] | bsLen v = bLen b} @-}
 group xs
     | null xs   = []
     | otherwise = let  y        = unsafeHead xs
@@ -765,10 +829,10 @@ the output is a `[ByteStringNE]`. The second requirement, that the sum of the le
 preserved, is expressed by a writing a [numeric measure](#numericmeasure):
 
 \begin{code}
-{-@ measure bLens @-}
-bLens        :: [ByteString] -> Int
-bLens []     = 0
-bLens (b:bs) = bLen b + bLens bs
+{-@ measure bsLen @-}
+bsLen        :: [ByteString] -> Int
+bsLen []     = 0
+bsLen (b:bs) = bLen b + bsLen bs
 \end{code}
 
 
