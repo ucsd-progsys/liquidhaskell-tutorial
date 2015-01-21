@@ -617,7 +617,7 @@ and actually, it has a rather subtle type signature that
 LiquidHaskell is able to automatically infer.
 
 <div class="hwex" id="Pack Invariant">
-\singlestar Still, we're here to learn, so can you
+\exercise \singlestar Still, we're here to learn, so can you
 *write down* the type signature for the loop so that the below
 variant of `pack` is accepted by LiquidHaskell (Do this *without*
 cheating by peeping at the type inferred for `go` above!)
@@ -729,7 +729,6 @@ demo     = [ex6, ex30]
 
 <div class="hwex" id="Chop"> Fix the specification for `chop` so that
 the following property is proved:
-</div>
 
 \begin{code}
 {-@ prop_chop_length  :: String -> Nat -> True @-}
@@ -744,6 +743,7 @@ are obtained *dynamically*, e.g. as inputs from the user? Fill in the implementa
 of `ok` below to ensure that `chop` is called safely with user specified values:
 </div>
 
+
 \begin{code}
 safeChop      :: String -> Int -> String
 safeChop str n
@@ -755,30 +755,18 @@ safeChop str n
 queryAndChop  :: IO String
 queryAndChop  = do putStrLn "Give me a string:"
                    str  <-  getLine   
-                   putStrLn "Now give me a number:"
+                   putStrLn "Give me a number:"
                    ns   <-  getLine
                    let n =  read ns :: Int
                    return $ safeChop str n
 \end{code}
 
-**HEREHEREHERE**
-
 Nested ByteStrings 
 ------------------
 
 For a more in-depth example, let's take a look at `group`,
-which transforms strings like
-
-\begin{spec}
-`"foobaaar"`
-\end{spec}
-
-into *lists* of strings like
-
-\begin{spec}
-`["f","oo", "b", "aaa", "r"]`.
-\end{spec}
-
+which transforms strings like `"foobaaar"` into *lists* of
+strings like `["f","oo", "b", "aaa", "r"]`.
 The specification is that `group` should produce a
 
 1. list of *non-empty* `ByteStrings`, 
@@ -787,36 +775,41 @@ The specification is that `group` should produce a
 \newthought{Non-empty ByteStrings} are those whose length is non-zero:
 
 \begin{code}
-{-@ type ByteStringNE = {v:ByteString | bLen v /= 0} @-}
+{-@ predicate Null B  = bLen B == 0                   @-}
+{-@ type ByteStringNE = {v:ByteString | not (Null v)} @-}
 \end{code}
 
-\noindent We can use these to define enrich the ByteString API with a `null` check
+\noindent We can use these to enrich the API with a `null` check
 
 \begin{code}
-{-@ null               :: b:ByteString -> {v:Bool | Prop v <=> bLen b == 0} @-}
-null (BS _ _ l)        = l == 0
+{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
+null (BS _ _ l) = l == 0
 \end{code}
 
-\noindent This check is used to determine if it is safe to extract
-the head and tail of the `ByteString`. Notice how we can use refinements
-to ensure the safety of the operations, and also track the sizes.
-\footnotetext{`peekByteOff p i` is equivalent to `peek (plusPtr p i)`}
+\noindent This check is used to determine if it is safe
+to extract the head and tail of the `ByteString`.
+we can use refinements to ensure the safety of
+the operations and also track the sizes.
+
+<div class="footnotetext">
+`peekByteOff p i` is equivalent to `peek (plusPtr p i)`.
+</div>
 
 \begin{code}
-{-@ unsafeHead        :: ByteStringNE -> Word8 @-}
+{-@ unsafeHead :: ByteStringNE -> Word8 @-}
 unsafeHead (BS x s _) = unsafePerformIO $
                           withForeignPtr x $ \p ->
                             peekByteOff p s
 
-{-@ unsafeTail         :: b:ByteStringNE -> ByteStringN {bLen b - 1} @-}
+{-@ unsafeTail :: b:ByteStringNE -> ByteStringN {bLen b -1} @-}
 unsafeTail (BS ps s l) = BS ps (s + 1) (l - 1)
 \end{code}
 
-\newthought{The `group`} function recursively calls `spanByte` to carve off
+\newthought{The Group`} function recursively calls `spanByte` to carve off
 the next group, and then returns the accumulated results:
 
 \begin{code}
-{-@ group :: b:ByteString -> {v: [ByteStringNE] | bsLen v = bLen b} @-}
+{-@ group :: b:_ -> {v: [ByteStringNE] | bsLen v = bLen b} @-}
 group xs
     | null xs   = []
     | otherwise = let  y        = unsafeHead xs
@@ -836,21 +829,25 @@ bsLen (b:bs) = bLen b + bsLen bs
 \end{code}
 
 
-\newthought{`spanByte`} does a lot of the heavy lifting. It uses low-level pointer
+\newthought{SpanByte} does a lot of the heavy lifting. It uses low-level pointer
 arithmetic to find the *first* position in the `ByteString` that is different from
 the input character `c` and then splits the `ByteString` into a pair comprising the
 prefix and suffix at that point.
 
 \begin{code}
 {-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
-spanByte c ps@(BS x s l) = unsafePerformIO $ withForeignPtr x $ \p ->
-    go  (p `plusPtr` s) 0
+spanByte c ps@(BS x s l)
+  = unsafePerformIO
+      $ withForeignPtr x $ \p ->
+         go (p `plusPtr` s) 0
   where
-    go p i | i >= l    = return (ps, empty)
-           | otherwise = do c' <- peekByteOff p i
-                            if c /= c'
-                                then return (unsafeTake i ps, unsafeDrop i ps)
-                                else go  p (i+1)
+    go p i
+      | i >= l    = return (ps, empty)
+      | otherwise = do c' <- peekByteOff p i
+                       if c /= c'
+                         then return $ splitAt i 
+                         else go p (i+1)
+    splitAt i     = (unsafeTake i ps, unsafeDrop i ps)
 \end{code}
 
 LiquidHaskell infers that `0 <= i <= l` and therefore that
@@ -860,23 +857,25 @@ the precise specifications given to `unsafeTake` and
 lengths add up to the size of the input `ByteString`.
 
 \begin{code}
-{-@ type ByteString2 B = {v:_ | bLen (fst v) + bLen (snd v) = bLen B} @-}
+{-@ type ByteString2 B
+      = {v:_ | bLen (fst v) + bLen (snd v) = bLen B} @-}
 \end{code}
 
 Recap: Types Against Overflows
 ------------------------------
 
-In this chapter we saw a case study illustrating how measures and refinements
-enable safe low-level pointer arithmetic in Haskell. The take away messages are:
+In this chapter we saw a case study illustrating how measures
+and refinements enable safe low-level pointer arithmetic in
+Haskell. The take away messages are that we can:
 
-1. larger systems are *composed of* layers of smaller ones,
-2. we can write *refined APIs* for each layer,
-3. that can be used to inform the *design* and
-   ensure *correctness* of the layers above.
+1. *compose* larger systems from layers of smaller ones,
+2. *refine* APIs for each layer, which can be used to 
+3. *design and validate* the layers above.
 
-We saw this in action by developing a low-level `Pointer` API, using it to
-implement fast `ByteString`s API, and then building some higher-level
-functions on top of the `ByteStrings`.
+We saw this recipe in action by developing a low-level
+`Pointer` API, using it to implement fast `ByteString`s
+API, and then building some higher-level functions on
+top of the `ByteStrings`.
 
 \newthought{The Trusted Computing Base} in this approach includes
 exactly those layers for which the code is *not* available, for
