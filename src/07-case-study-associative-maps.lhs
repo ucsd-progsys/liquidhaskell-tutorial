@@ -31,12 +31,19 @@ mem    :: (Ord k) => k -> Map k v -> Bool
 emp    :: Map k v
 elems  :: (Ord a) => [a] -> Set a
 fresh  :: [Int] -> Int
+
+-- | Set Interface 
+{-@ predicate In X Xs      = Set_mem X Xs               @-}
+{-@ predicate Subset X Y   = Set_sub X Y                @-}
+{-@ predicate Empty  X     = Set_emp X                  @-}
+{-@ predicate Union X Y Z  = X = Set_cup Y Z            @-}
+{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z      @-}
+
 -- | Predicate Aliases
-{-@ predicate NoKey M       = Empty (keys M)                        @-}
-{-@ predicate HasKey K M    = Set_mem K (keys M)                    @-}
-{-@ predicate PlusKey K M N = keys N = Set_cup (Set_sng K) (keys M) @-}
-{-@ predicate Subset X Y    = Set_sub X Y                           @-}
-{-@ predicate Empty  X      = Set_emp X                             @-}
+{-@ predicate NoKeys M     = Empty (keys M)             @-}
+{-@ predicate HasKey K M   = In K (keys M)              @-}
+{-@ predicate AddKey K M N = Union1 (keys N) K (keys M) @-}
+          
 \end{code}
 \end{comment}
 
@@ -48,7 +55,7 @@ fresh  :: [Int] -> Int
 \end{figure}
 \end{comment}
 
-Recall the following from the [introduction](#intro).
+Recall the following from the [introduction](#intro):
 
 \begin{ghci}
 ghci> :m +Data.Map 
@@ -70,11 +77,10 @@ It is rather difficult to use Haskell's type system to precisely
 characterize the behavior of associative map APIs as ultimately,
 this requires tracking the *dynamic set of keys* in the map.
 
-In this case study, we'll see how to combine two techniques -- 
-[measures](#setmeasure) for reasoning about the *sets* of elements
-in structures, and [refined data types](#refineddatatypes) for
-reasoning about order invariants -- can be applied to programs
-that use associative maps (e.g. `Data.Map` or `Data.HashMap`).
+In this case study, we'll see how to combine two techniques,
+[measures](#setmeasure) and [refined data types](#refineddatatypes),
+to analyze programs that *implement* and *use* associative
+maps (e.g. `Data.Map` or `Data.HashMap`).
 
 Specifying Maps {#mapapi}
 -------------------------
@@ -83,13 +89,12 @@ Lets start by defining a *refined API* for Associative Maps
 that tracks the set of keys stored in the map, in order to
 statically ensure the safety of lookups.
 
-\newthought{Types} First, we need an (currently abstract)
-type for `Map`s. As usual, lets parameterize the type with
-`k` for the type of keys and `v` for the type of values.
+\newthought{Types} First, we need a type for `Map`s. As usual,
+lets parameterize the type with `k` for the type of keys and
+`v` for the type of values:
 
 \begin{spec}
--- | Data Type
-data Map k v
+data Map k v    -- Currently left abstract
 \end{spec}
 
 \newthought{Keys} To talk about the set of keys in a map,
@@ -105,15 +110,15 @@ defined keys. Next, we use the above measure, and the usual
 *create*, *add* and *lookup* key-value bindings, in order
 to precisely track, within the type system, the `keys`
 that are dynamically defined within each `Map`.
+<div class="footnotetext"> Recall that `Empty`, `Union`, `In`
+and the other `Set` operators are described [here](#listelems).
+</div>
 
-\newthought{Empty} `Map`s have no keys in them. Hence, we
-defined a predicate alias, `NoKey` and use it to type `emp`
-which is used to denote the empty `Map`:
+\newthought{Empty} `Map`s have no keys in them. Hence, we type
+the empty `Map` as:
 
 \begin{spec}
-emp :: {m:Map k v | NoKey m}
-
-predicate NoKey M = keys M = Set_empty 0
+emp :: {m:Map k v | Empty (keys m)}
 \end{spec}
 
 \newthought{Add} The function `set` takes a key $k$ a
@@ -123,16 +128,16 @@ Thus, the set of `keys` of the output `Map` includes
 those of the input plus the singleton $k$, that is:
 
 \begin{spec}
-set :: (Ord k) => k:k -> v -> m:Map k v -> {n: Map k v | PlusKey k m n}
+set :: k:k -> v -> m:Map k v -> {n: Map k v| AddKey k m n}
 
-predicate PlusKey K M N = keys N = Set_cup (Set_sng K) (keys M)
+predicate AddKey K M N = keys N = Set_cup (Set_sng K) (keys M)
 \end{spec}
 
-\newthought{Query} Finally, queries will only succeed for keys that are defined
-a given `Map`. Thus, we define an alias:
+\newthought{Query} Finally, queries will only succeed for
+keys that are defined a given `Map`. Thus, we define an alias:
 
 \begin{spec}
-predicate HasKey K M    = Set_mem K (keys M)
+predicate HasKey K M = In K (keys M)
 \end{spec}
 
 \noindent and use it to type `mem` which *checks* if
@@ -141,10 +146,10 @@ returns the value associated with a given key.
 
 \begin{spec}
 -- | Check if key is defined 
-mem :: (Ord k) => k:k -> m:Map k v -> {v:Bool | Prop v <=> HasKey k m}
+mem :: k:k -> m:Map k v -> {v:Bool|Prop v <=> HasKey k m}
 
 -- | Lookup key's value 
-get :: (Ord k) => k:k -> {m:Map k v | HasKey k m} -> v
+get :: k:k -> {m:Map k v | HasKey k m} -> v
 \end{spec}
 
 Using Maps: Well Scoped Expressions 
@@ -202,7 +207,7 @@ plus _         _         = die "Bad call to plus"
 \end{code}
 
 \newthought{Environments} let us save values for the
-"local" i.e. *let-bound* variables; when evaluating
+local" i.e. *let-bound* variables; when evaluating
 an expression `Var x` we simply look up the value of
 `x` in the environment. This is why `Map`s were
 invented! Lets define our environments as `Map`s from `Var`iables to `Val`ues:
@@ -253,8 +258,15 @@ formalize this notion as a (lifted) function:
 free               :: Expr -> (Set Var) 
 free (Const _)     = empty
 free (Var x)       = singleton x
-free (Plus e1 e2)  = (free e1) `union` (free e2)
-free (Let x e1 e2) = (free e1) `union` ((free e2) `difference` (singleton x))
+free (Plus e1 e2)  = xs1 `union`  xs2
+  where
+    xs1            = free e1
+    xs2            = free e2
+free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)  
+  where
+    xs1            = free e1
+    xs2            = free e2
+    xs             = singleton x
 \end{code}
 
 \newthought{An Expression is Closed} with respect to an environment
@@ -285,8 +297,10 @@ free variables.Lets use that to write a "top-level" evaluator:
 topEval     = eval emp 
 \end{code}
 
-\exercise Complete the definition of the below function which
-*checks* if an `Expr` is well formed before `eval`uating it:
+<div class="hwex" id="Wellformedness Check"> Complete the definition
+of the below function which *checks* if an `Expr` is well formed
+before `eval`uating it:
+</div>
 
 \begin{code}
 {-@ evalAny   :: Env -> Expr -> Maybe Val @-} 
@@ -312,8 +326,10 @@ tests   = [v1, v2]
     c10 = Const 10
 \end{code}
 
-\exercisen{Functions and Closures} \doublestar Extend the language above
-to include functions. That is, extend
+<div class="hwex" id="Closures">
+\doublestar Extend the language above to include functions.
+That is, extend `Expr` as below, (and `eval` and `free` respectively.)
+</div>
 
 \begin{spec}
 data Expr = ... | Fun Var Expr | App Expr Expr
@@ -336,7 +352,7 @@ a `Map` library that respects the API using
 [Binary Search Trees](#binarysearchtree)
 
 \newthought{Data Type} First, lets provide an
-implementation of the (hitherto abstract) data
+implementation of the hitherto abstract data
 type for `Map`. We shall use Binary Search Trees,
 wherein, at each `Node`, the `left` (resp. `right`)
 subtree has keys that are less than (resp. greater than)
@@ -351,7 +367,7 @@ the root `key`.
   @-}
 \end{code}
 
-\noindent [Recall](#binarysearchtree) that the above
+[Recall](#binarysearchtree) that the above
 refined data definition yields strengthened data
 constructors that statically ensure that only legal,
 *binary-search ordered* trees are created in the program.
@@ -359,36 +375,44 @@ constructors that statically ensure that only legal,
 \newthought{Defined Keys} Next, we must provide an
 implementation of the notion of the `keys` that are
 defined for a given `Map`.  This is achieved via the
-(lifted) measure function:
+lifted measure function:
 
 \begin{code}
 {-@ measure keys @-}
 keys                :: (Ord k) => Map k v -> Set k
 keys Tip            = empty
-keys (Node k _ l r) = union (singleton k) (union (keys l) (keys r))
+keys (Node k _ l r) = ks `union` kl `union` kr 
+  where
+    kl              = keys l
+    kr              = keys r
+    ks              = singleton k
+                      
 \end{code}
 
 Armed with the basic type and measure definition, we
 can start to fill in the operations for `Maps`.
 
-\exercisen{Empty Maps} To make sure you are following,
-fill in the definition for an `emp`ty Map:
+<div class="hwex" id="Empty Maps">
+To make sure you are following, fill in the definition for an `emp`ty Map:
+</div>
 
 \begin{code}
-{-@ emp :: {m:Map k v | NoKey m} @-}
+{-@ emp :: {m:Map k v | Empty (keys m)} @-}
 emp     = undefined  
 \end{code}
 
-\exercisen{Insert} To add a key `k'` to a `Map` we
+<div class="hwex" id="Insert"> To add a key `k'` to a `Map` we
 recursively traverse the `Map` zigging `left` or `right`
 depending on the result of comparisons with the keys along
 the path. Unfortunately, the version below has an
 (all too common!) bug, and hence, is *rejected*
 by LiquidHaskell. Find and fix the bug so that
 the function is verified.
+</div>
 
 \begin{code}
-{-@ set :: (Ord k) => k:k -> v -> m:Map k v -> {n: Map k v | PlusKey k m n} @-}
+{-@ set :: (Ord k) => k:k -> v -> m:Map k v
+                   -> {n: Map k v | AddKey k m n} @-}
 set k' v' (Node k v l r)
   | k' == k   = Node k v' l r
   | k' <  k   = set k' v l
@@ -406,7 +430,7 @@ check that lookup *never fails*, and hence, we implement the `Tip`
 case is indeed dead code, i.e. never happens at run-time.
 
 \begin{code}
-{-@ get' :: (Ord k) =>  k:k -> m:{Map k v | HasKey k m} -> v @-}
+{-@ get' :: (Ord k) =>  k:k -> m:{Map k v| HasKey k m} -> v @-}
 get' k' m@(Node k v l r)
   | k' == k   = v
   | k' <  k   = get' k' l
@@ -422,15 +446,13 @@ Well, lets look at the error for the call `get' k' l`
 \begin{liquiderror}
  src/07-case-study-associative-maps.lhs:411:25: Error: Liquid Type Mismatch
    Inferred type
-     VV : (Map a b) | VV == l
-  
+     VV : Map a b | VV == l
    not a subtype of Required type
-     VV : (Map a b) | Set_mem k' (keys VV)
-
+     VV : Map a b | Set_mem k' (keys VV)
    In Context
-     VV : (Map a b) | VV == l
+     VV : Map a b | VV == l
      k  : a
-     l  : (Map a b)
+     l  : Map a b
      k' : a
 \end{liquiderror}
 
@@ -460,12 +482,16 @@ relate refinements of a container's *type parameters*
 (here: $\vkey' \not = \vkey$, which refines the `Map`s first type
 parameter) with properties of the entire container
 (here: $\vHasKey\ \vkey\ \vt$).
-\footnotetext{Why not? This is tricky to describe. Intuitively,
-because there is no way of automatically connecting the *traversal*
-corresponding to `keys` with the type variable `k`. I wish I had a
-better way to explain this rather subtle point; suggestions welcome!}
-Fortunately, it is both easy to *state*, *prove* and *use* facts like
-the above.
+Fortunately, it is easy to *state*, *prove* and *use*
+facts like the above, via *lemmas* which are just functions.
+
+
+<div class="footnotetext"> Why does LiquidHaskell not automatically
+deduce this information? This is tricky to describe.
+Intuitively, because there is no way of automatically connecting
+the *traversal* corresponding to `keys` with the type variable `k`.
+I wish I had a better way to explain this rather subtle point;
+suggestions welcome!</div>
 
 \newthought{Defining Lemmas} To state a lemma, we need only
 convert it into a [type](curry-howard) by viewing universal
@@ -473,9 +499,13 @@ quantifiers as function parameters, and implications as
 function types:
 
 \begin{code}
-{-@ lemma_notMem :: key:k -> m:Map {k:k | k /= key} v -> {v:Bool | not (HasKey key m)} @-}
+{-@ lemma_notMem :: key:k
+                 -> m:Map {k:k | k /= key} v
+                 -> {v:Bool | not (HasKey key m)}
+  @-}
 lemma_notMem _   Tip            = True 
-lemma_notMem key (Node _ _ l r) = lemma_notMem key l && lemma_notMem key r 
+lemma_notMem key (Node _ _ l r) = lemma_notMem key l &&
+                                  lemma_notMem key r 
 \end{code}
 
 \newthought{Proving Lemmas} Note how the signature for `lemma_notMem`
@@ -489,7 +519,7 @@ proofs from the subtrees.
 it to the particular keys and trees we care about, by "calling" the
 lemma function, and forcing its result to be in the *environment* used
 to typecheck the expression where we want to use the lemma. Say what?
-Here is a verified `get`:
+Here's how to use lemmas to verify `get`:
 
 \begin{code}
 {-@ get :: (Ord k) => k:k -> m:{Map k v | HasKey k m} -> v @-}
@@ -502,25 +532,27 @@ get k' (Node k v l r)
 get _ Tip     = die "Lookup failed? Impossible."
 \end{code}
 
-By calling `lemma_notMem` we create a dummy `Bool` that carries the desired
-refinement that tells LiquidHaskell that `not (HasKey k' r)` (resp. `not (HasKey k' l)`).
-We force the calls to `get k' l` (resp. `get k' r`) to be typechecked using
-the materialized refinement by wrapping the calls within a function `assert`
+By calling `lemma_notMem` we create a dummy `Bool` refined with
+the fact `not (HasKey k' r)` (resp. `not (HasKey k' l)`).
+We force the calls to `get k' l` (resp. `get k' r`) to be
+typechecked using the materialized refinement by wrapping
+the calls in `assert`:
 
 \begin{code}
 assert _ x = x
 \end{code}
 
-\newthought{Ghost Values}
-This technique of materializing auxiliary facts via *ghost values* is a
-well known idea in the program verification literature. Usually, one has
-to take care to ensure that ghost computations do not interfere with the
-regular computations. If we had to actually *execute*
-`lemma_notMem` it would totally wreck the efficient logarithmic lookup
-times \footnotetext{Assuming we kept the trees balanced} as we'd traverse
-the entire tree all the time
-\footnotetext{Which is what makes dynamic contract checking
-[rather slow](findler-contract) for such invariants}
+\newthought{Ghost Values} This technique of materializing auxiliary
+facts via *ghost values* is a well known idea in program
+verification. Usually, one has to take care to ensure that ghost
+computations do not interfere with the regular computations. If we had
+to actually *execute* `lemma_notMem` it would wreck the efficient
+logarithmic lookup time, assuming we kept the trees
+[balanced](#avltrees), as we would traverse the *entire* tree instead
+of just the short path to a node.
+<div class="footnotetext">
+Which is what makes dynamic contract checking [inefficient](findler-contract) for such invariants.
+</div>
 
 \newthought{Laziness} comes to our rescue: as the ghost value is (trivially)
 not needed, it is never computed. In fact, it is straightforward to entirely
@@ -530,11 +562,13 @@ language we would have to do a bit of work to specifically mark the computation
 as a ghost or [irrelevant](proof-irrelevance) but in the lazy setting we get
 this for free.
 
-\exercisen{Membership Test} Capisce? Fix the definition of `mem` so that
-it verifiably implements the given signature:
+<div class="hwex" id="Membership Test"> Capisce? Fix the definition of `mem`
+so that it verifiably implements the given signature.
+</div>
 
 \begin{code}
-{-@ mem :: (Ord k) => k:k -> m:Map k v -> {v:Bool | Prop v <=> HasKey k m} @-}
+{-@ mem :: (Ord k) => k:k -> m:Map k v
+                   -> {v:_ | Prop v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
   | k' <  k   = mem k' l
@@ -542,9 +576,11 @@ mem k' (Node k _ l r)
 mem _ Tip     = False
 \end{code}
 
-\exercisen{Fresh} \doublestar To make sure you really understand this business of
+<div class="hwex" id="Fresh">
+\doublestar To make sure you really understand this business of
 ghosts values and proofs, complete the implementation of the following function which
 returns a `fresh` integer that is *distinct* from all the values in its input list:
+</div>
 
 \begin{code}
 {-@ fresh :: xs:[Int] -> {v:Int | not (Elem v xs)} @-}
@@ -555,7 +591,7 @@ fresh = undefined
 we [saw earlier](#listelems)
 
 \begin{code}
-{-@ predicate Elem X Ys  = Set_mem X (elems Ys) @-}
+{-@ predicate Elem X Ys  = In X (elems Ys) @-}
 {-@ measure elems @-}
 elems []     = empty
 elems (x:xs) = (singleton x) `union` (elems xs)
@@ -567,13 +603,13 @@ Recap
 In this chapter we saw how to combine several of the techniques from previous chapters
 in a case study. We learnt how to:
 
-1. **Define** an API for associative maps that used refinements to track the *set* of `keys`
+1. *Define* an API for associative maps that used refinements to track the *set* of `keys`
    stored in a map, in order to prevent lookup failures, the `NullPointerDereference` errors
    of the functional world,
 
-2. **Use** the API to implement a small interpreter that is guaranteed to never fail with
+2. *Use* the API to implement a small interpreter that is guaranteed to never fail with
    `UnboundVariable` errors, as long as the input expressions were closed,
 
-3. **Implement** the API using Binary Search Trees; in particular, using *ghost lemmas*
+3. *Implement* the API using Binary Search Trees; in particular, using *ghost lemmas*
    to `assert` facts that LiquidHaskell is otherwise unable to deduce automatically.
 

@@ -22,11 +22,6 @@ die msg = error msg
 isUnique, isNotUnique :: [Int]
 mergeSort :: (Ord a) => [a] -> [a]
 range :: Int -> Int -> [Int]
-
--- TODO: qualifier needed for focus* ? not clear. Eric: can you check?
-{- q0 :: x:a ->  {v:[a] | not (Elem x v)} @-}
-q0   :: a -> [a]
-q0 _ = []
 \end{code}
 \end{comment}
 
@@ -230,14 +225,40 @@ data [a] where
 Next, to make the specifications concise, let's define a few predicate aliases:
 
 \begin{code}
-{-@ predicate EqElts  X Y   = elems X = elems Y                         @-}
-{-@ predicate SubElts X Y   = Set_sub (elems X) (elems Y)               @-}
-{-@ predicate DisjElts X Y  = Set_empty 0 = Set_cap (elems X) (elems Y) @-}
-{-@ predicate Empty   X     = elems X = Set_empty 0                     @-}
-{-@ predicate UnElts  X Y Z = elems X = Set_cup (elems Y) (elems Z)     @-}
-{-@ predicate UnElt   X Y Z = elems X = Set_cup (Set_sng Y) (elems Z)   @-}
-{-@ predicate Elem    X Y   = Set_mem X (elems Y)                       @-}
+{-@ predicate EqElts  X Y   = elems X = elems Y                   @-}
+{-@ predicate SubElts X Y   = Subset (elems X) (elems Y)          @-}
+{-@ predicate DisjElts X Y  = Disjoint (elems X) (elems Y)        @-}
+{-@ predicate UnElts  X Y Z = Union (elems X) (elems Y) (elems Z) @-}
+{-@ predicate UnElt   X Y Z = Union1 (elems X) Y (elems Z)        @-}
+{-@ predicate Elem    X Y   = In X (elems Y)                      @-}
 \end{code}
+
+\noindent Here, the predicates correspond to various primitive relations over `Set`s
+that are natively implemented within the SMT solver:
+
+\begin{spec}
+predicate In X Y       = -- X is an element of Y
+predicate Subset X Y   = -- X is a subset of Y
+predicate Disjoint X Y = -- X and Y are Disjoint
+predicate Empty X      = -- X is empty
+predicate Union X Y Z  = -- X is the union of Y and Z
+predicate Union1 X Y Z = -- X is the union of {Y} and Z
+\end{spec}
+
+\begin{comment}
+\begin{code}
+-- | Set Interface (Add to Data.Set.Spec) 
+
+{-@ predicate In X Xs      = Set_mem X Xs            @-}
+{-@ predicate Subset X Y   = Set_sub X Y             @-}
+{-@ predicate Empty  X     = Set_emp X               @-}
+{-@ predicate Inter X Y Z  = X = Set_cap Y Z         @-}
+{-@ predicate Union X Y Z  = X = Set_cup Y Z         @-}
+{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z   @-}
+{-@ predicate Disjoint X Y = Inter (Set_empty 0) X Y @-}
+\end{code}
+\end{comment}
+
 
 
 \newthought{Append}
@@ -362,7 +383,7 @@ for `merge` above, you should be able to prove the
 surprising signature for `mergeSort` below.
 
 \begin{code}
-{-@ mergeSort :: (Ord a) => xs:[a] -> {v:[a] | Empty v} @-}
+{-@ mergeSort :: (Ord a) => xs:[a] -> {v:[a] | Empty (elems v)} @-}
 mergeSort []  = []
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where

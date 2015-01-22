@@ -335,8 +335,9 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
     (ys, zs)  = split xs
 \end{code}
 
-\exercise Why is the following implementation of `quickSort`
+<div class="hwex" id="QuickSort">Why is the following implementation of `quickSort`
 rejected by LiquidHaskell? Modify it so it is accepted.
+</div>
 
 \begin{code}
 quickSort           :: (Ord a) => [a] -> IncList a

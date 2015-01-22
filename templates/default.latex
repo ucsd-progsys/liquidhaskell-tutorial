@@ -49,10 +49,10 @@
 
 
 
-% spec 
-\DefineVerbatimEnvironment%
-  {spec}{Verbatim}
-  {}
+%% % spec 
+%% \DefineVerbatimEnvironment%
+%%   {spec}{Verbatim}
+%%   {}
 
 % error 
 \DefineVerbatimEnvironment%
@@ -135,8 +135,21 @@
 \usepackage{natbib}
 \bibliographystyle{plainnat}
 
+%%\usepackage{tcolorbox}
+
 \usepackage{listings}
+
+%% \tcbuselibrary{listings,skins,breakable}
+%% \newtcblisting{spec}{
+%%       colback=yellow,
+%%       listing only
+%%       }
+
+\definecolor{bgspec}{gray}{0.95}
+
+
 \lstnewenvironment{lcode}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+\lstnewenvironment{spec}{\lstset{backgroundcolor=\color{bgspec},language=Haskell,basicstyle=\small\ttfamily}}{}
 \lstMakeShortInline[language=Haskell]@
 
 \newcommand\cc[1]{\texttt{#1}}

@@ -76,10 +76,10 @@
     - 03
     - 04
     - 05
-    - 06
-    - 07
-    * 08 <<< HEREHEREHEREHERE
-
+    - 06 <<< HEREHEREHEREHERE
+    + 07 
+    + 08 
+    - 09
 
 
 + Subtyping exercises
