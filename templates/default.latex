@@ -149,7 +149,7 @@
 
 
 \lstnewenvironment{lcode}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
-\lstnewenvironment{spec}{\lstset{backgroundcolor=\color{bgspec},language=Haskell,basicstyle=\small\ttfamily}}{}
+\lstnewenvironment{spec}{\lstset{backgroundcolor=\color{bgspec},language=Haskell,basicstyle=\ttfamily}}{}
 \lstMakeShortInline[language=Haskell]@
 
 \newcommand\cc[1]{\texttt{#1}}

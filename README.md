@@ -73,10 +73,10 @@
     + 00
     + 01
     + 02
-    - 03
-    - 04
+    + 03
+    - 04 <<< HEREHEREHEREHERE
     - 05
-    - 06 <<< HEREHEREHEREHERE
+    - 06 
     + 07 
     + 08 
     - 09
