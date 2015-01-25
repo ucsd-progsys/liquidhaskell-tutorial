@@ -289,7 +289,6 @@ along, and especially that you do the exercises.
 [wiki-zipper]: http://en.wikipedia.org/wiki/Zipper_(data_structure)
 
 
-
 [wiki-contracts]: http://en.wikipedia.org/wiki/Design_by_contract
 [smart-ctr-wiki]:  https://www.haskell.org/haskellwiki/Smart_constructors
 [smt-wiki]:        http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories

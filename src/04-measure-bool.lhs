@@ -53,7 +53,7 @@ divide x n = x `div` n
 allows LiquidHaskell to prove that the `die` is *never* executed at
 run-time, but consequently, requires us to establish that wherever
 `divide` is *used*, the second parameter be provably non-zero.
-This is requirement is not onerous when we know exactly what the
+This is requirement is not onerous when we know what the
 divisor is *statically*
 
 \begin{code}
@@ -130,28 +130,26 @@ the above requirements into the refinement logic by declaring:
 
 
 
-\newthought{Non-Empty Lists}
-To use the newly defined measure, we define an alias for 
-non-empty lists, i.e. the *subset* of plain old Haskell
-lists `[a]` for which the predicate `notEmpty` holds
+\newthought{Non-Empty Lists} can now be described as
+the *subset* of plain old Haskell lists `[a]` for which
+the predicate `notEmpty` holds
                 
 \begin{code}
 {-@ type NEList a = {v:[a] | notEmpty v} @-}
 \end{code}
 
-
 We can now refine various signatures to establish the safety of
 the list-average function.
 
-\newthought{Size} First, we specify that `size` returns
-a non-zero value when the input list is not-empty:
+\newthought{Size} returns a non-zero value when the
+the input list is not-empty:
 
 \begin{code}
 {-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}
 \end{code}
 
-\newthought{Average} Second, we specify that the `average`
-is only sensible for non-empty lists:
+\newthought{Average} is only sensible for non-empty lists.
+Happily, we can specify this using the refined `NEList` type:
 
 \begin{code}
 {-@ average :: NEList Int -> Int @-}
@@ -161,8 +159,10 @@ average xs = divide total elems
     elems  = size xs
 \end{code}
 
-\exercise Fix the code below to obtain an alternate variant
+<div class="hwex" id="Average, Maybe">
+Fix the code below to obtain an alternate variant
 `average'` that returns `Nothing` for empty lists:
+</div>
 
 \begin{code}
 average'      :: [Int] -> Maybe Int
@@ -175,15 +175,16 @@ average' xs
     ok        = True    -- What expression goes here? 
 \end{code}
 
-
-\exercise An important aspect of formal verifiers like LiquidHaskell
+<div class="hwex" id="Debugging Specifications">
+An important aspect of formal verifiers like LiquidHaskell
 is that they help establish properties not just of your *implementations*
 but equally, or more importantly, of your *specifications*. In that spirit,
 can you explain why the following two variants of `size` are *rejected*
 by LiquidHaskell? 
+</div>
 
 \begin{code}
-{-@ size1    :: xs:(NEList a) -> Pos @-}
+{-@ size1    :: xs:NEList a -> Pos @-}
 size1 []     =  0
 size1 (_:xs) =  1 + size1 xs
 
@@ -192,19 +193,18 @@ size2 []     =  0
 size2 (_:xs) =  1 + size2 xs
 \end{code}
 
-\todo {} **solution**
 
 A Safe List API 
 ---------------
 
 Now that we can talk about non-empty lists, we can ensure
 the safety of various list-manipulating functions which
-are only well-defined on non-empty lists and which crash
-with unexpected run-time errors otherwise.
+are only well-defined on non-empty lists and crash otherwise.
 
-\newthought{Heads and Tails}
-For example, we can type the potentially dangerous `head`
-and `tail` as:
+\newthought{Head and Tail} are two of the canonical *dangerous*
+functions, that only work on non-empty lists, and burn horribly
+otherwise. We can type them simple as:
+
 
 \begin{code}
 {-@ head    :: NEList a -> a @-}
@@ -216,11 +216,14 @@ tail (_:xs) = xs
 tail []     = die "Relaxeth! this too shall ne'er be"
 \end{code}
 
-LiquidHaskell deduces that the second equations are
-*dead code* thanks to the precondition, which ensures
-callers only supply non-empty arguments.
+LiquidHaskell uses the precondition to deduce that
+the second equations are *dead code*. Of course, this
+requires us to establish that *callers* of `head` and `tail`
+only invoke the respective functions with non-empty lists.
 
-\exercise Write down a specification for `null` such that `safeHead` is verified:
+<div class="hwex" id="Safe Head">
+Write down a specification for `null` such that `safeHead` is verified:
+</div>
 
 \begin{code}
 safeHead      :: [a] -> Maybe a
@@ -238,11 +241,11 @@ Lets use the above to write a function that chunks sequences
 into non-empty groups of equal elements:
 
 \begin{code}
-{-@ groupEq         :: (Eq a) => [a] -> [NEList a] @-}
-groupEq []          = []
-groupEq (x:xs)      = (x:ys) : groupEq zs
+{-@ groupEq    :: (Eq a) => [a] -> [NEList a] @-}
+groupEq []     = []
+groupEq (x:xs) = (x:ys) : groupEq zs
   where
-    (ys, zs)        = span (x ==) xs
+    (ys, zs)   = span (x ==) xs
 \end{code}
 
 \noindent By using the fact that *each element* in the
@@ -250,8 +253,9 @@ output returned by `groupEq` is in fact of the form `x:ys`,
 LiquidHaskell infers that `groupEq` returns a `[NEList a]`
 that is, a list of *non-empty lists*.
 
-We can use `groupEq` to write a function that
-eliminates stuttering from a String:
+\newthought{To Eliminate Stuttering} from a string, we can use `groupEq`
+to split the string into blocks of repeating `Char`s, and then just
+extract the first `Char` from each block:
 
 \begin{code}
 -- >>> eliminateStutter "ssstringssss liiiiiike thisss"
@@ -264,21 +268,22 @@ LiquidHaskell automatically instantiates the type parameter
 for `map` in `eliminateStutter` to `notEmpty v` to deduce that
 `head` is only called on non-empty lists.
 
-\newthought{Folds} One of my favorite folds is `foldr1` which
-uses the first element of the sequence as the initial value. Of course,
-it should only be called with non-empty sequences!
+\newthought{Foldr1} is one of my favorite folds; it uses
+the first element of the sequence as the initial value.
+Of course, it should only be called with non-empty sequences!
 
 \begin{code}
-{-@ foldr1      :: (a -> a -> a) -> NEList a -> a @-} 
-foldr1 f (x:xs) = foldr f x xs
-foldr1 _ []     = die "foldr1" 
+{-@ foldr1         :: (a -> a -> a) -> NEList a -> a @-} 
+foldr1 f (x:xs)    = foldr f x xs
+foldr1 _ []        = die "foldr1" 
 
 foldr              :: (a -> b -> b) -> b -> [a] -> b 
 foldr _ acc []     = acc
 foldr f acc (x:xs) = f x (foldr f acc xs)
 \end{code}
 
-\newthought{Sum}
+\newthought{To Sum} a non-empty list of numbers, we can just
+perform a `foldr1` with the `+` operator:
 Thanks to the precondition, LiquidHaskell will prove that
 the `die` code is indeed dead. Thus, we can write
 
@@ -291,14 +296,16 @@ sum xs  = foldr1 (+) xs
 \noindent Consequently, we can only invoke `sum` on non-empty lists, so:
 
 \begin{code}
-sumOk  = sum [1,2,3,4,5]    -- accepted by LH
+sumOk  = sum [1,2,3,4,5]    -- is accepted by LH, but
 
-sumBad = sum []             -- rejected by LH
+sumBad = sum []             -- is rejected by LH
 \end{code}
 
-\exercise The function below computes a weighted average of its input.
+<div class="hwex" id="Weighted Average">
+The function below computes a weighted average of its input.
 Unfortunately, LiquidHaskell is not very happy about it. Can you figure out
 why, and fix the code or specification appropriately?
+</div>
 
 \begin{code}
 {-@ wtAverage :: NEList (Pos, Pos) -> Int @-}
@@ -318,12 +325,15 @@ map f (x:xs)  = f x : map f xs
 \hint On what variables are the errors? How are those variables' values computed?
 Can you think of a better specification for the function(s) doing those computations?
 
-
-\exercise
+<div class="hwex" id="Mitchell's Risers">
 Non-empty lists pop up in many places, and it is rather convenient
 to have the type system track non-emptiness without having to make
-up special types. Consider the `risers` function:
-\footnotetext{Popularized by [Neil Mitchell](http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html)}
+up special types. Consider the `risers` function, popularized by
+by [Neil Mitchell][mitchell-riser]. `safeSplit` requires
+its input be non-empty; but LiquidHaskell believes that the
+call inside `risers` fails this requirement. Fix the
+specification for `risers` so that it is verified.
+</div>
 
 \begin{code}
 risers           :: (Ord a) => [a] -> [[a]]
@@ -340,28 +350,23 @@ safeSplit (x:xs) = (x, xs)
 safeSplit _      = die "don't worry, be happy"
 \end{code}
 
-\noindent The call to `safeSplit` requires its input be non-empty,
-and LiquidHaskell does not believe that the call inside `risers`
-meets this requirement. Can you devise a specification for `risers`
-that allows LiquidHaskell to verify the call to `safeSplit` that
-`risers` will not `die`?
-
 Recap
 -----
 
 In this chapter we saw how LiquidHaskell lets you 
 
-1. Define *structural properties* of data types, 
+1. *Define* structural properties of data types, 
 
-2. Use refinements over these properties to describe key
+2. *Use refinements* over these properties to describe key
    invariants that establish, at compile-time, the safety
    of operations that might otherwise fail on unexpected
    values at run-time, all while,
 
-3. Working with plain Haskell types, here, Lists, without
-   having to [make up new types][apple-riser]
-   which can have the unfortunate effect of adding a multitude of constructors
-   and conversions which often clutter implementations and specifications.
+3. *Working with plain Haskell types*, here, Lists,
+   without having to [make up new types][apple-riser]
+   which can have the unfortunate effect of adding
+   a multitude of constructors and conversions which
+   often clutter implementations and specifications.
 
 \noindent 
 Of course, We can do a lot more with measures, so lets press on!

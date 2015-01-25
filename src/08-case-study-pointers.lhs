@@ -1,4 +1,4 @@
-Case Study: Pointers and ByteStrings
+Case Study: Pointers and ByteStrings {#case-study-pointers}
 ====================================
 
 \begin{comment}

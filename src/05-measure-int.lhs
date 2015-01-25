@@ -5,6 +5,7 @@ Numeric Measures {#numericmeasure}
 \begin{code}
 
 {-@ LIQUID "--diff"           @-}
+{-@ LIQUID "--real"           @-}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}
 
@@ -28,6 +29,8 @@ die msg = error msg
 take, drop, take' :: Int -> [a] -> [a]
 txgo              :: Int -> Int -> Vector (Vector a) -> Vector (Vector a)
 quickSort         :: (Ord a) => [a] -> [a]
+size              :: [a] -> Int
+flatten :: Int -> Int -> Vector (Vector a) -> Vector a
 \end{code}
 
 Plan
@@ -41,23 +44,24 @@ Plan
 \end{comment}
 
 Many of the programs we have seen so far, for example those in
-[here](#vectorbounds), suffer from *indexitis*
-<div class="footnotetext">A term coined by [Richard Bird](http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383)</div>
-a tendency to perform low-level manipulations to iterate over the
-indices into a collection, which opens the door to various off-by-one
-errors. Such errors can be entirely eliminated by instead programming
+[here](#vectorbounds), suffer from *indexitis*. This is a term
+coined by [Richard Bird][bird-pearls] which describes a tendency
+to perform low-level manipulations to iterate over the indices
+into a collection, opening the door to various off-by-one
+errors. Such errors can be eliminated by instead programming
 at a higher level, using a [wholemeal approach][hinze-icfp09]
 where the emphasis is on using aggregate operations, like `map`,
-`fold` and `reduce`. However, wholemeal programming requires us to
-take care when operating on multiple collections; if these collections
-are *incompatible*, e.g. have the wrong dimensions, then we end up with
-a fate worse than a crash, a *meaningless* result.
+`fold` and `reduce`.
 
-Fortunately, LiquidHaskell can help. Lets see how we can use measures to
-specify dimensions and create a dimension-aware API for lists which can be
-used to implement wholemeal dimension-safe APIs.
-<div class="footnotetext">In a [later chapter](#kmeans-case-study) we will use this
-API to implement K-means clustering.</div>
+\newthought{Wholemeal programming is no panacea} as it still
+requires us to take care when operating on *different* collections;
+if these collections are *incompatible*, e.g. have the wrong dimensions,
+then we end up with a fate worse than a crash, a possibly meaningless
+result. Fortunately, LiquidHaskell can help. Lets see how we can use
+measures to specify dimensions and create a dimension-aware API for
+lists which can be used to implement wholemeal dimension-safe APIs.
+<div class="footnotetext">In a [later chapter](#kmeans-case-study)
+we will use this API to implement K-means clustering.</div>
 
 Wholemeal Programming
 ---------------------
@@ -79,8 +83,7 @@ data Matrix a = M { mRow  :: Int
               deriving (Eq)
 \end{code}
 
-\newthought{Vector Product} We can write the dot product of
-two `Vector`s using a fold:
+\newthought{The Dot Product} of two `Vector`s can be easily computed using a fold:
 
 \begin{code}
 dotProd       :: (Num a) => Vector a -> Vector a -> a
@@ -91,10 +94,9 @@ dotProd vx vy = sum (prod xs ys)
     ys        = vElts vy
 \end{code}
 
-\newthought{Matrix Product} Similarly, we can compute the
-product of two matrices in a wholemeal fashion, without 
-performing any low-level index manipulations, but instead using
-a high-level "iterator" over the elements of the matrix.
+\newthought{Matrix Multiplication} can similarly be expressed
+in a high-level, wholemeal fashion, by eschewing low level index
+manipulations in favor of a high-level *iterator* over the `Matrix` elements:
 
 \begin{code}
 matProd       :: (Num a) => Matrix a -> Matrix a -> Matrix a
@@ -106,12 +108,13 @@ matProd (M rx _ xs) (M _ cy ys)
                        dotProd xi yj
 \end{code}
 
-\newthought{Iteration} In the above, the "iteration" embodied
-in `for` is simply a `map` over the elements of the vector.
+\newthought{The Iteration} embodied by the `for` combinator, is simply
+a `map` over the elements of the vector.
 
-\begin{code}
+\begin{spec}
+for            :: Vector a -> (a -> b) -> Vector b 
 for (V n xs) f = V n (map f xs) 
-\end{code}
+\end{spec}
 
 \newthought{Wholemeal programming frees} us from having to fret
 about low-level index range manipulation, but is hardly a panacea.
@@ -126,42 +129,49 @@ of the various aggreates. For example,
 + `matProd` is only well defined on matrices of compatible
   dimensions; the number of columns of `mx` must equal the
   number of rows  of `my`. Otherwise, again, rather than an
-  error, we will get the wrong output. \footnotetext{In fact,
-  while the implementation of  `matProd` breezes past GHC it is quite wrong!}
-
+  error, we will get the wrong output.
+<div class="footnotetext">
+In fact, while the implementation of `matProd` breezes past GHC it is quite wrong!
+</div>
 
 Specifying List Dimensions
 --------------------------
 
 In order to start reasoning about dimensions, we need a way
 to represent the *dimension* of a list inside the refinement
-logic. \footnotetext{We could just use `vDim`, but that is
-a lazy cheat as there is no guarantee that the field's value
-actually equals the size of the list!}
+logic. <div class="footnotetext">We could just use `vDim`,
+but that is a cheat as there is no guarantee that the field's
+value actually equals the size of the list!</div>
 
 \newthought{Measures} are ideal for this
-task. [Previously](#boolmeasures) we saw how we could lift Haskell
-functions up to the refinement logic.
-\footnotetext{Recall that these must be inductively defined functions,
-with a single equation per data-constructor}
-Lets write a measure to describe the length of a list:
+task. [Previously](#boolmeasures) we saw how we could lift
+Haskell functions up to the refinement logic. Lets write a
+measure to describe the length of a list:
+<div class="footnotetext">Recall that these must be
+inductively defined functions, with a single equation
+per data-constructor</div>
 
+\begin{comment}
 \begin{spec}
 {-@ measure len @-}
 len        :: [a] -> Int
 len []     = 0
 len (_:xs) = 1 + len xs
 \end{spec}
-
+\end{comment}
 
 \begin{code}
 {-@ measure size @-}
-{- size    :: xs:[a] -> {v:Nat | v = size xs && v = len xs} @-}
-{-@ size    :: xs:[a] -> Nat @-}
-size        :: [a] -> Int
-size (_:rs) = 1 + size rs
+{-@ size    :: [a] -> Nat @-}
 size []     = 0
+size (_:rs) = 1 + size rs
 \end{code}
+
+\begin{comment}
+\begin{code}
+{-@ invariant {v:[a] | 0 <= size v} @-}
+\end{code}
+\end{comment}
 
 \newthought{Measures Refine Constructors}
 As with [refined data definitions](#autosmart), the
@@ -172,13 +182,12 @@ measure is translated into:
 \begin{spec}
 data [a] where
   []  :: {v: [a] | size v = 0}
-  (:) :: x:a -> xs:[a] -> {v:[a] | size v = 1 + size xs}
+  (:) :: a -> xs:[a] -> {v:[a]|size v = 1 + size xs}
 \end{spec}
 
-\newthought{Multiple Measures} We can write several
-different measures for a datatype. For example, in
-addition to the `size` measure, we can define a `notEmpty`
-measure for the list type:
+\newthought{Multiple Measures} may be defined for the same data
+type. For example, in addition to the `size` measure, we can define a
+`notEmpty` measure for the list type:
 
 \begin{code}
 {-@ measure notEmpty @-}
@@ -187,8 +196,8 @@ notEmpty []    = False
 notEmpty (_:_) = True 
 \end{code}
 
-\newthought{Composing Measures}
-LiquidHaskell lets you *compose* the different measures
+
+\newthought{We Compose Different Measures}
 simply by *conjoining* the refinements in the strengthened
 constructors. For example, the two measures for lists end
 up yielding the constructors:
@@ -196,7 +205,9 @@ up yielding the constructors:
 \begin{spec}
 data [a] where
   []  :: {v: [a] | not (notEmpty v) && size v = 0}
-  (:) :: x:a -> xs:[a] -> {v:[a] | notEmpty v && size v = 1 + size xs}
+  (:) :: a
+      -> xs:[a]
+      -> {v:[a]| notEmpty v && size v = 1 + size xs}
 \end{spec}
 
 \noindent 
@@ -209,53 +220,61 @@ to bake into the structure, but can define a generic
 structure and refine it *a posteriori* as needed with
 new measures.
 
-Lets use `size` to create a dimension-aware API for lists.
-To get the ball rolling, lets defining a few helpful type aliases:
+We are almost ready to begin creating a dimension aware API
+for lists; one last thing that is useful is a couple of aliases
+for describing lists of a given dimension.
 
-\newthought{An `N`-List} is a list with exactly `N` elements:
-\footnotetext{Note that when defining refinement type aliases,
-we use uppercase variables like `N` to distinguish value- parameters
-from the lowercase type parameters like `a`.}
-
-\begin{code}
-{-@ type ListN a N = {v : [a] | size v = N} @-}
-\end{code}
-
-\noindent To make the signatures symmetric, lets use an alias
-for plain old Lists:
+\newthought{To make signatures symmetric} lets define an alias for
+plain old (unrefined) lists:
 
 \begin{code}
 type List a = [a]
 \end{code}
 
+<div class="toolinfo">
+\newthought{A ListN} is a list with exactly `N` elements, and a
+`ListX` is a list whose size is the same as another list `X`.  Note
+that when defining refinement type aliases, we use uppercase variables
+like `N` and `X` to distinguish *value* parameters from the lowercase
+*type* parameters like `a`.
+</div>
+
+\begin{code}
+{-@ type ListN a N = {v:List a | size v = N} @-}
+{-@ type ListX a X = ListN a {size X}        @-}
+\end{code}
+
+
 Lists: Size Preserving API
 --------------------------
 
-With the types firmly in hand, let us write dimension-aware
-variants of the usual list functions. The implementations are
-the same as in the standard library i.e. [`Data.List`][data-list];
-but the specifications are enriched with dimension information.
+With the types and aliases firmly in our pockets, let us
+write dimension-aware variants of the usual list functions.
+The implementations are the same as in the standard library
+i.e. [`Data.List`][data-list], but the specifications are
+enriched with dimension information.
 
-\newthought{`map`} yields a list with the same size as the input:
+\newthought{map} yields a list with the same size as the input:
 
 \begin{code}
-{-@ map      :: (a -> b) -> xs:List a -> ListN b (size xs) @-}
+{-@ map      :: (a -> b) -> xs:List a -> ListX b xs @-}
 map _ []     = []
 map f (x:xs) = f x : map f xs
 \end{code}
 
 \newthought{zipWith} requires both lists to have the *same* size, and produces
 a list with that same size.
-\footnotetext{Note that as made explicit by the call to `die`, the
-input type *rules out* the case where one list is empty and the other
-is not, as in that case the former's length is zero while the latter's
-is not, and hence, different.}
+<div class="footnotetext"> As made explicit by the call to
+`die`, the input type *rules out* the case where one list
+is empty and the other is not, as in that case the former's
+length is zero while the latter's is not, and hence, different.
+</div>
 
 \begin{code}
-
-{-@ invariant {v:[a] | 0 <= size v} @-}
-
-{-@ zipWith :: _ -> xs:List a -> ListN b (size xs) -> ListN c (size xs) @-}
+{-@ zipWith :: (a -> b -> c) -> xs:List a
+                             -> ListX b xs
+                             -> ListX c xs
+  @-}
 zipWith f (a:as) (b:bs) = f a b : zipWith f as bs
 zipWith _ [] []         = []
 zipWith _ _  _          = die "no other cases"
@@ -267,24 +286,30 @@ Here's a function that actually allows for that case, where the output
 type is the *shorter* of the two inputs:
 
 \begin{code}
-{-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Min (size v) (size as) (size bs)} @-}
+{-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Tinier v as bs} @-}
 zip (a:as) (b:bs) = (a, b) : zip as bs
 zip [] _          = []
 zip _  []         = [] 
 \end{code}
 
-\noindent The output type uses the following which defines `X`
-to be the smaller of `Y` and `Z`.
-<div class="footnotetext">Note that `if p then q else r` is simply an abbreviation for `p => q && not p => r`</div>
+\noindent The output type uses the predicate `Tinier Xs Ys Zs`
+which defines the length of `Xs` to be the smaller of that of
+`Ys` and `Zs`. <div class="footnotetext">Recall that
+in logic, `if p then q else r` is just `p => q && not p => r`.
+</div>
+
 \begin{code}
-{-@ predicate Min X Y Z = (if X < Y then X = Y else X = Z) @-}
+{-@ predicate Tinier X Y Z = Min (size X) (size Y) (size Z) @-}
+{-@ predicate Min X Y Z = (if Y < Z then X = Y else X = Z)  @-}
 \end{code}
 
-\exercisen{Zip Unless Empty} In my experience, `zip` as shown above is far too
+<div class="hwex" id="Zip Unless Empty">
+In my experience, `zip` as shown above is far too
 permissive and lets all sorts of bugs into my code. As middle
 ground, consider `zipOrNull` below. Write a specification
 for `zipOrNull` such that the code below is verified by
-LiquidHaskell:
+LiquidHaskell.
+</div>
 
 \begin{code}
 zipOrNull       :: [a] -> [b] -> [(a, b)]
@@ -305,9 +330,11 @@ test3     = zipOrNull ["cat", "dog"] []
 \hint Yes, the type is rather gross; it uses a bunch of
       disjunctions `||` , conjunctions `&&` and implications `=>`.
 
-\exercisen{Reverse} Consider the code below that reverses
-a list using the tail-recursive `go`. Fix the signature for `go`
+<div class="hwex" id="Reverse">
+We can `reverse` the elements of a list as shown below, using the
+tail recursive function `go`. Fix the signature for `go`
 so that LiquidHaskell can prove the specification for `reverse`.
+</div>
 
 \begin{code}
 {-@ reverse       :: xs:[a] -> {v:[a] | size v = size xs} @-}
@@ -328,17 +355,24 @@ Next, lets look at some functions that truncate lists, in one way or another.
 \newthought{Take} lets us grab the first `k` elements from a list: 
 
 \begin{code}
-{-@ take'     :: n:Nat -> {v:List a | n <= size v} -> ListN a n @-}
+{-@ take'     :: n:Nat -> ListGE a n -> ListN a n @-}
 take' 0 _      = []
 take' n (x:xs) = x : take' (n-1) xs
 take' _ _      = die "won't  happen"
 \end{code}
 
+\noindent The alias `ListGE a n` denotes lists whose
+length is at least `n`:
 
-\exercisen{Drop} is the yang to `take`'s yin: it returns
-the remainder after extracting the first `k` elements.
-Write a suitable specification for it so that the below
-typechecks:
+\begin{code}
+{-@ type ListGE a N = {v:List a | N <= size v} @-} 
+\end{code}
+
+<div class="hwex" id="Drop">
+`Drop` is the yang to `take`'s yin: it returns the remainder after extracting
+the first `k` elements. Write a suitable specification for it so that the below
+typechecks.
+</div>
 
 \begin{code}
 drop 0 xs     = xs
@@ -349,10 +383,12 @@ drop _ _      = die "won't happen"
 test4 = drop 1 ["cat", "dog", "mouse"] 
 \end{code}
 
-\exercisen{Take it easy} The version `take'` above is too restrictive;
+<div class="hwex" id="Take it easy">
+The version `take'` above is too restrictive;
 it insists that the list actually have at least `n` elements.
 Modify the signature for the *real* `take` function so that
-the code below is accepted by LiquidHaskell:
+the code below is accepted by LiquidHaskell.
+</div>
 
 \begin{code}
 take 0 _       = []
@@ -364,10 +400,12 @@ test5 = [ take 2  ["cat", "dog", "mouse"]
         , take 20 ["cow", "goat"]        ] 
 \end{code}
 
-\newthought{Partition} As one last example, lets look at the
-function that `partition`s a list using a user supplied predicate:
+\newthought{The Partition} function breaks a list into two
+sub-lists of elements that either satisfy or fail a user
+supplied predicate.
 
 \begin{code}
+partition          :: (a -> Bool) -> [a] -> ([a], [a])
 partition _ []     = ([], [])
 partition f (x:xs)
   | f x            = (x:ys, zs)
@@ -377,36 +415,38 @@ partition f (x:xs)
 \end{code}
 
 We would like to specify that the *sum* of the output tuple's
-dimensions equal the input list's dimension.
-Lets write measures to access the elements of the output:
+dimensions equal the input list's dimension. Lets write measures
+to access the elements of the output:
+
+\begin{spec}
+{-@ measure fst @-}
+fst  (x, _) = x
+
+{-@ measure snd @-}
+snd (_, y) = y
+\end{spec}
+
+\noindent We can now refine the type of `partition` as: 
 
 \begin{code}
-{-@ measure first @-}
-first  (x, _) = x
-
-{-@ measure second @-}
-second (_, y) = y
+{-@ partition :: _ -> xs:_ -> {v:_ | Sum2 v (size xs)} @-}
 \end{code}
 
-\noindent We can use the above to type `partition` as
+\noindent where `Sum2 V N` holds for a pair of lists dimensions add to `N`:
 
 \begin{code}
-{-@ partition :: (a -> Bool) -> xs:_ -> ListPair a (size xs) @-}
+{-@ predicate Sum2 X N = size (fst X) + size (snd X) = N @-}
 \end{code}
 
-\noindent using an alias for a pair of lists whose total dimension equals `N`
-
-\begin{code}
-{-@ type ListPair a N = {v:([a], [a]) | size (first v) + size (second v) = N} @-}
-\end{code}
-
-\exercisen{QuickSort} Use the `partition` function above to implement `quickSort`:
+<div class="hwex" id="QuickSort">
+Use `partition` to implement `quickSort`.
+</div>
 
 \begin{code}
 -- >> quickSort [1,4,3,2]
 -- [1,2,3,4]
 
-{-@ quickSort    :: (Ord a) => xs:List a -> ListN a (size xs) @-}
+{-@ quickSort    :: (Ord a) => xs:List a -> ListX a xs @-}
 quickSort []     = []
 quickSort (x:xs) = undefined
 
@@ -424,9 +464,14 @@ We can use the dimension aware lists to create a safe vector API.
 
 \begin{code}
 {-@ data Vector a = V { vDim  :: Nat
-                      , vElts :: ListN a vDim }
-  @-}
+                      , vElts :: ListN a vDim }         @-}
 \end{code}
+
+\begin{comment}
+\begin{code}
+{-@ vDim :: x:_ -> {v: Nat | v = vDim x} @-}
+\end{code}
+\end{comment}
 
 \noindent 
 The refined data type prevents the creation of illegal vectors:
@@ -437,66 +482,119 @@ okVec  = V 2 [10, 20]       -- accepted by LH
 badVec = V 2 [10, 20, 30]   -- rejected by LH
 \end{code}
 
-\newthought{Access} Next, lets write some functions to access the elements of a vector:
+\noindent 
+As usual, it will be handy to have a few aliases.
 
 \begin{code}
-{-@ vCons        :: a -> x:Vector a -> {v:Vector a | vDim v = vDim x + 1} @-}
-vCons x (V n xs) = V (n+1) (x:xs)
+-- | Non Empty Vectors
+{-@ type VectorNE a  = {v:Vector a | vDim v > 0} @-}
 
-{-@ type VectorNE a = {v:Vector a | vDim v > 0} @-}
-
-{-@ vHd :: VectorNE a -> a @-}
-vHd (V _ (x:_)) = x
-vHd _           = die "nope"
-
-{-@ vTl          :: x:VectorNE a -> {v:Vector a | vDim v = vDim x - 1} @-}
-vTl (V n (_:xs)) = V (n-1) xs 
-vTl _           = die "nope"
-\end{code}
-
-\newthought{Iteration} It is straightforward to see that:
-
-\begin{code}
-{-@ for :: x:Vector a -> (a -> b) -> VectorN b (vDim x) @-}
-\end{code}
-\newthought{Binary Operations} We want to apply various binary
-operations to *compatible* vectors, i.e. vectors with equal
-dimensions. To this end, it is handy to have an alias for
-vectors of a given size:
-
-\begin{code}
+-- | Vectors of size N          
 {-@ type VectorN a N = {v:Vector a | vDim v = N} @-}
+
+-- | Vectors of Size Equal to Another Vector X 
+{-@ type VectorX a X = VectorN a {vDim X}        @-}
 \end{code}
 
-\noindent We can now write a generic binary operator:
+\newthought{To Create} a `Vector` safely, we can
+start with the empty vector `vEmp` and then add
+elements one-by-one with `vCons`:
 
 \begin{code}
-{-@ vBin :: (a -> b -> c) -> vx:Vector a -> vy:VectorN b (vDim vx) -> VectorN c (vDim vx) @-}
-vBin     :: (a -> b -> c) -> Vector a -> Vector b -> Vector c
+{-@ vEmp :: VectorN a 0 @-}
+vEmp = V 0 []
+
+{-@ vCons :: a -> x:Vector a -> VectorN a {vDim x + 1} @-}
+vCons x (V n xs) = V (n+1) (x:xs)
+\end{code}
+
+\newthought{To Access} vectors at a low-level, we can use
+equivalents of *head* and *tail*, which only work on
+non-empty `Vector`s:
+
+\begin{code}
+{-@ vHd :: VectorNE a -> a @-}
+vHd (V _ (x:_))  = x
+vHd _            = die "nope"
+
+{-@ vTl          :: x:VectorNE a -> VectorN a {vDim x - 1} @-}
+vTl (V n (_:xs)) = V (n-1) xs 
+vTl _            = die "nope"
+\end{code}
+
+\newthought{To Iterate} over a vector we can use the `for` combinator:
+
+\begin{code}
+{-@ for        :: x:Vector a -> (a -> b) -> VectorX b x @-}
+for (V n xs) f = V n (map f xs) 
+\end{code}
+
+
+
+\newthought{Binary Pointwise Operations} should only be applied
+to *compatible* vectors, i.e. vectors with equal dimensions.
+We can write a generic binary pointwise operator:
+
+\begin{code}
+{-@ vBin :: (a -> b -> c) -> x:Vector a
+                          -> VectorX b x
+                          -> VectorX c x
+  @-}
 vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)
 \end{code}
 
-\newthought{Dot Product} Finally, we can implement a wholemeal,
-dimension safe dot product operator as:
+\newthought{The Dot Product} of two `Vector`s can be now implemented
+in a wholemeal *and* dimension safe manner, as:
 
 \begin{code}
-{-@ dotProduct :: (Num a) => x:Vector a -> y:VectorN a (vDim x) -> a @-}
+{-@ dotProduct :: (Num a) => x:Vector a -> VectorX a x -> a @-}
 dotProduct x y = sum $ vElts $ vBin (*) x y 
 \end{code}
 
-\exercisen{Vector Constructor} Complete the *specification* and
-*implementation* of `vecFromList` which *creates* a `Vector` from
-a plain old list.
+<div class="hwex" id="Vector Constructor">
+Complete the *specification* and *implementation* of `vecFromList`
+which *creates* a `Vector` from a plain list.
+</div>
 
 \begin{code}
 vecFromList     :: [a] -> Vector a
-vecFromList xs  = undefined
+vecFromList xs  =  undefined
 
 test6  = dotProduct vx vy    -- should be accepted by LH
   where 
     vx = vecFromList [1,2,3]
     vy = vecFromList [4,5,6]
 \end{code}
+
+<div class="hwex" id="Flatten">
+\singlestar Write a function to `flatten` a nested `Vector`.
+</div>
+
+\begin{code}
+{-@ flatten :: n:Nat
+            -> m:Nat
+            -> VectorN (VectorN a m) n
+            -> VectorN a {m * n}
+  @-}
+flatten = undefined
+\end{code}
+
+\newthought{The Cross Product} of two vectors can now be
+computed in a nice wholemeal style, by a nested iteration
+followed by a `flatten`.
+
+\begin{code}
+{-@ product   :: xs:Vector _
+              -> ys:Vector _
+              -> VectorN _ {vDim xs * vDim ys}
+  @-}
+product xs ys = flatten (vDim ys) (vDim xs) xys
+  where
+    xys       = for ys $ \y ->
+                  for xs $ \x ->
+                    x * y
+\end{code}
+
 
 Dimension Safe Matrix API 
 -------------------------
@@ -511,10 +609,11 @@ of each inner vector is `mCol`. We can specify legality in a
 refined data definition: 
 
 \begin{code}
-{-@ data Matrix a = M { mRow  :: Pos
-                      , mCol  :: Pos 
-                      , mElts :: VectorN (VectorN a mCol) mRow
-                      }
+{-@ data Matrix a =
+      M { mRow  :: Pos
+        , mCol  :: Pos 
+        , mElts :: VectorN (VectorN a mCol) mRow
+        }
   @-}
 \end{code}
 
@@ -522,25 +621,29 @@ refined data definition:
 requiring the dimensions to be positive.
 
 \begin{code}
-
 {-@ type Pos = {v:Int | 0 < v} @-}
 \end{code}
 
 \noindent It is convenient to have an alias for matrices of a given size:
 
 \begin{code}
-{-@ type MatrixN a R C = {v:Matrix a | mRow v = R && mCol v = C} @-}
+{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C } @-}
+{-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}
 \end{code}
 
-\noindent after LiquidHaskell accepts:
+\noindent For example, we can use the above to write type: 
 
 \begin{code}
-ok23      = M 2 3 (V 2 [ V 3 [1, 2, 3]
-                       , V 3 [4, 5, 6] ])
+{-@ ok23 :: MatrixN _ 2 3 @-}
+ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
+                      , V 3 [4, 5, 6] ])
 \end{code}
 
-\exercisen{Legal Matrix} Modify the definitions of `bad1` and `bad2`
-so that they are legal matrices accepted by LiquidHaskell.
+<div class="hwex" id="Legal Matrix">
+Modify the definitions of `bad1` and `bad2`
+so that they are legal matrices accepted by
+LiquidHaskell.
+</div>
 
 \begin{code}
 bad1 :: Matrix Int
@@ -552,11 +655,14 @@ bad2 = M 2 3 (V 2 [ V 2 [1, 2]
                   , V 2 [4, 5] ])
 \end{code}
 
-\exercisen{Matrix Constructor} \singlestar Write a function to construct a `Matrix` from a nested list.
+<div class="hwex" id="Matrix Constructor">
+\singlestar Write a function to construct
+a `Matrix` from a nested list.
+</div>
 
 \begin{code}
 matFromList      :: [[a]] -> Maybe (Matrix a)
-matFromList []   = Nothing                       -- no meaningful dimensions! 
+matFromList []   = Nothing
 matFromList xss@(xs:_)
   | ok           = Just (M r c vs) 
   | otherwise    = Nothing 
@@ -565,12 +671,12 @@ matFromList xss@(xs:_)
     c            = size xs
     ok           = undefined
     vs           = undefined 
-
 \end{code}
 
-\exercisen{Refined Matrix Constructor} \doublestar Refine the
-specification for `matFromList` so that the following is
-accepted by LiquidHaskell:
+<div class="hwex" id="Refined Matrix Constructor">
+\doublestar Refine the specification for `matFromList`
+so that the following is accepted by LiquidHaskell.
+</div>
 
 \begin{code}
 {-@ mat23 :: Maybe (MatrixN Integer 2 2) @-} 
@@ -582,32 +688,18 @@ mat23     = matFromList [ [1, 2]
 How will you figure out the number of columns? A measure
 may be useful.
 
-\begin{comment}
--- DELETE ME
-{-@ matFromList  :: xss:[[a]] -> Maybe (MatrixN a (size xss) (cols xss)) @-}
-{-@ measure cols @-}
-{-@ cols   :: [[a]] -> Nat @-}
-cols (r:_) = size r
-cols []    = 0
-\end{comment}
-
-\newthought{Matrix Multiplication} Ok, lets now implement
-matrix multiplication. You'd think we did it already, but
-in fact the implementation at the top of this chapter
-is all wrong.
-\footnotetext{You could run it of course, or you could
-just replace `dotProd` with our type-safe `dotProduct`
-and see what happens!}
-Indeed, you cannot just multiply any two matrices: the
-number of *columns* of the first must equal to the *rows*
-of the second -- after which point the result comprises
-the `dotProduct` of the rows of the first matrix with
-the columns of the second.
+\newthought{Matrix Multiplication} Finally, lets implement matrix
+multiplication. You'd think we did it already, but in fact the
+implementation at the top of this chapter is all wrong (run it and
+see!) We cannot just multiply any two matrices: the number of
+*columns* of the first must equal to the *rows* of the second -- after
+which point the result comprises the `dotProduct` of the rows of the
+first matrix with the columns of the second.
 
 \begin{code}
-{-@ matProduct   :: (Num a) => x:Matrix a
-                            -> y:{Matrix a  | mCol x = mRow y}
-                            -> MatrixN a (mRow x) (mCol y)
+{-@ matProduct :: (Num a) => x:Matrix a
+                          -> y:{Matrix a  | mCol x = mRow y}
+                          -> MatrixN a (mRow x) (mCol y)
   @-}
 matProduct (M rx _ xs) my@(M _ cy _)
                  = M rx cy elts
@@ -618,7 +710,7 @@ matProduct (M rx _ xs) my@(M _ cy _)
     M _ _ ys'    = transpose my 
 \end{code}
 
-\newthought{Transposition} To iterate over the columns of
+\noindent To iterate over the *columns* of the matrix
 `my` we just `transpose` it so the columns become rows.
 
 \begin{code}
@@ -629,19 +721,21 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
                   , V 2 [3, 6] ])
 \end{code}
 
-\exercisen{Matrix Transposition} \doublestar
-Use the `Vector` API to Complete the implementation of `txgo`.
-For inspiration, you might look at the implementation of
-`Data.List.transpose` from the [prelude][URL-transpose].
+<div class="hwex" id="Matrix Transpose">
+\doublestar Use the `Vector` API to Complete the implementation
+of `txgo`. For inspiration, you might look at the implementation
+of `Data.List.transpose` from the [prelude][URL-transpose].
 Better still, don't.
+</div>
 
 \begin{code}
-{-@ transpose          :: m:Matrix a -> MatrixN a (mCol m) (mRow m) @-}
+{-@ transpose :: m:Matrix a -> MatrixN a (mCol m) (mRow m) @-}
 transpose (M r c rows) = M c r $ txgo c r rows
 
 {-@ txgo      :: c:Nat -> r:Nat
               -> VectorN (VectorN a c) r
-              -> VectorN (VectorN a r) c @-}
+              -> VectorN (VectorN a r) c
+  @-}
 txgo c r rows = undefined
 \end{code}
 
@@ -649,12 +743,13 @@ txgo c r rows = undefined
 stripping out the `head`s of the input rows, to create the
 corresponding output rows.
 
+
 Recap
 -----
 
 In this chapter, we saw how to use measures to describe
 numeric properties of structures like lists (`Vector`)
-and nested lists (`Matrix`). To recap:
+and nested lists (`Matrix`).
 
 1. Measures are *structurally recursive* functions, with a single
    equation per data constructor,
@@ -666,9 +761,8 @@ and nested lists (`Matrix`). To recap:
    via dimension-aware APIs that ensure that operators only apply to
    compatible values. 
 
-We can use numeric measures to encode various other properties
-of structures; in subsequent chapters we will see examples ranging
-from high-level [height-balanced trees](#case-study-wbl), to low-level
-safe [pointer arithmetic](#case-study-pointers).
-
+We can use numeric measures to encode various other properties of
+structures; in subsequent chapters we will see examples ranging from
+high-level [AVL trees](#case-study-avltree), to low-level safe
+[pointer arithmetic](#case-study-pointers).
 
