@@ -64,6 +64,18 @@
 
 ## TODO 
 
++ LH fix
+- allow using CoreToLogic definitions (e.g. member) in
+  predicates/aliases not just other measures.
+
+- convert measure refinements into invariants, e.g.
+
+  measure size :: [Int] -> Nat
+
+  should yield invariant {v:[a] | 0 <= size v}
+
+- see FIXME
+
 + pass over each chapter
     - proofread
     - squish code into box

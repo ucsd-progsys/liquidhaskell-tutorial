@@ -341,7 +341,7 @@ a function) is rather more complicated and beyond the
 scope of what we've seen so far.
 
 
-Implementing Maps: Binary Search Trees  
+Implementing Maps: Binary Search Trees {#lemmas} 
 --------------------------------------
 
 We just saw how easy it is to *use* the Associative

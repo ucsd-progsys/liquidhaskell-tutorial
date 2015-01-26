@@ -223,7 +223,7 @@ test2    = plus vec1 vec2
     vec2 = SP 3 [(0, 8),  (1, 100)]
 \end{code}
 
-Ordered Lists
+Ordered Lists {#orderedlists}
 --------------
 
 As a second example of refined data types, let's consider a
