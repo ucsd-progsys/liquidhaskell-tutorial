@@ -231,8 +231,10 @@ Content-Aware List API {#listelems}
 ----------------------------------
 
 Lets return to our real goal, which is to to verify
-properties of programs. Lets begin by refining
-the list API to track the list's elements.
+properties of programs. First, we need a way to refine
+the list API to precisely track the set of elements
+in a list.
+
 
 \newthought{The Elements of a List} can be described by
 a simple recursive measure that walks over the list, building
@@ -246,7 +248,8 @@ elts (x:xs) = singleton x `union` elts xs
 \end{code}
 
 \noindent
-To shorten the subsequent specifications, lets write some aliases.
+Lets write a few helpful aliases for various refined lists that will
+then make the subsequent specifications pithy and crisp.
 
 + A list with elements `S`
 
@@ -285,8 +288,8 @@ To shorten the subsequent specifications, lets write some aliases.
 {-@ type ListUn1 a X Y = ListS a {Set_cup (Set_sng X) (elts Y)} @-}
 \end{code}
 
-\newthought{Measures strengthen the constructors} for lists, and so
-in effect, we get the automatically refined types:
+\newthought{The Measures strengthens} the data constructors for lists. That is
+we get the automatically refined types for "nil" and "cons":
 
 \begin{spec}
 data List a where
@@ -742,7 +745,8 @@ Recap
 -----
 
 In this chapter, we saw how SMT solvers can let us reason precisely about
-the actual *contents* of data structures, via the theory of sets. We can
+the actual *contents* of data structures, via the theory of sets. In particular,
+we saw how to:
 
 * *Lift set-theoretic primitives* to refined Haskell functions from
   the `Data.Set` library,
