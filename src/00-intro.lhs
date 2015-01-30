@@ -301,3 +301,6 @@ along, and especially that you do the exercises.
 [sbv]:             https://github.com/LeventErkok/sbv
 [leon]:            http://lara.epfl.ch/w/leon
 [ptrspec]:  https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/GHC/Ptr.spec
+
+[okasaki95]: http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
+[queue-wiki]: http://en.wikipedia.org/wiki/Queue_%28abstract_data_type%29

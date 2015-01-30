@@ -1,4 +1,4 @@
-Case Study: AVL Trees {#avltree}
+Case Study: AVL Trees {#case-study-avltree}
 ================================
 
 \begin{code}
