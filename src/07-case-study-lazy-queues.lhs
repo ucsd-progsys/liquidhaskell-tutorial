@@ -1,5 +1,5 @@
-Case Study:Okasaki's Lazy Queues
-================================
+Case Study: Okasaki's Lazy Queues
+=================================
 
 Lets start with a case study that is simple enough to explain without
 pages of code, yet complex enough to show off whats cool about
@@ -8,7 +8,7 @@ This structure leans heavily on an invariant to provide fast
 *insertion* and *deletion*. Let's see how to enforce that
 invariant with LiquidHaskell.
 
-<div class="hidden">
+\begin{comment}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--total"          @-}
@@ -35,7 +35,7 @@ die x = error x
 
 replicate :: Int -> a -> Queue a 
 \end{code}
-</div>
+\end{comment}
 
 Queues 
 ------
@@ -45,9 +45,9 @@ such that the order in which the data is removed is the same as the order in whi
 it was inserted.
 
 \begin{figure}[h]
-\includegraphics[height=2.0in]{/img/queue.png}
-\caption{A Queue is a structure into which we can `insert`
-and `remove` elements. The order in which the elements are
+\includegraphics[height=2.0in]{img/queue.png}
+\caption{A Queue is a structure into which we can insert
+and remove elements. The order in which the elements are
 removed is the same as the order in which they were inserted.}
 \label{fig:queue}
 \end{figure}
@@ -69,7 +69,7 @@ and `back` which represent the corresponding parts of the Queue.
 
 
 \begin{figure}[h]
-\includegraphics[height=2.0in]{/img/queue-lists.png}
+\includegraphics[height=2.0in]{img/queue-lists.png}
 \caption{We can implement a Queue with a pair of lists; respectively
 representing the front and back.}
 \label{fig:queue-pair}
@@ -80,10 +80,10 @@ to the front every so often, e.g. we can transfer the elements from
 the `back` to the `front`, when:
 
 1. a `remove` call is triggered, and
-2. the `front` list is empty,
+2. the `front` list is empty.
 
 \begin{figure}[h]
-\includegraphics[height=2.0in]{/img/queue-rotate.png}
+\includegraphics[height=2.0in]{img/queue-rotate.png}
 \caption{Transferring Elements from back to front.}
 \label{fig:queue-transfer}
 \end{figure}
@@ -99,7 +99,7 @@ paying the bill. They have a rather high latency up to `O(n)` where
 \newthought{Okasaki's second insight} saves the day: he observed that
 all we need to do is to enforce a simple *balance invariant*:
 
-$$\mbox{Size of front} \geq Size of back$$
+$$\mbox{Size of front} \geq \mbox{Size of back}$$
 
 \noindent If the lists are lazy i.e. only constructed as the head
 value is demanded, then a single `remove` needs only a tiny `O(log n)`
@@ -162,20 +162,19 @@ badList = SL 1 []         -- rejected
 \newthought{Lets define an alias} for lists of a given size `N`:
 
 \begin{code}
--- | SList of size N
-
 {-@ type SListN a N = {v:SList a | size v = N} @-}
 \end{code}
 
+\noindent
 Finally, we can define a basic API for `SList`.
 
 \newthought{To Construct lists}, we use `nil` and `cons`:
 
 \begin{code}
-{-@ nil          :: SListN a 0  @-}
-nil              = SL 0 []
+{-@ nil :: SListN a 0 @-}
+nil = SL 0 []
 
-{-@ cons         :: a -> xs:SList a -> SListN a {size xs + 1}   @-}
+{-@ cons :: a -> xs:SList a -> SListN a {size xs + 1} @-}
 cons x (SL n xs) = SL (n+1) (x:xs)
 \end{code}
 
@@ -213,8 +212,7 @@ It is quite straightforward to define the `Queue` type, as a pair of lists,
 {-@ data Queue a = Q {
        front :: SList a 
      , back  :: SListLE a (size front)
-     }
-  @-}
+     }                                    @-}
 \end{code}
 
 \newthought{The alias} `SListLE a L` corresponds to lists with at most `N` elements:
@@ -271,17 +269,16 @@ fail if the `f` list is empty.
    calls made to `hd` and `tl`.
 </div>
 
-\begin{code}
--- | Queues of size `N`
-{-@ type QueueN a N = {v:Queue a | true} @-}
-\end{code}
-
 \hint When you are done, `okRemove` should be accepted, `badRemove`
 should be rejected, and `emp` should have the type shown below:
 
+
 \begin{code}
-okRemove  = remove example2Q   -- should be accepted
-badRemove = remove example0Q   -- should be rejected
+-- | Queues of size `N`
+{-@ type QueueN a N = {v:Queue a | true} @-}
+
+okRemove  = remove example2Q   -- accept
+badRemove = remove example0Q   -- reject
 
 {-@ emp :: QueueN _ 0 @-}
 
@@ -370,10 +367,7 @@ okTake   = take 2 exampleQ  -- accept
 
 badTake  = take 10 exampleQ -- reject
 
-exampleQ = insert "nalini"
-         $ insert "bob"
-         $ insert "alice"
-         $ emp
+exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp
 \end{code}
 
 
@@ -385,6 +379,6 @@ invariants easily expressed and checked with LiquidHaskell.
 This example is particularly interesting because
 
 1. The refinements express invariants that are critical for efficiency,
-2. The code introspects on the `size` in order to guarantee the invariants, and
+2. The code introspects on the `size` to guarantee the invariants, and
 3. The code is quite simple and we hope, easy to follow!
 
