@@ -150,7 +150,7 @@ refinements with `&&`:
 
 \begin{comment}
 ES: this is confusingly worded
-\end{commment}
+\end{comment}
 
 \begin{code}
 {-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
