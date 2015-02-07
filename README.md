@@ -102,6 +102,11 @@
 + Gotchas
     - hs sig vs. lh sig
     - module and import story
+    - `inline`
 
+
++ AVL trees
+
+   - img: avl TREE 
 
 
