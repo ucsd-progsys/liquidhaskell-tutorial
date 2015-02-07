@@ -54,7 +54,7 @@ allows LiquidHaskell to prove that the `die` is *never* executed at
 run-time, but consequently, requires us to establish that wherever
 `divide` is *used*, the second parameter be provably non-zero.
 This is requirement is not onerous when we know what the
-divisor is *statically*
+divisor is *statically*.
 
 \begin{code}
 avg2 x y   = divide (x + y)     2
@@ -120,6 +120,10 @@ notEmpty (_:_) = True
 1. With a *single* equation per data constructor, and 
 2. Guaranteed to *terminate*, typically via structural recursion.
 
+\begin{comment}
+ES: (2) is a bit redundant since you've already said it must be total
+\end{comment}
+
 \noindent
 We can tell LiquidHaskell to *lift* a function meeting
 the above requirements into the refinement logic by declaring:
@@ -171,8 +175,10 @@ average' xs
   | otherwise = Nothing 
   where
     total     = sum  xs
+    -- ES: sigh.. LH can't prove that `total` is safe even though it will
+    -- only be demanded inside the `ok` branch
     elems     = size xs
-    ok        = True    -- What expression goes here? 
+    ok        = notEmpty xs
 \end{code}
 
 <div class="hwex" id="Debugging Specifications">
@@ -192,6 +198,11 @@ size1 (_:xs) =  1 + size1 xs
 size2 []     =  0
 size2 (_:xs) =  1 + size2 xs
 \end{code}
+
+size1: `xs` might be empty and therefore unsafe
+
+size2: `size2 xs` may return a negative number if `xs` is empty,
+so we can't guarantee the result is positive
 
 
 A Safe List API 
@@ -229,9 +240,12 @@ Write down a specification for `null` such that `safeHead` is verified:
 safeHead      :: [a] -> Maybe a
 safeHead xs
   | null xs   = Nothing
-  | otherwise = Just $ head xs  
+  | otherwise = Just $ head xs
 
-{-@ null      :: xs:[a] -> Bool @-}
+{-@ null      :: xs:[a] -> {v:Bool | Prop v <=> null xs} @-}
+{- measure null @-}
+-- ES: natural thing to do here is make `null` a measure, but that gives
+-- a name conflict with the one from Prelude..
 null []       = True 
 null (_:_)    = False
 \end{code}
@@ -289,6 +303,7 @@ the `die` code is indeed dead. Thus, we can write
 
 \begin{code}
 {-@ sum :: (Num a) => NEList a -> a  @-}
+-- ES: why not define `sum [] = 0`? would make error above in average' go away
 sum []  = die "cannot add up empty list"
 sum xs  = foldr1 (+) xs
 \end{code}
@@ -317,7 +332,9 @@ wtAverage wxs = divide totElems totWeight
     totWeight = sum weights 
     sum       = foldr1 (+)
 
-map           :: (a -> b) -> [a] -> [b] 
+{-@ map       :: (a -> b) -> xs:[a] -> {v:[b] | notEmpty xs => notEmpty v} @-}
+-- ES: pain point: need to preserve non-emptiness rather than length, though
+-- we haven't yet introduced `len`..
 map _ []      = []
 map f (x:xs)  = f x : map f xs 
 \end{code}
@@ -336,7 +353,7 @@ specification for `risers` so that it is verified.
 </div>
 
 \begin{code}
-risers           :: (Ord a) => [a] -> [[a]]
+{-@ risers       :: (Ord a) => xs:[a] -> {v:[[a]] | notEmpty xs => notEmpty v} @-}
 risers []        = []
 risers [x]       = [[x]]
 risers (x:y:etc)
