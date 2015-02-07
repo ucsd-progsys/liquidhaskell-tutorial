@@ -267,12 +267,15 @@ Consider the function `avg`:
 
 </div>
 
+Because `n` might be 0.
+
 \begin{code}
 avg       :: [Int] -> Int
 avg xs    = divide total n
   where
     total = sum xs
-    n     = length xs
+    n     = if length xs > 0 then length xs else 1
+            -- ES: haven't introduced measures yet
 \end{code}
 
 
@@ -368,6 +371,12 @@ Can you *change* the type for `isPositive` (i.e. write some other type)
 to while preserving safety?
 </div>
 
+LH is unable to prove safety of `divide` in `result` if we delete the
+signature for `isPositive`.
+We could change it to describe non-zero numbers and retain safety.
+{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x /= 0} @-}
+
+
 <div class="hwex" id="Assertions">
 Consider the following [assert][hoogle-assert] function, and two use sites.
 Write a suitable refinement type signature for `lAssert` so that
@@ -375,7 +384,7 @@ Write a suitable refinement type signature for `lAssert` so that
 </div>
 
 \begin{code}
-{-@ lAssert  :: Bool -> a -> a @-}
+{-@ lAssert  :: {v:Bool | Prop v} -> a -> a @-}
 lAssert True  x = x
 lAssert False _ = die "yikes, assertion fails!"
 
