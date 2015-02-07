@@ -198,8 +198,24 @@ sanitizer `fromList`, so that the following typechecks:
 </div>
 
 \begin{code}
-fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
-fromList dim elts = undefined   
+{-@ fromList :: dim:Int -> elts:[(Int, a)] -> Maybe (SparseN a dim) @-}
+fromList     :: Int     -> [(Int, a)]      -> Maybe (Sparse a)
+fromList dim elts
+  | dim >= 0
+  , Just elts' <- inBounds elts = Just (SP dim elts')
+  | otherwise                   = Nothing
+  where
+    -- ES: this one is a bit tricky as you have to construct a "new" list,
+    -- instead of writing a predicate, as the predicate's type would need to
+    -- universally quantify over the list elements.
+    inBounds []
+      = Just []
+    inBounds ((i,x):ixs)
+      | i >= 0 && i < dim
+      , Just ixs' <- inBounds ixs
+      = Just ((i,x):ixs')
+      | otherwise
+      = Nothing
 
 {-@ test1 :: SparseN String 3 @-}
 test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]
@@ -213,8 +229,16 @@ When you are done, the following code should typecheck:
 </div>
 
 \begin{code}
+{-@ plus :: (Num a) => x:Sparse a -> SparseN a (spDim x) -> SparseN a (spDim x) @-}
 plus     :: (Num a) => Sparse a -> Sparse a -> Sparse a
-plus x y = undefined 
+plus x@(SP dx xs) y@(SP dy ys) = SP dx (sum xs ys)
+  where
+    sum [] ys = ys
+    sum xs [] = xs
+    sum ((ix,x):xs) ((iy,y):ys)
+      | ix < iy = sum xs ((iy,y):ys)
+      | iy < ix = sum ((ix,x):xs) ys
+      | otherwise = (ix, x+y) : sum xs ys
 
 {-@ test2 :: SparseN Int 3 @-}   
 test2    = plus vec1 vec2 
@@ -239,7 +263,7 @@ infixr 9 :<
 \end{code}
 
 \noindent 
-The Haskell type above does not state that the elements
+The Haskell type above does not state that the elements must
 be in order of course, but we can specify that requirement
 by refining *every* element in `tl` to be *greater than* `hd`: 
 
@@ -305,11 +329,11 @@ use `foldr` to eliminate the explicit recursion in `insertSort`.
 </div>
 
 \begin{code}
-insertSort'     :: (Ord a) => [a] -> IncList a
-insertSort' xs  = foldr f b xs
+insertSort'    :: (Ord a) => [a] -> IncList a
+insertSort' xs = foldr f b xs
   where
-     f          = undefined    -- Fill this in
-     b          = undefined    -- Fill this in
+    f x xs     = insert x xs
+    b          = Emp
 \end{code}
 
 \newthought{Merge Sort} Similarly, it is easy to write merge sort,
@@ -362,14 +386,17 @@ satisfies that specification.
 \begin{code}
 quickSort           :: (Ord a) => [a] -> IncList a
 quickSort []        = Emp 
-quickSort (x:xs)    = append lessers greaters 
+quickSort (x:xs)    = append x lessers greaters 
   where 
     lessers         = quickSort [y | y <- xs, y < x ]
     greaters        = quickSort [z | z <- xs, z >= x]
 
-append              :: IncList a -> IncList a -> IncList a
-append Emp       ys = ys
-append (x :< xs) ys = x :< append xs ys 
+-- ES: the lack of an Ord constraint here is a bit dubious, we should probably
+-- require Ord to use <= in the predicates..
+{-@ append :: z:a -> IncList {v:a | v <= z} -> IncList {v:a | v >= z} -> IncList a @-}
+append :: a -> IncList a -> IncList a -> IncList a
+append _ Emp       ys = ys
+append z (x :< xs) ys = x :< append z xs ys
 \end{code}
 
 Ordered Trees {#binarysearchtree}
@@ -529,6 +556,12 @@ the elements in `rest` via the data type refinement:
 \noindent Finally, we can write the code to compute `MinPair`
 
 \begin{code}
+{-@ measure emp @-}
+emp :: BST a -> Bool
+emp Leaf = True
+emp _    = False
+
+{-@ delMin             :: (Ord a) => {v:BST a | not (emp v)} -> MinPair a @-}
 delMin                 :: (Ord a) => BST a -> MinPair a
 delMin (Node k Leaf r) = MP k r
 delMin (Node k l r)    = MP k' (Node k l' r)
@@ -543,9 +576,27 @@ a `BST`, if it is present.
 </div>
 
 \begin{code}
+-- pre-measure
 del                   :: (Ord a) => a -> BST a -> BST a
-del k' t@(Node k l r) = undefined
+del k' t@(Node k l r)
+  | k' < k = Node k (del k' l) r
+  | k' > k = Node k l (del k' r)
+  | True   = Node rmin l r'
+  where MP rmin r' = delMin r
 del _  t              = t
+
+-- post-measure
+del'                   :: (Ord a) => a -> BST a -> BST a
+del' k' t@(Node k l Leaf)
+  | k' < k = Node k (del' k' l) Leaf
+  | k' > k = t
+  | True   = l
+del' k' t@(Node k l r)
+  | k' < k = Node k (del' k' l) r
+  | k' > k = Node k l (del' k' r)
+  | True   = Node rmin l r'
+  where MP rmin r' = delMin r
+del' _  t              = t
 \end{code}
 
 <div class="hwex" id="Safely Deleting Minimum">
@@ -568,7 +619,9 @@ toBST     :: (Ord a) => [a] -> BST a
 toBST     = foldr add Leaf  
 
 toIncList :: BST a -> IncList a
-toIncList = undefined
+toIncList t = case t of
+  Leaf -> Emp
+  Node k l r -> append k (toIncList l) (k :< toIncList r)
 \end{code}
 
 \hint This exercise will be a lot easier *if* you first finish the
