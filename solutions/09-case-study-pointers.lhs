@@ -512,7 +512,7 @@ size, and is flagged as such:
 
 \begin{code}
 bad1 = do fp <- mallocForeignPtrBytes 3 
-          return (BS fp 0 10)
+          return (BS fp 0 3)
 \end{code}
 
 \noindent Similarly, `bad2` does have `2` bytes but *not* if
@@ -520,7 +520,7 @@ we start at the offset of `2`:
 
 \begin{code}
 bad2 = do fp <- mallocForeignPtrBytes 3
-          return (BS fp 2 2)
+          return (BS fp 2 1)
 \end{code}
 
 <div class="hwex" id="Legal ByteStrings">
@@ -548,7 +548,7 @@ the function tucks the pointer into and returns a `ByteString`
 of size `n`.
 
 \begin{code}
-{-@ create :: n:Nat -> (Ptr Word8 -> IO ()) -> ByteStringN n @-}
+{-@ create :: n:Nat -> (PtrN Word8 n -> IO ()) -> ByteStringN n @-}
 create n fill = unsafePerformIO $ do
   fp  <- mallocForeignPtrBytes n
   withForeignPtr fp fill 
@@ -559,6 +559,8 @@ create n fill = unsafePerformIO $ do
 \singlestar Why does LiquidHaskell *reject* the following function
 that creates a `ByteString` corresponding to `"GHC"`?
 </div>
+
+Because the callback function doesn't get to assume *anything* about p
 
 \begin{code}
 bsGHC = create 3 $ \p -> do
@@ -586,6 +588,7 @@ exercise. (But don't!)
 </div>
 
 \begin{code}
+{-@ pack :: str:_ -> ByteStringN (len str) @-}
 pack str      = create' n $ \p -> go p xs
   where
   n           = length str
@@ -629,7 +632,9 @@ packEx str     = create' n $ \p -> pLoop p xs
   n            = length str
   xs           = map c2w str
 
-{-@ pLoop      :: (Storable a) => p:Ptr a -> xs:[a] -> IO () @-}
+{-@ type ListN a N = {v:[a] | len v = N} @-}
+
+{-@ pLoop      :: (Storable a) => p:Ptr a -> xs:ListN a (plen p) -> IO () @-}
 pLoop p (x:xs) = poke p x >> pLoop (plusPtr p 1) xs
 pLoop _ []     = return ()
 \end{code}
@@ -645,10 +650,10 @@ specifications so that they are accepted?
 </div>
 
 \begin{code}
-{-@ unsafeTake :: n:Nat -> b:_ -> ByteStringN n @-}
+{-@ unsafeTake :: n:Nat -> b:{_ | bLen b >= n} -> ByteStringN n @-}
 unsafeTake n (BS x s _) = BS x s n
 
-{-@ unsafeDrop :: n:Nat -> b:_ -> ByteStringN {bLen b - n} @-}
+{-@ unsafeDrop :: n:Nat -> b:{_ | bLen b >= n} -> ByteStringN {bLen b - n} @-}
 unsafeDrop n (BS x s l) = BS x (s + n) (l - n)
 \end{code}
 
@@ -660,13 +665,13 @@ we essentially run `pack` in reverse, by walking over the pointer,
 and reading out the characters one by one till we reach the end:
 
 \begin{code}
-unpack              :: ByteString -> String 
+{-@ unpack          :: b:ByteString -> ListN _ (bLen b) @-}
 unpack (BS _  _ 0)  = []
 unpack (BS ps s l)  = unsafePerformIO
                         $ withForeignPtr ps
                         $ \p -> go (p `plusPtr` s) (l - 1) []
   where
-    {-@ go     :: p:_ -> n:_ -> acc:_ -> IO {v:_ | true } @-}
+    {-@ go     :: p:_ -> n:_ -> acc:{_ | len acc <= plen p - n} -> IO {v:_ | len v = len acc + 1 + n } @-}
     go p 0 acc = peekAt p 0 >>= \e -> return (w2c e : acc)
     go p n acc = peekAt p n >>= \e -> go p (n-1) (w2c e : acc)
     peekAt p n = peek (p `plusPtr` n)
@@ -703,7 +708,7 @@ require that the prefix size `n` be less than the
 size of the input string `s`:
 
 \begin{code}
-{-@ chop :: s:String -> n:BNat (len s) -> String @-} 
+{-@ chop :: s:String -> n:BNat (len s) -> ListN Char n @-} 
 chop s n = s'
   where 
     b    = pack s          -- down to low-level
@@ -750,7 +755,7 @@ safeChop str n
   | ok        = chop str n
   | otherwise = ""
   where
-    ok        = True 
+    ok        = 0 <= n && n <= length str
     
 queryAndChop  :: IO String
 queryAndChop  = do putStrLn "Give me a string:"
@@ -857,8 +862,7 @@ the precise specifications given to `unsafeTake` and
 lengths add up to the size of the input `ByteString`.
 
 \begin{code}
-{-@ type ByteString2 B
-      = {v:_ | bLen (fst v) + bLen (snd v) = bLen B} @-}
+{-@ type ByteString2 B = {v:_ | bLen (fst v) + bLen (snd v) = bLen B} @-}
 \end{code}
 
 Recap: Types Against Overflows

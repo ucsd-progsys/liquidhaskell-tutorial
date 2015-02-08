@@ -646,16 +646,21 @@ computes the same result.)
                    
 {-@ range     :: i:Int -> j:Int -> UList (Btwn i j) @-}
 range i j
-  | i < j && lemma_notMem i r = i : r
+  | i < j     = assert (lemma_notElem i r) (i : r)
+                -- ES: what am i missing here? the error claims
+                -- 1. unique ?a => unique VV
+                -- 2. unique ?a <=> unique r
+                -- 3. unique r
+                -- and yet it won't prove unique VV...
   | otherwise = [] 
   where r = range (i + 1) j
 
-{-@ lemma_notMem :: x:a -> ys:[a] -> {v:Bool | Prop v <=> ~(Set_mem x (elts ys))} @-}
-lemma_notMem x []
-  = True
-lemma_notMem x (y:ys)
-  | x == y = False
-  | True   = lemma_notMem x ys
+assert _ x = x
+
+{-@ lemma_notElem :: x:a -> xs:UList {v:a | v > x} -> {v:Bool | Prop v <=> not (In x xs)} @-}
+lemma_notElem :: a -> [a] -> Bool
+lemma_notElem x []     = True
+lemma_notElem x (y:ys) = lemma_notElem x ys
 \end{code}
 
 \hint This may be easier to do *after* you read this chapter [about lemmas](#lemmas).
