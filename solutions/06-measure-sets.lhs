@@ -81,8 +81,8 @@ axioms of the theory of arithmetic that:
 $$x = 2 + 2 \Rightarrow x = 4$$
 is a valid formula, i.e. holds for all $x$, the solver "knows" that:
 $$x = \tsng{1} \Rightarrow y = \tsng{2} \Rightarrow x = \tcap{x}{\tcup{y}{x}}$$
-This is because, the above formulas belong to a decidable Theory of Sets
-reduces to McCarthy's more general [Theory of Arrays][mccarthy]. 
+This is because the above formulas belong to a decidable Theory of Sets,
+which reduces to McCarthy's more general [Theory of Arrays][mccarthy]. 
 
 <div class="footnotetext">
 See [this recent paper][z3cal] to learn how modern SMT
@@ -161,7 +161,7 @@ $\forall x, y. x < 100 \wedge y < 100 \Rightarrow x + y < 200$.
 
 \begin{code}
 {-@ prop_x_y_200 :: _ -> _ -> True @-}
-prop_x_y_200 x y = False -- fill in the theorem body 
+prop_x_y_200 x y = (x < 100 && y < 100) `implies` (x+y < 200)
 \end{code}
 
 
@@ -203,7 +203,7 @@ doesn't prove anything that *isn't* true ...
 prop_cup_dif_bad x y
   = pre `implies` (x == ((x `union` y) `difference` y))
   where
-    pre = True  -- Fix this with a non-trivial precondition
+    pre = empty == (x `intersection` y)
 \end{code}
 
 <div class="hwex" id="Set Difference">
@@ -352,6 +352,7 @@ Write down a type for `revHelper` so that `reverse'` is verified by LiquidHaskel
 {-@ reverse' :: xs:List a -> ListEq a xs @-}
 reverse' xs = revHelper [] xs
 
+{-@ revHelper :: xs:List a -> ys:List a -> ListUn a xs ys @-}
 revHelper acc []     = acc
 revHelper acc (x:xs) = revHelper (x:acc) xs
 \end{code}
@@ -363,6 +364,7 @@ proved by LiquidHaskell.
 </div>
 
 \begin{code}
+{-@ halve :: _ -> xs:[a] -> {v:([a],[a]) | elts xs = Set_cup (elts (fst v)) (elts (snd v)) } @-}
 halve            :: Int -> [a] -> ([a], [a])
 halve 0 xs       = ([], xs)
 halve n (x:y:zs) = (x:xs, y:ys) where (xs, ys) = halve (n-1) zs
@@ -385,7 +387,7 @@ Write down a signature for `elem` that suffices to verify
 </div>
 
 \begin{code}
-{-@ elem      :: (Eq a) => a -> [a] -> Bool @-}
+{-@ elem      :: (Eq a) => x:a -> xs:[a] -> {v:Bool | Prop v <=> Set_mem x (elts xs)} @-}
 elem x (y:ys) = x == y || elem x ys
 elem _ []     = False
 
@@ -446,7 +448,7 @@ Fix the specification of `merge` so that the subsequent property
 </div>
 
 \begin{code}
-{-@ merge :: xs:List a -> ys:List a -> List a @-}
+{-@ merge :: xs:List a -> ys:List a -> ListUn a xs ys @-}
 merge (x:xs) (y:ys)
   | x <= y           = x : merge xs (y:ys)
   | otherwise        = y : merge (x:xs) ys
@@ -475,8 +477,9 @@ er, unexpected signature for `mergeSort` below.
 </div>
 
 \begin{code}
-{-@ mergeSort :: (Ord a) => xs:List a -> ListEmp a @-}
+{-@ mergeSort :: (Ord a) => xs:List a -> ListEq a xs @-}
 mergeSort []  = []
+mergeSort [x] = [x]
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where
    (ys, zs)   = halve mid xs
@@ -548,6 +551,10 @@ are verified by LiquidHaskell.
 </div>
 
 \begin{code}
+{-@ filter'  :: (a -> Bool)
+             -> xs:List a
+             -> {v:ListSub a xs | unique xs => unique v}
+  @-}
 filter' _ []   = []
 filter' f (x:xs)
   | f x       = x : xs' 
@@ -570,12 +577,13 @@ so that we can prove that the output is a `UList a`?
 </div>
 
 \begin{code}
-{-@ reverse    :: xs:UList a -> UList a    @-}
+{-@ reverse    :: xs:UList a -> {v:UList a | elts v = elts xs}    @-}
 reverse         = go []
   where 
-    {-@ go     :: a:List a -> xs:List a -> List a @-}
+    -- ES: by the time we get down to integrate, we have enough qualifiers to infer this type
+    {- go     :: a:UList a -> xs:{UList a | Set_emp (Set_cap (elts a) (elts xs))} -> UList a @-}
     go a []     = a
-    go a (x:xs) = go (x:a) xs 
+    go a (x:xs) = go (x:a) xs
 \end{code}
 
 \newthought{The Nub} function constructs a `unique` list from
@@ -603,7 +611,7 @@ Which should be clear by now, if you did a certain exercise above \ldots.
 -- FIXME
 {-@ predicate In X Xs = Set_mem X (elts Xs) @-}
 
-{-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys }@-}
+{-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys} @-}
 isin x (y:ys)
   | x == y    = True
   | otherwise = x `isin` ys
@@ -617,7 +625,9 @@ that you can prove that the output is indeed `unique`.
 </div>
 
 \begin{code}
-{-@ append       :: UList a -> UList a -> UList a @-}
+{-@ append       :: xs:UList a -> ys:{UList a | Set_emp (Set_cap (elts xs) (elts ys))}
+                 -> {v:UList a | elts v = Set_cup (elts xs) (elts ys)}
+  @-}
 append []     ys = ys
 append (x:xs) ys = x : append xs ys
 \end{code}
@@ -636,8 +646,16 @@ computes the same result.)
                    
 {-@ range     :: i:Int -> j:Int -> UList (Btwn i j) @-}
 range i j
-  | i < j     = i : range (i + 1) j
+  | i < j && lemma_notMem i r = i : r
   | otherwise = [] 
+  where r = range (i + 1) j
+
+{-@ lemma_notMem :: x:a -> ys:[a] -> {v:Bool | Prop v <=> ~(Set_mem x (elts ys))} @-}
+lemma_notMem x []
+  = True
+lemma_notMem x (y:ys)
+  | x == y = False
+  | True   = lemma_notMem x ys
 \end{code}
 
 \hint This may be easier to do *after* you read this chapter [about lemmas](#lemmas).
@@ -703,6 +721,7 @@ accepts the below signatures for `integrate`:
 \begin{code}
 {-@ integrate            :: Zipper a -> UList a @-}
 integrate (Zipper x l r) = reverse l `append` (x : r)
+
 \end{code}
 
 \newthought{We can Shift the Focus} element to the left or
@@ -713,6 +732,8 @@ code that shifts the focus to the left:
 focusLeft                      :: Zipper a -> Zipper a
 focusLeft (Zipper t (l:ls) rs) = Zipper l ls (t:rs)
 focusLeft (Zipper t [] rs)     = Zipper x xs []
+-- ES: LH doesn't like `xs`, presumably because it can't figure out from the pattern match that
+-- x `notElem` xs
   where
     (x:xs)                     = reverse (t:rs)
 \end{code}
@@ -767,5 +788,4 @@ we saw how to:
 
 Next, we present a variety of longer *case-studies* that illustrate
 the techniques developed so far on particular application domains.
-
 
