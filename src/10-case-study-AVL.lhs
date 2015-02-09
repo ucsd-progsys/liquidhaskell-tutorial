@@ -336,12 +336,6 @@ getHeight (Node _ _ _ n) = n
 bFac Leaf           = 0
 bFac (Node _ l r _) = getHeight l - getHeight r 
 
-{- predicate LeftHeavy  T = bFac T == 1   @-}
-{- predicate RightHeavy T = bFac T == -1  @-}
-{- predicate NoHeavy    T = bFac T == 0   @-}
-
-
-
 {-@ inline leftHeavy @-}
 leftHeavy  t = bFac t > 0
 
