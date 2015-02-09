@@ -1,4 +1,4 @@
-Case Study: Okasaki's Lazy Queues
+Case Study: Okasaki's Lazy Queues {#lazyqueue}
 =================================
 
 Lets start with a case study that is simple enough to explain without

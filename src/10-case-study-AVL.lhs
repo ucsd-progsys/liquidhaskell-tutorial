@@ -31,7 +31,9 @@ main = do
 {-@ inv_proof  :: t:AVL a -> {v:_ | 0 <= realHeight t && realHeight t = getHeight t } @-}
 inv_proof Leaf           = True 
 inv_proof (Node k l r n) = inv_proof l && inv_proof r
-    
+
+{-@ node :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1} -> {v:AVL a | realHeight v = nodeHeight l r} @-}
+node v l r = Node v l r (nodeHeight l r)
 \end{code}
 </div>
 
@@ -127,91 +129,207 @@ than and greater than some value `X`:
 {-@ type AVLR a X = AVL {v:a | X < v}  @-}
 \end{code}
 
-\newthought{To Specify Balance} we need a way to talk about the *real height*
-of the tree. We can't just reach for the `ah` field because thats just some
-arbitrary `Int` -- there is nothing to prevent a buggy implementation from just
-filling that field with `0` everywhere. In short, we need a reality check: a
-measure that computes the real height of a tree.
+
+\newthought{The Real Height} of a tree is defined recursively as `0`
+for `Leaf`s and one more than the larger of left and right subtrees
+for `Node`s.  Note that we cannot simply use the `ah` field because
+thats just some arbitrary `Int` -- there is nothing to prevent a buggy
+implementation from just filling that field with `0` everywhere.  In
+short, we need the ground truth: a measure that computes the *actual*
+height of a tree.
 
 \begin{code}
 {-@ measure realHeight @-}
 realHeight                :: AVL a -> Int
 realHeight Leaf           = 0
-realHeight (Node _ l r _) = 1 + max (realHeight l) (realHeight r)
-\end{code}
+realHeight (Node _ l r _) = nodeHeight l r
 
-<div class="toolinfo">
-The function `max` just returns the larger of its two inputs. It can be lifted
-into the refinement logic directly, as specified with the `inline` pragma 
-</div>
+{-@ inline nodeHeight @-}
+nodeHeight l r = 1 + max hl hr
+  where
+    hl             = realHeight l
+    hr             = realHeight r                            
 
-\begin{code}
 {-@ inline max @-}
 max :: Int -> Int -> Int
 max x y = if x > y then x else y
 \end{code}
 
+<div class="toolinfo">
+The `inline` pragmas indicate that the Haskell
+functions can be directly lifted into and used inside the
+refinement logic and measures.
+</div>
+
+\noindent
+We can now say that a value `v` is indeed the *real* height of a
+node with subtrees `l` and `r` if the predicate `isReal v l r` holds:
+
+\begin{code}
+{-@ inline isReal @-}
+isReal v l r = v == nodeHeight l r
+\end{code} 
+
+\newthought{A Node is $n$-Balanced} if its left and right subtrees
+have a (real) height difference of at most $n$. We can specify this
+requirement as a predicate `isBal l r n`
+
+\begin{code}
+{-@ inline isBal @-}
+isBal l r n = 0 - n  <= d && d <= n
+  where
+    d       = hl - hr 
+    hl      = realHeight l
+    hr      = realHeight r
+\end{code}
+
+\newthought{A Legal AVL Tree} can now be defined via the following
+[refined data type](#refineddatatypes), which states that each `Node`
+is $1$-balanced, and that the saved height field is indeed the *real* height:
+
+\begin{code}
+{-@ data AVL a =
+        Leaf
+      | Node { key :: a
+             , l   :: AVLL a key
+             , r   :: {v:AVLR a key | isBal l v 1} 
+             , ah  :: {v:Nat        | isReal v l r}
+             }
+  @-}
+\end{code}
 
 Smart Constructors
 ------------------
 
-Inserting into a Tree
----------------------
+Lets use the type to construct a few small trees which will
+also be handy in a general collection API. First, lets write
+an alias for trees of a given height:
+ 
+\begin{code}
+-- | Trees of height N
+{-@ type AVLN a N = {v: AVL a | realHeight v = N} @-}
 
+-- | Trees of height equal to that of another T
+{-@ type AVLT a T = AVLN a {realHeight T} @-}
+\end{code}
+ 
+\newthought{An Empty} collection is represented by a `Leaf`,
+which has height `0`:
+
+\begin{code}
+{-@ empty :: AVLN a 0 @-}
+empty = Leaf
+\end{code}
+
+<div class="hwex" id="Singleton">
+Consider the function `singleton` that builds an `AVL`
+tree from a single element. Fix the code below so that
+it is accepted by LiquidHaskell.
+
+\begin{code}
+{-@ singleton :: a -> AVLN a 1 @-}
+singleton x =  Node x empty empty 0 
+\end{code}
+
+As you can imagine, it can be quite tedious to keep the saved height
+field `ah` *in sync* with the *real* height. In general in such
+situations, which arose also with [lazy queues](#lazyqueue), the right
+move is to eschew the data constructor and instead use a *smart
+constructor* that will fill in the appropriate values correctly.
+
+<div class="footnotetext">By the way, you might wonder: why do we
+bother to save the height anyway? Why not just recompute it instead? 
+</div>
+
+\newthought{The Smart Constructor} `node` takes as input the node's value `x`,
+left and right subtrees `l` and `r` and returns a tree by filling in the right
+value for the height field. 
+
+\begin{code}
+{-@ mkNode :: a -> l:AVL a -> r:AVL a -> AVLN a {nodeHeight l r} @-}
+mkNode v l r = Node v l r h
+ where
+   h       = 1 + max hl hr
+   hl      = getHeight l
+   hr      = getHeight r
+\end{code}
+
+<div class="hwex" id="Constructor">Unfortunately, LiquidHaskell  rejects
+the above smart constructor `node`. Can you explain why? Can you fix the 
+code (implementation or specification) so that the function is accepted?
+</div>
+
+\hint Think about the (refined) type of the actual constructor `Node`, and
+the properties it requires and ensures. 
+
+
+Inserting Elements
+------------------
+
+Next, lets turn our attention to the problem of *adding* elements to 
+an `AVL` tree. The basic strategy is this:
+
+1. *Find* the appropriate location in the tree to add the value, 
+   using binary search ordering
+2. *Replace* the `Leaf` at that location with the singleton 
+   containing the value.
+
+\noindent If you prefer the spare precision of Haskell to the 
+informality of English, here is a first stab at implementing 
+the insert function:
+
+\begin{code}
+{-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
+insert0 y t@(Node x l r _) 
+  | y < x      =  node x (insert0 y l) r
+  | x < y      =  node x l (insert0 y r)
+  | otherwise  = t 
+insert0 y Leaf = singleton y
+\end{code}
+
+\newthought{Unfortunately} `insert0` does not work. 
+Here `node` is a fixed variant of the smart constructor `mkNode`;
+If you did the exercise above, you can replace it with `mkNode` and 
+you will see that the above function is rejected by LiquidHaskell.
+The error message would essentially say that at the calls to the
+smart constructor, the arguments violate the balance requirement.
+
+\newthought{To see why} take a look at Figure~\ref{fig:avl-insert-naive}.
+The new value `y` is inserted into the left subtree, which is already 
+bigger than the right by a factor of `1`.  The insert increases the 
+height difference further to `2` making it impossible to (directly) 
+link up the `insert0 y l` and `r` using `node`.
+
+  
 Refactoring Balance
 -------------------
 
-Deleting from a Tree
--------------------- 
+Deleting Elements  
+-----------------
 
 Functional Correctness
 ----------------------
 
 \begin{code}
---------------------------------------------------------------------------------------------
--- | Datatype Definition ------------------------------------------------------------------- 
---------------------------------------------------------------------------------------------
+{-@ predicate NoHeavy    T = bFac T == 0                      @-}
+{-@ predicate LeftHeavy  T = bFac T == 1                      @-}
+{-@ predicate RightHeavy T = bFac T == -1                     @-}
 
+{- predicate HtDiff S T D = realHeight S - realHeight T == D @-}
+{- predicate Eq1 S T      = HtDiff T S 0 || HtDiff T S 1     @-}
 
-{-@ data AVL a =
-        Leaf
-      | Node { key :: a
-             , l   :: AVLL a key
-             , r   :: AVLR a key 
-             , ah  :: {v:Nat | HtBal l r 1 && v = nodeHeight l r}
-             }
-  @-}
+{-@ predicate HtDiff S T D = htDiff S T D @-}
+{-@ predicate Eq1 S T      = eq1 S T      @-}
 
+{-@ inline htDiff @-}
+htDiff s t d = (realHeight s - realHeight t) == d
 
--- | Predicate Aliases -------------------------------------------------------------------- 
-
-{-@ predicate HtBal L R N  = 0 <= realHeight L - realHeight R + N && realHeight L - realHeight R <= N               @-}
-{-@ predicate Ht N L R     = N = if (realHeight L) > (realHeight R) then (1 + realHeight L) else (1 + realHeight R) @-}
-{-@ predicate HtDiff S T D = realHeight S - realHeight T == D                                       @-}
-{-@ predicate EqHt S T     = HtDiff S T 0                                           @-}
-{-@ predicate NoHeavy    T = bFac T == 0                                            @-}
-{-@ predicate LeftHeavy  T = bFac T == 1                                            @-}
-{-@ predicate RightHeavy T = bFac T == -1                                           @-}
-{-@ predicate Eq1 S T      = EqHt T S || HtDiff T S 1                               @-}
-{-@ predicate RBal L R T   = if (realHeight L >= realHeight R) then (Eq1 L T) else Eq1 R T          @-}
+{-@ inline eq1 @-}
+eq1 s t      = htDiff t s 0 || htDiff t s 1
 
 --------------------------------------------------------------------------------------------
 -- | Constructor & Destructor  -------------------------------------------------------------
 --------------------------------------------------------------------------------------------
-
--- | Smart Constructor (fills in height field) ---------------------------------------------
-
-{-@ tree   :: x:a -> l:AVLL a x -> r:{AVLR a x | HtBal l r 1} -> {v:AVL a | realHeight v = nodeHeight l r} @-}
-tree v l r = Node v l r (nodeHeight l r)
-
-
-{-@ inline nodeHeight @-}
-nodeHeight     :: AVL a -> AVL a -> Int
-nodeHeight l r = 1 + max hl hr
-  where
-    hl         = getHeight l
-    hr         = getHeight r
-
 
 -- | Compute Tree Height -------------------------------------------------------------------
     
@@ -227,25 +345,6 @@ getHeight (Node _ _ _ n) = n
 {-@ bFac :: t:AVL a -> {v:Int | v = bFac t && 0 <= v + 1 && v <= 1} @-}
 bFac Leaf           = 0
 bFac (Node _ l r _) = getHeight l - getHeight r 
-
-{-@ htDiff :: s:AVL a -> t: AVL a -> {v: Int | HtDiff s t v} @-}
-htDiff     :: AVL a -> AVL a -> Int
-htDiff l r = getHeight l - getHeight r
-
-
---------------------------------------------------------------------------------------------
--- | API: Empty ---------------------------------------------------------------------------- 
---------------------------------------------------------------------------------------------
-             
-{-@ empty :: {v: AVL a | realHeight v == 0} @-}
-empty = Leaf
-
---------------------------------------------------------------------------------------------
--- | API: Singleton ------------------------------------------------------------------------ 
---------------------------------------------------------------------------------------------
-
-{-@ singleton :: a -> {v: AVL a | realHeight v == 1 } @-}
-singleton a = tree a empty empty 
 
 --------------------------------------------------------------------------------------------
 -- | API: Insert 1 (Beaumont) -------------------------------------------------------------- 
@@ -263,10 +362,9 @@ insL a (Node v l r _)
   | leftBig && bl' > 0 = balLL v l' r
   | leftBig && bl' < 0 = balLR v l' r
   | leftBig            = balL0 v l' r
-  | otherwise          = tree v l' r
+  | otherwise          = node v l' r
   where
-    leftBig            = siblDiff > 1
-    siblDiff           = htDiff l' r
+    leftBig            = getHeight l' - getHeight r > 1
     l'                 = insert a l
     bl'                = bFac l'
 
@@ -277,16 +375,16 @@ insR a (Node v l r _)
   | rightBig && br' > 0  = balRL v l r'
   | rightBig && br' < 0  = balRR v l r'
   | rightBig             = balR0 v l r'
-  | otherwise            = tree v l r'
+  | otherwise            = node v l r'
   where
-    rightBig             = siblDiff > 1
-    siblDiff             = htDiff r' l
+    rightBig             = getHeight r' - getHeight l > 1
     r'                   = insert a r
     br'                  = bFac r'
 
 --------------------------------------------------------------------------------------------
 -- | API: Insert 2 (Leroy) ----------------------------------------------------------------- 
 --------------------------------------------------------------------------------------------
+
 
 {-@ insert' :: a -> s:AVL a -> {t: AVL a | Eq1 s t} @-}
 insert' a Leaf             = singleton a
@@ -308,26 +406,31 @@ delete a (Node v l r _)  = case compare a v of
                             GT -> bal v l (delete a r) 
                             EQ -> merge v l r
 
-merge                    :: a -> AVL a -> AVL a -> AVL a 
-merge _ Leaf t           = t
-merge _ t Leaf           = t
-merge v t1 t2            = bal a t1 t2'
+
+merge :: a -> AVL a -> AVL a -> AVL a
+merge _ Leaf t           =  t
+merge _ t Leaf           =  t
+merge v t1 t2            =  bal a t1 t2'
   where
-    (a, t2')             = getMin t2
+    (a, t2')             =  getMin t2
                         
 getMin (Node x Leaf r _) = (x, r)
 getMin (Node x l r _)    = (x', bal x l' r)
   where
     (x', l')             = getMin l
 
+
+
 --------------------------------------------------------------------------------------------
 -- | Generalized Balancing  ---------------------------------------------------------------- 
 --------------------------------------------------------------------------------------------
 
+{-@ predicate RBal L R T   = if (realHeight L >= realHeight R) then (Eq1 L T) else Eq1 R T @-}
+
 {-@ bal :: x:a
         -> l:AVLL a x
-        -> r:{AVLR a x | HtBal l r 2}
-        -> {t: AVL a | (HtBal l r 1 => Ht (realHeight t) l r) && RBal l r t}
+        -> r:{AVLR a x | isBal l r 2}
+        -> {t: AVL a | (isBal l r 1 => isReal (realHeight t) l r) && RBal l r t}
   @-}
 bal v l r
   | leftBig  && bl > 0 = balLL v l r
@@ -336,36 +439,36 @@ bal v l r
   | rightBig && br > 0 = balRL v l r
   | rightBig && br < 0 = balRR v l r
   | rightBig           = balR0 v l r
-  | otherwise          = tree  v l r
+  | otherwise          = node  v l r
   where
     leftBig            = siblDiff     > 1
     rightBig           = siblDiff + 1 < 0
-    siblDiff           = htDiff l r
+    siblDiff           = getHeight l - getHeight r
     bl                 = bFac l
     br                 = bFac r
 
-{-@ balL0 :: x:a -> l:{AVLL a x | NoHeavy l} -> r:{AVLR a x | HtDiff l r 2} -> {t:AVL a | realHeight t = realHeight l + 1 } @-}
+{-@ balL0 :: x:a -> l:{AVLL a x | NoHeavy l} -> r:{AVLR a x | HtDiff l r 2} -> AVLN a {realHeight l + 1 } @-}
 balL0 v (Node lv ll lr _) r
-  = tree lv ll (tree v lr r)
+  = node lv ll (node v lr r)
 
-{-@ balLL :: x:a -> l:{AVLL a x | LeftHeavy l } -> r:{AVLR a x | HtDiff l r 2} -> {t:AVL a | EqHt t l} @-}
+{-@ balLL :: x:a -> l:{AVLL a x | LeftHeavy l } -> r:{AVLR a x | HtDiff l r 2} -> AVLT a l @-}
 balLL v (Node lv ll lr _) r
-  = tree lv ll (tree v lr r)
+  = node lv ll (node v lr r)
 
-{-@ balLR :: x:a -> l:{AVLL a x | RightHeavy l } -> r:{AVLR a x | HtDiff l r 2} -> {t: AVL a | EqHt t l } @-}
+{-@ balLR :: x:a -> l:{AVLL a x | RightHeavy l } -> r:{AVLR a x | HtDiff l r 2} -> AVLT a l @-}
 balLR v (Node lv ll (Node lrv lrl lrr _) _) r
-  = tree lrv (tree lv ll lrl) (tree v lrr r)
+  = node lrv (node lv ll lrl) (node v lrr r)
 
-{-@ balR0 :: x:a -> l: AVLL a x -> r: {AVLR a x | NoHeavy r && HtDiff r l 2 } -> {t: AVL a | realHeight t = realHeight r + 1} @-}
+{-@ balR0 :: x:a -> l: AVLL a x -> r: {AVLR a x | NoHeavy r && HtDiff r l 2 } -> AVLN a {realHeight r + 1} @-}
 balR0 v l (Node rv rl rr _)
-  = tree rv (tree v l rl) rr
+  = node rv (node v l rl) rr
 
-{-@ balRR :: x:a -> l: AVLL a x -> r:{AVLR a x | RightHeavy r && HtDiff r l 2 } -> {t: AVL a | EqHt t r } @-}
+{-@ balRR :: x:a -> l: AVLL a x -> r:{AVLR a x | RightHeavy r && HtDiff r l 2 } -> AVLT a r @-}
 balRR v l (Node rv rl rr _)
-  = tree rv (tree v l rl) rr
+  = node rv (node v l rl) rr
 
-{-@ balRL :: x:a -> l: AVLL a x -> r:{AVLR a x | LeftHeavy r && HtDiff r l 2} -> {t: AVL a | EqHt t r } @-}
+{-@ balRL :: x:a -> l: AVLL a x -> r:{AVLR a x | LeftHeavy r && HtDiff r l 2} -> AVLT a r @-}
 balRL v l (Node rv (Node rlv rll rlr _) rr _)
-  = tree rlv (tree v l rll) (tree rv rlr rr) 
+  = node rlv (node v l rll) (node rv rlr rr) 
                                                       
 \end{code}
