@@ -336,9 +336,20 @@ getHeight (Node _ _ _ n) = n
 bFac Leaf           = 0
 bFac (Node _ l r _) = getHeight l - getHeight r 
 
-{-@ predicate NoHeavy    T = bFac T == 0   @-}
-{-@ predicate LeftHeavy  T = bFac T == 1   @-}
-{-@ predicate RightHeavy T = bFac T == -1  @-}
+{- predicate LeftHeavy  T = bFac T == 1   @-}
+{- predicate RightHeavy T = bFac T == -1  @-}
+{- predicate NoHeavy    T = bFac T == 0   @-}
+
+
+
+{-@ inline leftHeavy @-}
+leftHeavy  t = bFac t > 0
+
+{-@ inline rightHeavy @-}
+rightHeavy t = bFac t < 0
+
+{-@ inline noHeavy @-}
+noHeavy    t = bFac t == 0
 
 
 --------------------------------------------------------------------------------------------
@@ -354,32 +365,29 @@ insert a t@(Node v _ _ _) = case compare a v of
 
 {-@ insL :: x:a -> s:{AVL a | x < key s && realHeight s > 0} -> {t: AVL a | eq1 s t} @-}
 insL a (Node v l r _)
-  | leftBig && bl' > 0 = balLL v l' r
-  | leftBig && bl' < 0 = balLR v l' r
-  | leftBig            = balL0 v l' r
-  | otherwise          = node v l' r
+  | leftBig && leftHeavy l'  = balLL v l' r
+  | leftBig && rightHeavy l' = balLR v l' r
+  | leftBig                  = balL0 v l'  r
+  | otherwise                = node v l' r
   where
-    leftBig            = getHeight l' - getHeight r > 1
-    l'                 = insert a l
-    bl'                = bFac l'
+    leftBig                  = getHeight l' - getHeight r > 1
+    l'                       = insert a l
 
 -- Skip this
     
 {-@ insR :: x:a -> s:{AVL a | key s < x && realHeight s > 0} -> {t: AVL a | eq1 s t} @-}
 insR a (Node v l r _)
-  | rightBig && br' > 0  = balRL v l r'
-  | rightBig && br' < 0  = balRR v l r'
-  | rightBig             = balR0 v l r'
-  | otherwise            = node v l r'
+  | rightBig && leftHeavy r'  = balRL v l r'
+  | rightBig && rightHeavy r' = balRR v l r'
+  | rightBig                  = balR0 v l r'
+  | otherwise                 = node v l r'
   where
-    rightBig             = getHeight r' - getHeight l > 1
-    r'                   = insert a r
-    br'                  = bFac r'
+    rightBig                  = getHeight r' - getHeight l > 1
+    r'                        = insert a r
 
 --------------------------------------------------------------------------------------------
 -- | API: Insert 2 (Leroy) ----------------------------------------------------------------- 
 --------------------------------------------------------------------------------------------
-
 
 {-@ insert' :: a -> s:AVL a -> {t: AVL a | eq1 s t} @-}
 insert' a Leaf             = singleton a
@@ -387,8 +395,6 @@ insert' a t@(Node v l r n) = case compare a v of
                                LT -> bal v (insert' a l) r 
                                GT -> bal v l (insert' a r) 
                                EQ -> t
-
-
 
 --------------------------------------------------------------------------------------------
 -- | API: Delete --------------------------------------------------------------------------- 
@@ -428,41 +434,39 @@ getMin (Node x l r _)    = (x', bal x l' r)
         -> {t: AVL a | (isBal l r 1 => isReal (realHeight t) l r) && RBal l r t}
   @-}
 bal v l r
-  | leftBig  && bl > 0 = balLL v l r
-  | leftBig  && bl < 0 = balLR v l r
-  | leftBig            = balL0 v l r
-  | rightBig && br > 0 = balRL v l r
-  | rightBig && br < 0 = balRR v l r
-  | rightBig           = balR0 v l r
-  | otherwise          = node  v l r
+  | leftBig  && leftHeavy l  = balLL v l r
+  | leftBig  && rightHeavy l = balLR v l r
+  | leftBig                  = balL0 v l r
+  | rightBig && leftHeavy r  = balRL v l r
+  | rightBig && rightHeavy r = balRR v l r
+  | rightBig                 = balR0 v l r
+  | otherwise                = node  v l r
   where
-    leftBig            = siblDiff     > 1
-    rightBig           = siblDiff + 1 < 0
-    siblDiff           = getHeight l - getHeight r
-    bl                 = bFac l
-    br                 = bFac r
+    leftBig                  = siblDiff     > 1
+    rightBig                 = siblDiff + 1 < 0
+    siblDiff                 = getHeight l - getHeight r
 
-{-@ balL0 :: x:a -> l:{AVLL a x | NoHeavy l} -> r:{AVLR a x | htDiff l r 2} -> AVLN a {realHeight l + 1 } @-}
+{-@ balL0 :: x:a -> l:{AVLL a x | noHeavy l} -> r:{AVLR a x | htDiff l r 2} -> AVLN a {realHeight l + 1 } @-}
 balL0 v (Node lv ll lr _) r
   = node lv ll (node v lr r)
 
-{-@ balLL :: x:a -> l:{AVLL a x | LeftHeavy l } -> r:{AVLR a x | htDiff l r 2} -> AVLT a l @-}
+{-@ balLL :: x:a -> l:{AVLL a x | leftHeavy l } -> r:{AVLR a x | htDiff l r 2} -> AVLT a l @-}
 balLL v (Node lv ll lr _) r
   = node lv ll (node v lr r)
 
-{-@ balLR :: x:a -> l:{AVLL a x | RightHeavy l } -> r:{AVLR a x | htDiff l r 2} -> AVLT a l @-}
+{-@ balLR :: x:a -> l:{AVLL a x | rightHeavy l } -> r:{AVLR a x | htDiff l r 2} -> AVLT a l @-}
 balLR v (Node lv ll (Node lrv lrl lrr _) _) r
   = node lrv (node lv ll lrl) (node v lrr r)
 
-{-@ balR0 :: x:a -> l: AVLL a x -> r: {AVLR a x | NoHeavy r && htDiff r l 2 } -> AVLN a {realHeight r + 1} @-}
+{-@ balR0 :: x:a -> l: AVLL a x -> r: {AVLR a x | noHeavy r && htDiff r l 2 } -> AVLN a {realHeight r + 1} @-}
 balR0 v l (Node rv rl rr _)
   = node rv (node v l rl) rr
 
-{-@ balRR :: x:a -> l: AVLL a x -> r:{AVLR a x | RightHeavy r && htDiff r l 2 } -> AVLT a r @-}
+{-@ balRR :: x:a -> l: AVLL a x -> r:{AVLR a x | rightHeavy r && htDiff r l 2 } -> AVLT a r @-}
 balRR v l (Node rv rl rr _)
   = node rv (node v l rl) rr
 
-{-@ balRL :: x:a -> l: AVLL a x -> r:{AVLR a x | LeftHeavy r && htDiff r l 2} -> AVLT a r @-}
+{-@ balRL :: x:a -> l: AVLL a x -> r:{AVLR a x | leftHeavy r && htDiff r l 2} -> AVLT a r @-}
 balRL v l (Node rv (Node rlv rll rlr _) rr _)
   = node rlv (node v l rll) (node rv rlr rr) 
                                                       
