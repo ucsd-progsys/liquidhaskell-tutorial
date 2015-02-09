@@ -487,7 +487,10 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
   = node lrv (node lv ll lrl) (node v lrr r)
 \end{code}
 
-
+<div class="hwex" id="Right Big"> 
+The *RightBig* cases are symmetric to the above cases where the left subtree is the
+larger one. Complete the implementation of the following functions:
+</div>
 
 <div class="hidden">
 \begin{code}
