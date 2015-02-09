@@ -294,15 +294,221 @@ you will see that the above function is rejected by LiquidHaskell.
 The error message would essentially say that at the calls to the
 smart constructor, the arguments violate the balance requirement.
 
-\newthought{To see why} take a look at Figure~\ref{fig:avl-insert-naive}.
-The new value `y` is inserted into the left subtree, which is already 
-bigger than the right by a factor of `1`.  The insert increases the 
-height difference further to `2` making it impossible to (directly) 
-link up the `insert0 y l` and `r` using `node`.
+\newthought{Insertion Can Increase The Height} of a sub-tree, making
+it *too large* relative to its sibling. For example, consider:
 
+\begin{ghci}
+ghci> let t0 = Node { key = 'a'
+                    , l   = Leaf
+                    , r   = Node {key = 'd'
+                                 , l = Leaf
+                                 , r = Leaf
+                                 , ah = 1 }
+                    , ah = 2}
+
+ghci> insert0 'e' t0 
+  Node { key = 'a'
+       , l   = Leaf
+       , r   = Node { key = 'd'
+                    , l   = Leaf
+                    , r   = Node { key = 'e'
+                                 , l   = Leaf
+                                 , r   = Leaf
+                                 , ah  = 1   }
+                    , ah = 2                 }
+       , ah = 3}
+\end{ghci}
+
+\noindent In the above, illustrated in Figure~\ref{fig:avl-insert0} 
+the value `'e'` is inserted into the valid tree `t0`; it is inserted
+into the *right* subtree of `t0` which already has height `1` and 
+causes its height to go up to `2` which is too large relative to 
+the empty left subtree of height `0`. 
+
+\newthought{LiquidHaskell catches the imbalance} by rejecting `insert0`.
+The new value `y` is inserted into the right subtree `r`,
+which (may already be bigger than the left by a factor of `1`).  
+The insert can return a tree with arbitrary height, possibly much
+larger than `l` and hence, LiquidHaskell rejects the call to
+the constructor `node` as the balance requirement does not hold.
+
+The above illustrates two key lessons.
+
+1. `insert` may *increase* the height of a tree, but
+2. `insert` can't increase the height by more than `1`, hence
+3. we need a way to *rebalance* siblings where one has height `2` more than the other.
   
-Refactoring Balance
--------------------
+Rebalancing Trees
+-----------------
+
+The brilliant insight of Adelson-Velsky and Landis was that we can, in fact, perform
+such a rebalancing with a clever bit of gardening. Suppose we have inserted a value
+into the *left* subtree `l` to obtain a new tree `l'` (the right case is symmetric.)
+There are really 3 cases for the relative heights of `l'` and `r` that we must account 
+for:
+
++ *(RightBig)* `r`  is two more than `l'`
++ *(NoBig)*    `l'` and `r` are within a factor of `1`,
++ *(LeftBig)*  `l'` is two more than `r`
+
+\newthought{We can specify} these cases as follows.
+
+<div class="footnotetext">
+We're using the *real* height here and hence shouldn't use these 
+predicates in our *implementation*.
+</div>
+
+\begin{code}
+{-@ inline leftBig @-}
+leftBig l r = realDiff l r == 2
+
+{-@ inline rightBig @-}
+rightBig l r = realDiff r l == 2
+
+{-@ inline realDiff @-}
+realDiff s t = realHeight s - realHeight t
+\end{code}
+
+The first case (*RightBig*) cannot arise as `l'` is at least as
+big as `l`, which was within a factor of `1` of `r` in the valid
+input tree `t`.  In the second case (*NoBig*), we can safely link 
+`l'` and `r` with the smart constructor as they satisfy the balance
+requirements.  The third case (*LeftBig*) is the tricky one: we
+need a way to shuffle elements from the left subtree over to the
+right side.
+
+\newthought{What is a LeftBig tree?} Lets split into the possible cases for `l'`, 
+immediately ruling out the *empty* tree because its height is `0` and cannot be 
+two larger than any other tree.
+
++ *(NoHeavy)* the left and right subtrees of `l'` have the same height,
++ *(LeftHeavy)* the left subtree of `l'` is bigger than the right,
++ *(RightHeavy)* the right subtree of `l'` is bigger than the left.
+
+
+\newthought{The Balance Factor} of a tree can be used to make the above
+cases precise. Note that while the `getHeight` function returns the saved
+height (for efficiency), thanks to the invariants, we know it is in fact
+equal to the `realHeight` of the given tree.
+
+\begin{code}
+{-@ measure balFac @-}
+{-@ balFac :: t:AVL a -> {v:Int | v = balFac t && 0 <= v + 1 && v <= 1} @-}
+balFac Leaf           = 0
+balFac (Node _ l r _) = getHeight l - getHeight r 
+
+{-@ measure getHeight @-}
+{-@ getHeight            :: t:_ -> {v:Nat | v = realHeight t} @-}
+getHeight Leaf           = 0
+getHeight (Node _ _ _ n) = n
+\end{code}
+
+\newthought{Heaviness} can be encoded by testing the balance factor:
+ 
+\begin{code}
+{-@ inline leftHeavy @-}
+leftHeavy  t = balFac t > 0
+
+{-@ inline rightHeavy @-}
+rightHeavy t = balFac t < 0
+
+{-@ inline noHeavy @-}
+noHeavy    t = balFac t == 0
+\end{code}
+
+Adelson-Velsky and Landis observed that once you've drilled 
+down  into these three cases, the *shuffling* suggests itself.
+
+\begin{marginfigure}[h]
+\includegraphics[height=1.5in]{img/avl-balL0.png}
+\caption{Rotating when in the LeftBig, NoHeavy case.}
+\label{fig:avl-balL0}
+\end{marginfigure}
+
+\newthought{In the NoHeavy} case, illustrated in Figure~\ref{fig:avl-balL0},
+the subtrees  `ll` and `lr` have the same height which is one more than that 
+of `r`. Hence, we can link up `lr` and `r` and link the result with `l`.
+Here's how you would implement the rotation. Note how the preconditions
+capture the exact case we're in: the left subtree is *NoHeavy* and the right 
+subtree is smaller than the left by `2`. Finally, the output type captures 
+the exact height of the result, relative to the input subtrees.
+
+\begin{code}
+{-@ balL0 :: x:a
+          -> l:{AVLL a x | noHeavy l}
+          -> r:{AVLR a x | leftBig l r}
+          -> AVLN a {realHeight l + 1 }
+  @-}
+balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)
+\end{code}
+
+\begin{marginfigure}[h]
+\includegraphics[height=1.5in]{img/avl-balLL.png}
+\caption{Rotating when in the LeftBig, LeftHeavy case.}
+\label{fig:avl-balL0}
+\end{marginfigure}
+
+\newthought{In the LeftHeavy} case, illustrated in Figure~\ref{fig:avl-balLL},
+the subtree  `ll` is larger than  `lr`; hence `lr` has the same height as `r`,
+and again we can link up `lr` and `r` and link the result with `l`. Again, as
+with the *NoHeavy* case, the input types capture the exact case, and the output
+the height of the resulting tree.
+ 
+ \begin{code}
+{-@ balLL :: x:a
+          -> l:{AVLL a x | leftHeavy l}
+          -> r:{AVLR a x | leftBig l r}
+          -> AVLT a l
+  @-}
+balLL v (Node lv ll lr _) r
+  = node lv ll (node v lr r)
+\end{code}
+
+
+\begin{marginfigure}[h]
+\includegraphics[height=1.5in]{img/avl-balLR.png}
+\caption{Rotating when in the LeftBig, RightHeavy case.}
+\label{fig:avl-balL0}
+\end{marginfigure}
+
+\newthought{In the RightHeavy} case, illustrated in Figure~\ref{fig:avl-balLR},
+the subtree  `lr` is larger than  `ll`. We cannot directly link it with `r` as the result
+would again be too large. Hence, we split it further into its own subtrees `lrl` and `lrr`
+and link the latter with `r`.
+Again, before the types capture the requirements and guarantees of the rotation.
+
+\begin{code}
+{-@ balLR :: x:a
+          -> l:{AVLL a x | rightHeavy l}
+          -> r:{AVLR a x | leftBig l r} 
+          -> AVLT a l
+  @-}
+balLR v (Node lv ll (Node lrv lrl lrr _) _) r
+  = node lrv (node lv ll lrl) (node v lrr r)
+\end{code}
+
+
+
+<div class="hidden">
+\begin{code}
+{-@ balR0 :: x:a -> l: AVLL a x -> r: {AVLR a x | noHeavy r && rightBig l r} -> AVLN a {realHeight r + 1} @-}
+balR0 v l (Node rv rl rr _)
+  = node rv (node v l rl)  rr
+
+{-@ balRR :: x:a -> l: AVLL a x -> r:{AVLR a x | rightHeavy r && rightBig l r} -> AVLT a r @-}
+balRR v l (Node rv rl rr _)
+  = node rv (node v l rl) rr
+
+{-@ balRL :: x:a -> l: AVLL a x -> r:{AVLR a x | leftHeavy r && rightBig l r} -> AVLT a r @-}
+balRL v l (Node rv (Node rlv rll rlr _) rr _)
+  = node rlv (node v l rll) (node rv rlr rr) 
+\end{code}
+
+</div>
+
+
+Refactoring Rebalance 
+---------------------
 
 Deleting Elements  
 -----------------
@@ -311,40 +517,9 @@ Functional Correctness
 ----------------------
 
 \begin{code}
-{-@ inline htDiff @-}
-htDiff s t d = (realHeight s - realHeight t) == d
 
 {-@ inline eq1 @-}
-eq1 s t      = htDiff t s 0 || htDiff t s 1
-
---------------------------------------------------------------------------------------------
--- | Constructor & Destructor  -------------------------------------------------------------
---------------------------------------------------------------------------------------------
-
--- | Compute Tree Height -------------------------------------------------------------------
-    
-{-@ measure getHeight @-}
-{-@ getHeight            :: t:_ -> {v:Nat | v = realHeight t} @-}
-getHeight Leaf           = 0
-getHeight (Node _ _ _ n) = n
-
-
--- | Compute Balance Factor ----------------------------------------------------------------
-
-{-@ measure bFac @-}
-{-@ bFac :: t:AVL a -> {v:Int | v = bFac t && 0 <= v + 1 && v <= 1} @-}
-bFac Leaf           = 0
-bFac (Node _ l r _) = getHeight l - getHeight r 
-
-{-@ inline leftHeavy @-}
-leftHeavy  t = bFac t > 0
-
-{-@ inline rightHeavy @-}
-rightHeavy t = bFac t < 0
-
-{-@ inline noHeavy @-}
-noHeavy    t = bFac t == 0
-
+eq1 s t      = (realDiff t s == 0) || (realDiff t s == 1)
 
 --------------------------------------------------------------------------------------------
 -- | API: Insert 1 (Beaumont) -------------------------------------------------------------- 
@@ -359,25 +534,25 @@ insert a t@(Node v _ _ _) = case compare a v of
 
 {-@ insL :: x:a -> s:{AVL a | x < key s && realHeight s > 0} -> {t: AVL a | eq1 s t} @-}
 insL a (Node v l r _)
-  | leftBig && leftHeavy l'  = balLL v l' r
-  | leftBig && rightHeavy l' = balLR v l' r
-  | leftBig                  = balL0 v l'  r
-  | otherwise                = node v l' r
+  | isLeftBig && leftHeavy l'  = balLL v l' r
+  | isLeftBig && rightHeavy l' = balLR v l' r
+  | isLeftBig                  = balL0 v l'  r
+  | otherwise                  = node v l' r
   where
-    leftBig                  = getHeight l' - getHeight r > 1
-    l'                       = insert a l
+    isLeftBig                  = getHeight l' - getHeight r > 1
+    l'                         = insert a l
 
 -- Skip this
     
 {-@ insR :: x:a -> s:{AVL a | key s < x && realHeight s > 0} -> {t: AVL a | eq1 s t} @-}
 insR a (Node v l r _)
-  | rightBig && leftHeavy r'  = balRL v l r'
-  | rightBig && rightHeavy r' = balRR v l r'
-  | rightBig                  = balR0 v l r'
-  | otherwise                 = node v l r'
+  | isRightBig && leftHeavy r'  = balRL v l r'
+  | isRightBig && rightHeavy r' = balRR v l r'
+  | isRightBig                  = balR0 v l r'
+  | otherwise                   = node v l r'
   where
-    rightBig                  = getHeight r' - getHeight l > 1
-    r'                        = insert a r
+    isRightBig                  = getHeight r' - getHeight l > 1
+    r'                          = insert a r
 
 --------------------------------------------------------------------------------------------
 -- | API: Insert 2 (Leroy) ----------------------------------------------------------------- 
@@ -439,29 +614,5 @@ bal v l r
     leftBig                  = siblDiff     > 1
     rightBig                 = siblDiff + 1 < 0
     siblDiff                 = getHeight l - getHeight r
-
-{-@ balL0 :: x:a -> l:{AVLL a x | noHeavy l} -> r:{AVLR a x | htDiff l r 2} -> AVLN a {realHeight l + 1 } @-}
-balL0 v (Node lv ll lr _) r
-  = node lv ll (node v lr r)
-
-{-@ balLL :: x:a -> l:{AVLL a x | leftHeavy l } -> r:{AVLR a x | htDiff l r 2} -> AVLT a l @-}
-balLL v (Node lv ll lr _) r
-  = node lv ll (node v lr r)
-
-{-@ balLR :: x:a -> l:{AVLL a x | rightHeavy l } -> r:{AVLR a x | htDiff l r 2} -> AVLT a l @-}
-balLR v (Node lv ll (Node lrv lrl lrr _) _) r
-  = node lrv (node lv ll lrl) (node v lrr r)
-
-{-@ balR0 :: x:a -> l: AVLL a x -> r: {AVLR a x | noHeavy r && htDiff r l 2 } -> AVLN a {realHeight r + 1} @-}
-balR0 v l (Node rv rl rr _)
-  = node rv (node v l rl) rr
-
-{-@ balRR :: x:a -> l: AVLL a x -> r:{AVLR a x | rightHeavy r && htDiff r l 2 } -> AVLT a r @-}
-balRR v l (Node rv rl rr _)
-  = node rv (node v l rl) rr
-
-{-@ balRL :: x:a -> l: AVLL a x -> r:{AVLR a x | leftHeavy r && htDiff r l 2} -> AVLT a r @-}
-balRL v l (Node rv (Node rlv rll rlr _) rr _)
-  = node rlv (node v l rll) (node rv rlr rr) 
-                                                      
 \end{code}
+
