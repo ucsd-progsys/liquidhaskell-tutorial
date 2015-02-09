@@ -311,10 +311,6 @@ Functional Correctness
 ----------------------
 
 \begin{code}
-{-@ predicate NoHeavy    T = bFac T == 0                      @-}
-{-@ predicate LeftHeavy  T = bFac T == 1                      @-}
-{-@ predicate RightHeavy T = bFac T == -1                     @-}
-
 {-@ inline htDiff @-}
 htDiff s t d = (realHeight s - realHeight t) == d
 
@@ -339,6 +335,11 @@ getHeight (Node _ _ _ n) = n
 {-@ bFac :: t:AVL a -> {v:Int | v = bFac t && 0 <= v + 1 && v <= 1} @-}
 bFac Leaf           = 0
 bFac (Node _ l r _) = getHeight l - getHeight r 
+
+{-@ predicate NoHeavy    T = bFac T == 0   @-}
+{-@ predicate LeftHeavy  T = bFac T == 1   @-}
+{-@ predicate RightHeavy T = bFac T == -1  @-}
+
 
 --------------------------------------------------------------------------------------------
 -- | API: Insert 1 (Beaumont) -------------------------------------------------------------- 
