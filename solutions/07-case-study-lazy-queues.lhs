@@ -184,11 +184,11 @@ typecheck.
 </div>
 
 \begin{code}
-{-@ tl           :: xs:SList a -> SListN a {size xs - 1}  @-}
+{-@ tl           :: xs:{SList a | size xs > 0} -> SListN a {size xs - 1}  @-}
 tl (SL n (_:xs)) = SL (n-1) xs
 tl _             = die "empty SList"
 
-{-@ hd           :: xs:SList a -> a @-}
+{-@ hd           :: xs:{SList a | size xs > 0} -> a @-}
 hd (SL _ (x:_))  = x 
 hd _             = die "empty SList"
 \end{code}
@@ -250,6 +250,10 @@ emp = Q nil nil
 the calls to `hd` and `tl` are safe.
 
 \begin{code}
+{-@ measure qsize @-}
+qsize (Q f b) = size f + size b
+
+{-@ remove :: q:{Queue a | qsize q > 0} -> (a, QueueN a {qsize q - 1}) @-}
 remove (Q f b)   = (hd f, makeq (tl f) b)
 \end{code}
 
@@ -257,6 +261,8 @@ remove (Q f b)   = (hd f, makeq (tl f) b)
 Can you explain why we (or Okasaki) didn't use pattern matching here, and have
 instead opted for the explicit `hd` and `tl`?
 </div>
+
+Pattern matching is stricter than `hd` and `tl`
 
 <div class="hwex" id="Queue Sizes"> 
 If you did the *List Destructing* exercise above, then you will notice that
@@ -275,7 +281,7 @@ should be rejected, and `emp` should have the type shown below:
 
 \begin{code}
 -- | Queues of size `N`
-{-@ type QueueN a N = {v:Queue a | true} @-}
+{-@ type QueueN a N = {v:Queue a | qsize v = N} @-}
 
 okRemove  = remove example2Q   -- accept
 badRemove = remove example0Q   -- reject
@@ -295,6 +301,7 @@ example0Q = Q nil nil
 the *smart constructor* `makeq` to ensure that the balance invariant holds:
 
 \begin{code}
+{-@ insert :: a -> q:Queue a -> QueueN a {qsize q + 1} @-}
 insert e (Q f b) = makeq f (e `cons` b)
 \end{code}
 
@@ -323,7 +330,7 @@ directly returns the `Queue`, and otherwise transfers the elements
 from `b` over using the rotate function `rot` described next.
 
 \begin{code}
-{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
+{-@ makeq :: f:SList a -> b:{SList a | size b <= 1 + size f} -> QueueN a {size f + size b} @-}
 makeq f b 
   | size b <= size f = Q f b
   | otherwise        = Q (rot f b nil) nil
@@ -342,6 +349,9 @@ that it typechecks and verifies the type for `makeq`.
 relationship between `f` and `b`.
 
 \begin{code}
+{-@ rot :: f:SList a -> b:{SList a | size b = 1 + size f} -> a:SList a
+        -> {v:SList a | size v = size f + size b + size a}
+  @-}
 rot f b a
   | size f == 0 = hd b `cons` a
   | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` a)
@@ -355,9 +365,12 @@ done, `okTake` should be accepted, but `badTake` should be rejected.
 </div>
 
 \begin{code}
+{-@ take       :: n:Nat -> q:{Queue a | qsize q >= n}
+               -> (QueueN a n, QueueN a {qsize q - n})
+  @-}
 take           :: Int -> Queue a -> (Queue a, Queue a)
 take 0 q       = (emp          , q)
-take n q       = (insert x out , q')
+take n q       = (insert x out , q'') -- ES: changed q' to q''
   where
     (x  , q')  = remove q
     (out, q'') = take (n-1) q'

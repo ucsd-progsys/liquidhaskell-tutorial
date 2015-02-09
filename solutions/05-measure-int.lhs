@@ -43,7 +43,7 @@ Plan
 5. Case Study: K-Means Clustering
 \end{comment}
 
-Many of the programs we have seen so far, for example those in
+Many of the programs we have seen so far, for example those
 [here](#vectorbounds), suffer from *indexitis*. This is a term
 coined by [Richard Bird][bird-pearls] which describes a tendency
 to perform low-level manipulations to iterate over the indices
@@ -162,7 +162,8 @@ len (_:xs) = 1 + len xs
 
 \begin{code}
 {-@ measure size @-}
-{-@ size    :: [a] -> Nat @-}
+{-@ size    :: xs:[a] -> {v:Nat | v = size xs} @-}
+-- ES: needed to add v = size xs postcondition
 size []     = 0
 size (_:rs) = 1 + size rs
 \end{code}
@@ -213,14 +214,14 @@ data [a] where
 \noindent 
 This is a very significant advantage of using measures
 instead of indices as in [DML][dml] or [Agda][agdavec],
-as *decouples property from structure*, which crucially
+as measures *decouple property from structure*, which crucially
 enables the use of the same structure for many different
 purposes. That is, we need not know *a priori* what indices
 to bake into the structure, but can define a generic
 structure and refine it *a posteriori* as needed with
 new measures.
 
-We are almost ready to begin creating a dimension aware API
+We are almost ready to begin creating a dimension-aware API
 for lists; one last thing that is useful is a couple of aliases
 for describing lists of a given dimension.
 
@@ -243,6 +244,10 @@ like `N` and `X` to distinguish *value* parameters from the lowercase
 {-@ type ListN a N = {v:List a | size v = N} @-}
 {-@ type ListX a X = ListN a {size X}        @-}
 \end{code}
+
+\begin{comment}
+ES: we can also write `ListN a (size X)`, any reason to introduce the curly-braces?
+\end{comment}
 
 
 Lists: Size Preserving API
@@ -293,7 +298,7 @@ zip _  []         = []
 \end{code}
 
 \noindent The output type uses the predicate `Tinier Xs Ys Zs`
-which defines the length of `Xs` to be the smaller of that of
+which constrains the length of `Xs` to be the smaller of
 `Ys` and `Zs`. <div class="footnotetext">Recall that
 in logic, `if p then q else r` is just `p => q && not p => r`.
 </div>
@@ -312,7 +317,12 @@ LiquidHaskell.
 </div>
 
 \begin{code}
-zipOrNull       :: [a] -> [b] -> [(a, b)]
+{-@ zipOrNull   :: as:[a]
+                -> bs:{[b] | (notEmpty as && notEmpty bs) => (size bs = size as)}
+                -> {v:[(a, b)] | if (notEmpty as && notEmpty bs)
+                                 then (size v = size as)
+                                 else (size v = 0) }
+  @-}
 zipOrNull [] _  = []
 zipOrNull _ []  = []
 zipOrNull xs ys = zipWith (,) xs ys
@@ -340,10 +350,14 @@ so that LiquidHaskell can prove the specification for `reverse`.
 {-@ reverse       :: xs:[a] -> {v:[a] | size v = size xs} @-}
 reverse xs        = go [] xs
   where 
-    {-@ go        :: xs:[a] -> ys:[a] -> [a] @-}
+    {-@ go        :: xs:[a] -> ys:[a] -> ListN a {size xs + size ys} @-}
     go acc []     = acc
     go acc (x:xs) = go (x:acc) xs
 \end{code}
+
+\begin{comment}
+ES: pain point: aha, we can write ListN a (size xs), but NOT ListN a (size xs + size ys)...
+\end{comment}
 
 \hint How big is the list returned by `go`?
 
@@ -375,6 +389,7 @@ typechecks.
 </div>
 
 \begin{code}
+{-@ drop :: n:Nat -> xs:{List a | size xs >= n} -> {v:List a | size v = size xs - n} @-}
 drop 0 xs     = xs
 drop n (_:xs) = drop (n-1) xs
 drop _ _      = die "won't happen"
@@ -391,6 +406,7 @@ the code below is accepted by LiquidHaskell.
 </div>
 
 \begin{code}
+{-@ take :: n:Nat -> xs:List a -> {v:List a | Min (size v) n (size xs)} @-}
 take 0 _       = []
 take _ []      = []
 take n (x:xs)  = x : take (n-1) xs
@@ -420,7 +436,7 @@ to access the elements of the output:
 
 \begin{spec}
 {-@ measure fst @-}
-fst  (x, _) = x
+fst (x, _) = x
 
 {-@ measure snd @-}
 snd (_, y) = y
@@ -448,7 +464,11 @@ Use `partition` to implement `quickSort`.
 
 {-@ quickSort    :: (Ord a) => xs:List a -> ListX a xs @-}
 quickSort []     = []
-quickSort (x:xs) = undefined
+quickSort (x:xs) = quickSort l ++ [x] ++ quickSort g
+  where (l, g) = partition (<=x) xs
+
+{-@ assume (++) :: xs:List a -> ys:List a -> ListN a {size xs + size ys} @-}
+-- ES: pain point: size vs len conflict here
 
 {-@ test10 :: ListN String 2 @-}
 test10 = quickSort test4 
@@ -458,7 +478,7 @@ test10 = quickSort test4
 Dimension Safe Vector API
 -------------------------
 
-We can use the dimension aware lists to create a safe vector API.
+We can use the dimension-aware lists to create a safe vector API.
 
 \newthought{Legal Vectors} are those whose `vDim` field actually equals the size of the underlying list:
 
@@ -557,8 +577,8 @@ which *creates* a `Vector` from a plain list.
 </div>
 
 \begin{code}
-vecFromList     :: [a] -> Vector a
-vecFromList xs  =  undefined
+{-@ vecFromList :: xs:[a] -> VectorN a {size xs} @-}
+vecFromList xs = V (size xs) xs
 
 test6  = dotProduct vx vy    -- should be accepted by LH
   where 
@@ -576,7 +596,18 @@ test6  = dotProduct vx vy    -- should be accepted by LH
             -> VectorN (VectorN a m) n
             -> VectorN a {m * n}
   @-}
-flatten = undefined
+-- ES: note that this exercise *requires* Z3 due to non-linear arith
+flatten n m (V _ xs) = concat xs
+  where
+    {-@ concat :: xs:List (VectorN a m) -> VectorN a {size xs * m} @-}
+    concat []       = vEmp
+    concat (xs:xss) = vApp xs (concat xss)
+    {-@ vApp :: xs:Vector a -> ys:Vector a -> VectorN a {vDim xs + vDim ys} @-}
+    vApp (V dx xs) (V dy ys) = V (dx + dy) (xs ++ ys)
+
+{-@ measure sumSize @-}
+sumSize [] = 0
+sumSize (xs:xss) = size xs + sumSize xss
 \end{code}
 
 \newthought{The Cross Product} of two vectors can now be
@@ -617,7 +648,7 @@ refined data definition:
   @-}
 \end{code}
 
-\noindent Notice that we avoid disallow degenerate matrices by
+\noindent Notice that we disallow degenerate matrices by
 requiring the dimensions to be positive.
 
 \begin{code}
@@ -627,11 +658,11 @@ requiring the dimensions to be positive.
 \noindent It is convenient to have an alias for matrices of a given size:
 
 \begin{code}
-{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C } @-}
-{-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}
+{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C} @-}
+{-@ predicate Dims M R C = mRow M = R && mCol M = C  @-}
 \end{code}
 
-\noindent For example, we can use the above to write type: 
+\noindent For example, we can use the above to write: 
 
 \begin{code}
 {-@ ok23 :: MatrixN _ 2 3 @-}
@@ -647,11 +678,11 @@ LiquidHaskell.
 
 \begin{code}
 bad1 :: Matrix Int
-bad1 = M 2 3 (V 2 [ V 3 [1, 2   ]
+bad1 = M 2 3 (V 2 [ V 3 [1, 2, 3]
                   , V 3 [4, 5, 6]])
 
 bad2 :: Matrix Int
-bad2 = M 2 3 (V 2 [ V 2 [1, 2]
+bad2 = M 2 2 (V 2 [ V 2 [1, 2]
                   , V 2 [4, 5] ])
 \end{code}
 
@@ -661,16 +692,27 @@ a `Matrix` from a nested list.
 </div>
 
 \begin{code}
-matFromList      :: [[a]] -> Maybe (Matrix a)
+{-@ matFromList  :: xs:[[a]] -> Maybe (MatrixN a (size xs) (headSize xs)) @-}
 matFromList []   = Nothing
 matFromList xss@(xs:_)
-  | ok           = Just (M r c vs) 
-  | otherwise    = Nothing 
+  | c <= 0             = Nothing
+  | Just xss <- ok xss = Just (M r c $ V r (map (V c) xss)) 
+  | otherwise          = Nothing 
   where
     r            = size xss
     c            = size xs
-    ok           = undefined
-    vs           = undefined 
+    {-@ ok :: xs:[[a]] -> Maybe (ListX (ListN a c) xs) @-}
+    ok []        = Just []
+    ok (xs:xss)
+      | size xs == c
+      , Just xss <- ok xss
+      = Just (xs:xss)
+      | otherwise
+      = Nothing
+    -- ES: laziness forces you to move the vs = ... inside the guard
+{-@ measure headSize @-}
+headSize []   = 0
+headSize (xs:_) = size xs
 \end{code}
 
 <div class="hwex" id="Refined Matrix Constructor">
@@ -736,7 +778,9 @@ transpose (M r c rows) = M c r $ txgo c r rows
               -> VectorN (VectorN a c) r
               -> VectorN (VectorN a r) c
   @-}
-txgo c r rows = undefined
+txgo 0 _ _          = vEmp
+txgo c r (V _ rows) = vCons (V r $ map vHd rows)
+                            (txgo (c-1) r (V r (map vTl rows)))
 \end{code}
 
 \hint As shown by `ok23` and `ok32`, `transpose` works by

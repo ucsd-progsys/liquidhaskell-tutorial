@@ -109,4 +109,6 @@
 
    - img: avl TREE 
 
++ fix printing of predicates (we drop required parens)
 
++ produce intelligible parse errors

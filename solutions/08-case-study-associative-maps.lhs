@@ -121,8 +121,8 @@ the empty `Map` as:
 emp :: {m:Map k v | Empty (keys m)}
 \end{spec}
 
-\newthought{Add} The function `set` takes a key $k$ a
-value $v$ and a map `m` and returns the new map obtained
+\newthought{Add} The function `set` takes a key $k$, a
+value $v$, and a map `m`, and returns the new map obtained
 by extending `m` with the binding ${k \mapsto v}$.
 Thus, the set of `keys` of the output `Map` includes
 those of the input plus the singleton $k$, that is:
@@ -174,6 +174,8 @@ data Expr = Const Int
           | Var   Var
           | Plus  Expr Expr
           | Let   Var  Expr Expr
+          | Fun   Var  Expr
+          | App   Expr Expr
 \end{code}
 
 \newthought{Values} We can use refinements to formally
@@ -188,6 +190,8 @@ val (Const _)    = True
 val (Var _)      = False 
 val (Plus _ _)   = False 
 val (Let _ _ _ ) = False 
+val (Fun _ _)    = False
+val (App _ _)    = False
 \end{code}
 
 \noindent and then we can use the lifted `measure` to
@@ -234,6 +238,7 @@ eval g (Let x e1 e2) = eval g' e2
   where 
     g'               = set x v1 g 
     v1               = eval g e1
+eval g (App (Fun x e) e2) = eval (set x (eval g e2) g) e
 \end{code}
 
 The above `eval` seems rather unsafe; whats the guarantee that
@@ -267,13 +272,15 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
     xs1            = free e1
     xs2            = free e2
     xs             = singleton x
+free (Fun x e)     = free e `difference` singleton x
+free (App f e)     = free f `union` free e
 \end{code}
 
 \newthought{An Expression is Closed} with respect to an environment
 `G` if all the *free* variables in the expression appear in `G`, i.e.
 the environment contains bindings for all the variables in the
 expression that are *not* bound within the expression. As we've seen
-repeatedly, often a whole pile of informal handwaving, can be
+repeatedly, often a whole pile of informal handwaving can be
 succinctly captured by a type definition that says the `free` variables
 in the `Expr` must be contained in the `keys` of the environment `G`:
 
@@ -308,7 +315,7 @@ evalAny g e
   | ok        = Just $ eval g e
   | otherwise = Nothing
   where
-    ok        = undefined  
+    ok        = isSubsetOf (free e) (keys g)
 \end{code}
 
 \noindent Proof is all well and good, in the end, you need a few
@@ -398,7 +405,7 @@ To make sure you are following, fill in the definition for an `emp`ty Map:
 
 \begin{code}
 {-@ emp :: {m:Map k v | Empty (keys m)} @-}
-emp     = undefined  
+emp     = Tip
 \end{code}
 
 <div class="hwex" id="Insert"> To add a key `k'` to a `Map` we
@@ -415,8 +422,8 @@ the function is verified.
                    -> {n: Map k v | AddKey k m n} @-}
 set k' v' (Node k v l r)
   | k' == k   = Node k v' l r
-  | k' <  k   = set k' v l
-  | otherwise = set k' v r
+  | k' <  k   = Node k v (set k' v l) r
+  | otherwise = Node k v l (set k' v r)
 set k' v' Tip = Node k' v' Tip Tip
 \end{code}
 
@@ -571,8 +578,8 @@ so that it verifiably implements the given signature.
                    -> {v:_ | Prop v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
-  | k' <  k   = mem k' l
-  | otherwise = mem k' r
+  | k' <  k   = assert (lemma_notMem k' r) (mem k' l)
+  | otherwise = assert (lemma_notMem k' l) (mem k' r)
 mem _ Tip     = False
 \end{code}
 
@@ -584,7 +591,17 @@ returns a `fresh` integer that is *distinct* from all the values in its input li
 
 \begin{code}
 {-@ fresh :: xs:[Int] -> {v:Int | not (Elem v xs)} @-}
-fresh = undefined
+fresh []     = 0
+fresh (x:xs) = go x [] xs
+  where
+    go :: Int -> [Int] -> [Int] -> Int
+    go x s []     = assert (lemma_notElem x s) (x + 1)
+    go x s (y:ys) = go (1 + max x y) (x:s) ys
+
+{-@ lemma_notElem :: x:a -> xs:[{v:a | v < x}] -> {v:Bool | Prop v <=> not (Elem x xs)} @-}
+lemma_notElem :: a -> [a] -> Bool
+lemma_notElem x []     = True
+lemma_notElem x (y:ys) = lemma_notElem x ys
 \end{code}
 
 \noindent To refresh your memory, here are the definitions for `Elem`
