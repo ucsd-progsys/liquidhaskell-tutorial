@@ -760,6 +760,7 @@ elems Leaf           = S.empty
 
 <div class="hwex" id="Membership">Complete the implementation of the implementation of 
 the function `member` that checks if an element is in an `AVL` tree:
+</div>
 
 \begin{code}
 -- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
@@ -771,7 +772,7 @@ member x t = undefined
 <div class="hwex" id="Insertion">Modify `insert'` to obtain 
 a function `insertAPI` that states that the output tree 
 contains the newly inserted element (in addition to the old elements):
-
+</div>
 -- FIXME
 \begin{spec}
 
@@ -787,6 +788,7 @@ addElem x s t = (elems t) == (elems s) `S.union` (S.singleton x)
 <div class="hwex" id="Insertion">Modify `delete` to obtain 
 a function `deleteAPI` that states that the output tree
 contains the old elements minus the removed element:
+</div>
 
 -- FIXME
 \begin{spec}
