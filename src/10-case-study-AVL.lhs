@@ -355,10 +355,10 @@ height `1` and causes its height to go up to `2` which is too large
 relative to the empty left subtree of height `0`. 
 
 \newthought{LiquidHaskell catches the imbalance} by rejecting `insert0`.
-The new value `y` is inserted into the right subtree `r`,
-which (may already be bigger than the left by a factor of `1`).  
-The insert can return a tree with arbitrary height, possibly much
-larger than `l` and hence, LiquidHaskell rejects the call to
+The new value `y` is inserted into the right subtree `r`, which (may 
+already be bigger than the left by a factor of `1`). 
+As insert can return a tree with arbitrary height, possibly 
+much larger than `l` and hence, LiquidHaskell rejects the call to
 the constructor `node` as the balance requirement does not hold.
 
 The above illustrates two key lessons.
@@ -447,11 +447,11 @@ noHeavy    t = balFac t == 0
 Adelson-Velsky and Landis observed that once you've drilled 
 down  into these three cases, the *shuffling* suggests itself.
 
-\begin{marginfigure}
-\includegraphics[height=1.5in]{img/avl-balL0.png}
+\begin{figure}[h]
+\includegraphics[height=3.0in]{img/avl-balL0.png}
 \caption{Rotating when in the LeftBig, NoHeavy case.}
 \label{fig:avl-balL0}
-\end{marginfigure}
+\end{figure}
 
 \newthought{In the NoHeavy} case, illustrated in Figure~\ref{fig:avl-balL0},
 the subtrees  `ll` and `lr` have the same height which is one more than that 
@@ -470,11 +470,11 @@ the exact height of the result, relative to the input subtrees.
 balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)
 \end{code}
 
-\begin{marginfigure}
+\begin{figure}[h]
 \includegraphics[height=1.5in]{img/avl-balLL.png}
 \caption{Rotating when in the LeftBig, LeftHeavy case.}
 \label{fig:avl-balL0}
-\end{marginfigure}
+\end{figure}
 
 \newthought{In the LeftHeavy} case, illustrated in Figure~\ref{fig:avl-balLL},
 the subtree  `ll` is larger than  `lr`; hence `lr` has the same height as `r`,
@@ -493,11 +493,11 @@ balLL v (Node lv ll lr _) r
 \end{code}
 
 
-\begin{marginfigure}
+\begin{figure}[h]
 \includegraphics[height=1.5in]{img/avl-balLR.png}
 \caption{Rotating when in the LeftBig, RightHeavy case.}
 \label{fig:avl-balL0}
-\end{marginfigure}
+\end{figure}
 
 \newthought{In the RightHeavy} case, illustrated in Figure~\ref{fig:avl-balLR},
 the subtree  `lr` is larger than  `ll`. We cannot directly link it with `r` as the result
@@ -520,6 +520,8 @@ The *RightBig* cases are symmetric to the above cases where the
 left subtree is the larger one. Fix the implementation of the
 following functions, so that they respect the given types.
 </div>
+
+\vfill
 
 \begin{code}
 {-@ balR0 :: x:a
