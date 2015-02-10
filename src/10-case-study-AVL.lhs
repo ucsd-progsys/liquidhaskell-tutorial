@@ -2,7 +2,7 @@ Case Study: AVL Trees {#case-study-avltree}
 ================================
 
 
-<div class="hidden">
+\begin{comment}
 \begin{code}
 {- Example of AVL trees by michaelbeaumont -}
 
@@ -41,11 +41,14 @@ insR :: a -> AVL a -> AVL a
 member :: (Ord a) => a -> AVL a -> Bool
 -- FIXME bigHt l r t  = if (realHeight l >= realHeight r) then (eqOrUp l t) else (eqOrUp r t)
 \end{code}
+
+\end{comment}
+
+<div class="footnotetext">
+This chapter is based on code by Michael Beaumont.
 </div>
 
-*This chapter is based on code by Michael Beaumont.*
-
-One of the most fundamental abstractions in computing, is that of a
+One of the most fundamental abstractions in computing is that of a
 *collection* of values -- names, numbers, records -- into which we can
 rapidly `insert`, `delete` and check for `member`ship.
 
@@ -86,7 +89,7 @@ two crucial invariants: it should be binary search ordered and
 balanced.
 
 
-\begin{marginfigure}[h]
+\begin{marginfigure}
 \includegraphics[height=1.5in]{img/avl.png}
 \caption{An AVL tree is an ordered, height-balanced tree.}
 \label{fig:avl}
@@ -94,7 +97,7 @@ balanced.
 
 \newthought{A Binary Search Ordered} tree is one where at *each*
 `Node`, the values of the `left` and `right` subtrees are strictly
-less and greater than the values at the `Node`. For example, in the
+less and greater than the values at the `Node`. In the
 tree in Figure~\ref{fig:avl} the root has value `50` while its left
 and right subtrees have values in the range `9-23` and `54-76`
 respectively.  This holds at all nodes, not just the root. For
@@ -102,11 +105,12 @@ example, the node `12` has left and right children strictly less and
 greater than `12`.
 
 \newthought{A Balanced} tree is one where at *each* node, the *heights*
-of the left and right subtrees differ by at most `1`. For example, in
+of the left and right subtrees differ by at most `1`. In
 Figure~\ref{fig:avl}, at the root, the heights of the left and right subtrees
 are the same, but at the node `72` the left subtree has height `2` which is
 one more then the right subtree.
 
+\newthought{The Invariants Lead To Fast Operations.}
 Order ensures that there is at most a single path of `left` and
 `right` moves from the root at which an element can be found; balance
 ensures that each such path in the tree is of size $O(\log\ n)$ where
@@ -122,7 +126,7 @@ anything, lets tell LiquidHaskell what we mean by these terms, by
 defining legal or valid AVL trees.
 
 \newthought{To Specify Order} we just define two aliases `AVLL` and `AVLR`
--- read *AVL-left* and *AVL-right* for trees whose values are strictly less
+-- read *AVL-left* and *AVL-right* -- for trees whose values are strictly less
 than and greater than some value `X`:
 
 \begin{code}
@@ -142,6 +146,13 @@ implementation from just filling that field with `0` everywhere.  In
 short, we need the ground truth: a measure that computes the *actual*
 height of a tree.
 
+<div class="toolinfo">
+<div class="footnotetext">
+The `inline` pragma indicates that the Haskell functions can be directly
+lifted into and used inside the refinement logic and measures.
+</div>
+</div>
+
 \begin{code}
 {-@ measure realHeight @-}
 realHeight                :: AVL a -> Int
@@ -159,15 +170,8 @@ max :: Int -> Int -> Int
 max x y = if x > y then x else y
 \end{code}
 
-<div class="toolinfo">
-The `inline` pragmas indicate that the Haskell
-functions can be directly lifted into and used inside the
-refinement logic and measures.
-</div>
-
-\noindent
-We can now say that a value `v` is indeed the *real* height of a
-node with subtrees `l` and `r` if the predicate `isReal v l r` holds:
+\newthought{A Reality Check} predicate ensures that a value
+`v` is indeed the *real* height of a node with subtrees `l` and `r`:
 
 \begin{code}
 {-@ inline isReal @-}
@@ -180,11 +184,9 @@ requirement as a predicate `isBal l r n`
 
 \begin{code}
 {-@ inline isBal @-}
-isBal l r n = 0 - n  <= d && d <= n
+isBal l r n = 0 - n <= d && d <= n
   where
-    d       = hl - hr 
-    hl      = realHeight l
-    hr      = realHeight r
+    d       = realHeight l - realHeight r 
 \end{code}
 
 \newthought{A Legal AVL Tree} can now be defined via the following
@@ -192,14 +194,12 @@ isBal l r n = 0 - n  <= d && d <= n
 is $1$-balanced, and that the saved height field is indeed the *real* height:
 
 \begin{code}
-{-@ data AVL a =
-        Leaf
-      | Node { key :: a
-             , l   :: AVLL a key
-             , r   :: {v:AVLR a key | isBal l v 1} 
-             , ah  :: {v:Nat        | isReal v l r}
-             }
-  @-}
+{-@ data AVL a = Leaf
+               | Node { key :: a
+                      , l   :: AVLL a key
+                      , r   :: {v:AVLR a key | isBal l v 1} 
+                      , ah  :: {v:Nat        | isReal v l r}
+                      }                                  @-}
 \end{code}
 
 Smart Constructors
@@ -229,6 +229,7 @@ empty = Leaf
 Consider the function `singleton` that builds an `AVL`
 tree from a single element. Fix the code below so that
 it is accepted by LiquidHaskell.
+</div>
 
 \begin{code}
 {-@ singleton :: a -> AVLN a 1 @-}
@@ -241,8 +242,8 @@ situations, which arose also with [lazy queues](#lazyqueue), the right
 move is to eschew the data constructor and instead use a *smart
 constructor* that will fill in the appropriate values correctly.
 
-<div class="footnotetext">By the way, you might wonder: why do we
-bother to save the height anyway? Why not just recompute it instead? 
+<div class="footnotetext"> Why do we bother to save the height anyway? 
+Why not just recompute it instead? 
 </div>
 
 \newthought{The Smart Constructor} `node` takes as input the node's value `x`,
@@ -250,7 +251,7 @@ left and right subtrees `l` and `r` and returns a tree by filling in the right
 value for the height field. 
 
 \begin{code}
-{-@ mkNode :: a -> l:AVL a -> r:AVL a -> AVLN a {nodeHeight l r} @-}
+{-@ mkNode :: a -> l:_ -> r:_ -> AVLN a {nodeHeight l r} @-}
 mkNode v l r = Node v l r h
  where
    h       = 1 + max hl hr
@@ -275,8 +276,7 @@ an `AVL` tree. The basic strategy is this:
 
 1. *Find* the appropriate location in the tree to add the value, 
    using binary search ordering
-2. *Replace* the `Leaf` at that location with the singleton 
-   containing the value.
+2. *Replace* the `Leaf` at that location with the singleton value. 
 
 \noindent If you prefer the spare precision of Haskell to the 
 informality of English, here is a first stab at implementing 
@@ -294,25 +294,44 @@ insL0 y (Node x l r _) = node x (insert0 y l) r
 insR0 y (Node x l r _) = node x l (insert0 y r)
 \end{code}
 
+<div class="footnotetext">
+`node` is a fixed variant of the smart constructor `mkNode`.
+Do the exercise above without looking at it.
+</div>
+
 \newthought{Unfortunately} `insert0` does not work. 
-Here `node` is a fixed variant of the smart constructor `mkNode`;
 If you did the exercise above, you can replace it with `mkNode` and 
 you will see that the above function is rejected by LiquidHaskell.
 The error message would essentially say that at the calls to the
 smart constructor, the arguments violate the balance requirement.
 
-\newthought{Insertion Can Increase The Height} of a sub-tree, making
-it *too large* relative to its sibling. For example, consider:
+\newthought{Insertion Increases The Height} of a sub-tree, making
+it *too large* relative to its sibling. For example, consider the
+tree `t0` defined as:
+
+\begin{marginfigure}
+\includegraphics[height=1.5in]{img/avl-insert0.png}
+\caption{Naive insertion breaks balancedness}
+\label{fig:avl-insert0}
+\end{marginfigure}
 
 \begin{ghci}
 ghci> let t0 = Node { key = 'a'
                     , l   = Leaf
                     , r   = Node {key = 'd'
-                                 , l = Leaf
-                                 , r = Leaf
+                                 , l  = Leaf
+                                 , r  = Leaf
                                  , ah = 1 }
                     , ah = 2}
 
+
+          
+\end{ghci}
+
+If we use `insert0` to add the key `'e'` (which goes after `'d'`) then we end up
+with the result:
+
+\begin{ghci}
 ghci> insert0 'e' t0 
   Node { key = 'a'
        , l   = Leaf
@@ -326,6 +345,9 @@ ghci> insert0 'e' t0
        , ah = 3}
 \end{ghci}
 
+
+
+ 
 \noindent In the above, illustrated in Figure~\ref{fig:avl-insert0} 
 the value `'e'` is inserted into the valid tree `t0`; it is inserted
 using `insR0`, into the *right* subtree of `t0` which already has 
@@ -425,7 +447,7 @@ noHeavy    t = balFac t == 0
 Adelson-Velsky and Landis observed that once you've drilled 
 down  into these three cases, the *shuffling* suggests itself.
 
-\begin{marginfigure}[h]
+\begin{marginfigure}
 \includegraphics[height=1.5in]{img/avl-balL0.png}
 \caption{Rotating when in the LeftBig, NoHeavy case.}
 \label{fig:avl-balL0}
@@ -448,7 +470,7 @@ the exact height of the result, relative to the input subtrees.
 balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)
 \end{code}
 
-\begin{marginfigure}[h]
+\begin{marginfigure}
 \includegraphics[height=1.5in]{img/avl-balLL.png}
 \caption{Rotating when in the LeftBig, LeftHeavy case.}
 \label{fig:avl-balL0}
@@ -471,7 +493,7 @@ balLL v (Node lv ll lr _) r
 \end{code}
 
 
-\begin{marginfigure}[h]
+\begin{marginfigure}
 \includegraphics[height=1.5in]{img/avl-balLR.png}
 \caption{Rotating when in the LeftBig, RightHeavy case.}
 \label{fig:avl-balL0}
