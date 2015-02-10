@@ -107,7 +107,10 @@
 
 + AVL trees
 
+   - TODO (remove let-expansion: `let z = e in z` after) https://github.com/ucsd-progsys/liquidhaskell/issues/182
    - img: avl TREE 
+   - \includegraphics[height=1.5in]{img/avl.png}
+   - \includegraphics[height=1.5in]{img/avl-balL{0,L,R}.png}
 
 + fix printing of predicates (we drop required parens)
 
