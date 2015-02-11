@@ -251,7 +251,9 @@ left and right subtrees `l` and `r` and returns a tree by filling in the right
 value for the height field. 
 
 \begin{code}
-{-@ mkNode :: a -> l:_ -> r:_ -> AVLN a {nodeHeight l r} @-}
+{-@ mkNode :: a -> l:AVL a -> r:AVL a
+           -> AVLN a {nodeHeight l r}
+  @-}
 mkNode v l r = Node v l r h
  where
    h       = 1 + max hl hr
@@ -372,19 +374,15 @@ Rebalancing Trees
 The brilliant insight of Adelson-Velsky and Landis was that we can, 
 in fact, perform such a rebalancing with a clever bit of gardening. 
 Suppose we have inserted a value into the *left* subtree `l` to 
-obtain a new tree `l'` (the right case is symmetric.) There are just 
-three cases for the relative heights of `l'` and `r`:
+obtain a new tree `l'` (the right case is symmetric.) 
+
+\newthought{The relative heights} of `l'` and `r` fall under one of three cases:
 
 + *(RightBig)* `r`  is two more than `l'`, 
++ *(LeftBig)*  `l'` is two more than `r`, and otherwise
 + *(NoBig)*    `l'` and `r` are within a factor of `1`,
-+ *(LeftBig)*  `l'` is two more than `r`.
 
 \newthought{We can specify} these cases as follows.
-
-<div class="footnotetext">
-We're using the *real* height here and hence shouldn't use these 
-predicates in our *implementation*.
-</div>
 
 \begin{code}
 {-@ inline leftBig @-}
@@ -395,24 +393,27 @@ rightBig l r = diff r l == 2
 
 {-@ inline diff @-}
 diff s t = getHeight s - getHeight t
+\end{code}
 
+\noindent the function `getHeight` accesses the saved height field.
+
+\begin{code}
 {-@ measure getHeight @-}
 {-@ getHeight            :: t:_ -> {v:Nat | v = realHeight t} @-}
 getHeight Leaf           = 0
 getHeight (Node _ _ _ n) = n
 \end{code}
 
-The first case (*RightBig*) cannot arise as `l'` is at least as
+In `insL`, the *RightBig* case cannot arise as `l'` is at least as
 big as `l`, which was within a factor of `1` of `r` in the valid
-input tree `t`.  In the second case (*NoBig*), we can safely link 
-`l'` and `r` with the smart constructor as they satisfy the balance
-requirements.  The third case (*LeftBig*) is the tricky one: we
-need a way to shuffle elements from the left subtree over to the
-right side.
+input tree `t`.  In *NoBig*, we can safely link  `l'` and `r` with
+the smart constructor as they satisfy the balance requirements.
+The *LeftBig* case is the tricky one: we need a way to shuffle
+elements from the left subtree over to the right side.
 
-\newthought{What is a LeftBig tree?} Lets split into the possible cases for `l'`, 
-immediately ruling out the *empty* tree because its height is `0` and cannot be 
-two larger than any other tree.
+\newthought{What is a LeftBig tree?} Lets split into the possible
+cases for `l'`, immediately ruling out the *empty* tree because 
+its height is `0` which cannot be `2` larger than any other tree.
 
 + *(NoHeavy)* the left and right subtrees of `l'` have the same height,
 + *(LeftHeavy)* the left subtree of `l'` is bigger than the right,
@@ -425,7 +426,6 @@ equal to the `realHeight` of the given tree.
 
 \begin{code}
 {-@ measure balFac @-}
-{-@ balFac :: t:AVL a -> {v:Int | v = balFac t && 0 <= v + 1 && v <= 1} @-}
 balFac Leaf           = 0
 balFac (Node _ l r _) = getHeight l - getHeight r 
 \end{code}
@@ -444,7 +444,7 @@ noHeavy    t = balFac t == 0
 \end{code}
 
 Adelson-Velsky and Landis observed that once you've drilled 
-down  into these three cases, the *shuffling* suggests itself.
+down  into these three cases, the shuffling suggests itself.
 
 \begin{figure}[h]
 \includegraphics[height=3.0in]{img/avl-balL0.png}
@@ -452,7 +452,7 @@ down  into these three cases, the *shuffling* suggests itself.
 \label{fig:avl-balL0}
 \end{figure}
 
-\newthought{In the NoHeavy} case, illustrated in Figure~\ref{fig:avl-balL0},
+\newthought{In the NoHeavy} case, illustrated in Figure \ref{fig:avl-balL0},
 the subtrees  `ll` and `lr` have the same height which is one more than that 
 of `r`. Hence, we can link up `lr` and `r` and link the result with `l`.
 Here's how you would implement the rotation. Note how the preconditions
@@ -472,14 +472,14 @@ balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)
 \begin{figure}[h]
 \includegraphics[height=1.5in]{img/avl-balLL.png}
 \caption{Rotating when in the LeftBig, LeftHeavy case.}
-\label{fig:avl-balL0}
+\label{fig:avl-balLL}
 \end{figure}
 
-\newthought{In the LeftHeavy} case, illustrated in Figure~\ref{fig:avl-balLL},
-the subtree  `ll` is larger than  `lr`; hence `lr` has the same height as `r`,
-and again we can link up `lr` and `r` and link the result with `l`. Again, as
-with the *NoHeavy* case, the input types capture the exact case, and the output
-the height of the resulting tree.
+\newthought{In the LeftHeavy} case, illustrated in Figure \ref{fig:avl-balLL}, 
+the subtree `ll` is larger than `lr`; hence `lr` has the same height as `r`, 
+and again we can link up `lr` and `r` and link the result with `l`.
+As in the *NoHeavy* case, the input types capture the exact case, 
+and the output the height of the resulting tree.
  
  \begin{code}
 {-@ balLL :: x:a
@@ -487,22 +487,21 @@ the height of the resulting tree.
           -> r:{AVLR a x | leftBig l r}
           -> AVLT a l
   @-}
-balLL v (Node lv ll lr _) r
-  = node lv ll (node v lr r)
+balLL v (Node lv ll lr _) r = node lv ll (node v lr r)
 \end{code}
 
 
 \begin{figure}[h]
 \includegraphics[height=1.5in]{img/avl-balLR.png}
 \caption{Rotating when in the LeftBig, RightHeavy case.}
-\label{fig:avl-balL0}
+\label{fig:avl-balLR}
 \end{figure}
 
-\newthought{In the RightHeavy} case, illustrated in Figure~\ref{fig:avl-balLR},
-the subtree  `lr` is larger than  `ll`. We cannot directly link it with `r` as the result
-would again be too large. Hence, we split it further into its own subtrees `lrl` and `lrr`
-and link the latter with `r`.
-Again, before the types capture the requirements and guarantees of the rotation.
+\newthought{In the RightHeavy} case, illustrated in Figure \ref{fig:avl-balLR},
+the subtree  `lr` is larger than  `ll`. We cannot directly link it with `r` as
+the result would again be too large. Hence, we split it further into its own
+subtrees `lrl` and `lrr` and link the latter with `r`. Again, the types capture
+the requirements and guarantees of the rotation.
 
 \begin{code}
 {-@ balLR :: x:a
