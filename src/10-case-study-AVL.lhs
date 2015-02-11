@@ -274,13 +274,12 @@ Inserting Elements
 Next, lets turn our attention to the problem of *adding* elements to 
 an `AVL` tree. The basic strategy is this:
 
-1. *Find* the appropriate location in the tree to add the value, 
-   using binary search ordering
+1. *Find* the appropriate location (per ordering) to add the value, 
 2. *Replace* the `Leaf` at that location with the singleton value. 
 
-\noindent If you prefer the spare precision of Haskell to the 
+\noindent If you prefer the spare precision of code to the 
 informality of English, here is a first stab at implementing 
-the insert function:
+insertion:
 
 \begin{code}
 {-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
@@ -309,12 +308,6 @@ smart constructor, the arguments violate the balance requirement.
 it *too large* relative to its sibling. For example, consider the
 tree `t0` defined as:
 
-\begin{marginfigure}
-\includegraphics[height=1.5in]{img/avl-insert0.png}
-\caption{Naive insertion breaks balancedness}
-\label{fig:avl-insert0}
-\end{marginfigure}
-
 \begin{ghci}
 ghci> let t0 = Node { key = 'a'
                     , l   = Leaf
@@ -323,13 +316,12 @@ ghci> let t0 = Node { key = 'a'
                                  , r  = Leaf
                                  , ah = 1 }
                     , ah = 2}
-
-
-          
 \end{ghci}
 
 If we use `insert0` to add the key `'e'` (which goes after `'d'`) then we end up
 with the result:
+
+\vfill
 
 \begin{ghci}
 ghci> insert0 'e' t0 
@@ -346,6 +338,12 @@ ghci> insert0 'e' t0
 \end{ghci}
 
 
+\begin{marginfigure}
+\includegraphics[height=1.5in]{img/avl-insert0.png}
+\caption{Naive insertion breaks balancedness}
+\label{fig:avl-insert0}
+\end{marginfigure}
+ 
 
  
 \noindent In the above, illustrated in Figure~\ref{fig:avl-insert0} 
@@ -361,24 +359,25 @@ As insert can return a tree with arbitrary height, possibly
 much larger than `l` and hence, LiquidHaskell rejects the call to
 the constructor `node` as the balance requirement does not hold.
 
-The above illustrates two key lessons.
+\newthought{Two lessons} can be drawn from the above exercise. First,
+`insert` may *increase* the height of a tree by at most `1`. So,
+second, we need a way to *rebalance* sibling trees where one has
+height `2` more than the other.
 
-1. `insert` may *increase* the height of a tree, but
-2. `insert` can't increase the height by more than `1`, hence
-3. we need a way to *rebalance* siblings where one has height `2` more than the other.
-  
+HEREHEREHERE
+
 Rebalancing Trees
 -----------------
 
-The brilliant insight of Adelson-Velsky and Landis was that we can, in fact, perform
-such a rebalancing with a clever bit of gardening. Suppose we have inserted a value
-into the *left* subtree `l` to obtain a new tree `l'` (the right case is symmetric.)
-There are really 3 cases for the relative heights of `l'` and `r` that we must account 
-for:
+The brilliant insight of Adelson-Velsky and Landis was that we can, 
+in fact, perform such a rebalancing with a clever bit of gardening. 
+Suppose we have inserted a value into the *left* subtree `l` to 
+obtain a new tree `l'` (the right case is symmetric.) There are just 
+three cases for the relative heights of `l'` and `r`:
 
-+ *(RightBig)* `r`  is two more than `l'`
++ *(RightBig)* `r`  is two more than `l'`, 
 + *(NoBig)*    `l'` and `r` are within a factor of `1`,
-+ *(LeftBig)*  `l'` is two more than `r`
++ *(LeftBig)*  `l'` is two more than `r`.
 
 \newthought{We can specify} these cases as follows.
 
