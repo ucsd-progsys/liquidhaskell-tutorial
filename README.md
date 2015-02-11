@@ -1,7 +1,9 @@
 # LiquidHaskell Tutorial
 
 
-## Part I: Refinement Types
+## Contents
+
+### Part I: Refinement Types
 
 0. Install
 
@@ -11,7 +13,7 @@
 
 3. Refining Datatypes
 
-## Part II: Measures
+### Part II: Measures
 
 4. Propositions
 
@@ -19,17 +21,19 @@
 
 6. Sets
 
-## Part III : Case Studies
+### Part III : Case Studies
 
-7. Case Study: Associative Maps
+7. Case Study: Lazy Queue
 
-8. Case Study: Pointers without Overflows
+8. Case Study: Associative Maps
 
-9. Case Study: Balanced Heaps
-   + Weighted Biased Heaps
-   + EX: AVL TREE (insert/delete/member)
- 
-## Part IV : Abstract Refinements 
+9. Case Study: Pointers without Overflows
+
+10. Case Study: AVL Trees
+
+## TODO
+
+### Part IV : Abstract Refinements (TODO) 
 
 10. Abstract Refinements I (code)
   + Copy from FLOPS/IHP talk sequence
@@ -44,7 +48,7 @@
   + filter
   + state 
 
-## Part IV: Tips and Tricks
+### Part V: Tips and Tricks (TODO)
 
 13. Tips:
      + Inductive strengthening 
@@ -57,61 +61,36 @@
   + Copy from BLOG/PAPER sequence
   + HW Exercises
 
-## Perhaps Someday
+### Extra Case Studies
 
 + Case Study 1: AlphaConvert (tests/pos/alphaconvert-List.hs) 
 + Case Study 2: Kmeans
 
+
 ## TODO 
 
-+ LH fix
-- allow using CoreToLogic definitions (e.g. member) in
-  predicates/aliases not just other measures.
+- grep FIXME/TODO (!)
 
+- Subtyping exercises
+    - div by zero
+    - array-bounds
+    - create (bytestring)
+
+- LH fix
+  - allow using CoreToLogic definitions (e.g. member) in
+    predicates/aliases not just other measures #332
+  
 - convert measure refinements into invariants, e.g.
 
   measure size :: [Int] -> Nat
 
   should yield invariant {v:[a] | 0 <= size v}
 
-- see FIXME
-
-+ pass over each chapter
-    - proofread
-    - squish code into box
-    - fix footnotetext/links
-    - fix exercises 
-
-    + 00
-    + 01
-    + 02
-    + 03
-    + 04
-    + 05 
-    - 06 <<< HEREHEREHEREHERE
-    + 07 
-    + 08 
-    - 09
-
-
-+ Subtyping exercises
-    - div by zero
-    - array-bounds
-    - create (bytestring)
-
-+ Gotchas
+- Gotchas
     - hs sig vs. lh sig
     - module and import story
     - `inline`
 
++ Printing of predicates (we drop required parens)
 
-+ AVL trees
-
-   - TODO (remove let-expansion: `let z = e in z` after) https://github.com/ucsd-progsys/liquidhaskell/issues/182
-   - img: avl TREE 
-   - \includegraphics[height=1.5in]{img/avl.png}
-   - \includegraphics[height=1.5in]{img/avl-balL{0,L,R}.png}
-
-+ fix printing of predicates (we drop required parens)
-
-+ produce intelligible parse errors
+? Intelligible parse errors
