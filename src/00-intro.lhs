@@ -236,7 +236,7 @@ various points in the source.
 \newthought{Emacs and Vim} have LiquidHaskell plugins, which run `liquid`
 in the background as you edit any Haskell file, highlight errors, and
 display the inferred types, all of which we find to be extremely useful.
-Hence we *strongly recommend* these over the command line option.
+Hence we **strongly recommend** these over the command line option.
 
 + Emacs' `flycheck` plugin is described  [here][liquid-emacs]
 + Vim's `syntastic` checker is described [here][liquid-vim]
@@ -249,6 +249,15 @@ the code for it is available [here][liquid-tutorial].
 We *strongly* recommend you grab the code, and follow
 along, and especially that you do the exercises.
 
+\begin{shell}
+$ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
+$ cd liquidhaskell-tutorial/src
+\end{shell}
+
+\noindent Lets begin!
+
+
+
 [dml]:             http://www.cs.bu.edu/~hwxi/DML/DML.html
 [vecspec]:         https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/Data/Vector.spec
 [vec]:             http://hackage.haskell.org/package/vector
@@ -259,9 +268,9 @@ along, and especially that you do the exercises.
 [foldl]:           http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html
 [listtail]:        /blog/2013/01/31/safely-catching-a-list-by-its-tail.lhs/
 [dmlarray]:        http://www.cs.bu.edu/~hwxi/academic/papers/pldi98.pdf
-[liquid-tutorial]: http://github.com/ucsd-pl/liquidhaskell-tutorial.git 
-[liquid-emacs]:    https://github.com/ucsd-progsys/liquidhaskell#emacs
-[liquid-vim]:      https://github.com/ucsd-progsys/liquidhaskell#vim
+[liquid-tutorial]: http://github.com/ucsd-progsys/liquidhaskell-tutorial.git 
+[liquid-emacs]:    https://github.com/ucsd-progsys/liquid-types.el
+[liquid-vim]:      https://github.com/ucsd-progsys/liquid-types.vim
 [z3]:              http://z3.codeplex.com/
 [cvc4]:            http://cvc4.cs.nyu.edu/ 
 [mathsat]:         http://mathsat.fbk.eu/download.html

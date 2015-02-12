@@ -94,3 +94,7 @@
 + Printing of predicates (we drop required parens)
 
 ? Intelligible parse errors
+
++ [Emacs mode](https://github.com/ucsd-progsys/liquidhaskell/issues/322)
+
++ Web demo 
