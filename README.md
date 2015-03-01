@@ -2,7 +2,10 @@
 
 ## Website
 
-- Generate SINGLE file
++ Generate SINGLE file
+- footnotes
+- links
+- horiz scrollable code-pre pane
 - Generate and link from raw index.lhs
 - Go through each chapter, updating filters appropriately
 - Auto-generate table of contents

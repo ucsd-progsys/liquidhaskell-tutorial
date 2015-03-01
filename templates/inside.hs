@@ -17,17 +17,6 @@ main = toJSONFilter readFootnotes
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-
--- readFootnotes :: Inline -> Inline
--- readFootnotes (footnoteText -> Just args) = RawInline (Format "tex") res
---   where
---     parsed  = writeLaTeX def . readMarkdown def
---     res     = fnString ++ parsed args ++ "}"
-
--- readFootnotes (Span (id,["footnotetext"],_) is) = RawInline (Format "tex") tex 
---   where
---     tex   = fnString ++ writeLaTeX def para ++ "}" 
---     para  = Pandoc mempty [Para is]
     
 readFootnotes (Div (id, [cls], _) bs)
   | cls `elem` mydivs                 = RawBlock (Format "tex") $ toLaTeX cls id bs

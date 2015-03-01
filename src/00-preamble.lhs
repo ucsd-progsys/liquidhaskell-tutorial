@@ -6,5 +6,6 @@ date:           Sep 5th, 2014
 documentclass:  book
 toc:            true
 bibliography:   sw.bib
+notitle:        true
 ---
 

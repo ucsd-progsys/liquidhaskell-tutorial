@@ -1,4 +1,3 @@
-
 Introduction {#intro}
 ============
 
@@ -12,7 +11,6 @@ main = putStrLn "Intro"
 One of the great things about Haskell is its brainy type system that
 allows one to enforce a variety of invariants at compile time, thereby
 nipping in the bud a large swathe of run-time errors.
-
 
 Well-Typed Programs Do Go Wrong
 -------------------------------
@@ -29,10 +27,10 @@ average xs = sum xs `div` length xs
 
 We get the desired result on a non-empty list of numbers:
 
-\begin{verbatim}
+~~~~~{.ghci}
 ghci> average [10, 20, 30, 40]
 25
-\end{verbatim}
+~~~~~
 
 However, if we call it with an empty list, we get a rather unpleasant crash:
 <div class="footnotetext"> We might solve this problem by writing `average`
@@ -41,34 +39,34 @@ However, this merely kicks the can down the road. Ultimately, we will
 want to extract the `Int` from the `Maybe` and if the inputs were
 invalid to start with, then at that point we'd be stuck.</div>
 
-\begin{verbatim}
+~~~~~{.ghci}
 ghci> average []
 *** Exception: divide by zero
-\end{verbatim}
+~~~~~
 
 \newthought{Missing Keys}
 Associative key-value maps are the new lists; they come "built-in"
 with modern languages like Go, Python, JavaScript and Lua; and of
 course, they're widely used in Haskell too.
 
-\begin{verbatim}
+~~~~~{.ghci}
 ghci> :m +Data.Map 
 ghci> let m = fromList [ ("haskell", "lazy")
                        , ("ocaml"  , "eager")]
 
 ghci> m ! "haskell"
 "lazy"
-\end{verbatim}
+~~~~~
 
 Alas, maps are another source of vexing errors that are tickled
 when we try to find the value of an absent key: 
 
 <div class="footnotetext">Again, one could use a `Maybe` but its just deferring the inevitable.</div>
 
-\begin{verbatim} 
+~~~~~{.ghci}
 ghci> m ! "javascript"
 "*** Exception: key is not in the map
-\end{verbatim}
+~~~~~
 
 
 \newthought{Segmentation Faults}
@@ -77,20 +75,20 @@ language like Haskell. Well, here's the thing: every safe language is
 built on a foundation of machine code, or at the very least, `C`.
 Consider the ubiquitous `vector` library:
 
-\begin{shell}
+~~~~~{.ghci}
 ghci> :m +Data.Vector 
 ghci> let v = fromList ["haskell", "ocaml"]
 ghci> unsafeIndex v 0
 "haskell"
-\end{shell}
+~~~~~
 
 However, invalid inputs at the safe upper levels can percolate all
 the way down and stir a mutiny down below:
 
-\begin{verbatim}
+~~~~~{.ghci}
 ghci> unsafeIndex v 3
 'ghci' terminated by signal SIGSEGV ...
-\end{verbatim}
+~~~~~
 
 <div class="footnotetext">Why use a function marked `unsafe`?
 Because it's very fast! Furthermore, even if we used
@@ -105,22 +103,22 @@ Finally, for certain kinds of programs, there is a fate worse than death.
 `text` is a high-performance string processing library for Haskell, that
 is used, for example, to build web services.
 
-\begin{verbatim}
+~~~~~{.ghci}
 ghci> :m + Data.Text Data.Text.Unsafe 
 ghci> let t = pack "Voltage"
 ghci> takeWord16 5 t
 "Volta"
-\end{verbatim}
+~~~~~
 
 A cunning adversary can use invalid, or rather,
 *well-crafted*, inputs that go well outside the size of
 the given text` to read extra bytes and thus *extract secrets*
 without anyone being any the wiser.
 
-\begin{verbatim}
+~~~~~{.ghci}
 ghci> takeWord16 20 t
 "Voltage\1912\3148\SOH\NUL\15928\2486\SOH\NUL"
-\end{verbatim}
+~~~~~
 
 The above call returns the bytes residing in memory
 *immediately after* the string `Voltage`. These bytes
@@ -184,15 +182,15 @@ solver, e.g. one of
    
 \newthought{To Install} LiquidHaskell, just do:
 
-\begin{shell}
+~~~~~{.shell}
 $ cabal install liquidhaskell
-\end{shell}
+~~~~~
 
 \newthought{Command Line} execution simply requires you type:
 
-\begin{shell}
+~~~~~{.shell}
 $ liquid /path/to/file.hs
-\end{shell}
+~~~~~
 
 You will see a report of `SAFE` or `UNSAFE` together with type errors at
 various points in the source.
@@ -213,10 +211,10 @@ the code for it is available [here][liquid-tutorial].
 We *strongly* recommend you grab the code, and follow
 along, and especially that you do the exercises.
 
-\begin{shell}
+~~~~~{.shell}
 $ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/src
-\end{shell}
+~~~~~
 
 \noindent Lets begin!
 
