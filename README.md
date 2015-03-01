@@ -1,34 +1,43 @@
 # LiquidHaskell Tutorial
 
+## Website
+
+- Generate SINGLE file
+- Generate and link from raw index.lhs
+- Go through each chapter, updating filters appropriately
+- Auto-generate table of contents
+
+
+
 ## Contents
 
 ### Part I: Refinement Types
 
-0. Install
+1. Install
 
-1. Refinement Types
+2. Refinement Types
 
-2. Polymorphism & HOFs
+3. Polymorphism & Higher Order Functions
 
-3. Refining Datatypes
+4. Refining Data Types
 
 ### Part II: Measures
 
-4. Propositions
+5. Propositions
 
-5. Numbers
+6. Numbers
 
-6. Sets
+7. Sets
 
 ### Part III : Case Studies
 
-7. Case Study: Lazy Queue
+8. Case Study: Lazy Queue
 
-8. Case Study: Associative Maps
+9. Case Study: Associative Maps
 
-9. Case Study: Pointers without Overflows
+10. Case Study: Pointers without Overflows
 
-10. Case Study: AVL Trees
+11. Case Study: AVL Trees
 
 ## TODO
 

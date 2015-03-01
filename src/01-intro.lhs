@@ -1,12 +1,6 @@
----
-title:          "Programming with Refinement Types"
-subtitle:       "An Introduction to LiquidHaskell"
-author:         Ranjit Jhala, Eric Seidel, Niki Vazou
-date:           Sep 5th, 2014
-documentclass:  book
-toc:            true
-bibliography:   sw.bib
----
+
+Introduction {#intro}
+============
 
 
 \begin{comment}
@@ -15,12 +9,6 @@ module Introduction where
 main = putStrLn "Intro"
 \end{code}
 \end{comment}
-
-
-
-Introduction {#intro}
-============
-
 
 \begin{comment}
 \begin{mcode}
