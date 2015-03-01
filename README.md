@@ -85,8 +85,6 @@
 
   should yield invariant {v:[a] | 0 <= size v}
 
-+ Printing of predicates (we drop required parens)
-
 ? Intelligible parse errors
 
 + Web demo 
@@ -94,10 +92,7 @@
 Chapter 4
 ----------
 
-+ align source names and chapter names (00 --> 01)
 + too early to do BOTH spec and implementation (one at a time)
-+
-
 
 Gotchas
 ------- 
@@ -115,6 +110,7 @@ Gotchas
 LH tells me that v2 is unbound. I feel that it should not be given that I defined v2 in the second argument to the spec.
 
 * Ch4 refined datatypes p35
+
   All types should derive Show so that a reader following along can try functions in GHCI and get a result printed
 
 * Pattern matching gives you invariants but raw field access doesn't. See Chris's note on 4.6
