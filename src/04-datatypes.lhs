@@ -42,7 +42,7 @@ module RefinedDatatypes
 
 import Prelude      hiding (abs, length, min)
 import Data.List    (foldl')
-import Data.Vector  hiding (singleton, foldl', foldr, fromList) 
+import Data.Vector  hiding (singleton, foldl', foldr, fromList, (++)) 
 import Data.Maybe   (fromJust)
 
 dotProd, dotProd' :: Vector Int -> Sparse Int -> Int
@@ -359,17 +359,19 @@ has the desired property. Next, can you bottle that intuition into a
 suitable *specification* for `append` and then ensure that the code
 satisfies that specification.
 
+**FIXME** This is too big a jump for an exercise; explain it.
+
 \begin{code}
 quickSort           :: (Ord a) => [a] -> IncList a
 quickSort []        = Emp 
-quickSort (x:xs)    = append lessers greaters 
+quickSort (x:xs)    = append x lessers greaters 
   where 
     lessers         = quickSort [y | y <- xs, y < x ]
     greaters        = quickSort [z | z <- xs, z >= x]
 
-append              :: IncList a -> IncList a -> IncList a
-append Emp       ys = ys
-append (x :< xs) ys = x :< append xs ys 
+{-@ append            :: x:a -> IncList {v:a | v < x} -> IncList {v:a | x <= v} -> IncList a @-}
+append z Emp       ys = z :< ys
+append z (x :< xs) ys = x :< append z xs ys 
 \end{code}
 
 Ordered Trees {#binarysearchtree}
@@ -537,6 +539,8 @@ delMin (Node k l r)    = MP k' (Node k l' r)
 delMin Leaf            = die "Don't say I didn't warn ya!"
 \end{code}
 
+
+
 <div class="hwex" id="Delete"> Use `delMin` to complete the
 implementation of `del` which *deletes* a given element from
 a `BST`, if it is present.
@@ -545,8 +549,11 @@ a `BST`, if it is present.
 \begin{code}
 del                   :: (Ord a) => a -> BST a -> BST a
 del k' t@(Node k l r) = undefined
-del _  t              = t
+del _  Leaf           = Leaf 
 \end{code}
+
+**FIXME** See issue about using RAW FIELDS vs PATTERN MATCHING.
+
 
 <div class="hwex" id="Safely Deleting Minimum">
 The function `delMin` is only sensible for non-empty trees.
@@ -554,6 +561,8 @@ The function `delMin` is only sensible for non-empty trees.
 it is only called with such trees, and then apply that technique here
 to verify the call to `die` in `delMin`.
 </div>
+
+**FIXME**  I shouldn't have to read a future chapter to complete an exercise in this chapter.
 
 <div class="hwex" id="BST Sort">
 Complete the implementation of `toIncList` to obtain a `BST`
@@ -568,7 +577,8 @@ toBST     :: (Ord a) => [a] -> BST a
 toBST     = foldr add Leaf  
 
 toIncList :: BST a -> IncList a
-toIncList = undefined
+toIncList (Node x l r) = undefined
+toIncList Leaf         = undefined
 \end{code}
 
 \hint This exercise will be a lot easier *if* you first finish the
