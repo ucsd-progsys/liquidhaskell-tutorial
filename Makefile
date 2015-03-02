@@ -33,7 +33,7 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 all: site 
 
 site:
-	$(PANDOCHTML) src/00-preamble.lhs src/02-basic.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
+	$(PANDOCHTML) src/00-preamble.lhs src/03-poly.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs

@@ -8,7 +8,7 @@ Refinement Types
 {-@ LIQUID "--no-termination" @-}
 module Intro where
 
-import Prelude hiding                   (abs)
+import Prelude hiding (abs)
 divide     :: Int -> Int -> Int
 zero'''' :: Int
 die     :: String -> a

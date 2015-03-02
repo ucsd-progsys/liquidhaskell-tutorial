@@ -6,7 +6,9 @@
 + footnotes (but fix in each chapter)
 + links
 + horiz scrollable code-pre pane
++ commented out code blocks are not sent to server.
 - [HEREHERE] Go through each chapter, updating filters appropriately
+  - PER block cross-marks
 - Generate and link from raw index.lhs
 - Auto-generate table of contents
 - Auto-generate table of exercises
