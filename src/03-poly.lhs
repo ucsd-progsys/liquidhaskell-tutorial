@@ -33,18 +33,19 @@ sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
 Refinement types shine when we want to establish
 properties of *polymorphic* datatypes and higher-order
 functions. Rather than be abstract, let's illustrate this
-with a [classic][dmlarray] and concrete  use-case.
+with a [classic][dmlarray] use-case.
 
 \newthought{Array Bounds Verification} aims to ensure
 that the indices used to retrieve values from an array are indeed
 *valid* for the array, i.e. are between `0` and the
 *size* of the array. For example, suppose we create
-an `array` with two elements and then attempt to look
-it up at various indices:
+an `array` with two elements:
 
 \begin{spec}
 twoLangs  = fromList ["haskell", "javascript"]
 \end{spec} 
+
+Lets attempt to look it up at various indices:
 
 \begin{code}
 eeks      = [ok, yup, nono]
@@ -54,18 +55,18 @@ eeks      = [ok, yup, nono]
     nono  = twoLangs ! 3
 \end{code}
 
-If we try to *run* the above, we get a nasty shock: an exception
-that says we're trying to look up `twoLangs` at index `3` whereas
-the size of `twoLangs` is just `2`.
+If we try to *run* the above, we get a nasty shock: an
+exception that says we're trying to look up `twoLangs`
+at index `3` whereas the size of `twoLangs` is just `2`.
 
-\begin{shell}
+~~~~~{.sh}
 Prelude> :l 03-poly.lhs
 [1 of 1] Compiling VectorBounds     ( 03-poly.lhs, interpreted )
 Ok, modules loaded: VectorBounds.
 *VectorBounds> eeks
 Loading package ... done.
 "*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)
-\end{shell}
+~~~~~
 
 \newthought{In a suitable Editor} e.g. Vim or Emacs, you will
 you will literally see the error *without* running the code.
@@ -172,7 +173,7 @@ head vec = vec ! 0
 
 When we check the above, we get an error:
 
-\begin{liquiderror}
+~~~~~{.liquiderror}
      src/03-poly.lhs:127:23: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == ?a && VV == 0
@@ -184,7 +185,7 @@ When we check the above, we get an error:
          VV  : Int | VV == ?a && VV == 0 
          vec : Vector a | 0 <= vlen vec
          ?a  : Int | ?a == (0  :  int)
-\end{liquiderror}
+~~~~~
 
 \noindent LiquidHaskell is saying that `0` is *not* a valid index
 as it is not between `0` and `vlen vec`. Say what? Well, what if
@@ -280,12 +281,10 @@ absoluteSum     = undefined
 
 
 \newthought{Inference}
-LiquidHaskell verifies `vectorSum` -- or, to be precise, the safety of
-the vector accesses `vec ! i`.  The verification works out because
-LiquidHaskell is able to *automatically infer*
-<div class="footnotetext">
-In your editor, click on `go` to see the inferred type.
-</div>
+LiquidHaskell verifies `vectorSum` -- or, to be precise,
+the safety of the vector accesses `vec ! i`. The verification
+works out because LiquidHaskell is able to
+*automatically infer* ^[In your editor, click on `go` to see the inferred type.]
 
 \begin{spec}
 go :: Int -> {v:Int | 0 <= v && v <= sz} -> Int
