@@ -16,7 +16,9 @@ die     :: String -> a
 \end{comment}
 
 \newthought{What is a Refinement Type?} In a nutshell, 
-$$\mbox{Refinement Types} = \mbox{Types} + \mbox{Predicates}$$
+
+ > *Refinement Types* = *Types* + *Predicates*
+
 
 \noindent
 That is, refinement types allow us to decorate types with 
@@ -40,9 +42,9 @@ of each refinement type. Hence, `Zero` describes the *set of* `Int` values
 that are equal to `0`, that is, the singleton set containing just `0`, and
 `NonZero` describes the set of `Int` values that are *not* equal to `0`,
 that is, the set `{1, -1, 2, -2, ...}` and so on.
-<div class="footnotetext">We will use `@`-marked comments to write refinement type 
-annotations the Haskell source file, making these types, quite literally,
-machine-checked comments!</div>
+^[We will use `@`-marked comments to write refinement
+type annotations the Haskell source file, making these
+types, quite literally, machine-checked comments!]
 
 \newthought{To use} these types we can write:
 
@@ -69,28 +71,28 @@ one' = 1 :: Int
 \noindent
 LiquidHaskell will complain with an error message:
 
-\begin{verbatim}
+~~~~~{.sh}
     02-basic.lhs:58:8: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == (1  :  int)
       
        not a subtype of Required type
          VV : Int | VV == 0
-\end{verbatim}
+~~~~~
 
 \noindent
 The message says that the expression `1 :: Int` has the type
 
-\begin{verbatim}
+~~~~~{.sh}
     {v:Int | v == 1}
-\end{verbatim}
+~~~~~
 
 \noindent
 which is *not* (a subtype of) the *required* type
 
-\begin{verbatim}
+~~~~~{.sh}
     {v:Int | v == 0}
-\end{verbatim}
+~~~~~
 
 \noindent
 as `1` is not equal to `0`.
@@ -122,16 +124,17 @@ zero''     = zero
 \end{code}
 
 \noindent
-and also any other satisfactory refinement, such as:
+and also any other satisfactory refinement,
+such as ^[We use a different names `zero'`,
+`zero''` etc. as (currently) LiquidHaskell
+supports *at most* one refinement type
+for each top-level name.]
+
 
 \begin{code}
 {-@ zero''' :: Lt100  @-}
 zero'''     = zero 
 \end{code}
-
-\footnotetext{We use a different names `zero'`, `zero''` etc. as
-(currently) LiquidHaskell supports \emph{at most} one refinement type
-for each top-level name.}
 
 \newthought{Subtyping and Implication}
 `Zero` is the most precise type for `0::Int`, as it is *subtype* of `Nat`,
@@ -161,17 +164,15 @@ zero''''     = 0
 
 1. A refinement type is just a type *decorated* with logical predicates.
 2. A term can have *different* refinements for different properties.
-3. When we *erase* the predicates we get the standard Haskell types.
-
-<div class="footnotetext">Dually, a standard Haskell type, has the trivial refinement `true`. For example, `Int` is equivalent to `{v:Int|true}`.</div>
+3. When we *erase* the predicates we get the standard Haskell types.^[Dually, a standard Haskell type, has the trivial refinement `true`. For example, `Int` is equivalent to `{v:Int|true}`.]
 
 Writing Specifications
 ----------------------
 
 Let's write some more interesting specifications.
 
-\newthought{Typing Dead Code} We can wrap the usual `error` function in a function `die`
-with the type:
+\newthought{Typing Dead Code} We can wrap the usual `error`
+function in a function `die` with the type:
 
 \begin{code}
 {-@ die :: {v:String | false} -> a  @-}
@@ -240,9 +241,9 @@ which the call to `die'` occurs. LiquidHaskell arrives at this conclusion by
 using the fact that in the first equation for `divide` the
 *denominator* is in fact
 
-\begin{verbatim}
+~~~~~{.sh}
     0 :: {v: Int | v == 0}
-\end{verbatim}
+~~~~~
 
 \noindent
 which *contradicts* the pre-condition (i.e. input) type.
@@ -296,15 +297,14 @@ returns non-negative values
 {-@ abs :: Int -> Nat @-}
 \end{code}
 
-LiquidHaskell *verifies* that `abs` indeed enjoys the above type by
-deducing that `n` is trivially non-negative when `0 < n` and that in 
-the `otherwise` case, the value `0 - n` is indeed non-negative.
-
-<div class="footnotetext">
-LiquidHaskell is able to automatically make these arithmetic deductions
-by using an [SMT solver][smt-wiki] which has built-in decision
-procedures for arithmetic, to reason about the logical refinements.
-</div>
+LiquidHaskell *verifies* that `abs` indeed enjoys the
+above type by deducing that `n` is trivially non-negative
+when `0 < n` and that in the `otherwise` case,
+the value `0 - n` is indeed non-negative. ^[LiquidHaskell
+is able to automatically make these arithmetic deductions
+by using an [SMT solver][smt-wiki] which has built-in
+decision procedures for arithmetic, to reason about the
+logical refinements.]
 
 Testing Values: Booleans and Propositions
 -----------------------------------------

@@ -6,11 +6,11 @@
 + footnotes (but fix in each chapter)
 + links
 + horiz scrollable code-pre pane
-- Go through each chapter, updating filters appropriately
-- [HEREHERE] table of contents on left? (cf rust) 
+- [HEREHERE] Go through each chapter, updating filters appropriately
 - Generate and link from raw index.lhs
 - Auto-generate table of contents
-
+- Auto-generate table of exercises
+- Table of contents on left? (cf rust) 
 
 
 ## Contents

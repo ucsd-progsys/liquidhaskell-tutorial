@@ -12,6 +12,7 @@ PANDOCPDF=pandoc \
 PANDOCHTML=pandoc \
      --from=markdown+lhs \
 	   --to=html5 \
+     -s --mathjax \
 	   --standalone \
      --parse-raw \
 	   --mathjax \
