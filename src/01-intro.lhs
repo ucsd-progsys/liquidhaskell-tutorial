@@ -12,6 +12,7 @@ One of the great things about Haskell is its brainy type system that
 allows one to enforce a variety of invariants at compile time, thereby
 nipping in the bud a large swathe of run-time errors.
 
+
 Well-Typed Programs Do Go Wrong
 -------------------------------
 
@@ -33,11 +34,11 @@ ghci> average [10, 20, 30, 40]
 ~~~~~
 
 However, if we call it with an empty list, we get a rather unpleasant crash:
-<div class="footnotetext"> We might solve this problem by writing `average`
-more *defensively*, perhaps returning a `Maybe` or `Either` value.
-However, this merely kicks the can down the road. Ultimately, we will 
-want to extract the `Int` from the `Maybe` and if the inputs were
-invalid to start with, then at that point we'd be stuck.</div>
+^[We could write `average` more *defensively*, returning
+a `Maybe` or `Either` value. However, this merely kicks
+the can down the road. Ultimately, we will want to extract
+the `Int` from the `Maybe` and if the inputs were invalid
+to start with, then at that point we'd be stuck.]
 
 ~~~~~{.ghci}
 ghci> average []
@@ -59,9 +60,8 @@ ghci> m ! "haskell"
 ~~~~~
 
 Alas, maps are another source of vexing errors that are tickled
-when we try to find the value of an absent key: 
-
-<div class="footnotetext">Again, one could use a `Maybe` but its just deferring the inevitable.</div>
+when we try to find the value of an absent key: ^[Again, one could
+use a `Maybe` but its just deferring the inevitable.]
 
 ~~~~~{.ghci}
 ghci> m ! "javascript"
@@ -82,21 +82,23 @@ ghci> unsafeIndex v 0
 "haskell"
 ~~~~~
 
-However, invalid inputs at the safe upper levels can percolate all
-the way down and stir a mutiny down below:
+However, invalid inputs at the safe upper
+levels can percolate all the way down and
+stir a mutiny down below:
+^[Why use a function marked `unsafe`?
+Because it's very fast! Furthermore, even if we used
+the safe variant, we'd get a *run-time* exception
+which is only marginally better. Finally, we should remember
+to thank the developers for carefully marking it unsafe,
+because in general, given the many layers of abstraction,
+it is hard to know which functions are indeed safe.]
+
 
 ~~~~~{.ghci}
 ghci> unsafeIndex v 3
 'ghci' terminated by signal SIGSEGV ...
 ~~~~~
 
-<div class="footnotetext">Why use a function marked `unsafe`?
-Because it's very fast! Furthermore, even if we used
-the safe variant, we'd get a *run-time* exception
-which is only marginally better. Finally, we should remember
-to thank the developers for carefully marking it unsafe,
-because in general, given the many layers of abstraction,
-it is hard to know which functions are indeed safe.</div>
 
 \newthought{Heart Bleeds}
 Finally, for certain kinds of programs, there is a fate worse than death.
@@ -143,13 +145,13 @@ the above calamities *cannot occur at run-time*.
 
 \newthought{LiquidHaskell} is a Refinement Type Checker for Haskell, and in
 this tutorial we'll describe how you can use it to make programs
-better and programming even more fun.
+better and programming even more fun. ^[If you are familiar with
+the notion of Dependent Types, for example, as in the Coq proof
+assistant, then Refinement Types can be thought of as restricted
+class of the former where the logic is restricted, at the cost of
+expressiveness, but with the reward of a considerable amount of
+automation.]
 
-<div class="footnotetext">If you are familiar with the notion of Dependent Types,
-for example, as in the Coq proof assistant, then Refinement Types
-can be thought of as restricted class of the former where the logic
-is restricted, at the cost of expressiveness, but with the reward of
-a considerable amount of automation.</div>
 
 Audience
 --------
@@ -172,8 +174,8 @@ Getting Started
 
 First things first; lets see how to install and run LiquidHaskell.
 
-\newthought{LiquidHaskell Requires} in addition to the cabal
-dependencies the binary executable for an `SMTLIB2` compatible
+\newthought{LiquidHaskell Requires} (in addition to the cabal
+dependencies) binary for an `SMTLIB2` compatible
 solver, e.g. one of
 
 + [Z3][z3]
@@ -182,13 +184,13 @@ solver, e.g. one of
    
 \newthought{To Install} LiquidHaskell, just do:
 
-~~~~~{.shell}
+~~~~~{.sh}
 $ cabal install liquidhaskell
 ~~~~~
 
 \newthought{Command Line} execution simply requires you type:
 
-~~~~~{.shell}
+~~~~~{.sh}
 $ liquid /path/to/file.hs
 ~~~~~
 
@@ -211,7 +213,7 @@ the code for it is available [here][liquid-tutorial].
 We *strongly* recommend you grab the code, and follow
 along, and especially that you do the exercises.
 
-~~~~~{.shell}
+~~~~~{.sh}
 $ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/src
 ~~~~~
