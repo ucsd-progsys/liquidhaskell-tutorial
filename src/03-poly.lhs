@@ -68,12 +68,13 @@ Loading package ... done.
 "*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)
 ~~~~~
 
-\newthought{In a suitable Editor} e.g. Vim or Emacs, you will
-you will literally see the error *without* running the code.
-Next, let's see how LiquidHaskell checks `ok` and `yup` but
-flags `nono`, and along the way, learn how LiquidHaskell
-reasons about *recursion*, *higher-order functions*,
-*data types*, and *polymorphism*.
+\newthought{In a suitable Editor} e.g. Vim or Emacs,
+or if you push the "play" button in the online demo,
+you will you will literally see the error *without*
+running the code. Lets see how LiquidHaskell
+checks `ok` and `yup` but flags `nono`, and along
+the way, learn how it reasons about *recursion*,
+*higher-order functions*, *data types* and *polymorphism*.
 
 
 Specification: Vector Bounds {#vectorbounds}
@@ -98,13 +99,13 @@ inside `include/Data/Vector.spec` which contains:
 
 \begin{spec}
 -- | Define the size 
-measure vlen  :: Vector a -> Int 
+measure vlen :: Vector a -> Int 
 
 -- | Compute the size 
 assume length :: x:Vector a -> {v:Int | v = vlen x}
 
--- | Restrict the indices 
-assume !      :: x:Vector a -> {v:Nat | v < vlen x} -> a 
+-- | Lookup at an index 
+assume (!) :: x:Vector a -> {v:Nat | v < vlen x} -> a 
 \end{spec}
 
 </div>
@@ -126,8 +127,8 @@ size of the input vector `x`.
 signature for `length` names the input with the binder `x` that then
 appears in the output type to constrain the output `Int`. Similarly,
 the signature for `(!)` names the input vector `x` so that the index
-can be constrained to be valid for `x`.  Thus, dependency is essential
-for writing properties that connect different program values.
+can be constrained to be valid for `x`.  Thus, dependency lets us 
+write properties that connect *multiple* program values.
 
 \newthought{Aliases} are extremely useful for defining
 *abbreviations* for commonly occuring types. Just as we
@@ -147,14 +148,14 @@ For example, we can define `Vector`s of a given size `N` as:
 twoLangs     = fromList ["haskell", "javascript"]
 \end{code}
 
-Similarly, we can define an alias for `Int` values between `Lo` and `Hi`:
+Similarly, we can define an alias for `Int` values
+between `Lo` and `Hi`:
 
 \begin{code}
 {-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}
 \end{code}
 
-\noindent
-after which we can specify `(!)` as:
+\noindent after which we can specify `(!)` as:
 
 \begin{spec}
 (!) :: x:Vector a -> Btwn 0 (vlen x) -> a
@@ -209,8 +210,8 @@ head' vec = vec ! 0
 
 <div class="hwex" id="Vector Head">
 Replace the `undefined` with an *implementation* of `head''`
-which accepts *all* `Vector`s but returns a value only when the input `vec`
-is not empty. 
+which accepts *all* `Vector`s but returns a value only when
+the input `vec` is not empty. 
 </div>
 
 \begin{code}
@@ -364,7 +365,7 @@ absoluteSum' vec = loop 0 n 0 body
 \end{code}
 
 <div class="hwex" id="Dot Product">
-The following function uses `loop` to compute
+The following uses `loop` to compute
 `dotProduct`s. Why does LiquidHaskell flag an error?
 Fix the code or specification so that LiquidHaskell
 accepts it. </div>
@@ -396,7 +397,7 @@ as a list of index-value tuples:
 \noindent Implicitly, all indices *other* than those in the list
 have the value `0` (or the equivalent value for the type `a`).
 
-\newthought{Alias} `SparseN` is just a 
+\newthought{The Alias} `SparseN` is just a 
 shorthand for the (longer) type on the right, it does not
 *define* a new type. If you are familiar with the *index-style*
 length encoding e.g. as found in [DML][dml] or [Agda][agdavec],
