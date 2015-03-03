@@ -86,7 +86,7 @@ makeFigure tgt prefix t r id cls kvs
   = RawBlock (Format $ show tgt) . pad prefix t id cls kvs <$> getCount r id
      
 pad prefix tplt id cls kvs n
-  = trace ("PAD" ++ show res) $ res 
+  = {- trace ("PAD" ++ show res) $ -} res 
   where
     res = L.unpack $ substitute tplt ctx 
     ctx          :: T.Text -> T.Text 
@@ -125,7 +125,7 @@ getCount r id
        let i' = if i == n then i + 1 else i 
        let l  = Ref c n 
        writeIORef r (info {count = i', label = M.insert id n m})
-       return $ trace ("GETCOUNT: " ++ show l) l 
+       return l -- $ trace ("GETCOUNT: " ++ show l) l 
 
 newChapter r
   = do info <- readIORef r

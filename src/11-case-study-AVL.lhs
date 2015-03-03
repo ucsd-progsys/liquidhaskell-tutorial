@@ -348,7 +348,7 @@ ghci> insert0 'e' t0
 </div> 
 
  
-\noindent In the above, illustrated in Figure~[auto](#fig:avl-insert0) 
+\noindent In the above, illustrated in Figure [auto](#fig:avl-insert0) 
 the value `'e'` is inserted into the valid tree `t0`; it is inserted
 using `insR0`, into the *right* subtree of `t0` which already has 
 height `1` and causes its height to go up to `2` which is too large 
