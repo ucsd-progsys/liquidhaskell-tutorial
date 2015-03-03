@@ -35,7 +35,7 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 all: fullsite 
 
 site:
-	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs src/06-measure-int.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
+	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs src/06-measure-int.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
@@ -45,7 +45,7 @@ fullsite: $(htmlObjects)
 	mv src/*.html $(WEB)/dist/
 
 src/%.html: src/%.lhs
-	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs $? src/99-bib.lhs -o $@
+	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs $? templates/bib.lhs -o $@
 
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex

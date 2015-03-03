@@ -2,18 +2,16 @@
 
 ## Website
 
-+ Generate SINGLE file
-+ footnotes (but fix in each chapter)
-+ links
-+ horiz scrollable code-pre pane
-+ commented out code blocks are not sent to server.
-- [HEREHERE] Go through each chapter, updating filters appropriately
-- Generate and link from raw index.lhs
-- Auto-generate table of contents
-- Auto-generate table of exercises
-- Table of contents on left? (cf rust) 
-- Add --diff-check on local machine
-- GLOBAL error status? (single tick/cross at top-right)
+- Package
+  - Generate and link from raw index.lhs
+  - Auto-generate table of contents
+  - Auto-generate table of exercises
+  - Table of contents on left? (cf rust) 
+
+- Interact
+  - Make server link a METADATA variable
+  - Add --diff-check on local machine
+  - GLOBAL error status? (single tick/cross at top-right)
 
 ## Contents
 
