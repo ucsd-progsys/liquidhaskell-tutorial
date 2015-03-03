@@ -44,13 +44,14 @@ A [queue][queue-wiki] is a structure into which we can `insert` and `remove` dat
 such that the order in which the data is removed is the same as the order in which
 it was inserted.
 
-\begin{figure}[h]
-\includegraphics[height=2.0in]{img/queue.png}
-\caption{A Queue is a structure into which we can insert
-and remove elements. The order in which the elements are
-removed is the same as the order in which they were inserted.}
-\label{fig:queue}
-\end{figure}
+<div class="figure"
+  id="fig:queue"
+  caption="A Queue is a structure into which we can insert
+           and remove elements. The order in which the elements are
+           removed is the same as the order in which they were inserted."
+  height="200px"
+  file="img/queue.png">
+</div>
 
 \newthought{To efficiently implement} a queue we need to have rapid
 access to both the front as well as the back because we `remove`
@@ -67,13 +68,13 @@ and `back` which represent the corresponding parts of the Queue.
 + To `insert` elements, we just *cons* them onto the `back` list,
 + To `remove` elements, we just *un-cons* them from the `front` list.
 
-
-\begin{figure}[h]
-\includegraphics[height=2.0in]{img/queue-lists.png}
-\caption{We can implement a Queue with a pair of lists; respectively
-representing the front and back.}
-\label{fig:queue-pair}
-\end{figure}
+<div class="figure"
+     id="fig:queue-pair"
+     height="200px"
+     file="img/queue-lists.png"
+     caption="We can implement a Queue with a pair of lists;
+              respectively representing the front and back.">
+</div>
 
 \newthought{The catch} is that we need to shunt elements from the back
 to the front every so often, e.g. we can transfer the elements from
@@ -82,11 +83,12 @@ the `back` to the `front`, when:
 1. a `remove` call is triggered, and
 2. the `front` list is empty.
 
-\begin{figure}[h]
-\includegraphics[height=2.0in]{img/queue-rotate.png}
-\caption{Transferring Elements from back to front.}
-\label{fig:queue-transfer}
-\end{figure}
+<div class="figure"
+     id="fig:queue-transfer"
+     height="200px"
+     file="img/queue-rotate.png"
+     caption="Transferring Elements from back to front.">
+</div>
 
 \newthought{Okasaki's first insight} was to note that every element is only moved
 *once* from the front to the back; hence, the time for `insert` and

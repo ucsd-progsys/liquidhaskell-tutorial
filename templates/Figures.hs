@@ -48,22 +48,21 @@ output s       = error $ "Figures : unknown target: " ++ s
 txFig HTML  = txFigures HTML  "../../" "templates/figHtml.template"
 txFig LATEX = txFigures LATEX ""       "templates/figLatex.template"
 
+                     
 txFigures :: Output -> FilePath -> FilePath -> IO () 
 txFigures tgt prefix templateF 
-  = do r    <- newIORef M.empty 
+  = do r    <- newIORef emptyInfo 
        tplt <- TIO.readFile templateF 
        toJSONFilter (tx tgt (T.pack prefix) tplt r)
-
 
 tx tgt prefix t r b0
   = do b1 <- txBlock tgt prefix t r b0
        b2 <- txLink               r b1
        return b2
-
               
 txLink r = walkM (reLink r)
 
-reLink   :: IORef (M.Map String Int) -> Inline -> IO Inline
+reLink   :: IORef Info -> Inline -> IO Inline
 reLink r (Link [Str "auto"] tgt@('#':id,_))
   = do n <- getCount r id
        return $ Link [Str (show n)] tgt
@@ -71,7 +70,9 @@ reLink r (Link [Str "auto"] tgt@('#':id,_))
 reLink _ i
   = return i
 
-
+txBlock _   _      _ r z@(Header 1 _ _)
+  = newChapter r >> return z
+    
 txBlock tgt prefix t r (Div (id, [cls], kvs) _)
   | isFigure cls
   = makeFigure tgt prefix t r id cls kvs 
@@ -84,12 +85,6 @@ isFigure s    = s `elem` ["figure", "marginfigure"]
 makeFigure tgt prefix t r id cls kvs
   = RawBlock (Format $ show tgt) . pad prefix t id cls kvs <$> getCount r id
      
-getCount r id
-  = do m    <- readIORef r
-       let n = M.findWithDefault (1 + M.size m) id m
-       writeIORef r (M.insert id n m)
-       return n
-
 pad prefix tplt id cls kvs n
   = trace ("PAD" ++ show res) $ res 
   where
@@ -104,4 +99,35 @@ pad prefix tplt id cls kvs n
 get k kvs = T.pack
             $ fromMaybe (error $ "Cannot find: " ++ k )
             $ lookup k kvs
+
+----------------------------------------------
+
+data Info = Info { chapter :: Int
+                 , count   :: Int
+                 , label   :: M.Map String Int
+                 }
+            deriving (Show)
+
+data Ref  = Ref Int Int
+
+instance Show Ref where
+  show (Ref i j) = show i ++ "." ++ show j
+  
+emptyInfo
+  = Info 0 1 M.empty
+
+getCount r id
+  = do info <- readIORef r
+       let m  = label info
+       let c  = chapter info 
+       let i  = count info
+       let n  = M.findWithDefault i id m
+       let i' = if i == n then i + 1 else i 
+       let l  = Ref c n 
+       writeIORef r (info {count = i', label = M.insert id n m})
+       return $ trace ("GETCOUNT: " ++ show l) l 
+
+newChapter r
+  = do info <- readIORef r
+       writeIORef r (info {count = 1, chapter = 1 + chapter info})
 

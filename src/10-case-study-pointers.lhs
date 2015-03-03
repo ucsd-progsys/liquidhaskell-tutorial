@@ -80,7 +80,7 @@ ghci> chop' ex 10
 "Ranjit Lov"
 \end{spec}
 
-\noindent But, as illustrated in \cref{fig:overflow}, the
+\noindent But, as illustrated in Figure [auto](#fig:overflow), the
 machine silently reveals (or more colorfully, *bleeds*) the contents
 of adjacent memory or if we use an *invalid* prefix:
 
@@ -90,11 +90,12 @@ ghci> heartBleed ex 30
 \end{spec}
 
 
-\begin{figure}[h]
-\includegraphics[height=1.0in]{img/overflow.png}
-\caption{Can we prevent the program from leaking secrets?} 
-\label{fig:overflow}
-\end{figure}
+<div class="figure"
+  id="fig:overflow"
+  caption="Can we prevent the program from leaking secrets via overflows?"
+  height="100px"
+  file="img/overflow.png">
+</div>
 
 
 \newthought{Types against Overflows} Now that we have stared the problem
@@ -439,17 +440,18 @@ data ByteString = BS {
 + `bOff` is the *offset* in the block where the string begins,
 + `bLen` is the number of bytes from the offset that belong to the string.
 
-These entities are illustrated in \cref{fig:bytestring}; the
+These entities are illustrated in Figure [auto](#fig:bytestring); the
 green portion represents the actual contents of a particular
 `ByteString`.  This representation makes it possible to implement
 various operations like computing prefixes and suffixes extremely
 quickly, simply by pointer arithmetic.
 
-\begin{figure}[t]
-\includegraphics[height=1.0in]{img/bytestring.png}
-\caption{Representing ByteStrings in memory.}
-\label{fig:bytestring}
-\end{figure}
+<div class="figure"
+     id="fig:bytestring"
+     height="100px"
+     file="img/bytestring.png"
+     caption="Representing ByteStrings in memory.">
+</div>
 
 \newthought{In a Legal ByteString} the *start* (`bOff`) and *end*
 (`bOff + bLen`) offsets lie inside the buffer referred to by the
@@ -714,7 +716,7 @@ chop s n = s'
 \newthought{Overflows are prevented} by LiquidHaskell, as it
 rejects calls to `chop` where the prefix size is too large
 which is what led to the overflow that spilled the contents
-of memory after the string (\cref{fig:overflow}).
+of memory after the string (cf. Figure [auto](#fig:overflow)).
 In the code below, the first use of `chop` which
 defines `ex6` is accepted as `6 <= len ex` but the second
 call is rejected as `30 > len ex`.

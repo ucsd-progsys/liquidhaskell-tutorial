@@ -85,21 +85,21 @@ data AVL a =
 \end{code}
 
 While the Haskell type signature describes any old binary tree, an
-`AVL` tree like that shown in Figure~\ref{fig:avl} actually satisfies
+`AVL` tree like that shown in Figure [auto](#fig:avl) actually satisfies
 two crucial invariants: it should be binary search ordered and
 balanced.
 
-
-\begin{marginfigure}
-\includegraphics[height=1.5in]{img/avl.png}
-\caption{An AVL tree is an ordered, height-balanced tree.}
-\label{fig:avl}
-\end{marginfigure}
+<div class="marginfigure"
+     id="fig:avl"
+     height="150px"
+     file="img/avl.png"
+     caption="An AVL tree is an ordered, height-balanced tree.">
+</div>
 
 \newthought{A Binary Search Ordered} tree is one where at *each*
 `Node`, the values of the `left` and `right` subtrees are strictly
 less and greater than the values at the `Node`. In the
-tree in Figure~\ref{fig:avl} the root has value `50` while its left
+tree in Figure [auto](#fig:avl) the root has value `50` while its left
 and right subtrees have values in the range `9-23` and `54-76`
 respectively.  This holds at all nodes, not just the root. For
 example, the node `12` has left and right children strictly less and
@@ -107,7 +107,7 @@ greater than `12`.
 
 \newthought{A Balanced} tree is one where at *each* node, the *heights*
 of the left and right subtrees differ by at most `1`. In
-Figure~\ref{fig:avl}, at the root, the heights of the left and right subtrees
+Figure [auto](#fig:avl), at the root, the heights of the left and right subtrees
 are the same, but at the node `72` the left subtree has height `2` which is
 one more then the right subtree.
 
@@ -340,16 +340,15 @@ ghci> insert0 'e' t0
        , ah = 3}
 \end{ghci}
 
+<div class="marginfigure"
+     height="150px"
+     file="img/avl-insert0.png"
+     id="fig:avl-insert0"
+     caption="Naive insertion breaks balancedness">
+</div> 
 
-\begin{marginfigure}
-\includegraphics[height=1.5in]{img/avl-insert0.png}
-\caption{Naive insertion breaks balancedness}
-\label{fig:avl-insert0}
-\end{marginfigure}
  
-
- 
-\noindent In the above, illustrated in Figure~\ref{fig:avl-insert0} 
+\noindent In the above, illustrated in Figure~[auto](#fig:avl-insert0) 
 the value `'e'` is inserted into the valid tree `t0`; it is inserted
 using `insR0`, into the *right* subtree of `t0` which already has 
 height `1` and causes its height to go up to `2` which is too large 
@@ -446,13 +445,15 @@ noHeavy    t = balFac t == 0
 Adelson-Velsky and Landis observed that once you've drilled 
 down  into these three cases, the shuffling suggests itself.
 
-\begin{figure}[h]
-\includegraphics[height=3.0in]{img/avl-balL0.png}
-\caption{Rotating when in the LeftBig, NoHeavy case.}
-\label{fig:avl-balL0}
-\end{figure}
+<div class="figure"
+     id="fig:avl-balL0"
+     height="150px"
+     file="img/avl-balL0.png"
+     caption="Rotating when in the LeftBig, NoHeavy case.">
+</div>
 
-\newthought{In the NoHeavy} case, illustrated in Figure \ref{fig:avl-balL0},
+\newthought{In the NoHeavy} case, illustrated in
+Figure [auto](#fig:avl-balL0),
 the subtrees  `ll` and `lr` have the same height which is one more than that 
 of `r`. Hence, we can link up `lr` and `r` and link the result with `l`.
 Here's how you would implement the rotation. Note how the preconditions
@@ -469,17 +470,19 @@ the exact height of the result, relative to the input subtrees.
 balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)
 \end{code}
 
-\begin{figure}[h]
-\includegraphics[height=1.5in]{img/avl-balLL.png}
-\caption{Rotating when in the LeftBig, LeftHeavy case.}
-\label{fig:avl-balLL}
-\end{figure}
+<div class="figure"
+     height="150px"
+     file="img/avl-balLL.png"
+     caption="Rotating when in the LeftBig, LeftHeavy case."
+     id="fig:avl-balLL">
+</div>
 
-\newthought{In the LeftHeavy} case, illustrated in Figure \ref{fig:avl-balLL}, 
-the subtree `ll` is larger than `lr`; hence `lr` has the same height as `r`, 
-and again we can link up `lr` and `r` and link the result with `l`.
-As in the *NoHeavy* case, the input types capture the exact case, 
-and the output the height of the resulting tree.
+\newthought{In the LeftHeavy} case, illustrated in
+Figure [auto](#fig:avl-balLL), the subtree `ll` is larger than `lr`;
+hence `lr` has the same height as `r`, and again we can link up
+`lr` and `r` and link the result with `l`. As in the *NoHeavy* case,
+the input types capture the exact case, and the output the height of
+the resulting tree.
  
  \begin{code}
 {-@ balLL :: x:a
@@ -490,14 +493,14 @@ and the output the height of the resulting tree.
 balLL v (Node lv ll lr _) r = node lv ll (node v lr r)
 \end{code}
 
+<div class="figure"
+     height="150px"
+     file="img/avl-balLR.png"
+     caption="Rotating when in the LeftBig, RightHeavy case."
+     id="fig:avl-balLR">
+</div>
 
-\begin{figure}[h]
-\includegraphics[height=1.5in]{img/avl-balLR.png}
-\caption{Rotating when in the LeftBig, RightHeavy case.}
-\label{fig:avl-balLR}
-\end{figure}
-
-\newthought{In the RightHeavy} case, illustrated in Figure \ref{fig:avl-balLR},
+\newthought{In the RightHeavy} case, illustrated in Figure [auto](#fig:avl-balLR),
 the subtree  `lr` is larger than  `ll`. We cannot directly link it with `r` as
 the result would again be too large. Hence, we split it further into its own
 subtrees `lrl` and `lrr` and link the latter with `r`. Again, the types capture
