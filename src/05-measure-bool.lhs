@@ -129,7 +129,6 @@ the above requirements into the refinement logic by declaring:
 \end{code}
 
 
-
 \newthought{Non-Empty Lists} can now be described as
 the *subset* of plain old Haskell lists `[a]` for which
 the predicate `notEmpty` holds

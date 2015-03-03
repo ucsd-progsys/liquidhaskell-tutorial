@@ -33,7 +33,7 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
 A large part of the allure of Haskell is its elegant, high-level ADTs
 that ensure that programs won't be plagued by problems like the infamous
-[SSL heartbleed bug](heartbleed.com).\footnotetext{Assuming, of course, the absence of errors in the compiler and run-time...}
+[SSL heartbleed bug](heartbleed.com).^[Assuming, of course, the absence of errors in the compiler and run-time...]
 However, another part of Haskell's charm is that when you really really 
 need to, you can drop down to low-level pointer twiddling to squeeze the 
 most performance out of your machine. But of course, that opens the door 
@@ -160,11 +160,9 @@ i.e. reads or writes.
 
 \newthought{To Dereference} a pointer, i.e. to read or update
 the contents at the corresponding memory location, we use
-`peek` and `poke` respectively.
-<div class="footnotetext">
-We elide the `Storable` type class constraint to strip
-this presentation down to the absolute essentials.
-</div>
+`peek` and `poke` respectively. ^[We elide the `Storable`
+type class constraint to strip this presentation down to
+the absolute essentials.]
 
 \begin{spec}
 peek :: Ptr a -> IO a         -- Read  
@@ -216,9 +214,9 @@ A Refined Pointer API
 ---------------------
 
 Wouldn't it be great if we had an assistant to helpfully point out
-the error above as soon as we *wrote* it?
-\footnotetext{In Vim or Emacs, you'd see the error helpfully underlined.}
-We will use the following strategy to turn LiquidHaskell into such an assistant:
+the error above as soon as we *wrote* it? ^[In Vim or Emacs or online,
+you'd see the error helpfully highlighted.] We will use the following
+strategy to turn LiquidHaskell into such an assistant:
 
 1. *Refine* pointers with allocated buffer size,
 2. *Track* sizes in pointer operations,
@@ -249,8 +247,7 @@ a concrete implementation of the underlying value, but we know that
 the value *exists*.   Here, we don't have the value -- inside Haskell
 -- because the buffers are manipulated within C. However, this is no
 cause for alarm as we will simply use measures to refine the API, not
-to perform any computations.
-<div class="footnotetext"> This is another *ghost* specification. </div>
+to perform any computations. ^[This is another *ghost* specification.]
 
 
 \newthought{To Refine Allocation} we stipulate that
@@ -316,11 +313,9 @@ byte can be safely read from or written to the underlying buffer.
 
 \newthought{To Refine the Shift} operations, we simply check that the
 pointer *remains* within the bounds of the buffer, and update the `plen`
-to reflect the size remaining after the shift:
-<div class="footnotetext">
-This signature precludes *left* or *backward* shifts; for
-that there is an analogous `minusPtr` which we elide for simplicity.
-</div>
+to reflect the size remaining after the shift: ^[This signature precludes
+*left* or *backward* shifts; for that there is an analogous `minusPtr`
+which we elide for simplicity.]
 
 \begin{spec}
 plusPtr :: p:Ptr a -> off:BNat (plen p) -> PtrN b (plen p - off)      
@@ -332,13 +327,11 @@ plusPtr :: p:Ptr a -> off:BNat (plen p) -> PtrN b (plen p - off)
 type BNat N = {v:Nat | v <= N}
 \end{spec}
 
-<div class="footnotetext">
-Did you notice that we have strengthened the type of `plusPtr` to
+^[Did you notice that we have strengthened the type of `plusPtr` to
 prevent the pointer from wandering outside the boundary of the buffer?
 We could instead use a weaker requirement for `plusPtr` that omits
 this requirement, and instead have the error be flagged when the
-pointer was used to read or write memory.
-</div>
+pointer was used to read or write memory.]
 
 \newthought{Types Prevent Overflows} Lets revisit the zero-fill example
 from above to understand how the refinements help detect the error:
@@ -412,10 +405,9 @@ low-level function in a manner consistent with this specification.
 us to verify systems that use some modules for which we do not have
 the code. Here, we can *assume* a boundary specification, and then
 *guarantee* that the rest of the system is safe with respect to
-that specification.
-<div class="footnotetext">If we so desire, we can also *check* the boundary
+that specification. ^[If we so desire, we can also *check* the boundary
 specifications at [run-time](http://en.wikipedia.org/wiki/Design_by_contract),
-but that is outside the scope of LiquidHaskell.</div>
+but that is outside the scope of LiquidHaskell.]
 
 ByteString API
 --------------
@@ -579,13 +571,10 @@ the `do`-block above? Make sure you figure out the above
 before proceeding.
 
 \newthought{To Pack} a `String` into a `ByteString`
-we simply call `create` with the appropriate fill action:
-
-<div class="footnotetext">
-The code uses `create'` which is just `create`
-with the *correct* signature in case you want to skip the previous
-exercise. (But don't!)
-</div>
+we simply call `create` with the appropriate fill
+action:^[The code uses `create'` which is just `create`
+with the *correct* signature in case you want to skip
+the previous exercise. (But don't!)]
 
 \begin{code}
 pack str      = create' n $ \p -> go p xs
@@ -791,11 +780,7 @@ null (BS _ _ l) = l == 0
 \noindent This check is used to determine if it is safe
 to extract the head and tail of the `ByteString`.
 we can use refinements to ensure the safety of
-the operations and also track the sizes.
-
-<div class="footnotetext">
-`peekByteOff p i` is equivalent to `peek (plusPtr p i)`.
-</div>
+the operations and also track the sizes. ^[`peekByteOff p i` is equivalent to `peek (plusPtr p i)`.]
 
 \begin{code}
 {-@ unsafeHead :: ByteStringNE -> Word8 @-}

@@ -45,9 +45,6 @@ member :: (Ord a) => a -> AVL a -> Bool
 
 \end{comment}
 
-<div class="footnotetext">
-This chapter is based on code by Michael Beaumont.
-</div>
 
 One of the most fundamental abstractions in computing is that of a
 *collection* of values -- names, numbers, records -- into which we can
@@ -71,7 +68,7 @@ data structures class: the Georgy Adelson-Velsky and Landis' or [AVL Tree][avl-w
 AVL Trees 
 ---------
 
-An `AVL` tree is defined by the following Haskell datatype:
+An `AVL` tree is defined by the following Haskell datatype:^[This chapter is based on code by Michael Beaumont.]
 
 \begin{code}
 data AVL a =
@@ -145,14 +142,9 @@ for `Node`s.  Note that we cannot simply use the `ah` field because
 thats just some arbitrary `Int` -- there is nothing to prevent a buggy
 implementation from just filling that field with `0` everywhere.  In
 short, we need the ground truth: a measure that computes the *actual*
-height of a tree.
-
-<div class="toolinfo">
-<div class="footnotetext">
-The `inline` pragma indicates that the Haskell functions can be directly
-lifted into and used inside the refinement logic and measures.
-</div>
-</div>
+height of a tree. ^[**FIXME** The `inline` pragma indicates that the
+Haskell functions can be directly lifted into and used inside the
+refinement logic and measures.]
 
 \begin{code}
 {-@ measure realHeight @-}
@@ -241,11 +233,8 @@ As you can imagine, it can be quite tedious to keep the saved height
 field `ah` *in sync* with the *real* height. In general in such
 situations, which arose also with [lazy queues](#lazyqueue), the right
 move is to eschew the data constructor and instead use a *smart
-constructor* that will fill in the appropriate values correctly.
-
-<div class="footnotetext"> Why do we bother to save the height anyway? 
-Why not just recompute it instead? 
-</div>
+constructor* that will fill in the appropriate values correctly. ^[Why
+bother to save the height anyway? Why not just recompute it instead?]
 
 \newthought{The Smart Constructor} `node` takes as input the node's value `x`,
 left and right subtrees `l` and `r` and returns a tree by filling in the right
@@ -282,7 +271,9 @@ an `AVL` tree. The basic strategy is this:
 
 \noindent If you prefer the spare precision of code to the 
 informality of English, here is a first stab at implementing 
-insertion:
+insertion: ^[`node` is a fixed variant of the smart
+constructor `mkNode`. Do the exercise *without* looking at it.]
+
 
 \begin{code}
 {-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
@@ -296,10 +287,6 @@ insL0 y (Node x l r _) = node x (insert0 y l) r
 insR0 y (Node x l r _) = node x l (insert0 y r)
 \end{code}
 
-<div class="footnotetext">
-`node` is a fixed variant of the smart constructor `mkNode`.
-Do the exercise above without looking at it.
-</div>
 
 \newthought{Unfortunately} `insert0` does not work. 
 If you did the exercise above, you can replace it with `mkNode` and 
@@ -365,8 +352,6 @@ the constructor `node` as the balance requirement does not hold.
 `insert` may *increase* the height of a tree by at most `1`. So,
 second, we need a way to *rebalance* sibling trees where one has
 height `2` more than the other.
-
-HEREHEREHERE
 
 Rebalancing Trees
 -----------------
@@ -767,9 +752,7 @@ and verify that our AVL operations indeed implement sets correctly, by:
 
 1. *Defining* the set of elements in a tree,
 2. *Specifying* the desired semantics of operations via types,
-3. *Verifying* the implemetation.
-
-<div class="footnotetext">By adding [ghost operations](#lemmas), if needed.</div>
+3. *Verifying* the implemetation. ^[By adding [ghost operations](#lemmas), if needed.]
 
 We've done this [once before](#lemmas) already, so this is a good exercise
 to solidify your understanding of that material.

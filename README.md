@@ -2,73 +2,16 @@
 
 ## Website
 
-+ Generate SINGLE file
-+ footnotes (but fix in each chapter)
-+ links
-+ horiz scrollable code-pre pane
-+ commented out code blocks are not sent to server.
-- [HEREHERE] Go through each chapter, updating filters appropriately
-  - PER block cross-marks
-- Generate and link from raw index.lhs
-- Auto-generate table of contents
-- Auto-generate table of exercises
-- Table of contents on left? (cf rust) 
+- Package
+  - Generate and link from raw index.lhs
+  - Auto-generate table of contents
+  - Auto-generate table of exercises
+  - Table of contents on left? (cf rust) 
 
-
-## Images
-<div class="marginfigure"
-     id="fig:bst">
-     caption="A Binary Search Tree with values between 1 and 9. Each root's value lies between the values appearing in its left and right subtrees."
-     file="img/bst.png"
-     height="200"
-</div>
-
-<figure>
-  <img src="img_pulpit.jpg" alt="The Pulpit Rock" height="228">
-  <figcaption>Fig1. - A view of the pulpit rock in Norway.</figcaption>
-</figure>
-
-<figure>
-</figure>
-
-![This is a caption A VERY LONG CAPITION la lune](../../img/bst.png) 
-
-Convert
-
-    Figure [auto](#fig:bst)
-
-    <div class="marginfigure"
-         id="fig:bst"
-         caption="A Binary Search Tree with values"
-         height="200px"
-         file="img/bst.png">
-    </div>
-
-Into
-
-
-HTML
-
-Figure <a href="#fig:bst">NUMBER</a>
-
-<figure>
-  <img src="img/bst.png" height="200px">
-  <figcaption>A Binary Search Tree with values"</figcaption>
-  <a name="fig:bst"></a>
-</figure>
-
-LATEX
-
-Figure \autoref{fig:bst}
-
-\begin{marginfigure}
-\includegraphics[height=200px]{img/bst.png}
-\caption{A Binary Search Tree with values}
-\label{fig:bst}
-\end{marginfigure}
-
-
-
+- Interact
+  - Make server link a METADATA variable
+  - Add --diff-check on local machine
+  - GLOBAL error status? (single tick/cross at top-right)
 
 ## Contents
 

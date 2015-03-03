@@ -19,8 +19,8 @@ PANDOCHTML=pandoc \
 	   --mathjax \
 	   --section-divs \
 		 --filter $(WEB)/templates/codeblock.hs \
-	   --filter templates/html.hs \
 	   --filter templates/Figures.hs \
+	   --filter templates/html.hs \
      --variable=notitle \
      --highlight-style=tango\
      --template=$(WEB)/templates/page.template
@@ -34,18 +34,20 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 all: book 
 
-site:
-	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs src/tmp.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
-
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
 	PANDOC_TARGET=latex $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
-fullsite: $(htmlObjects)
-	mv dist/*.html $(WEB)/dist/
+web: $(htmlObjects)
+	mv src/*.html $(WEB)/dist/
 
 src/%.html: src/%.lhs
-	-$(PANDOCHTML) $? -o $@ 
+	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs $? templates/bib.lhs -o $@
+
+site:
+	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs src/06-measure-int.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
+
+
 
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex

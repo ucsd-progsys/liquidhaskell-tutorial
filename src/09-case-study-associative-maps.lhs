@@ -109,10 +109,9 @@ defined keys. Next, we use the above measure, and the usual
 `Set` operators to refine the types of the functions that
 *create*, *add* and *lookup* key-value bindings, in order
 to precisely track, within the type system, the `keys`
-that are dynamically defined within each `Map`.
-<div class="footnotetext"> Recall that `Empty`, `Union`, `In`
-and the other `Set` operators are described [here](#listelems).
-</div>
+that are dynamically defined within each `Map`. ^[Recall
+that `Empty`, `Union`, `In` and the other `Set` operators
+are described [here](#listelems).]
 
 \newthought{Empty} `Map`s have no keys in them. Hence, we type
 the empty `Map` as:
@@ -163,9 +162,9 @@ API to ensure that *lookups never fail*, and hence, that well-scoped
 programs always reduce to a value.
 
 \newthought{Expressions} Lets work with a simple language with
-integer constants, variables, binding and arithmetic operators:
-\footnotetext{Feel free to embellish the language with fancier
-features like functions, tuples etc.}
+integer constants, variables, binding and arithmetic operators:^[Feel
+free to embellish the language with fancier features like functions,
+tuples etc.]
 
 \begin{code}
 type Var  = String 
@@ -483,15 +482,12 @@ relate refinements of a container's *type parameters*
 parameter) with properties of the entire container
 (here: $\vHasKey\ \vkey\ \vt$).
 Fortunately, it is easy to *state*, *prove* and *use*
-facts like the above, via *lemmas* which are just functions.
-
-
-<div class="footnotetext"> Why does LiquidHaskell not automatically
-deduce this information? This is tricky to describe.
-Intuitively, because there is no way of automatically connecting
-the *traversal* corresponding to `keys` with the type variable `k`.
-I wish I had a better way to explain this rather subtle point;
-suggestions welcome!</div>
+facts like the above, via *lemmas* which are just functions. ^[Why
+does LiquidHaskell not automatically deduce this information? This
+is tricky to describe. Intuitively, because there is no way of
+automatically connecting the *traversal* corresponding to `keys`
+with the type variable `k`. I wish I had a better way to explain
+this rather subtle point; suggestions welcome!]
 
 \newthought{Defining Lemmas} To state a lemma, we need only
 convert it into a [type](curry-howard) by viewing universal
@@ -549,10 +545,8 @@ computations do not interfere with the regular computations. If we had
 to actually *execute* `lemma_notMem` it would wreck the efficient
 logarithmic lookup time, assuming we kept the trees
 [balanced](#avltrees), as we would traverse the *entire* tree instead
-of just the short path to a node.
-<div class="footnotetext">
-Which is what makes dynamic contract checking [inefficient](findler-contract) for such invariants.
-</div>
+of just the short path to a node. ^[Which is what makes dynamic contract
+checking [inefficient](findler-contract) for such invariants.]
 
 \newthought{Laziness} comes to our rescue: as the ghost value is (trivially)
 not needed, it is never computed. In fact, it is straightforward to entirely

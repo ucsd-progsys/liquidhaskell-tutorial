@@ -11,21 +11,21 @@ import Data.List
 import Data.Monoid (mempty)
 import Debug.Trace
 import Text.Printf (printf)
+import Text.Pandoc.Walk (walk)
 
 main :: IO ()
 main = toJSONFilter tx
 
-mydivs = ["hwex", "marginfigure"]
-
 tx :: Block -> Block
 tx (Para is)
   = Para $ concatMap txInline is
+tx (Plain is)
+  = Plain $ concatMap txInline is
 tx (Div (id, [cls], kvs) bs)
-  -- | cls `elem` mydivs
   = toHTML cls id kvs bs
 tx z
-  = trace ("BLOCK:" ++ show z) z
-                   
+  = z -- trace ("BLOCK:" ++ show z) z
+    
 txInline (RawInline (Format "tex") z)
   | isNoindent z
   = []
@@ -51,7 +51,9 @@ toHTML "hwex" id kvs (b : bs)
       hdr = Strong [Str $ "Exercise: (" ++ id ++ "): "]
       
 toHTML cls id kvs bs
-  = Div (id, [cls], kvs) $ trace ("TODO toHTML: " ++ show (id, cls, kvs, bs)) $ bs
+  = Div (id, [cls], kvs)
+    $ trace ("TODO toHTML: " ++ show (id, cls))
+    $ bs
 
 addHdr i (Plain is) = Plain (LineBreak : i : is)
 addHdr i (Para is)  = Para  (LineBreak : i : is)
