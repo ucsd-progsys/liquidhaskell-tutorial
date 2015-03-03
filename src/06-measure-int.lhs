@@ -59,9 +59,9 @@ if these collections are *incompatible*, e.g. have the wrong dimensions,
 then we end up with a fate worse than a crash, a possibly meaningless
 result. Fortunately, LiquidHaskell can help. Lets see how we can use
 measures to specify dimensions and create a dimension-aware API for
-lists which can be used to implement wholemeal dimension-safe APIs.
-<div class="footnotetext">In a [later chapter](#kmeans-case-study)
-we will use this API to implement K-means clustering.</div>
+lists which can be used to implement wholemeal
+dimension-safe APIs.^[In a [later chapter](#kmeans-case-study)
+we will use this API to implement K-means clustering.]
 
 Wholemeal Programming
 ---------------------
@@ -129,27 +129,25 @@ of the various aggreates. For example,
 + `matProd` is only well defined on matrices of compatible
   dimensions; the number of columns of `mx` must equal the
   number of rows  of `my`. Otherwise, again, rather than an
-  error, we will get the wrong output.
-<div class="footnotetext">
-In fact, while the implementation of `matProd` breezes past GHC it is quite wrong!
-</div>
+  error, we will get the wrong output.^[In fact, while the
+  implementation of `matProd` breezes past GHC it is quite
+  wrong!]
 
 Specifying List Dimensions
 --------------------------
 
 In order to start reasoning about dimensions, we need a way
 to represent the *dimension* of a list inside the refinement
-logic. <div class="footnotetext">We could just use `vDim`,
-but that is a cheat as there is no guarantee that the field's
-value actually equals the size of the list!</div>
+logic. ^[We could just use `vDim`, but that is a cheat as
+there is no guarantee that the field's value actually equals
+the size of the list!]
 
 \newthought{Measures} are ideal for this
 task. [Previously](#boolmeasures) we saw how we could lift
 Haskell functions up to the refinement logic. Lets write a
-measure to describe the length of a list:
-<div class="footnotetext">Recall that these must be
-inductively defined functions, with a single equation
-per data-constructor</div>
+measure to describe the length of a list: ^[[Recall](#usingmeasures)
+that these must be inductively defined functions, with a single
+equation per data-constructor]
 
 \begin{comment}
 \begin{spec}
@@ -262,13 +260,11 @@ map _ []     = []
 map f (x:xs) = f x : map f xs
 \end{code}
 
-\newthought{zipWith} requires both lists to have the *same* size, and produces
-a list with that same size.
-<div class="footnotetext"> As made explicit by the call to
-`die`, the input type *rules out* the case where one list
-is empty and the other is not, as in that case the former's
-length is zero while the latter's is not, and hence, different.
-</div>
+\newthought{zipWith} requires both lists to have the *same* size,
+and produces a list with that same size. ^[As made explicit by
+the call to `die`, the input type *rules out* the case where one
+list is empty and the other is not, as in that case the former's
+length is zero while the latter's is not, and hence, different.]
 
 \begin{code}
 {-@ zipWith :: (a -> b -> c) -> xs:List a
@@ -294,9 +290,8 @@ zip _  []         = []
 
 \noindent The output type uses the predicate `Tinier Xs Ys Zs`
 which defines the length of `Xs` to be the smaller of that of
-`Ys` and `Zs`. <div class="footnotetext">Recall that
-in logic, `if p then q else r` is just `p => q && not p => r`.
-</div>
+`Ys` and `Zs`.^[In logic, `if p then q else r` is the same as
+`p => q && not p => r`.]
 
 \begin{code}
 {-@ predicate Tinier X Y Z = Min (size X) (size Y) (size Z) @-}
@@ -761,8 +756,8 @@ and nested lists (`Matrix`).
    via dimension-aware APIs that ensure that operators only apply to
    compatible values. 
 
-We can use numeric measures to encode various other properties of
-structures; in subsequent chapters we will see examples ranging from
-high-level [AVL trees](#case-study-avltree), to low-level safe
-[pointer arithmetic](#case-study-pointers).
+We can use numeric measures to encode various other
+properties of data structures. We will see examples
+ranging from high-level [AVL trees](#case-study-avltree),
+to low-level safe [pointer arithmetic](#case-study-pointers).
 

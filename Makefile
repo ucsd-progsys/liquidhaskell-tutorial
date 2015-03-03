@@ -32,20 +32,20 @@ texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 
-all: book 
+all: fullsite 
 
 site:
-	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs src/tmp.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
+	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs src/06-measure-int.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
 	PANDOC_TARGET=latex $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
 fullsite: $(htmlObjects)
-	mv dist/*.html $(WEB)/dist/
+	mv src/*.html $(WEB)/dist/
 
 src/%.html: src/%.lhs
-	-$(PANDOCHTML) $? -o $@ 
+	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs $? src/99-bib.lhs -o $@
 
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex

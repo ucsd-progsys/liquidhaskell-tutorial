@@ -113,13 +113,13 @@ these invariants with a refined data definition:
 definition is internally converted into refined types
 for the data constructor `SP`:
 
-\begin{spec}
+~~~~~{.spec}
 -- Generated Internal representation
 data Sparse a where
   SP :: spDim:Nat
      -> spElems:[(Btwn 0 spDim, a)]
      -> Sparse a 
-\end{spec}
+~~~~~
 
 \noindent In other words, by using refined input types for `SP`
 we have automatically converted it into a *smart* constructor that
@@ -250,13 +250,12 @@ by refining *every* element in `tl` to be *greater than* `hd`:
 the refined data definition is internally converted
 into a "smart" refined data constructor
 
-
-\begin{spec}
+~~~~~{.spec}
 -- Generated Internal representation
 data IncList a where
   Emp  :: IncList a
   (:<) :: hd:a -> tl:IncList {v:a | hd <= v} -> IncList a
-\end{spec}
+~~~~~
 
 
 \noindent which ensures that we can only create legal ordered lists.
@@ -445,13 +444,13 @@ handy later.]
 \newthought{Refined Data Constructors} As before, the above data definition
 creates a refined smart constructor for `BST`
 
-\begin{spec}
+~~~~~{.spec}
 data BST a where
   Leaf :: BST a
   Node :: r:a -> BST {v:a| v < r}
        -> BST {v:a | r < v}
        -> BST a
-\end{spec}
+~~~~~
 
 \noindent which *prevents* us from creating illegal trees
 

@@ -53,12 +53,9 @@ Talking about Sets
 
 First, we need a way to talk about sets in the refinement logic. We could
 roll our own special Haskell type but for now, lets just use the `Set a`
-type from the prelude's `Data.Set`.
-<div class="footnotetext">
-See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/03/26/talking-about-sets.lhs/)
+type from the prelude's `Data.Set`.^[See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/03/26/talking-about-sets.lhs/)
 for a brief description of how to work directly with the set operators natively
-supported by LiquidHaskell.
-</div>
+supported by LiquidHaskell.]
 
 \newthought{LiquidHaskell Lifts} the basic set operators from `Data.Set`
 into the refinement logic. That is, the prelude defines the following
@@ -79,15 +76,14 @@ The above operators are *interpreted* by the SMT solver.
 That is, just like the SMT solver "knows", via the
 axioms of the theory of arithmetic that:
 $$x = 2 + 2 \Rightarrow x = 4$$
-is a valid formula, i.e. holds for all $x$, the solver "knows" that:
+is a valid formula, i.e. holds for all $x$,
+the solver "knows" that:
 $$x = \tsng{1} \Rightarrow y = \tsng{2} \Rightarrow x = \tcap{x}{\tcup{y}{x}}$$
-This is because, the above formulas belong to a decidable Theory of Sets
-reduces to McCarthy's more general [Theory of Arrays][mccarthy]. 
+This is because, the above formulas belong to
+a decidable Theory of Sets reduces to McCarthy's
+more general [Theory of Arrays][mccarthy]. ^[See [this recent paper][z3cal]
+to learn how modern SMT solvers prove equalities like the above.]
 
-<div class="footnotetext">
-See [this recent paper][z3cal] to learn how modern SMT
-solvers prove equalities like the above.
-</div>
 
 Proving QuickCheck Style Properties {#quickcheck} 
 -----------------------------------
@@ -220,12 +216,9 @@ Why does the above property fail?
 Thus, LiquidHaskell's refined types offer a nice interface
 for interacting with the SMT solvers in order to *prove*
 theorems, while letting us use QuickCheck to generate
-counterexamples.
-<div class="footnotetext">
-The [SBV][sbv] and [Leon][leon] projects describe
-a different DSL based approach for using SMT solvers
-from Haskell and Scala respectively.
-</div>
+counterexamples.^[The [SBV][sbv] and [Leon][leon] projects
+describe a different DSL based approach for using SMT solvers
+from Haskell and Scala respectively.]
 
 Content-Aware List API {#listelems}
 ----------------------------------
@@ -402,15 +395,10 @@ Permutations
 Next, lets use the refined list API to prove that
 various sorting routines return *permutations*
 of their inputs, that is, return output lists whose
-elements are the *same as* those of the input lists.
-
-<div class="footnotetext">
-Since we are focusing on the elements, lets not
+elements are the *same as* those of the input lists.^[Since we are focusing on the elements, lets not
 distract ourselves with the [ordering invariant](#orderedlists)
-and reuse plain old lists.
-See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/07/29/putting-things-in-order.lhs/)
-for how to specify and verify order with plain old lists.
-</div>
+and reuse plain old lists. See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/07/29/putting-things-in-order.lhs/)
+for how to specify and verify order with plain old lists.]
 
 \newthought{Insertion Sort} is the simplest of all the
 list sorting routines; we build up an (ordered) output
@@ -594,10 +582,8 @@ nub xs                = go [] xs
 
 \noindent The key membership test is done by `isin`,
 whose output is `True` exactly when the element is
-in the given list.
-<div class="footnotetext">
-Which should be clear by now, if you did a certain exercise above \ldots.
-</div>
+in the given list. ^[Which should be clear by now,
+if you did a certain exercise above \ldots.]
 
 \begin{code}
 -- FIXME
