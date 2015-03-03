@@ -32,7 +32,7 @@ texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 
-all: site 
+all: book 
 
 site:
 	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs src/tmp.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
