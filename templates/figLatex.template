@@ -1,0 +1,5 @@
+\begin{$class}
+\includegraphics[height=$height]{$file}
+\caption{$caption}
+\label{$label}
+\end{$class}
