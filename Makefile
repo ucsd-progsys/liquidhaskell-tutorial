@@ -7,6 +7,7 @@ PANDOCPDF=pandoc \
 	--chapters \
 	--latex-engine=pdflatex \
 	--template=templates/default.latex \
+	--filter templates/Figures.hs \
 	--filter templates/inside.hs
 
 PANDOCHTML=pandoc \
@@ -19,6 +20,7 @@ PANDOCHTML=pandoc \
 	   --section-divs \
 		 --filter $(WEB)/templates/codeblock.hs \
 	   --filter templates/html.hs \
+	   --filter templates/Figures.hs \
      --variable=notitle \
      --highlight-style=tango\
      --template=$(WEB)/templates/page.template
@@ -33,11 +35,11 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 all: site 
 
 site:
-	$(PANDOCHTML) src/00-preamble.lhs src/03-poly.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
+	PANDOC_TARGET=html $(PANDOCHTML) src/00-preamble.lhs src/tmp.lhs src/99-bib.lhs -o $(WEB)/dist/foo.html
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
-	$(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
+	PANDOC_TARGET=latex $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
 fullsite: $(htmlObjects)
 	mv dist/*.html $(WEB)/dist/

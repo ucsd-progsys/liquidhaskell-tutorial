@@ -54,6 +54,7 @@ die msg = error msg
 \end{code}
 \end{comment}
 
+
 So far, we have seen how to refine the types of *functions*, to
 specify, for example, pre-conditions on the inputs, or postconditions
 on the outputs. Very often, we wish to define *datatypes* that satisfy
@@ -61,7 +62,7 @@ certain invariants. In these cases, it is handy to be able to directly
 refine the the `data` definition, making it impossible to create
 illegal inhabitants.
 
-Sparse Vectors Revisited {#sparsedata} {#autosmart}
+Sparse Vectors Revisited {#autosmart}
 -------------------------------------
 
 As our first example of a refined datatype, let's revisit the
@@ -87,13 +88,11 @@ First, the dimension stored in `spDim` is non-negative.
 Second, every index in `spElems` must be valid, i.e.
 between `0` and the dimension. Unfortunately, Haskell's
 type system does not make it easy to ensure that
-*illegal vectors are not representable*.
-<div class="footnotetext">
-The standard approach is to use abstract types and
-[smart constructors][smart-ctr-wiki]
-but even then there is only the informal guarantee that the
-smart constructor establishes the right invariants.
-</div>
+*illegal vectors are not representable*.^[The standard
+approach is to use abstract types and
+[smart constructors][smart-ctr-wiki] but even
+then there is only the informal guarantee that the
+smart constructor establishes the right invariants.]
 
 \newthought{Data Invariants} LiquidHaskell lets us enforce
 these invariants with a refined data definition:
@@ -144,11 +143,9 @@ badSP = SP 5 [ (0, "cat")
 \newthought{Field Measures} It is convenient to write an alias
 for sparse vectors of a given size `N`. We can use the field name
 `spDim` as a *measure*, like `vlen`. That is, we can use `spDim`
-inside refinements:
-
-<div class="footnotetext">Note that *inside* a refined `data` definition,
+inside refinements^[Note that *inside* a refined `data` definition,
 a field name like `spDim` refers to the value of the field, but *outside*
-it refers to the field selector measure or function.</div>
+it refers to the field selector measure or function.]
 
 \begin{code}
 {-@ type SparseN a N = {v:Sparse a | spDim v == N} @-} 
@@ -369,7 +366,10 @@ quickSort (x:xs)    = append x lessers greaters
     lessers         = quickSort [y | y <- xs, y < x ]
     greaters        = quickSort [z | z <- xs, z >= x]
 
-{-@ append            :: x:a -> IncList {v:a | v < x} -> IncList {v:a | x <= v} -> IncList a @-}
+{-@ append :: x:a -> IncList {v:a | v < x}
+                  -> IncList {v:a | x <= v}
+                  -> IncList a
+  @-}
 append z Emp       ys = z :< ys
 append z (x :< xs) ys = x :< append z xs ys 
 \end{code}
@@ -398,16 +398,16 @@ occur in the tree.  If it is less than (respectively greater than) the
 root, we recursively check whether the value occurs in the left
 (respectively right) subtree.
 
+<div class="marginfigure"
+  id="fig:bst"
+  caption="A Binary Search Tree with values between 1 and 9.
+           Each root's value lies between the values appearing
+           in its left and right subtrees."
+  height="200px"
+  file="img/bst.png">
+</div>
 
-\begin{marginfigure}
-\includegraphics[height=2.0in]{img/bst.png}
-\caption{A Binary Search Tree with values between 1 and 9.
-         Each root's value lies between the values appearing
-         in its left and right subtrees.}
-\label{fig:bst}
-\end{marginfigure}
-
-Figure \ref{fig:bst} shows a binary search tree whose nodes
+Figure [auto](#fig:bst) shows a binary search tree whose nodes
 are labeled with a subset of values from `1` to `9`.
 We might represent such a tree with the Haskell value:
 
@@ -427,9 +427,9 @@ ordering invariant, and hence, cannot prevent us from creating illegal
 `BST` values that violate the invariant. We can remedy this with a
 refined data definition that captures the invariant. The aliases `BSTL`
 and `BSTR` denote `BST`s with values less than and greater than some `X`,
-respectively.
-<div class="footnotetext"> We could also just *inline* the definitions
-of `BSTL` and `BSTR` into that of `BST` but they will be handy later.</div>
+respectively.^[We could also just *inline* the definitions
+of `BSTL` and `BSTR` into that of `BST` but they will be
+handy later.]
 
 \begin{code}
 {-@ data BST a    = Leaf
@@ -492,10 +492,9 @@ one x = Node x Leaf Leaf
 \end{code}
 
 \newthought{Insertion} Lets write a function that adds an
-element to a `BST`.
-<div class="footnotetext">While writing this exercise
+element to a `BST`.^[While writing this exercise
 I inadvertently swapped the `k` and `k'` which caused
-LiquidHaskell to protest.</div>
+LiquidHaskell to protest.]
 
 \begin{code}
 add                  :: (Ord a) => a -> BST a -> BST a
@@ -511,10 +510,11 @@ element from a `BST`. This function will return a *pair* of outputs --
 the smallest element and the remainder of the tree. We can say that the
 output element is indeed the smallest, by saying that the remainder's
 elements exceed the element. To this end, lets define a helper type:
-<div class="footnotetext">This helper type approach is rather verbose.
-We should be able to just use plain old pairs and specify the above
-requirement as a *dependency* between the pairs' elements. Later,
-we will see how to do so using [abstract refinements][vazou13].</div>
+^[This helper type approach is rather verbose.
+We should be able to just use plain old pairs
+and specify the above requirement as a *dependency*
+between the pairs' elements. Later, we will see how
+to do so using [abstract refinements][vazou13].]
 
 
 \begin{code}

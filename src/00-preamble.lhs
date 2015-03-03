@@ -7,5 +7,6 @@ documentclass:  book
 toc:            true
 bibliography:   sw.bib
 notitle:        true
+prefix:         "../../"
 ---
 

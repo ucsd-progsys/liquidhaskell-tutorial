@@ -1,0 +1,5 @@
+<div id="$label" style="align: left; text-align:center;">
+  <img src="$file" height="$height" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure $number:</b> $caption </div>
+</div>
+

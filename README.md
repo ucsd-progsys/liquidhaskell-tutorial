@@ -15,6 +15,61 @@
 - Table of contents on left? (cf rust) 
 
 
+## Images
+<div class="marginfigure"
+     id="fig:bst">
+     caption="A Binary Search Tree with values between 1 and 9. Each root's value lies between the values appearing in its left and right subtrees."
+     file="img/bst.png"
+     height="200"
+</div>
+
+<figure>
+  <img src="img_pulpit.jpg" alt="The Pulpit Rock" height="228">
+  <figcaption>Fig1. - A view of the pulpit rock in Norway.</figcaption>
+</figure>
+
+<figure>
+</figure>
+
+![This is a caption A VERY LONG CAPITION la lune](../../img/bst.png) 
+
+Convert
+
+    Figure [auto](#fig:bst)
+
+    <div class="marginfigure"
+         id="fig:bst"
+         caption="A Binary Search Tree with values"
+         height="200px"
+         file="img/bst.png">
+    </div>
+
+Into
+
+
+HTML
+
+Figure <a href="#fig:bst">NUMBER</a>
+
+<figure>
+  <img src="img/bst.png" height="200px">
+  <figcaption>A Binary Search Tree with values"</figcaption>
+  <a name="fig:bst"></a>
+</figure>
+
+LATEX
+
+Figure \autoref{fig:bst}
+
+\begin{marginfigure}
+\includegraphics[height=200px]{img/bst.png}
+\caption{A Binary Search Tree with values}
+\label{fig:bst}
+\end{marginfigure}
+
+
+
+
 ## Contents
 
 ### Part I: Refinement Types
