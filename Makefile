@@ -19,8 +19,8 @@ PANDOCHTML=pandoc \
 	   --mathjax \
 	   --section-divs \
 		 --filter $(WEB)/templates/codeblock.hs \
-	   --filter templates/html.hs \
 	   --filter templates/Figures.hs \
+	   --filter templates/html.hs \
      --variable=notitle \
      --highlight-style=tango\
      --template=$(WEB)/templates/page.template
