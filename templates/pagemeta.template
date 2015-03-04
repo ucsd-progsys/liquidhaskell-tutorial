@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>$$title$$</title>
+
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="../css/editor.css">
+
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+
+
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="../js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="../js/angular/angular.js"></script>
+<script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+</head>
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
+
+    <div id="nav">
+       <button id="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
+
+<div id='toc' class='mobile-hidden'>
+$toc
+</div>
+  
+<div id='page-wrapper'>
+<div id='page'>
+ 
+$$if(notitle)$$
+$$else$$
+<h1 class="title">$$title$$</h1>
+$$endif$$
+$$body$$
+
+</div>
+</div>
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="../js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="../js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="../js/liquid/tooltip.js"></script> 
+  <script src="../js/liquid/annot.js"></script> 
+  <script src="../js/liquid/config.js"></script> 
+  <script src="../js/liquid/liquid.js"></script>
+
+
+  <!-- rust nav JS --> 
+  <script type="text/javascript">
+        window.playgroundUrl = "";
+  </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+  document.getElementById("toggle-nav").onclick = toggleNav;
+  function toggleNav() {
+    var toc = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    toggleClass(toc, "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
+
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
+
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+
+       el.className = classes.join(' ');
+     }
+  }
+
+  // The below code is used to add prev and next navigation links to the bottom
+  // of each of the sections.
+  // It works by extracting the current page based on the url and iterates over
+  // the menu links until it finds the menu item for the current page. We then
+  // create a copy of the preceding and following menu links and add the
+  // correct css class and insert them into the bottom of the page.
+  var toc = document.getElementById('toc').getElementsByTagName('a');
+  var href = document.location.pathname.split('/').pop();
+  if (href === 'index.html' || href === '') {
+    href = 'README.html';
+  }
+
+  for (var i = 0; i < toc.length; i++) {
+    if (toc[i].attributes['href'].value === href) {
+      var nav = document.createElement('p');
+      if (i > 0) {
+        var prevNode = toc[i-1].cloneNode(true);
+        prevNode.className = 'left';
+        nav.appendChild(prevNode);
+      }
+      if (i < toc.length - 1) {
+        var nextNode = toc[i+1].cloneNode(true);
+        nextNode.className = 'right';
+        nav.appendChild(nextNode);
+      }
+      document.getElementById('page').appendChild(nav);
+      break;
+    }
+  }
+
+});
+</script>
+</body>
+</html>
