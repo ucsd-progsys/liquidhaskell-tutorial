@@ -23,7 +23,7 @@ PANDOCHTML=pandoc \
 	   --filter templates/html.hs \
      --variable=notitle \
      --highlight-style=tango\
-     --template=$(WEB)/templates/page.template
+     --template=templates/pagenav.template
 
 ####################################################################
 
@@ -45,7 +45,7 @@ src/%.html: src/%.lhs
 	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs $? templates/bib.lhs -o $@
 
 site:
-	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs src/06-measure-int.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
+	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
 
 
 

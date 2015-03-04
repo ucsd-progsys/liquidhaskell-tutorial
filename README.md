@@ -3,10 +3,9 @@
 ## Website
 
 - Package
-  - Generate and link from raw index.lhs
-  - Auto-generate table of contents
-  - Auto-generate table of exercises
+  - Generate table of contents
   - Table of contents on left? (cf rust) 
+  - Generate table of exercises
 
 - Interact
   - Make server link a METADATA variable
