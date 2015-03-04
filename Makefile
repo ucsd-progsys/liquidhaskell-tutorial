@@ -1,7 +1,8 @@
 WEB=web
-TOC=templates/toc.md
+MAKETEMPLATE=templates/Toc.hs
+TOC=src/
 METATEMPLATE=templates/pagemeta.template
-TEMPLATE=templates/page.template
+TEMPLATE=templates/pagegen.template
 
 PANDOCPDF=pandoc \
 	--highlight-style=tango \
@@ -45,7 +46,7 @@ book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
 	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
-web: $(htmlObjects) template
+web: $(htmlObjects) 
 	mv src/*.html $(WEB)/dist/
 
 src/%.html: src/%.lhs template
@@ -55,7 +56,7 @@ site: template
 	PANDOC_TARGET=dist.html $(PANDOCHTML) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
 
 template:
-	$(PANDOCT) --template=$(METATEMPLATE) $(TOC) -o $(TEMPLATE)
+	$(MAKETEMPLATE) $(METATEMPLATE) $(TOC) $(TEMPLATE)
 
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex

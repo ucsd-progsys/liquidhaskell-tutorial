@@ -2,9 +2,14 @@
 
 ## Website
 
+    echo "" | pandoc -V mytoc="$(templates/toc.html)" --template=templates/pagemeta.template -s 
+
+
+
 - Package
   + Manual TOC on left
-  - Generate TOC 
+  - Create TOC
+  - Render TOC
   - Generate table of exercises
 
   0. Use templates/toc.html (or whatever) to directly SUBSTITUTE inside template/pagemeta.template ($toc) ---- to get ----> page.template

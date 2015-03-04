@@ -64,7 +64,7 @@ tx tgt prefix t r b0
   = do b1 <- txBlock tgt prefix t r b0
        b2 <- txLink               r b1
        return b2
-              
+
 txLink r = walkM (reLink r)
 
 reLink   :: IORef Info -> Inline -> IO Inline
@@ -77,11 +77,11 @@ reLink _ i
 
 txBlock _   _      _ r z@(Header 1 _ _)
   = newChapter r >> return z
-    
+
 txBlock tgt prefix t r (Div (id, [cls], kvs) _)
   | isFigure cls
   = makeFigure tgt prefix t r id cls kvs 
-      
+
 txBlock _ _ _ _ z
   = return z -- $ trace ("IAMTHIS:" ++ show z) z
 

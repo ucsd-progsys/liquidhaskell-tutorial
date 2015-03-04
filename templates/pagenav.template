@@ -52,21 +52,35 @@ code > span.er { color: #ff0000; font-weight: bold; }
     </div>
 
 <div id='toc' class='mobile-hidden'>
-$body$
+<div>
+<ul class='chapter'>
+  <li><a href='README.html'><b>1.</b> Introduction</a></li>
+    <ul class='section'>
+      <li><a href='installing-rust.html'><b>2.1.</b> Foo</a></li>
+      <li><a href='hello-world.html'><b>2.2.</b> Bar!</a></li>
+      <li><a href='hello-cargo.html'><b>2.3.</b> Baz!</a></li>
+      <li><a href='variable-bindings.html'><b>2.4.</b> Goo </a></li>
+    </ul>
+  <li><a href='basic.html'><b>2.</b> Refinements Zoink</a>
+    <ul class='section'>
+      <li><a href='installing-rust.html'><b>2.1.</b> Gibble </a></li>
+      <li><a href='hello-world.html'><b>2.2.</b> Gobble!</a></li>
+      <li><a href='hello-cargo.html'><b>2.3.</b> Perp!</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 </div>
   
 <div id='page-wrapper'>
 <div id='page'>
  
 $if(notitle)$
-
 $else$
 <h1 class="title">$title$</h1>
 $endif$
 $body$
-
-$$body$$
-
 </div>
 </div>
 
@@ -80,8 +94,7 @@ $$body$$
   <script src="../js/liquid/config.js"></script> 
   <script src="../js/liquid/liquid.js"></script>
 
-
-  <!-- rust nav JS --> 
+<!-- RUST TOC HACKERY -->
   <script type="text/javascript">
         window.playgroundUrl = "";
   </script>
@@ -146,5 +159,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 });
 </script>
+
 </body>
 </html>
