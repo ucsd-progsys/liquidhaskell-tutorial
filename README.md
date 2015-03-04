@@ -3,8 +3,8 @@
 ## Website
 
 - Package
-  - Generate table of contents
-  - Table of contents on left? (cf rust) 
+  + Manual TOC on left
+  - Generate TOC 
   - Generate table of exercises
 
 - Interact
