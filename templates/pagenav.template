@@ -52,94 +52,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
     </div>
 
 <div id='toc' class='mobile-hidden'>
-<ul class='chapter'>
-<li><a href='README.html'><b>1.</b> Introduction</a>
-</li>
-<li><a href='basic.html'><b>2.</b> I: The Basics</a>
-<ul class='section'>
-<li><a href='installing-rust.html'><b>2.1.</b> Installing Rust</a>
-</li>
-<li><a href='hello-world.html'><b>2.2.</b> Hello, world!</a>
-</li>
-<li><a href='hello-cargo.html'><b>2.3.</b> Hello, Cargo!</a>
-</li>
-<li><a href='variable-bindings.html'><b>2.4.</b> Variable Bindings</a>
-</li>
-<li><a href='if.html'><b>2.5.</b> If</a>
-</li>
-<li><a href='functions.html'><b>2.6.</b> Functions</a>
-</li>
-<li><a href='comments.html'><b>2.7.</b> Comments</a>
-</li>
-<li><a href='compound-data-types.html'><b>2.8.</b> Compound Data Types</a>
-</li>
-<li><a href='match.html'><b>2.9.</b> Match</a>
-</li>
-<li><a href='looping.html'><b>2.10.</b> Looping</a>
-</li>
-<li><a href='strings.html'><b>2.11.</b> Strings</a>
-</li>
-<li><a href='arrays-vectors-and-slices.html'><b>2.12.</b> Arrays, Vectors, and Slices</a>
-</li>
-<li><a href='standard-input.html'><b>2.13.</b> Standard Input</a>
-</li>
-<li><a href='guessing-game.html'><b>2.14.</b> Guessing Game</a>
-</li>
-</ul>
-</li>
-<li><a href='intermediate.html'><b>3.</b> II: Intermediate Rust</a>
-<ul class='section'>
-<li><a href='more-strings.html'><b>3.1.</b> More Strings</a>
-</li>
-<li><a href='crates-and-modules.html'><b>3.2.</b> Crates and Modules</a>
-</li>
-<li><a href='testing.html'><b>3.3.</b> Testing</a>
-</li>
-<li><a href='pointers.html'><b>3.4.</b> Pointers</a>
-</li>
-<li><a href='ownership.html'><b>3.5.</b> Ownership</a>
-</li>
-<li><a href='patterns.html'><b>3.6.</b> Patterns</a>
-</li>
-<li><a href='method-syntax.html'><b>3.7.</b> Method Syntax</a>
-</li>
-<li><a href='closures.html'><b>3.8.</b> Closures</a>
-</li>
-<li><a href='iterators.html'><b>3.9.</b> Iterators</a>
-</li>
-<li><a href='generics.html'><b>3.10.</b> Generics</a>
-</li>
-<li><a href='traits.html'><b>3.11.</b> Traits</a>
-</li>
-<li><a href='static-and-dynamic-dispatch.html'><b>3.12.</b> Static and Dynamic Dispatch</a>
-</li>
-<li><a href='macros.html'><b>3.13.</b> Macros</a>
-</li>
-<li><a href='concurrency.html'><b>3.14.</b> Concurrency</a>
-</li>
-<li><a href='error-handling.html'><b>3.15.</b> Error Handling</a>
-</li>
-<li><a href='documentation.html'><b>3.16.</b> Documentation</a>
-</li>
-</ul>
-</li>
-<li><a href='advanced.html'><b>4.</b> III: Advanced Topics</a>
-<ul class='section'>
-<li><a href='ffi.html'><b>4.1.</b> FFI</a>
-</li>
-<li><a href='unsafe.html'><b>4.2.</b> Unsafe Code</a>
-</li>
-<li><a href='advanced-macros.html'><b>4.3.</b> Advanced Macros</a>
-</li>
-<li><a href='plugins.html'><b>4.4.</b> Compiler Plugins</a>
-</li>
-</ul>
-</li>
-<li><a href='conclusion.html'><b>5.</b> Conclusion</a>
-</li>
-<li><a href='glossary.html'><b>6.</b> Glossary</a>
-</li>
-</ul>
+$body$
 </div>
   
 <div id='page-wrapper'>
@@ -151,6 +64,9 @@ $else$
 <h1 class="title">$title$</h1>
 $endif$
 $body$
+
+$$body$$
+
 </div>
 </div>
 

@@ -7,6 +7,18 @@
   - Generate TOC 
   - Generate table of exercises
 
+  0. Use templates/toc.html (or whatever) to directly SUBSTITUTE inside template/pagemeta.template ($toc) ---- to get ----> page.template
+
+  1. Write a script to generate templates/toc.html (with fully expanded links)
+
+  2. Write a templates/tocmeta.template with a $body$ and $$body$$ (continuation),
+
+
+  3. Use dist/toc.lhs to fill in $body$ to obtain templates/tocpage.template
+     templates/tocmeta.template + dist/toc.lhs -> dist/tocpage.template
+
+  4. Use dist/tocpage.template to generate individual chapters
+     
 - Interact
   - Make server link a METADATA variable
   - Add --diff-check on local machine

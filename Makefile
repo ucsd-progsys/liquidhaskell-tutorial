@@ -1,4 +1,7 @@
 WEB=web
+TOC=templates/toc.md
+METATEMPLATE=templates/pagemeta.template
+TEMPLATE=templates/page.template
 
 PANDOCPDF=pandoc \
 	--highlight-style=tango \
@@ -20,10 +23,13 @@ PANDOCHTML=pandoc \
 	   --section-divs \
 		 --filter $(WEB)/templates/codeblock.hs \
 	   --filter templates/Figures.hs \
+	   --filter templates/Links.hs \
 	   --filter templates/html.hs \
      --variable=notitle \
      --highlight-style=tango\
-     --template=templates/pagenav.template
+     --template=$(TEMPLATE)
+
+PANDOCT=pandoc --from=markdown --to=html --standalone
 
 ####################################################################
 
@@ -31,23 +37,25 @@ lhsObjects  := $(wildcard src/*.lhs)
 texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
+####################################################################
 
 all: book 
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
-	PANDOC_TARGET=latex $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
+	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
-web: $(htmlObjects)
+web: $(htmlObjects) template
 	mv src/*.html $(WEB)/dist/
 
-src/%.html: src/%.lhs
-	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs $? templates/bib.lhs -o $@
+src/%.html: src/%.lhs template
+	PANDOC_TARGET=$@ $(PANDOCHTML) templates/preamble.lhs $? templates/bib.lhs -o $@
 
-site:
-	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
+site: template
+	PANDOC_TARGET=dist.html $(PANDOCHTML) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
 
-
+template:
+	$(PANDOCT) --template=$(METATEMPLATE) $(TOC) -o $(TEMPLATE)
 
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex

@@ -12,6 +12,7 @@ import Data.List (isSuffixOf, isPrefixOf)
 import Debug.Trace
 import Text.Printf (printf)
  
+import System.FilePath (takeExtension)
 -- import Data.Char (isSpace)
 -- import Data.Monoid (mempty)
 -- import System.Environment (getEnv)
@@ -41,10 +42,14 @@ instance Show Output where
   show HTML  = "html"
   show LATEX = "latex" 
 
-output "html"  = HTML
-output "latex" = LATEX
-output s       = error $ "Figures : unknown target: " ++ s 
+output :: FilePath -> Output
+output = extOut . takeExtension 
+  where
+    extOut ".html" = HTML 
+    extOut ".pdf"  = LATEX
+    extOut s       = error $ "Figures : unknown target: " ++ s 
 
+txFig :: Output -> IO ()
 txFig HTML  = txFigures HTML  "../../" "templates/figHtml.template"
 txFig LATEX = txFigures LATEX ""       "templates/figLatex.template"
 
