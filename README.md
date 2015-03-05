@@ -97,7 +97,16 @@
 
 ## TODO 
 
+- Appendix / Concrete Syntax of LH
+  - Measures
+  - Predicate
+  - Type aliases
+  - Concrete GRAMMAR
+  - Logical connectives &&, ||, <=>, =>, not
+
 - grep FIXME/TODO (!)
+
+- move HINT to ABOVE code block
 
 - Subtyping exercises
     - div by zero

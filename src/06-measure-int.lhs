@@ -288,6 +288,10 @@ zip [] _          = []
 zip _  []         = [] 
 \end{code}
 
+**FIXME: what is a predicate?**
+**FIXME: what is `=>` **
+**FIXME: simpler exercises first**
+
 \noindent The output type uses the predicate `Tinier Xs Ys Zs`
 which defines the length of `Xs` to be the smaller of that of
 `Ys` and `Zs`.^[In logic, `if p then q else r` is the same as
@@ -305,6 +309,8 @@ ground, consider `zipOrNull` below. Write a specification
 for `zipOrNull` such that the code below is verified by
 LiquidHaskell.
 </div>
+
+**FIXME:this is a HARD exercise**
 
 \begin{code}
 zipOrNull       :: [a] -> [b] -> [(a, b)]
