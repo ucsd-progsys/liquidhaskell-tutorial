@@ -10,6 +10,8 @@
   + Manual TOC on left
   + Create TOC
   + Render TOC
+  + on goto
+  - rsync
   - inter-file links
   - liquid-server inside YAML
   - Generate table of exercises

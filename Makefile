@@ -67,7 +67,7 @@ site:
 	PANDOC_TARGET=dist.html $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
 
 indexhtml: $(INDEX)
-	PANDOC_TARGET=dist/index.html $(PANDOCHTML) --template=$(INDEX) templates/preamble.lhs templates/bib.lhs -o dist/index.html
+	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) templates/preamble.lhs -o dist/index.html
 	mv dist/index.html $(WEB)/dist/
 
 $(INDEX):
