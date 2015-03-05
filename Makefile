@@ -3,7 +3,7 @@ remoteuser=rjhala
 remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
 
-WEB=../liquid-client
+LIQUIDCLIENT=../liquid-client
 INDEXER=filters/Toc.hs
 
 METATEMPLATE=templates/pagemeta.template
@@ -35,7 +35,7 @@ PANDOCHTML=pandoc \
      --parse-raw \
 	 --mathjax \
 	 --section-divs \
-	 --filter $(WEB)/templates/codeblock.hs \
+	 --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
 	 --filter filters/Figures.hs \
 	 --filter filters/Html.hs \
 	 --variable=notitle \
@@ -60,9 +60,9 @@ book: $(lhsObjects)
 web: indexhtml $(htmlObjects)
 	mv src/*.html      _site/
 	cp -r img          _site/
-	cp -r $(WEB)/fonts _site/
-	cp -r $(WEB)/css   _site/
-	cp -r $(WEB)/js    _site/
+	cp -r $(LIQUIDCLIENT)/fonts _site/
+	cp -r $(LIQUIDCLIENT)/css   _site/
+	cp -r $(LIQUIDCLIENT)/js    _site/
 
 indexhtml: $(INDEX)
 	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) templates/preamble.lhs -o _site/index.html
@@ -71,7 +71,7 @@ $(INDEX):
 	$(INDEXER) src/ $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS) 
 
 src/%.html: src/%.lhs
-	PANDOC_TARGET=$@ $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs $? templates/bib.lhs -o $@
+	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs $? templates/bib.lhs -o $@
 
 clean:
 	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
