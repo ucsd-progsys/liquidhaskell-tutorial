@@ -4,7 +4,7 @@ remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
 
 WEB=web
-INDEXER=templates/Toc.hs
+INDEXER=filters/Toc.hs
 TOC=src/
 
 METATEMPLATE=templates/pagemeta.template
@@ -25,8 +25,8 @@ PANDOCPDF=pandoc \
 	--chapters \
 	--latex-engine=pdflatex \
 	--template=templates/default.latex \
-	--filter templates/Figures.hs \
-	--filter templates/inside.hs
+	--filter filters/Figures.hs \
+	--filter filters/Latex.hs
 
 PANDOCHTML=pandoc \
      --from=markdown+lhs \
@@ -37,8 +37,8 @@ PANDOCHTML=pandoc \
 	   --mathjax \
 	   --section-divs \
 		 --filter $(WEB)/templates/codeblock.hs \
-	   --filter templates/Figures.hs \
-	   --filter templates/html.hs \
+	   --filter scripts/Figures.hs \
+	   --filter scripts/Html.hs \
      --variable=notitle \
      --highlight-style=tango
 
@@ -59,7 +59,10 @@ book: $(lhsObjects)
 	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
 web: indexhtml $(htmlObjects)
-	mv src/*.html $(WEB)/dist/
+	mv src/*.html    _site/
+  cp -r img        _site/
+  cp -r $(WEB)/css _site/
+  cp -r $(WEB)/js  _site/
 
 site:
 	PANDOC_TARGET=dist.html $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
@@ -70,7 +73,6 @@ indexhtml: $(INDEX)
 
 $(INDEX):
 	$(INDEXER) $(TOC) $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS) 
-
 
 src/%.html: src/%.lhs
 	PANDOC_TARGET=$@ $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs $? templates/bib.lhs -o $@
