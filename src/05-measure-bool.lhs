@@ -147,6 +147,10 @@ the input list is not-empty:
 {-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}
 \end{code}
 
+**FIXME:** see chris' note explaining the need for implies
+here in detail and an explanation that foreshadoes the
+null/safeHead exercise later
+
 \newthought{Average} is only sensible for non-empty lists.
 Happily, we can specify this using the refined `NEList` type:
 
@@ -228,11 +232,12 @@ Write down a specification for `null` such that `safeHead` is verified:
 safeHead      :: [a] -> Maybe a
 safeHead xs
   | null xs   = Nothing
-  | otherwise = Just $ head xs  
+  | otherwise = Just $ head xs
 
-{-@ null      :: xs:[a] -> Bool @-}
-null []       = True 
-null (_:_)    = False
+{-@ predicate Empty Xs = not (notEmpty Xs) @-}
+{-@ null      :: xs:[a] -> {v:Bool | Prop v <=> Empty xs} @-}
+null []       =  True
+null (_:_)    =  False
 \end{code}
 
 \newthought{Groups}
@@ -312,13 +317,14 @@ wtAverage wxs = divide totElems totWeight
   where
     elems     = map (\(w, x) -> w * x) wxs
     weights   = map (\(w, _) -> w    ) wxs
-    totElems  = sum elems 
-    totWeight = sum weights 
+    totElems  = sum elems
+    totWeight = sum weights
     sum       = foldr1 (+)
 
-map           :: (a -> b) -> [a] -> [b] 
-map _ []      = []
-map f (x:xs)  = f x : map f xs 
+{-@ map       :: (a -> b) -> xs:[a] -> {v:[b] | notEmpty v <=> notEmpty xs} @-}
+map           :: (a -> b) -> [a] -> [b]
+map _ []      =  []
+map f (x:xs)  =  f x : map f xs
 \end{code}
 
 \hint On what variables are the errors? How are those variables' values computed?
@@ -341,7 +347,7 @@ risers [x]       = [[x]]
 risers (x:y:etc)
   | x <= y       = (x:s) : ss
   | otherwise    = [x] : (s : ss)
-    where 
+    where
       (s, ss)    = safeSplit $ risers (y:etc)
 
 {-@ safeSplit    :: NEList a -> (a, [a]) @-}

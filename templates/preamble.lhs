@@ -8,5 +8,6 @@ toc:            true
 bibliography:   sw.bib
 notitle:        true
 prefix:         "../../"
+liquidserver:   "http://goto.ucsd.edu:8090/"
 ---
 

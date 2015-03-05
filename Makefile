@@ -1,4 +1,22 @@
+RSYNC=$(shell pwd)/sync.sh
+remoteuser=rjhala
+remotedir=/home/rjhala/public_html/liquid/book
+remotehost=goto.ucsd.edu
+
 WEB=web
+INDEXER=templates/Toc.hs
+TOC=src/
+
+METATEMPLATE=templates/pagemeta.template
+INDEXTEMPLATE=templates/index.TEMPLATE
+
+# generated
+PAGETEMPLATE=dist/page.template
+LINKS=dist/links.txt
+INDEX=dist/index.lhs
+
+
+##############################################
 
 PANDOCPDF=pandoc \
 	--highlight-style=tango \
@@ -22,8 +40,9 @@ PANDOCHTML=pandoc \
 	   --filter templates/Figures.hs \
 	   --filter templates/html.hs \
      --variable=notitle \
-     --highlight-style=tango\
-     --template=$(WEB)/templates/page.template
+     --highlight-style=tango
+
+PANDOCT=pandoc --from=markdown --to=html --standalone
 
 ####################################################################
 
@@ -31,56 +50,33 @@ lhsObjects  := $(wildcard src/*.lhs)
 texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
+####################################################################
 
-all: book 
+all: book
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
-	PANDOC_TARGET=latex $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
+	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
-web: $(htmlObjects)
+web: indexhtml $(htmlObjects)
 	mv src/*.html $(WEB)/dist/
 
-src/%.html: src/%.lhs
-	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs $? templates/bib.lhs -o $@
-
 site:
-	PANDOC_TARGET=html $(PANDOCHTML) templates/preamble.lhs src/06-measure-int.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
+	PANDOC_TARGET=dist.html $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
+
+indexhtml: $(INDEX)
+	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) templates/preamble.lhs -o dist/index.html
+	mv dist/index.html $(WEB)/dist/
+
+$(INDEX):
+	$(INDEXER) $(TOC) $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS) 
 
 
+src/%.html: src/%.lhs
+	PANDOC_TARGET=$@ $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs $? templates/bib.lhs -o $@
 
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex
 
-
-###################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-
-LHS2TEX=pandoc \
-	--from=markdown+lhs \
-	--to=latex \
-	--chapters
-
-
-## CITATION HACKERY
-# pandoc --from=markdown+lhs --chapters --latex-engine=pdflatex --template=templates/default.latex --filter templates/inside.hs --metadata bibliography=sw.bib dist/pbook.lhs -o dist/pbook.pdf
-
-###### json: $(lhsObjects)
-###### 	cat $(lhsObjects) > dist/pbook.lhs
-###### 	$(PANDOC) dist/pbook.lhs -t json
-###### 
-###### 
-###### book: templates/book.tex $(texObjects) 
-###### 	cp templates/book.tex dist/
-###### 	mv src/*.tex dist/
-###### 	cd dist/ && pdflatex book.tex && cd ..
-###### 
-###### src/%.tex: src/%.lhs
-###### 	-$(LHS2TEX) $? -o $@ 
-
-
+rsync:
+	$(RSYNC) $(WEB) $(remoteuser) $(remotehost) $(remotedir)

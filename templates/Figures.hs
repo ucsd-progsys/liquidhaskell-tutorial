@@ -12,6 +12,7 @@ import Data.List (isSuffixOf, isPrefixOf)
 import Debug.Trace
 import Text.Printf (printf)
  
+import System.FilePath (takeExtension)
 -- import Data.Char (isSpace)
 -- import Data.Monoid (mempty)
 -- import System.Environment (getEnv)
@@ -41,10 +42,14 @@ instance Show Output where
   show HTML  = "html"
   show LATEX = "latex" 
 
-output "html"  = HTML
-output "latex" = LATEX
-output s       = error $ "Figures : unknown target: " ++ s 
+output :: FilePath -> Output
+output = extOut . takeExtension 
+  where
+    extOut ".html" = HTML 
+    extOut ".pdf"  = LATEX
+    extOut s       = error $ "Figures : unknown target: " ++ s 
 
+txFig :: Output -> IO ()
 txFig HTML  = txFigures HTML  "../../" "templates/figHtml.template"
 txFig LATEX = txFigures LATEX ""       "templates/figLatex.template"
 
@@ -59,7 +64,7 @@ tx tgt prefix t r b0
   = do b1 <- txBlock tgt prefix t r b0
        b2 <- txLink               r b1
        return b2
-              
+
 txLink r = walkM (reLink r)
 
 reLink   :: IORef Info -> Inline -> IO Inline
@@ -72,11 +77,11 @@ reLink _ i
 
 txBlock _   _      _ r z@(Header 1 _ _)
   = newChapter r >> return z
-    
+
 txBlock tgt prefix t r (Div (id, [cls], kvs) _)
   | isFigure cls
   = makeFigure tgt prefix t r id cls kvs 
-      
+
 txBlock _ _ _ _ z
   = return z -- $ trace ("IAMTHIS:" ++ show z) z
 

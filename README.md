@@ -2,12 +2,21 @@
 
 ## Website
 
-- Package
-  - Generate and link from raw index.lhs
-  - Auto-generate table of contents
-  - Auto-generate table of exercises
-  - Table of contents on left? (cf rust) 
+    echo "" | pandoc -V mytoc="$(templates/toc.html)" --template=templates/pagemeta.template -s 
 
+
+
+- Package
+  + Manual TOC on left
+  + Create TOC
+  + Render TOC
+  + on goto
+  - rsync
+  - inter-file links
+  - liquid-server inside YAML
+  - Generate table of exercises
+
+    
 - Interact
   - Make server link a METADATA variable
   - Add --diff-check on local machine
@@ -81,7 +90,16 @@
 
 ## TODO 
 
+- Appendix / Concrete Syntax of LH
+  - Measures
+  - Predicate
+  - Type aliases
+  - Concrete GRAMMAR
+  - Logical connectives &&, ||, <=>, =>, not
+
 - grep FIXME/TODO (!)
+
+- move HINT to ABOVE code block
 
 - Subtyping exercises
     - div by zero
