@@ -77,7 +77,10 @@ $$body$$
   <script src="../js/liquid/config.js"></script> 
   <script src="../js/liquid/liquid.js"></script>
 
-
+  <script type="text/javascript">
+    var queryServerURL = "$$liquidserver$$" ;
+  </script>
+  
   <!-- rust nav JS --> 
   <script type="text/javascript">
         window.playgroundUrl = "";

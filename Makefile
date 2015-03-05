@@ -3,17 +3,15 @@ remoteuser=rjhala
 remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
 
-
-
-
 WEB=web
 INDEXER=templates/Toc.hs
 TOC=src/
 
 METATEMPLATE=templates/pagemeta.template
-PAGETEMPLATE=dist/page.template
 INDEXTEMPLATE=templates/index.TEMPLATE
 
+# generated
+PAGETEMPLATE=dist/page.template
 LINKS=dist/links.txt
 INDEX=dist/index.lhs
 
@@ -81,3 +79,4 @@ clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex
 
 rsync:
+	$(RSYNC) $(WEB) $(remoteuser) $(remotehost) $(remotedir)
