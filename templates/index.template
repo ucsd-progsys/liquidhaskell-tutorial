@@ -6,10 +6,10 @@
     <meta name="generator" content="rustdoc">
     <title>$$title$$</title>
 
-    <link href="../css/bootstrap.css" rel="stylesheet">
-    <link href="../css/bootstrap-theme.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../css/rust-book.css">
-    <link rel="stylesheet" type="text/css" href="../css/editor.css">
+    <link href="$$root$$/css/bootstrap.css" rel="stylesheet">
+    <link href="$$root$$/css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="$$root$$/css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="$$root$$/css/editor.css">
 
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">

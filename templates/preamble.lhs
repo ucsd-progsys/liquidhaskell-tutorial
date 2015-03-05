@@ -7,7 +7,7 @@ documentclass:  book
 toc:            true
 bibliography:   sw.bib
 notitle:        true
-prefix:         "../../"
+root:           "."
 liquidserver:   "http://goto.ucsd.edu:8090/"
 ---
 
