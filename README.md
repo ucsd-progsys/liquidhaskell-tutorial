@@ -11,11 +11,14 @@
   + Create TOC
   + Render TOC
   + on goto
-  - rsync
-  - inter-file links
-  - liquid-server inside YAML
-  - Generate table of exercises
 
+  + liquid-server inside YAML
+  + fix liquid-server on GOTO (SCOTTY/cors etc.)
+  
+  + rsync
+  - inter-file links
+
+  - Generate table of exercises
     
 - Interact
   - Make server link a METADATA variable
