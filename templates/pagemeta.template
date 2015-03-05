@@ -6,10 +6,10 @@
     <meta name="generator" content="rustdoc">
     <title>$$title$$</title>
 
-    <link href="../css/bootstrap.css" rel="stylesheet">
-    <link href="../css/bootstrap-theme.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../css/rust-book.css">
-    <link rel="stylesheet" type="text/css" href="../css/editor.css">
+    <link href="$$root$$/css/bootstrap.css" rel="stylesheet">
+    <link href="$$root$$/css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="$$root$$/css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="$$root$$/css/editor.css">
 
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
@@ -34,9 +34,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 
 <!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
-<script type="text/javascript" src="../js/jquery/jquery-2.0.3.min.js"></script>
-<script type="text/javascript" src="../js/angular/angular.js"></script>
-<script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="$$root$$/js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="$$root$$/js/angular/angular.js"></script>
+<script type="text/javascript" src="$$root$$/js/bootstrap/bootstrap.js"></script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
@@ -69,13 +69,13 @@ $$body$$
 
 <!-- JavaScript below! ============================================== -->
 
-  <script src="../js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
-  <script src="../js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
-  <script src="../js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
-  <script src="../js/liquid/tooltip.js"></script> 
-  <script src="../js/liquid/annot.js"></script> 
-  <script src="../js/liquid/config.js"></script> 
-  <script src="../js/liquid/liquid.js"></script>
+  <script src="$$root$$/js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="$$root$$/js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="$$root$$/js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="$$root$$/js/liquid/tooltip.js"></script> 
+  <script src="$$root$$/js/liquid/annot.js"></script> 
+  <script src="$$root$$/js/liquid/config.js"></script> 
+  <script src="$$root$$/js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
     var queryServerURL = "$$liquidserver$$" ;
@@ -83,7 +83,7 @@ $$body$$
   
   <!-- rust nav JS --> 
   <script type="text/javascript">
-        window.playgroundUrl = "";
+    window.playgroundUrl = "";
   </script>
   
 <script type="text/javascript">
@@ -120,29 +120,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // the menu links until it finds the menu item for the current page. We then
   // create a copy of the preceding and following menu links and add the
   // correct css class and insert them into the bottom of the page.
-  var toc = document.getElementById('toc').getElementsByTagName('a');
-  var href = document.location.pathname.split('/').pop();
-  if (href === 'index.html' || href === '') {
-    href = 'README.html';
-  }
+  // var toc = document.getElementById('toc').getElementsByTagName('a');
+  // var href = document.location.pathname.split('/').pop();
+  // if (href === 'index.html' || href === '') {
+  //   href = 'README.html';
+  // }
 
-  for (var i = 0; i < toc.length; i++) {
-    if (toc[i].attributes['href'].value === href) {
-      var nav = document.createElement('p');
-      if (i > 0) {
-        var prevNode = toc[i-1].cloneNode(true);
-        prevNode.className = 'left';
-        nav.appendChild(prevNode);
-      }
-      if (i < toc.length - 1) {
-        var nextNode = toc[i+1].cloneNode(true);
-        nextNode.className = 'right';
-        nav.appendChild(nextNode);
-      }
-      document.getElementById('page').appendChild(nav);
-      break;
-    }
-  }
+  // for (var i = 0; i < toc.length; i++) {
+  //   if (toc[i].attributes['href'].value === href) {
+  //     var nav = document.createElement('p');
+  //     if (i > 0) {
+  //       var prevNode = toc[i-1].cloneNode(true);
+  //       prevNode.className = 'left';
+  //       nav.appendChild(prevNode);
+  //     }
+  //     if (i < toc.length - 1) {
+  //       var nextNode = toc[i+1].cloneNode(true);
+  //       nextNode.className = 'right';
+  //       nav.appendChild(nextNode);
+  //     }
+  //     document.getElementById('page').appendChild(nav);
+  //     break;
+  //   }
+  // }
 
 });
 </script>

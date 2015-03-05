@@ -4,8 +4,7 @@ remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
 
 WEB=web
-INDEXER=templates/Toc.hs
-TOC=src/
+INDEXER=filters/Toc.hs
 
 METATEMPLATE=templates/pagemeta.template
 INDEXTEMPLATE=templates/index.TEMPLATE
@@ -25,22 +24,22 @@ PANDOCPDF=pandoc \
 	--chapters \
 	--latex-engine=pdflatex \
 	--template=templates/default.latex \
-	--filter templates/Figures.hs \
-	--filter templates/inside.hs
+	--filter filters/Figures.hs \
+	--filter filters/Latex.hs
 
 PANDOCHTML=pandoc \
      --from=markdown+lhs \
-	   --to=html5 \
+	 --to=html5 \
      -s --mathjax \
-	   --standalone \
+	 --standalone \
      --parse-raw \
-	   --mathjax \
-	   --section-divs \
-		 --filter $(WEB)/templates/codeblock.hs \
-	   --filter templates/Figures.hs \
-	   --filter templates/html.hs \
-     --variable=notitle \
-     --highlight-style=tango
+	 --mathjax \
+	 --section-divs \
+	 --filter $(WEB)/templates/codeblock.hs \
+	 --filter filters/Figures.hs \
+	 --filter filters/Html.hs \
+	 --variable=notitle \
+	 --highlight-style=tango
 
 PANDOCT=pandoc --from=markdown --to=html --standalone
 
@@ -59,24 +58,23 @@ book: $(lhsObjects)
 	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
 
 web: indexhtml $(htmlObjects)
-	mv src/*.html $(WEB)/dist/
-
-site:
-	PANDOC_TARGET=dist.html $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs src/01-intro.lhs templates/bib.lhs -o $(WEB)/dist/foo.html
+	mv src/*.html      _site/
+	cp -r img          _site/
+	cp -r $(WEB)/fonts _site/
+	cp -r $(WEB)/css   _site/
+	cp -r $(WEB)/js    _site/
 
 indexhtml: $(INDEX)
-	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) templates/preamble.lhs -o dist/index.html
-	mv dist/index.html $(WEB)/dist/
+	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) templates/preamble.lhs -o _site/index.html
 
 $(INDEX):
-	$(INDEXER) $(TOC) $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS) 
-
+	$(INDEXER) src/ $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS) 
 
 src/%.html: src/%.lhs
 	PANDOC_TARGET=$@ $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs $? templates/bib.lhs -o $@
 
 clean:
-	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex
+	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
 
 rsync:
-	$(RSYNC) $(WEB) $(remoteuser) $(remotehost) $(remotedir)
+	$(RSYNC) _site/ $(remoteuser) $(remotehost) $(remotedir)

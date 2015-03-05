@@ -11,12 +11,11 @@ import Text.Pandoc.Walk (walkM)
 import Data.List (isSuffixOf, isPrefixOf)
 import Debug.Trace
 import Text.Printf (printf)
- 
+
 import System.FilePath (takeExtension)
--- import Data.Char (isSpace)
 -- import Data.Monoid (mempty)
 -- import System.Environment (getEnv)
- 
+
 import System.Directory
 import System.IO
 import Control.Applicative ((<$>))
@@ -33,31 +32,30 @@ import Data.Text.Template
 
 main :: IO ()
 main = do tgt <- output <$> getEnv "PANDOC_TARGET"
-          -- trace ("Pandoc OUTPUT: " ++ show tgt)
           txFig tgt
 
 data Output = HTML | LATEX deriving (Eq)
 
 instance Show Output where
   show HTML  = "html"
-  show LATEX = "latex" 
+  show LATEX = "latex"
 
 output :: FilePath -> Output
-output = extOut . takeExtension 
+output = extOut . takeExtension
   where
-    extOut ".html" = HTML 
+    extOut ".html" = HTML
     extOut ".pdf"  = LATEX
-    extOut s       = error $ "Figures : unknown target: " ++ s 
+    extOut s       = error $ "Figures : unknown target: " ++ s
 
 txFig :: Output -> IO ()
-txFig HTML  = txFigures HTML  "../../" "templates/figHtml.template"
-txFig LATEX = txFigures LATEX ""       "templates/figLatex.template"
+txFig HTML  = txFigures HTML  "" "templates/figHtml.template"
+txFig LATEX = txFigures LATEX "" "templates/figLatex.template"
 
-                     
-txFigures :: Output -> FilePath -> FilePath -> IO () 
-txFigures tgt prefix templateF 
-  = do r    <- newIORef emptyInfo 
-       tplt <- TIO.readFile templateF 
+
+txFigures :: Output -> FilePath -> FilePath -> IO ()
+txFigures tgt prefix templateF
+  = do r    <- newIORef emptyInfo
+       tplt <- TIO.readFile templateF
        toJSONFilter (tx tgt (T.pack prefix) tplt r)
 
 tx tgt prefix t r b0
@@ -89,16 +87,16 @@ isFigure s    = s `elem` ["figure", "marginfigure"]
 
 makeFigure tgt prefix t r id cls kvs
   = RawBlock (Format $ show tgt) . pad prefix t id cls kvs <$> getCount r id
-     
+
 pad prefix tplt id cls kvs n
-  = {- trace ("PAD" ++ show res) $ -} res 
+  = {- trace ("PAD" ++ show res) $ -} res
   where
-    res = L.unpack $ substitute tplt ctx 
-    ctx          :: T.Text -> T.Text 
-    ctx "class"  = T.pack cls 
-    ctx "label"  = T.pack id 
+    res = L.unpack $ substitute tplt ctx
+    ctx          :: T.Text -> T.Text
+    ctx "class"  = T.pack cls
+    ctx "label"  = T.pack id
     ctx "number" = T.pack $ show n
-    ctx "file"   = T.append prefix  (get "file" kvs) 
+    ctx "file"   = T.append prefix  (get "file" kvs)
     ctx str      = get (T.unpack str) kvs
 
 get k kvs = T.pack
@@ -117,20 +115,20 @@ data Ref  = Ref Int Int
 
 instance Show Ref where
   show (Ref i j) = show i ++ "." ++ show j
-  
+
 emptyInfo
   = Info 0 1 M.empty
 
 getCount r id
   = do info <- readIORef r
        let m  = label info
-       let c  = chapter info 
+       let c  = chapter info
        let i  = count info
        let n  = M.findWithDefault i id m
-       let i' = if i == n then i + 1 else i 
-       let l  = Ref c n 
+       let i' = if i == n then i + 1 else i
+       let l  = Ref c n
        writeIORef r (info {count = i', label = M.insert id n m})
-       return l -- $ trace ("GETCOUNT: " ++ show l) l 
+       return l -- $ trace ("GETCOUNT: " ++ show l) l
 
 newChapter r
   = do info <- readIORef r
