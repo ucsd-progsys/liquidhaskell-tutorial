@@ -2,23 +2,9 @@
 
 ## Website
 
-    echo "" | pandoc -V mytoc="$(templates/toc.html)" --template=templates/pagemeta.template -s 
-
-
-
-- Package
-  + Manual TOC on left
-  + Create TOC
-  + Render TOC
-  + on goto
-  - rsync
++ Package
   - inter-file links
-  - liquid-server inside YAML
   - Generate table of exercises
-
-    
-- Interact
-  - Make server link a METADATA variable
   - Add --diff-check on local machine
   - GLOBAL error status? (single tick/cross at top-right)
 
