@@ -1,3 +1,11 @@
+RSYNC=$(shell pwd)/sync.sh
+remoteuser=rjhala
+remotedir=/home/rjhala/public_html/liquid/book
+remotehost=goto.ucsd.edu
+
+
+
+
 WEB=web
 INDEXER=templates/Toc.hs
 TOC=src/
@@ -72,3 +80,4 @@ src/%.html: src/%.lhs
 clean:
 	rm -rf dist/* && rm -rf $(WEB)/dist/*.html && rm -rf src/*.tex
 
+rsync:
