@@ -3,7 +3,7 @@ remoteuser=rjhala
 remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
 
-WEB=web
+WEB=../liquid-client
 INDEXER=templates/Toc.hs
 TOC=src/
 
