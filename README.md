@@ -1,12 +1,6 @@
 # LiquidHaskell Tutorial
 
-## Website
-
-+ Package
-  - inter-file links
-  - Generate table of exercises
-  - Add --diff-check on local machine
-  - GLOBAL error status? (single tick/cross at top-right)
+Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
 
 ## Contents
 
@@ -38,6 +32,18 @@
 
 11. Case Study: AVL Trees
 
+
+
+## TODO
+
+### Website
+
++ Package
+  - inter-file links
+  - Generate table of exercises
+  - Add --diff-check on local machine
+  - GLOBAL error status? (single tick/cross at top-right)
+
 ## TODO
 
 ### Part IV : Abstract Refinements (TODO) 
@@ -61,7 +67,7 @@
      + Inductive strengthening 
      + Materializing Proofs
      + Assumes/Dynamic Checking
-     
+
 15. Tricks: Totality
 
 16. Tricks: Termination
