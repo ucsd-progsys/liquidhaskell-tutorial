@@ -70,7 +70,7 @@ Loading package ... done.
 
 \newthought{In a suitable Editor} e.g. Vim or Emacs,
 or if you push the "play" button in the online demo,
-you will you will literally see the error *without*
+you will literally see the error *without*
 running the code. Lets see how LiquidHaskell
 checks `ok` and `yup` but flags `nono`, and along
 the way, learn how it reasons about *recursion*,

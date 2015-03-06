@@ -113,7 +113,7 @@ ghci> takeWord16 5 t
 
 A cunning adversary can use invalid, or rather,
 *well-crafted*, inputs that go well outside the size of
-the given text` to read extra bytes and thus *extract secrets*
+the given `text` to read extra bytes and thus *extract secrets*
 without anyone being any the wiser.
 
 ~~~~~{.ghci}
