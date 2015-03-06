@@ -365,7 +365,7 @@ safely perform some computation on it.
 <div class="hwex" id="Propositions">
 What happens if you *delete* the type for `isPositive` ?
 Can you *change* the type for `isPositive` (i.e. write some other type)
-to while preserving safety?
+while preserving safety?
 </div>
 
 <div class="hwex" id="Assertions">
@@ -403,7 +403,7 @@ truncate i max
 
 \noindent
 The expression `truncate i n` evaluates to `i` when the absolute value
-of `i` is less the upper bound `max`, and otherwise *truncates* the value
+of `i` is less than the upper bound `max`, and otherwise *truncates* the value
 at the maximum `n`. LiquidHaskell verifies that the use of `divide` is
 safe by inferring that:
 
