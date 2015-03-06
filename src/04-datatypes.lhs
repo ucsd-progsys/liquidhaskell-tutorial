@@ -102,7 +102,7 @@ these invariants with a refined data definition:
                        , spElems :: [(Btwn 0 spDim, a)]} @-}
 \end{code}
 
-\noindent Where, as before, the we use the aliases:
+\noindent Where, as before, we use the aliases:
 
 \begin{code}
 {-@ type Nat        = {v:Int | 0 <= v}            @-}
@@ -188,7 +188,7 @@ polymorphic, higher-order combinators we know and love.
 and good for data computed *inside* our programs.
 The only way to ensure the legality of data coming
 from *outside*, i.e. from the "real world", is to
-writing a sanitizer that will check the appropriate
+write a sanitizer that will check the appropriate
 invariants before constructing a `Sparse` vector.
 Write the specification and implementation of a
 sanitizer `fromList`, so that the following typechecks:
@@ -237,7 +237,7 @@ infixr 9 :<
 
 \noindent 
 The Haskell type above does not state that the elements
-be in order of course, but we can specify that requirement
+are in order of course, but we can specify that requirement
 by refining *every* element in `tl` to be *greater than* `hd`: 
 
 \begin{code}
@@ -389,7 +389,7 @@ data BST a = Leaf
 \newthought{Binary Search Trees}
 enjoy the [property][bst-wiki]
 that each `root` lies (strictly) between the elements belonging in the
-`left` and `right` subtrees hanging off the the root. The ordering
+`left` and `right` subtrees hanging off the root. The ordering
 invariant makes it easy to check whether a certain value occurs in the
 tree.  If the tree is empty i.e. a `Leaf`, then the value does not occur
 in the tree.  If the given value is at the root then the value does
