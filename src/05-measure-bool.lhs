@@ -40,7 +40,7 @@ size1, size2 :: [a] -> Int
 Partial Functions 
 ------------------
 
-As a motivating example, let us return to problem of ensuring
+As a motivating example, let us return to the problem of ensuring
 the safety of division. Recall that we wrote:
 
 \begin{code}
@@ -53,7 +53,7 @@ divide x n = x `div` n
 allows LiquidHaskell to prove that the `die` is *never* executed at
 run-time, but consequently, requires us to establish that wherever
 `divide` is *used*, the second parameter be provably non-zero.
-This is requirement is not onerous when we know what the
+This requirement is not onerous when we know what the
 divisor is *statically*
 
 \begin{code}
@@ -140,7 +140,7 @@ the predicate `notEmpty` holds
 We can now refine various signatures to establish the safety of
 the list-average function.
 
-\newthought{Size} returns a non-zero value when the
+\newthought{Size} returns a non-zero value when
 the input list is not-empty:
 
 \begin{code}
@@ -333,7 +333,7 @@ Can you think of a better specification for the function(s) doing those computat
 <div class="hwex" id="Mitchell's Risers">
 Non-empty lists pop up in many places, and it is rather convenient
 to have the type system track non-emptiness without having to make
-up special types. Consider the `risers` function, popularized by
+up special types. Consider the `risers` function, popularized
 by [Neil Mitchell][mitchell-riser]. `safeSplit` requires
 its input be non-empty; but LiquidHaskell believes that the
 call inside `risers` fails this requirement. Fix the
@@ -374,7 +374,7 @@ In this chapter we saw how LiquidHaskell lets you
    often clutter implementations and specifications.
 
 \noindent 
-Of course, We can do a lot more with measures, so lets press on!
+Of course, we can do a lot more with measures, so lets press on!
 
 
 
