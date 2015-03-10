@@ -6,6 +6,26 @@ A Quick Primer on Logic & SMT
 module Logic where
 main :: IO ()
 main = return ()
+
+{-@ type TRUE  = {v:Bool | Prop v} @-}
+{-@ type FALSE = {v:Bool | not (Prop v)} @-}
+
+{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p =>  Prop q)} @-}
+{-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
+{-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
+
+ax1 :: Int -> Bool
+ax2 :: Int -> Bool
+ax3 :: Int -> Int -> Bool
+ax4 :: Int -> Int -> Bool
+ax5 :: Int -> Int -> Int -> Bool
+
+infixr 9 ==>
+
+{-@ invariant {v:[a] | size v >= 0} @-}
+{-@ f :: x:Int -> {v:Int | v = f x} @-}
+f :: Int -> Int
+f = undefined
 \end{code}
 \end{comment}
 
@@ -76,7 +96,7 @@ comparison operators:
 \newthought{A Predicate} is either an atomic predicate, obtained by comparing
 two expressions, or, an application of a predicate function to a list of arguments,
 or the Boolean combination of the above predicates with the operators `&&` (and),
-`||` (or), `=>` (implies ^[Read `p => q` as "if `p` then `q`"]), `<=>` (if and only
+`||` (or), `==>` (implies ^[Read `p ==> q` as "if `p` then `q`"]), `<=>` (if and only
 if ^[Read `p <=> q` as "if `p` then `q` **and** if `q` then `p`"]), and `not`.
 
 ~~~~~{.haskell}
@@ -86,7 +106,7 @@ if ^[Read `p <=> q` as "if `p` then `q` **and** if `q` then `p`"]), and `not`.
        | v e1 e2 ... en  -- predicate application
        | p  && p         -- and
        | p  || p         -- or
-       | p  => p         -- implies
+       | p ==> p         -- implies
        | p <=> p         -- if and only if
        | not p           -- negation
 ~~~~~
@@ -96,7 +116,7 @@ if ^[Read `p <=> q` as "if `p` then `q` **and** if `q` then `p`"]), and `not`.
 
 + `x + y <= 3`
 + `null x`
-+ `x < 10 => y < 10 => x + y < 20`
++ `x < 10 ==> y < 10 ==> x + y < 20`
 + `0 < x + y <=> 0 < y + x`
 
 Semantics
@@ -105,32 +125,29 @@ Semantics
 The syntax of predicates tells us what they *look* like, that is, what we
 can *write down* as valid predicates. Next, let us turn our attention to
 what a predicate *means*. Intuitively, a predicate is just a Boolean valued
-Haskell function -- `&&`, `||`, `not` are the usual operators and `=>` and `<=>`
-are two special operators. ^[Don't try to *actually* define these
-as such in Haskell; they are reserved keywords and you will get
-a syntax error]
-
-\newthought{The Implication} operator `=>` is equivalent to the Haskell
+Haskell function -- `&&`, `||`, `not` are the usual operators and `==>` and
+`<=>` are two special operators.
+ 
+\newthought{The Implication} operator `==>` is equivalent to the Haskell
 function:
 
-~~~~~{.haskell}
-    (=>)  :: Bool -> Bool -> Bool
-    False => False = True
-    False => True  = True
-    True  => True  = True
-    True  => False = False
-~~~~~
+\begin{code}
+(==>) :: Bool -> Bool -> Bool
+False ==> False = True
+False ==> True  = True
+True  ==> True  = True
+True  ==> False = False
+\end{code}
 
 \newthought{The If-and-only-if} operator `<=>` is equivalent to the Haskell function:
 
-~~~~~{.haskell}
-    (<=>)  :: Bool -> Bool -> Bool
-    False <=> False = True
-    False <=> True  = False
-    True  <=> True  = True
-    True  <=> False = False
-~~~~~
-
+\begin{code}
+(<=>)  :: Bool -> Bool -> Bool
+False <=> False = True
+False <=> True  = False
+True  <=> True  = True
+True  <=> False = False
+\end{code}
 
 \newthought{An Environment} is a mapping from variables to their Haskell types.
 For example, the environment `G` defined
@@ -179,19 +196,20 @@ For example, in `G` the predicate
 ~~~~~
 
 \noindent
-is satisfiable, as the above assignment makes the predicate evaluate to `True`.
+is satisfiable, as the above assignment makes the predicate
+evaluate to `True`.
 
-\newthought{A Predicate is Valid} in an environment if *every* assignment
-in that environment makes the predicate evaluate to `True`. For example,
-the predicate
+\newthought{A Predicate is Valid} in an environment if *every*
+assignment in that environment makes the predicate evaluate to
+`True`. For example, the predicate
 
 ~~~~~{.haskell}
-x < 10 || x == 10 || x > 10
+    x < 10 || x == 10 || x > 10
 ~~~~~
 
 \noindent
-is valid under `G` as no matter what value we assign to `x`, the above predicate
-will evaluate to `True`.
+is valid under `G` as no matter what value we assign to `x`, the
+above predicate will evaluate to `True`.
 
 
 Verification Conditions
@@ -202,26 +220,281 @@ programs. Instead, it checks that your program meets the given
 specifications in roughly two steps.
 
 1. First, LH combines the code and types down to a set of
-   *Verification Conditions* (VC) which are predicates that are valid
-   *only if* your program satisfies a given property. ^[The process is
-   described at length in [this paper][liquidpldi08]]
+   *Verification Conditions* (VC) which are predicates that
+   are valid *only if* your program satisfies a given
+   property. ^[The process is described at length
+   in [this paper][liquidpldi08]]
 
-2. Next, LH *queries* an [SMT solver][smt-wiki] to determine whether
-   these VCs are valid. If so, it says your program is *safe* and 
-   otherwise it *rejects* your program.
+2. Next, LH *queries* an [SMT solver][smt-wiki] to determine
+   whether these VCs are valid. If so, it says your program
+   is *safe* and otherwise it *rejects* your program.
 
-\newthought{We Carefully Restrict the Refinement Logic} so that the
-SMT solver can *correctly answer* (or "decide") all the validity
-queries.  That is, the SMT solver can determine that *all* assignments
-will make a VC satisfiable, *without* actually enumerating the
-assignments and evaluating the formula. If that sounds a bit
-remarkable, it is: its the magic of mathematical logic and the
-fruit of decades of research on [decision procedures][nelson-oppen].
+\newthought{The SMT Solver decides} whether a predicate (VC) is valid
+*without enumerating* and evaluating all assignments. Indeed, it is
+impossible to do so as there are usually infinitely many assignments
+once the predicates refer to integers or lists and so on.  Instead,
+the SMT solver uses a variety of sophisticated *symbolic algorithms*
+to deduce whether a predicate is valid or not. This somewhat magical
+process is the result of decades of work in mathematical logic and
+decision procedures; the [Ph.D thesis of Greg Nelson][nelson-thesis]
+is an excellent place to learn more about these beautiful algorithms.
 
-HEREHERE
+\newthought{We Restrict the Logic} to ensure that all our VC queries
+fall within the *decidable fragment*. This makes LiquidHaskell
+extremely automatic -- there is *no* explicit manipulation of proofs,
+just the specification of properties via types and of course, the
+implementation via Haskell code!  This automation comes at a price:
+all our refinements *must* belong to the logic above. Fortunately,
+with a bit of creativity, we can say a *lot* in this logic. ^[In
+particular, we will use the uninterpreted functions to create many
+sophisticated abstractions.]
 
- *all* validity queries (i.e. VCs) that are s (and hence, validity queries)
-Rather than getting into the formal details of how this mechanism works
- let
-us illustrate it by example.
+Examples: Propositions
+----------------------
 
+Finally, lets conclude this quick overview with some
+examples of predicates, in order to build up our own
+intuition about logic and validity.
+Each of the below is a predicate from our refinement
+logic. However, we write them as raw Haskell expressions
+that you may be more familiar with right now, and so that
+we can start to use LiquidHaskell to determine whether a
+predicate is indeed valid or not.
+
+\newthought{Let `TRUE` be a type} for `Bool` valued
+expressions that *always* evaluate to `True` ^[We will
+explain how to define such types shortly.] Thus, a
+*valid predicate* is one that has the type `TRUE`.
+The simplest example of a valid predicate is just
+`True`:
+
+\begin{code}
+{-@ ex0 :: TRUE @-}
+ex0 = True
+\end{code}
+
+\noindent of course, `False` is *not valid*
+
+\begin{code}
+{-@ ex0' :: TRUE @-}
+ex0' = False
+\end{code}
+
+We can get more interesting predicates if we use variables.
+For example, the following is valid predicate says that a
+`Bool` variable is either `True` or `False`.
+
+\begin{code}
+{-@ ex1 :: Bool -> TRUE @-}
+ex1 b = b || not b
+\end{code}
+
+\noindent Of course, a variable cannot be both `True`
+and `False`, and so the below predicate is invalid:
+
+\begin{code}
+{-@ ex2 :: Bool -> FALSE @-}
+ex2 b = b && not b
+\end{code}
+
+The next few examples illustrate the `==>` operator.  You should read
+`p ==> q` as *if* `p` is true *then* `q` must also be true.  Thus, the
+below predicates are valid as if both `a` and `b` are true, then well,
+`a` is true, and `b` is true.
+
+\begin{code}
+{-@ ex3 :: Bool -> Bool -> TRUE @-}
+ex3 a b = (a && b) ==> a
+
+{-@ ex4 :: Bool -> Bool -> TRUE @-}
+ex4 a b = (a && b) ==> b
+\end{code}
+
+\noindent Of course, if we replace the `&&` with `||` the result is *not valid*:
+
+\begin{code}
+{-@ ex3' :: Bool -> Bool -> TRUE @-}
+ex3' a b = (a || b) ==> a
+\end{code}
+
+The following predicates are valid because they encode
+[modus ponens](http://en.wikipedia.org/wiki/Modus_ponens):
+if you know that `a` implies `b` and you know that `a` is
+true, then it must be that `b` is also true:
+
+\begin{code}
+{-@ ex6 :: Bool -> Bool -> TRUE @-}
+ex6 a b = (a && (a ==> b)) ==> b
+
+{-@ ex7 :: Bool -> Bool -> TRUE @-}
+ex7 a b = a ==> (a ==> b) ==> b
+\end{code}
+
+Recall that `p <=> q` (read `p` if and only iff `q`) evaluates to `True`
+exactly when `p` and `q` evaluate to the *same* values (`True` or `False`).
+It is used to encode *equalities* between predicates. For example, we can
+write down [De Morgan's laws](http://en.wikipedia.org/wiki/De_Morgan's_laws)
+as the valid predicates:
+
+\begin{code}
+{-@ exDeMorgan1 :: Bool -> Bool -> TRUE @-}
+exDeMorgan1 a b = not (a || b) <=> (not a && not b)
+
+{-@ exDeMorgan2 :: Bool -> Bool -> TRUE @-}
+exDeMorgan2 a b = not (a && b) <=> (not a || not b)
+\end{code}
+
+Examples: Arithmetic
+--------------------
+
+Next, lets look at some predicates involving arithmetic.
+The simplest ones don't have any variables, for example:
+
+\begin{code}
+{-@ ax0 :: TRUE @-}
+ax0 = 1 + 1 == 2
+\end{code}
+
+\noindent Again, a predicate that evaluates to `False`
+is not valid:
+
+\begin{code}
+{-@ ax0 :: TRUE @-}
+ax0' = 1 + 1 == 3
+\end{code}
+
+\newthought{SMT Solvers determine Validity} *without*
+enumerating assignments. For example, consider the
+predicate:
+
+\begin{code}
+{-@ ax1 :: Int -> TRUE @-}
+ax1 x = x < x + 1
+\end{code}
+
+\noindent It is trivially valid; as via the usual
+laws of arithmetic, it is equivalent to `0 < 1`
+which is `True` independent of the value of `x`.
+The SMT solver is able to determine this validity
+without enumerating the infinitely many possible
+values for `x`. This kind of validity checking
+lies at the heart of LiquidHaskell.
+
+\newthought{We can combine arithmetic and propositional}
+operators, as shown in the following examples:
+
+\begin{code}
+{-@ ax2 :: Int -> TRUE @-}
+ax2 x = (x < 0) ==> (0 <= 0 - x)
+
+{-@ ax3 :: Int -> Int -> TRUE @-}
+ax3 x y = (0 <= x) ==> (0 <= y) ==> (0 <= x + y)
+
+{-@ ax4 :: Int -> Int -> TRUE @-}
+ax4 x y = (x == y - 1) ==> (x + 2 == y + 1)
+
+{-@ ax5 :: Int -> Int -> Int -> TRUE @-}
+ax5 x y z =   (x <= 0 && x >= 0)
+          ==> (y == x + z)
+          ==> (y == z)
+\end{code}
+
+Examples: Uninterpreted Function
+--------------------------------
+
+We say that function symbols are *uninterpreted* in the refinement logic,
+because the SMT solver does not "know" how functions are defined. Instead,
+the only thing that the solver knows is the *axiom of congruence* which
+states that any function `f`, returns equal outputs when invoked on equal
+inputs.
+
+Let us define an uninterpreted function from `Int` to `Int`:
+
+\begin{code}
+{-@ measure f :: Int -> Int @-}
+\end{code}
+
+\newthought{We Test the Axiom of Congruence} by checking that the
+following predicate
+is valid:
+
+\begin{code}
+{-@ congruence :: Int -> Int -> TRUE @-}
+congruence x y = (x == y) ==> (f x == f y)
+\end{code}
+
+\noindent Again, remember we are *not evaluating* the code above;
+indeed we *cannot* evaluate the code above because we have no
+definition of `f`. Still, the predicate is valid as the
+congruence axiom holds for any possible interpretation
+of `f`.
+
+Here is a fun example; can you figure out why this
+predicate is indeed valid? (The SMT solver can...)
+
+\begin{code}
+{-@ fx1 :: Int -> TRUE @-}
+fx1 x =   (x == f (f (f x)))
+      ==> (x == f (f (f (f (f x)))))
+      ==> (x == f x)
+\end{code}
+
+To get a taste of why uninterpreted functions will prove useful
+lets write a function to compute the `size` of a list:
+
+\begin{code}
+{-@ measure size @-}
+size        :: [a] -> Int
+size []     = 0
+size (x:xs) = 1 + size xs
+\end{code}
+
+We can now verify that the following predicates are *valid*:
+
+\begin{code}
+{-@ fx0 :: [a] -> [a] -> TRUE @-}
+fx0 xs ys = (xs == ys) ==> (size xs == size ys)
+\end{code}
+
+\noindent Note that to determine that the above is valid, the SMT
+solver does not need to know the *meaning* or *interpretation* of
+`size` -- merely that it is a function. When we need some information
+about the definition, of `size` we will put it inside the predicate.
+For example, in order to prove that the following is valid:
+
+\begin{code}
+{-@ fx2 :: a -> [a] -> TRUE @-}
+fx2 x xs = 0 < size ys
+  where
+    ys   = x : xs
+\end{code}
+
+\noindent LiquidHaskell actually asks the SMT solver to
+prove the validity of a VC predicate which states that
+sizes are non-negative and that since `ys` equals `x:xs`,
+the size of `ys` is one more than `xs`. ^[Fear not! We
+will describe how this works [soon](#autosmart)]
+
+\begin{code}
+fx2VC x xs ys =   (0 <= size xs)
+              ==> (size ys == 1 + size xs)
+              ==> (0 < size ys)
+\end{code}
+
+Recap
+-----
+
+This chapter describes exactly what we, for the purposes of this book,
+mean by the term *logical predicate*.
+
+1. We defined a grammar -- a restricted subset of Haskell corresponding
+   to `Bool` valued expressions.
+2. The restricted grammar lets us use SMT solvers to decide whether
+   a predicate is *valid* that is, evaluates to `True` for *all* values
+   of the variables.
+3. Crucially, the SMT solver determins validity *without enumerating*
+   and evaluating the predicates (which would take forever!) but instead
+   by using clever symbolic algorithms.
+
+Next, lets see how we can use logical predicates to *specify* and
+*verify* properties of real programs.

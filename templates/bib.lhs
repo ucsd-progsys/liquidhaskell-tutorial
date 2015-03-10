@@ -58,3 +58,5 @@
 
 [queue-wiki]: http://en.wikipedia.org/wiki/Queue_%28abstract_data_type%29
 [avl-wiki]: http://en.wikipedia.org/wiki/AVL_tree
+[liquidpldi08]: http://goto.ucsd.edu/~rjhala/papers/liquid_types.pdf
+[nelson-thesis]: http://research.microsoft.com/en-us/um/people/qadeer/cse599f/papers/nelsonthesis.pdf
