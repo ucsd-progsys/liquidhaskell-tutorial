@@ -41,9 +41,10 @@
 
 
 [wiki-contracts]: http://en.wikipedia.org/wiki/Design_by_contract
-[smart-ctr-wiki]:  https://www.haskell.org/haskellwiki/Smart_constructors
-[smt-wiki]:        http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories
-[vazou13]:         http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf
+[smart-ctr-wiki]: https://www.haskell.org/haskellwiki/Smart_constructors
+[smt-wiki]:       http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories
+[vazou13]:        http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf
+[liquidpldi08]:   http://goto.ucsd.edu/~rjhala/liquid/liquid_types.pdf
 
 [bird-pearls]: http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383
 [mitchell-riser]:  http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html
