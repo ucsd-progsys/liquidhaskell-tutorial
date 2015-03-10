@@ -160,85 +160,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
  
 <section id="case-study-avltree" class="level1">
 <h1>Case Study: AVL Trees</h1>
-<div id="program-pane-0" class="welleditor hidden" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-0" class="programbox">{- Example of AVL trees by michaelbeaumont -}
-
-{-@ LIQUID "--diff"           @-}
-{-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--totality"       @-}
-
-module AVL (AVL, empty, singleton, insert, insert', delete) where
-
-import qualified Data.Set as S
-import Prelude hiding (max)
--- import Language.Haskell.Liquid.Prelude (liquidAssume)
-
--- Test
-main = do
-    mapM_ print [a, b, c, d]
-  where
-    a = singleton 5 
-    b = insert 2 a
-    c = insert 3 b
-    d = insert 7 c
-
--- | Height is actual height (will disappear with measure-generated-invariants) ------------
-
-{-@ invariant {v:AVL a | 0 <= realHeight v && realHeight v = getHeight v} @-}
-
-{-@ inv_proof  :: t:AVL a -> {v:_ | 0 <= realHeight t && realHeight t = getHeight t } @-}
-inv_proof Leaf           = True 
-inv_proof (Node k l r n) = inv_proof l && inv_proof r
-
-{-@ node :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1} -> {v:AVL a | realHeight v = nodeHeight l r} @-}
-node v l r = Node v l r (nodeHeight l r)
-
-balR0, balRL, balRR :: a -> AVL a -> AVL a -> AVL a
-insR :: a -> AVL a -> AVL a
-merge :: a -> AVL a -> AVL a -> AVL a
-member :: (Ord a) => a -> AVL a -> Bool
--- FIXME bigHt l r t  = if (realHeight l >= realHeight r) then (eqOrUp l t) else (eqOrUp r t)
-\end{code}
-</div>
-</div>
 
 <p>One of the most fundamental abstractions in computing is that of a <em>collection</em> of values -- names, numbers, records -- into which we can rapidly <code>insert</code>, <code>delete</code> and check for <code>member</code>ship.</p>
 <p><br /><strong>Trees</strong> offer an an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
@@ -246,7 +167,7 @@ member :: (Ord a) => a -> AVL a -> Bool
 <section id="avl-trees" class="level2">
 <h2>AVL Trees</h2>
 <p>An <code>AVL</code> tree is defined by the following Haskell datatype:<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<div id="program-pane-1" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -285,7 +206,7 @@ member :: (Ord a) => a -> AVL a -> Bool
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">data AVL a =
+  <div id="program-0" class="programbox">data AVL a =
     Leaf
   | Node { key :: a      -- value
          , l   :: AVL a  -- left subtree
@@ -311,7 +232,7 @@ member :: (Ord a) => a -> AVL a -> Bool
 <h2>Specifying AVL Trees</h2>
 <p>The tricky bit is to ensure order and balance. Before we can ensure anything, lets tell LiquidHaskell what we mean by these terms, by defining legal or valid AVL trees.</p>
 <p><br /><strong>To Specify Order</strong> we just define two aliases <code>AVLL</code> and <code>AVLR</code> -- read <em>AVL-left</em> and <em>AVL-right</em> -- for trees whose values are strictly less than and greater than some value <code>X</code>:</p>
-<div id="program-pane-2" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -350,7 +271,7 @@ member :: (Ord a) => a -> AVL a -> Bool
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">-- | Trees with value less than X
+  <div id="program-1" class="programbox">-- | Trees with value less than X
 {-@ type AVLL a X = AVL {v:a | v < X}  @-}
 
 -- | Trees with value greater than X
@@ -358,7 +279,7 @@ member :: (Ord a) => a -> AVL a -> Bool
 </div>
 
 <p><br /><strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because thats just some arbitrary <code>Int</code> -- there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
-<div id="program-pane-3" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -397,7 +318,7 @@ member :: (Ord a) => a -> AVL a -> Bool
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">{-@ measure realHeight @-}
+  <div id="program-2" class="programbox">{-@ measure realHeight @-}
 realHeight                :: AVL a -> Int
 realHeight Leaf           = 0
 realHeight (Node _ l r _) = nodeHeight l r
@@ -414,7 +335,7 @@ max x y = if x > y then x else y</div>
 </div>
 
 <p><br /><strong>A Reality Check</strong> predicate ensures that a value <code>v</code> is indeed the <em>real</em> height of a node with subtrees <code>l</code> and <code>r</code>:</p>
-<div id="program-pane-4" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -453,12 +374,12 @@ max x y = if x > y then x else y</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">{-@ inline isReal @-}
+  <div id="program-3" class="programbox">{-@ inline isReal @-}
 isReal v l r = v == nodeHeight l r</div>
 </div>
 
 <p><br /><strong>A Node is $n$-Balanced</strong> if its left and right subtrees have a (real) height difference of at most <span class="math">\(n\)</span>. We can specify this requirement as a predicate <code>isBal l r n</code></p>
-<div id="program-pane-5" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -497,14 +418,14 @@ isReal v l r = v == nodeHeight l r</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ inline isBal @-}
+  <div id="program-4" class="programbox">{-@ inline isBal @-}
 isBal l r n = 0 - n <= d && d <= n
   where
     d       = realHeight l - realHeight r </div>
 </div>
 
 <p><br /><strong>A Legal AVL Tree</strong> can now be defined via the following <a href="#refineddatatypes">refined data type</a>, which states that each <code>Node</code> is <span class="math">\(1\)</span>-balanced, and that the saved height field is indeed the <em>real</em> height:</p>
-<div id="program-pane-6" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -543,7 +464,7 @@ isBal l r n = 0 - n <= d && d <= n
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ data AVL a = Leaf
+  <div id="program-5" class="programbox">{-@ data AVL a = Leaf
                | Node { key :: a
                       , l   :: AVLL a key
                       , r   :: {v:AVLR a key | isBal l v 1} 
@@ -555,7 +476,7 @@ isBal l r n = 0 - n <= d && d <= n
 <section id="smart-constructors" class="level2">
 <h2>Smart Constructors</h2>
 <p>Lets use the type to construct a few small trees which will also be handy in a general collection API. First, lets write an alias for trees of a given height:</p>
-<div id="program-pane-7" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -594,7 +515,7 @@ isBal l r n = 0 - n <= d && d <= n
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">-- | Trees of height N
+  <div id="program-6" class="programbox">-- | Trees of height N
 {-@ type AVLN a N = {v: AVL a | realHeight v = N} @-}
 
 -- | Trees of height equal to that of another T
@@ -602,7 +523,7 @@ isBal l r n = 0 - n <= d && d <= n
 </div>
 
 <p><br /><strong>An Empty</strong> collection is represented by a <code>Leaf</code>, which has height <code>0</code>:</p>
-<div id="program-pane-8" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -641,7 +562,7 @@ isBal l r n = 0 - n <= d && d <= n
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">{-@ empty :: AVLN a 0 @-}
+  <div id="program-7" class="programbox">{-@ empty :: AVLN a 0 @-}
 empty = Leaf</div>
 </div>
 
@@ -649,7 +570,7 @@ empty = Leaf</div>
 <br /><strong>Exercise: (Singleton): </strong>Consider the function <code>singleton</code> that builds an <code>AVL</code> tree from a single element. Fix the code below so that it is accepted by LiquidHaskell.
 <br /><br />
 </div>
-<div id="program-pane-9" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -688,13 +609,13 @@ empty = Leaf</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">{-@ singleton :: a -> AVLN a 1 @-}
+  <div id="program-8" class="programbox">{-@ singleton :: a -> AVLN a 1 @-}
 singleton x =  Node x empty empty 0 </div>
 </div>
 
 <p>As you can imagine, it can be quite tedious to keep the saved height field <code>ah</code> <em>in sync</em> with the <em>real</em> height. In general in such situations, which arose also with <a href="#lazyqueue">lazy queues</a>, the right move is to eschew the data constructor and instead use a <em>smart constructor</em> that will fill in the appropriate values correctly. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <p><br /><strong>The Smart Constructor</strong> <code>node</code> takes as input the node's value <code>x</code>, left and right subtrees <code>l</code> and <code>r</code> and returns a tree by filling in the right value for the height field.</p>
-<div id="program-pane-10" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -733,7 +654,7 @@ singleton x =  Node x empty empty 0 </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">{-@ mkNode :: a -> l:AVL a -> r:AVL a
+  <div id="program-9" class="programbox">{-@ mkNode :: a -> l:AVL a -> r:AVL a
            -> AVLN a {nodeHeight l r}
   @-}
 mkNode v l r = Node v l r h
@@ -757,7 +678,7 @@ mkNode v l r = Node v l r h
 <li><em>Replace</em> the <code>Leaf</code> at that location with the singleton value.</li>
 </ol>
 <p>If you prefer the spare precision of code to the informality of English, here is a first stab at implementing insertion: <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-<div id="program-pane-11" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -796,7 +717,7 @@ mkNode v l r = Node v l r h
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
+  <div id="program-10" class="programbox">{-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
 insert0 y t@(Node x l r _) 
   | y < x      = insL0 y t 
   | x < y      = insR0 y t
@@ -834,7 +755,7 @@ insR0 y (Node x l r _) = node x l (insert0 y r)</div>
 <li><em>(NoBig)</em> <code>l'</code> and <code>r</code> are within a factor of <code>1</code>,</li>
 </ul>
 <p><br /><strong>We can specify</strong> these cases as follows.</p>
-<div id="program-pane-12" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -873,7 +794,7 @@ insR0 y (Node x l r _) = node x l (insert0 y r)</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">{-@ inline leftBig @-}
+  <div id="program-11" class="programbox">{-@ inline leftBig @-}
 leftBig l r = diff l r == 2
 
 {-@ inline rightBig @-}
@@ -884,7 +805,7 @@ diff s t = getHeight s - getHeight t</div>
 </div>
 
 <p>the function <code>getHeight</code> accesses the saved height field.</p>
-<div id="program-pane-13" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -923,7 +844,7 @@ diff s t = getHeight s - getHeight t</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">{-@ measure getHeight @-}
+  <div id="program-12" class="programbox">{-@ measure getHeight @-}
 getHeight Leaf           = 0
 getHeight (Node _ _ _ n) = n</div>
 </div>
@@ -936,7 +857,7 @@ getHeight (Node _ _ _ n) = n</div>
 <li><em>(RightHeavy)</em> the right subtree of <code>l'</code> is bigger than the left.</li>
 </ul>
 <p><br /><strong>The Balance Factor</strong> of a tree can be used to make the above cases precise. Note that while the <code>getHeight</code> function returns the saved height (for efficiency), thanks to the invariants, we know it is in fact equal to the <code>realHeight</code> of the given tree.</p>
-<div id="program-pane-14" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -975,13 +896,13 @@ getHeight (Node _ _ _ n) = n</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">{-@ measure balFac @-}
+  <div id="program-13" class="programbox">{-@ measure balFac @-}
 balFac Leaf           = 0
 balFac (Node _ l r _) = getHeight l - getHeight r </div>
 </div>
 
 <p><br /><strong>Heaviness</strong> can be encoded by testing the balance factor:</p>
-<div id="program-pane-15" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1020,7 +941,7 @@ balFac (Node _ l r _) = getHeight l - getHeight r </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">{-@ inline leftHeavy @-}
+  <div id="program-14" class="programbox">{-@ inline leftHeavy @-}
 leftHeavy  t = balFac t > 0
 
 {-@ inline rightHeavy @-}
@@ -1039,7 +960,7 @@ noHeavy    t = balFac t == 0</div>
 
 
 <p><br /><strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">1.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here's how you would implement the rotation. Note how the preconditions capture the exact case we're in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
-<div id="program-pane-16" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1078,7 +999,7 @@ noHeavy    t = balFac t == 0</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">{-@ balL0 :: x:a
+  <div id="program-15" class="programbox">{-@ balL0 :: x:a
           -> l:{AVLL a x | noHeavy l}
           -> r:{AVLR a x | leftBig l r}
           -> AVLN a {realHeight l + 1 }
@@ -1094,7 +1015,7 @@ balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
 
 
 <p><br /><strong>In the LeftHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLL">1.4</a>, the subtree <code>ll</code> is larger than <code>lr</code>; hence <code>lr</code> has the same height as <code>r</code>, and again we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. As in the <em>NoHeavy</em> case, the input types capture the exact case, and the output the height of the resulting tree.</p>
-<div id="program-pane-17" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1133,7 +1054,7 @@ balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">{-@ balLL :: x:a
+  <div id="program-16" class="programbox">{-@ balLL :: x:a
           -> l:{AVLL a x | leftHeavy l}
           -> r:{AVLR a x | leftBig l r}
           -> AVLT a l
@@ -1149,7 +1070,7 @@ balLL v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
 
 
 <p><br /><strong>In the RightHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLR">1.5</a>, the subtree <code>lr</code> is larger than <code>ll</code>. We cannot directly link it with <code>r</code> as the result would again be too large. Hence, we split it further into its own subtrees <code>lrl</code> and <code>lrr</code> and link the latter with <code>r</code>. Again, the types capture the requirements and guarantees of the rotation.</p>
-<div id="program-pane-18" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1188,7 +1109,7 @@ balLL v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">{-@ balLR :: x:a
+  <div id="program-17" class="programbox">{-@ balLR :: x:a
           -> l:{AVLL a x | rightHeavy l}
           -> r:{AVLR a x | leftBig l r} 
           -> AVLT a l
@@ -1203,7 +1124,7 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
 <br /><br />
 </div>
 
-<div id="program-pane-19" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1242,7 +1163,7 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">{-@ balR0 :: x:a
+  <div id="program-18" class="programbox">{-@ balR0 :: x:a
           -> l: AVLL a x
           -> r: {AVLR a x | rightBig l r && noHeavy r}
           -> AVLN a {realHeight r + 1}
@@ -1254,7 +1175,7 @@ balR0 v l r = undefined</div>
 <br /><strong>Exercise: (RightBig, RightHeavy): </strong>Fix the implementation of <code>balRR</code> so that it implements the given type.
 <br /><br />
 </div>
-<div id="program-pane-20" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1293,7 +1214,7 @@ balR0 v l r = undefined</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">{-@ balRR :: x:a
+  <div id="program-19" class="programbox">{-@ balRR :: x:a
           -> l: AVLL a x
           -> r:{AVLR a x | rightBig l r && rightHeavy r}
           -> AVLT a r
@@ -1305,7 +1226,7 @@ balRR v l r = undefined</div>
 <br /><strong>Exercise: (RightBig, LeftHeavy): </strong>Fix the implementation of <code>balRL</code> so that it implements the given type.
 <br /><br />
 </div>
-<div id="program-pane-21" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1344,7 +1265,7 @@ balRR v l r = undefined</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-21" class="programbox">{-@ balRL :: x:a
+  <div id="program-20" class="programbox">{-@ balRL :: x:a
           -> l: AVLL a x      
           -> r:{AVLR a x | rightBig l r && leftHeavy r}
           -> AVLT a r
@@ -1353,7 +1274,7 @@ balRL v l r = undefined </div>
 </div>
 
 <p><br /><strong>To Correctly Insert</strong> an element, we recursively add it to the left or right subtree as appropriate and then determine which of the above cases hold in order to call the corresponding <em>rebalance</em> function which restores the invariants.</p>
-<div id="program-pane-22" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1392,7 +1313,7 @@ balRL v l r = undefined </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-22" class="programbox">{-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
+  <div id="program-21" class="programbox">{-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert y Leaf = singleton y
 insert y t@(Node x _ _ _) 
   | y < x     = insL y t 
@@ -1401,7 +1322,7 @@ insert y t@(Node x _ _ _)
 </div>
 
 <p>The refinement, <code>eqOrUp</code> says that the height of <code>t</code> is the same as <code>s</code> or goes <em>up</em> by atmost <code>1</code>.</p>
-<div id="program-pane-23" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1440,14 +1361,14 @@ insert y t@(Node x _ _ _)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-23" class="programbox">{-@ inline eqOrUp @-}
+  <div id="program-22" class="programbox">{-@ inline eqOrUp @-}
 eqOrUp s t = d == 0 || d == 1
   where
     d      = diff t s </div>
 </div>
 
 <p><br /><strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here's the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
-<div id="program-pane-24" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1486,7 +1407,7 @@ eqOrUp s t = d == 0 || d == 1
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-24" class="programbox">{-@ insL :: x:a
+  <div id="program-23" class="programbox">{-@ insL :: x:a
          -> t:{AVL a | x < key t && 0 < realHeight t}
          -> {v: AVL a | eqOrUp t v}
   @-}
@@ -1504,7 +1425,7 @@ insL a (Node v l r _)
 <br /><strong>Exercise: (InsertRight): </strong>The code for <code>insR</code> is symmetric. To make sure you're following along, why don't you fill it in?
 <br /><br />
 </div>
-<div id="program-pane-25" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1543,7 +1464,7 @@ insL a (Node v l r _)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-25" class="programbox">{-@ insR :: x:a
+  <div id="program-24" class="programbox">{-@ insR :: x:a
          -> t:{AVL a | key t < x && 0 < realHeight t}
          -> {v: AVL a | eqOrUp s v}
   @-}
@@ -1561,7 +1482,7 @@ insR = undefined</div>
 </ol>
 <p><br /><strong>We painted ourselves into a corner</strong> with <code>insert</code>: the code for actually inserting an element is intermingled with the code for determining and performing the rotation. That is, see how the code that determines which rotation to apply -- <code>leftBig</code>, <code>leftHeavy</code>, etc. -- is <em>inside</em> the <code>insL</code> which does the insertion as well. This is correct, but it means we would have to <em>repeat</em> the case analysis when deleting a value, which is unfortunate.</p>
 <p><br /><strong>Instead lets refactor</strong> the rebalancing code into a separate function, that can be used by <em>both</em> <code>insert</code> and <code>delete</code>. It looks like this:</p>
-<div id="program-pane-26" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1600,7 +1521,7 @@ insR = undefined</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-26" class="programbox">{-@ bal :: x:a
+  <div id="program-25" class="programbox">{-@ bal :: x:a
         -> l:AVLL a x
         -> r:{AVLR a x | isBal l r 2}
         -> {t:AVL a | reBal l r t}
@@ -1623,7 +1544,7 @@ bal v l r
 <li>(<code>bigHt</code>) The height of <code>t</code> is the same or one bigger than the larger of <code>l</code> and <code>r</code>, and</li>
 <li>(<code>balHt</code>) If <code>l</code> and <code>r</code> were already balanced (i.e. within <code>1</code>) then the height of <code>t</code> is exactly equal to that of a tree built by directly linking <code>l</code> and <code>r</code>.</li>
 </ul>
-<div id="program-pane-27" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1662,7 +1583,7 @@ bal v l r
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-27" class="programbox">{-@ inline reBal @-}
+  <div id="program-26" class="programbox">{-@ inline reBal @-}
 reBal l r t = bigHt l r t && balHt l r t
 
 {-@ inline balHt @-}
@@ -1678,7 +1599,7 @@ bigHt l r t = lBig && rBig
 </div>
 
 <p><br /><strong>Insert</strong> can now be written very simply as the following function that recursively inserts into the appropriate subtree and then calls <code>bal</code> to fix any imbalance:</p>
-<div id="program-pane-28" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1717,7 +1638,7 @@ bigHt l r t = lBig && rBig
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-28" class="programbox">{-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
+  <div id="program-27" class="programbox">{-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert' a t@(Node v l r n)
   | a < v      = bal v (insert' a l) r 
   | a > v      = bal v l (insert' a r)
@@ -1729,7 +1650,7 @@ insert' a Leaf = singleton a </div>
 <section id="deleting-elements" class="level2">
 <h2>Deleting Elements</h2>
 <p>Now we can write the <code>delete</code> function in a manner similar to <code>insert</code>: the easy cases are the recursive ones; here we just delete from the subtree and summon <code>bal</code> to clean up. Notice that the height of the output <code>t</code> is at most <code>1</code> <em>less</em> than that of the input <code>s</code>.</p>
-<div id="program-pane-29" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1768,7 +1689,7 @@ insert' a Leaf = singleton a </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-29" class="programbox">{-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
+  <div id="program-28" class="programbox">{-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
 delete y (Node x l r _)
   | y < x     = bal x (delete y l) r 
   | x < y     = bal x l (delete y r)
@@ -1780,7 +1701,7 @@ eqOrDn s t = eqOrUp t s</div>
 </div>
 
 <p><br /><strong>The tricky case</strong> is when we actually <em>find</em> the element that is to be removed. Here, we call <code>merge</code> to link up the two subtrees <code>l</code> and <code>r</code> after hoisting the smallest element from the right tree <code>r</code> as the new root which replaces the deleted element <code>x</code>.</p>
-<div id="program-pane-30" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1819,7 +1740,7 @@ eqOrDn s t = eqOrUp t s</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-30" class="programbox">{-@ merge :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1}
+  <div id="program-29" class="programbox">{-@ merge :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1}
           -> {t:AVL a | bigHt l r t}
   @-}
 merge _ Leaf r = r
@@ -1830,7 +1751,7 @@ merge x l r    = bal y l r'
 </div>
 
 <p><code>getMin</code> recursively finds the smallest (i.e. leftmost) value in a tree, and returns the value and the remainder tree. The height of each remainder <code>l'</code> may be lower than <code>l</code> (by at most <code>1</code>.) Hence, we use <code>bal</code> to restore the invariants when linking against the corresponding right subtree <code>r</code>.</p>
-<div id="program-pane-31" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1869,7 +1790,7 @@ merge x l r    = bal y l r'
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-31" class="programbox">getMin (Node x Leaf r _) = (x, r)
+  <div id="program-30" class="programbox">getMin (Node x Leaf r _) = (x, r)
 getMin (Node x l r _)    = (x', bal x l' r)
   where
     (x', l')             = getMin l</div>
@@ -1886,7 +1807,7 @@ getMin (Node x l r _)    = (x', bal x l' r)
 </ol>
 <p>We've done this <a href="#lemmas">once before</a> already, so this is a good exercise to solidify your understanding of that material.</p>
 <p><br /><strong>The Elements</strong> of an <code>AVL</code> tree can be described via a measure defined as follows:</p>
-<div id="program-pane-32" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1925,7 +1846,7 @@ getMin (Node x l r _)    = (x', bal x l' r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-32" class="programbox">{-@ measure elems @-}
+  <div id="program-31" class="programbox">{-@ measure elems @-}
 elems                :: (Ord a) => AVL a -> S.Set a
 elems (Node x l r _) = (S.singleton x) `S.union`
                        (elems l)       `S.union`
@@ -1938,7 +1859,7 @@ elems Leaf           = S.empty</div>
 <br /><strong>Exercise: (Membership): </strong>Complete the implementation of the implementation of <code>member</code> that checks if an element is in an <code>AVL</code> tree:
 <br /><br />
 </div>
-<div id="program-pane-33" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1977,7 +1898,7 @@ elems Leaf           = S.empty</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-33" class="programbox">-- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
+  <div id="program-32" class="programbox">-- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
 {-@ member :: (Ord a) => x:a -> t:AVL a -> {v: Bool | Prop v <=> hasElem x t} @-}
 member x t = undefined
 
@@ -1992,7 +1913,7 @@ hasElem x t = True
 <br /><strong>Exercise: (Insertion): </strong>Modify <code>insert'</code> to obtain a function <code>insertAPI</code> that states that the output tree contains the newly inserted element (in addition to the old elements):
 <br /><br />
 </div>
-<div id="program-pane-34" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -2031,7 +1952,7 @@ hasElem x t = True
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-34" class="programbox">{-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
+  <div id="program-33" class="programbox">{-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
 insertAPI x s = insert' x s 
 
 {-@ inline addElem @-}
@@ -2044,7 +1965,7 @@ addElem x s t = True
 <br /><strong>Exercise: (Insertion): </strong>Modify <code>delete</code> to obtain a function <code>deleteAPI</code> that states that the output tree contains the old elements minus the removed element:
 <br /><br />
 </div>
-<div id="program-pane-35" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -2083,7 +2004,7 @@ addElem x s t = True
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-35" class="programbox">{-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
+  <div id="program-34" class="programbox">{-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
 deleteAPI x s = delete x s 
 
 {-@ inline delElem @-}
@@ -2119,7 +2040,7 @@ delElem x s t = True
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+    var queryServerURL = "http://localhost:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

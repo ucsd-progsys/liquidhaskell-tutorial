@@ -158,13 +158,29 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id='page-wrapper'>
 <div id='page'>
  
-<section id="refineddatatypes" class="level1">
-<h1>Refined Datatypes</h1>
+<section id="setmeasure" class="level1">
+<h1>Elemental Measures</h1>
 
-<p>So far, we have seen how to refine the types of <em>functions</em>, to specify, for example, pre-conditions on the inputs, or postconditions on the outputs. Very often, we wish to define <em>datatypes</em> that satisfy certain invariants. In these cases, it is handy to be able to directly refine the the <code>data</code> definition, making it impossible to create illegal inhabitants.</p>
-<section id="autosmart" class="level2">
-<h2>Sparse Vectors Revisited</h2>
-<p>As our first example of a refined datatype, let's revisit the sparse vector representation that we <a href="#sparsetype">saw earlier</a>. The <code>SparseN</code> type alias we used got the job done, but is not pleasant to work with because we have no way of determining the <em>dimension</em> of the sparse vector. Instead, let's create a new datatype to represent such vectors:</p>
+<p>Often, correctness requires us to reason about the <em>set of elements</em> represented inside a data structure, or manipulated by a function. Examples of this abound: for example, we'd like to know that:</p>
+<ul>
+<li><p><em>sorting</em> routines return permutations of their inputs -- i.e. return collections whose elements are the same as the input set,</p></li>
+<li><p><em>resource</em> management functions do not inadvertently create duplicate elements or drop elements from set of tracked resources.</p></li>
+<li><p><em>syntax-tree</em> manipulating procedures create well-scoped trees where the set of used variables are contained within the set of variables previously defined.</p></li>
+</ul>
+<p><br /><strong>SMT Solvers</strong> support very expressive logics. In addition to linear arithmetic and uninterpreted functions, they can <a href="http://www.kroening.com/smt-lib-lsm.pdf)">efficiently decide</a> formulas over sets. Next, lets see how LiquidHaskell lets us exploit this fact to develop types and interfaces that guarantee invariants over the set of elements of a structures.</p>
+<section id="talking-about-sets" class="level2">
+<h2>Talking about Sets</h2>
+<p>First, we need a way to talk about sets in the refinement logic. We could roll our own special Haskell type but for now, lets just use the <code>Set a</code> type from the prelude's <code>Data.Set</code>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><br /><strong>LiquidHaskell Lifts</strong> the basic set operators from <code>Data.Set</code> into the refinement logic. That is, the prelude defines the following <em>logical</em> functions that correspond to the <em>Haskell</em> functions of the same name:</p>
+
+<p><br /><strong>Interpreted Operators</strong> The above operators are <em>interpreted</em> by the SMT solver. That is, just like the SMT solver &quot;knows&quot;, via the axioms of the theory of arithmetic that: <span class="math">\[x = 2 + 2 \Rightarrow x = 4\]</span> is a valid formula, i.e. holds for all <span class="math">\(x\)</span>, the solver &quot;knows&quot; that: <span class="math">\[x = \tsng{1} \Rightarrow y = \tsng{2} \Rightarrow x = \tcap{x}{\tcup{y}{x}}\]</span> This is because, the above formulas belong to a decidable Theory of Sets reduces to McCarthy's more general <a href="http://www-formal.stanford.edu/jmc/towards.ps">Theory of Arrays</a>. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+</section>
+<section id="quickcheck" class="level2">
+<h2>Proving QuickCheck Style Properties</h2>
+<p>To get the hang of whats going on, lets do a few warmup exercises, using LiquidHaskell to prove various simple theorems about sets and operations over them.</p>
+<p><br /><strong>We Refine The Set API</strong> to make it easy to write down theorems. That is, we give the operators in <code>Data.Set</code> refinement type signatures that precisely track their set-theoretic behavior:</p>
+
+<p><br /><strong>We Can Assert Theorems</strong> as <a href="quickcheck">QuickCheck</a> style <em>properties</em>, that is, as functions from arbitrary inputs to a <code>Bool</code> output that must always be <code>True</code>. Lets define aliases for the the <code>Bool</code>eans that are always <code>True</code> or <code>False</code></p>
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -204,13 +220,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-0" class="programbox">data Sparse a = SP { spDim   :: Int
-                   , spElems :: [(Int, a)] } </div>
+  <div id="program-0" class="programbox">{-@ type True  = {v:Bool |      Prop v } @-}
+{-@ type False = {v:Bool | not (Prop v)} @-}</div>
 </div>
 
-<p>Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
-<p><br /><strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
+<p>We can use <code>True</code> to state theorems. For example, the unexciting arithmetic equality above becomes:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -250,11 +264,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">{-@ data Sparse a = SP { spDim   :: Nat 
-                       , spElems :: [(Btwn 0 spDim, a)]} @-}</div>
+  <div id="program-1" class="programbox">{-@ prop_one_plus_one_eq_two :: _ -> True @-}
+prop_one_plus_one_eq_two x   = (x == 1 + 1) `implies` (x == 2)</div>
 </div>
 
-<p>Where, as before, the we use the aliases:</p>
+<p>Where <code>implies</code> is just the implication function over <code>Bool</code></p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -294,17 +308,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">{-@ type Nat        = {v:Int | 0 <= v}            @-}
-{-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
+  <div id="program-2" class="programbox">{-@ implies        :: p:Bool -> q:Bool -> Implies p q  @-}
+implies False _    = True
+implies _     True = True 
+implies _    _     = False</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> The refined data definition is internally converted into refined types for the data constructor <code>SP</code>:</p>
-<pre class="spec"><code>-- Generated Internal representation
-data Sparse a where
-  SP :: spDim:Nat
-     -&gt; spElems:[(Btwn 0 spDim, a)]
-     -&gt; Sparse a </code></pre>
-<p>In other words, by using refined input types for <code>SP</code> we have automatically converted it into a <em>smart</em> constructor that ensures that <em>every</em> instance of a <code>Sparse</code> is legal. Consequently, LiquidHaskell verifies:</p>
+<p>and <code>Implies p q</code> is defined as</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -344,12 +354,13 @@ data Sparse a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">okSP :: Sparse String
-okSP = SP 5 [ (0, "cat")
-            , (3, "dog") ] </div>
+  <div id="program-3" class="programbox">{-@ type Implies P Q = {v:_ | Prop v <=> (Prop P => Prop Q)} @-}</div>
 </div>
 
-<p>but rejects, due to the invalid index:</p>
+<div id="Bounded Addition" class="hwex">
+<br /><strong>Exercise: (Bounded Addition): </strong>Write and prove a QuickCheck style theorem that: <span class="math">\(\forall x, y. x &lt; 100 \wedge y &lt; 100 \Rightarrow x + y &lt; 200\)</span>.
+<br /><br />
+</div>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -389,12 +400,11 @@ okSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">badSP :: Sparse String
-badSP = SP 5 [ (0, "cat")
-             , (6, "dog") ]</div>
+  <div id="program-4" class="programbox">{-@ prop_x_y_200 :: _ -> _ -> True @-}
+prop_x_y_200 x y = False -- fill in the theorem body </div>
 </div>
 
-<p><br /><strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><br /><strong>The Commutativity of Intersection</strong> can be easily stated and proved as a QuickCheck style theorem:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -434,10 +444,12 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-} </div>
+  <div id="program-5" class="programbox">{-@ prop_intersection_comm :: _ -> _ -> True @-}
+prop_intersection_comm x y 
+  = (x `intersection` y) == (y `intersection` x)</div>
 </div>
 
-<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<p><br /><strong>The Associativity of Union</strong> can similarly be confirmed:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -477,15 +489,12 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ dotProd :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd x (SP _ y) = go 0 y
-  where 
-    go sum ((i, v) : y') = go (sum + (x ! i) * v) y' 
-    go sum []            = sum</div>
+  <div id="program-6" class="programbox">{-@ prop_intersection_comm :: _ -> _ -> True @-}
+prop_union_assoc x y z 
+  = (x `union` (y `union` z)) == (x `union` y) `union` z</div>
 </div>
 
-<p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br /><strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
+<p><br /><strong>The Distributivity Laws</strong> for Boolean Algebra can be verified by writing properties over the relevant operators. For example, we lets check that <code>union</code> distributes over <code>intersection</code>:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -525,17 +534,14 @@ dotProd x (SP _ y) = go 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">{-@ dotProd' :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd' x (SP _ y) = foldl' body 0 y   
-  where 
-    body sum (i, v) = sum + (x ! i)  * v</div>
+  <div id="program-7" class="programbox">{-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
+prop_intersection_dist x y z 
+  =  x `intersection` (y `union` z)
+     ==
+     (x `intersection` y) `union` (x `intersection` z) </div>
 </div>
 
-<p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
-<div id="Sanitization" class="hwex">
-<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to writing a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
-<br /><br />
-</div>
+<p><br /><strong>Non-Theorems</strong> should be rejected. So, while we're at it, let's make sure LiquidHaskell doesn't prove anything that <em>isn't</em> true ...</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -575,17 +581,27 @@ dotProd' x (SP _ y) = foldl' body 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
-fromList dim elts = undefined   
-
-{-@ test1 :: SparseN String 3 @-}
-test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
+  <div id="program-8" class="programbox">{-@ prop_cup_dif_bad :: _ -> _ -> True @-}
+prop_cup_dif_bad x y
+  = pre `implies` (x == ((x `union` y) `difference` y))
+  where
+    pre = True  -- Fix this with a non-trivial precondition</div>
 </div>
 
-<div id="Addition" class="hwex">
-<br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:
+<div id="Set Difference" class="hwex">
+<p><br /><strong>Exercise: (Set Difference): </strong>Why does the above property fail?</p>
+<ol type="1">
+<li><p>Use QuickCheck (or your own little grey cells) to find a <em>counterexample</em> for the property <code>prop_cup_dif_bad</code>.</p></li>
+<li>Use the counterexample to assign <code>pre</code> a non-trivial (i.e. other than <code>False</code>) condition so that the property can be proved.</li>
+</ol>
 <br /><br />
 </div>
+<p>Thus, LiquidHaskell's refined types offer a nice interface for interacting with the SMT solvers in order to <em>prove</em> theorems, while letting us use QuickCheck to generate counterexamples.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+</section>
+<section id="listelems" class="level2">
+<h2>Content-Aware List API</h2>
+<p>Lets return to our real goal, which is to to verify properties of programs. First, we need a way to refine the list API to precisely track the set of elements in a list.</p>
+<p><br /><strong>The Elements of a List</strong> can be described by a simple recursive measure that walks over the list, building up the set:</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -625,20 +641,17 @@ test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">plus     :: (Num a) => Sparse a -> Sparse a -> Sparse a
-plus x y = undefined 
-
-{-@ test2 :: SparseN Int 3 @-}   
-test2    = plus vec1 vec2 
-  where 
-    vec1 = SP 3 [(0, 12), (2, 9)]
-    vec2 = SP 3 [(0, 8),  (1, 100)]</div>
+  <div id="program-9" class="programbox">{-@ measure elts @-}
+elts        :: (Ord a) => [a] -> Set a
+elts []     = empty
+elts (x:xs) = singleton x `union` elts xs</div>
 </div>
 
-</section>
-<section id="orderedlists" class="level2">
-<h2>Ordered Lists</h2>
-<p>As a second example of refined data types, let's consider a different problem: representing <em>ordered</em> sequences. Here's a type for sequences that mimics the classical list:</p>
+<p>Lets write a few helpful aliases for various refined lists that will then make the subsequent specifications pithy and crisp.</p>
+
+<ul>
+<li>A list with elements <code>S</code></li>
+</ul>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -678,14 +691,12 @@ test2    = plus vec1 vec2
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">data IncList a =
-    Emp
-  | (:<) { hd :: a, tl :: IncList a }   
-
-infixr 9 :<</div>
+  <div id="program-10" class="programbox">{-@ type ListS a S = {v:[a] | elts v = S} @-}</div>
 </div>
 
-<p>The Haskell type above does not state that the elements be in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
+<ul>
+<li>An <em>empty</em> list</li>
+</ul>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -725,17 +736,12 @@ infixr 9 :<</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ data IncList a =
-        Emp
-      | (:<) { hd :: a, tl :: IncList {v:a | hd <= v}}  @-}</div>
+  <div id="program-11" class="programbox">{-@ type ListEmp a = ListS a {Set_empty 0} @-}</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
-<pre class="spec"><code>-- Generated Internal representation
-data IncList a where
-  Emp  :: IncList a
-  (:&lt;) :: hd:a -&gt; tl:IncList {v:a | hd &lt;= v} -&gt; IncList a</code></pre>
-<p>which ensures that we can only create legal ordered lists.</p>
+<ul>
+<li>A list whose contents <em>equal</em> those of list <code>X</code></li>
+</ul>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -775,13 +781,12 @@ data IncList a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">okList  = 1 :< 2 :< 3 :< Emp      -- accepted by LH
-
-badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
+  <div id="program-12" class="programbox">{-@ type ListEq a X = ListS a {elts X}    @-}</div>
 </div>
 
-<p>Its all very well to <em>specify</em> ordered lists. Next, lets see how its equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
-<p><br /><strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<ul>
+<li>A list whose contents are a <em>subset</em> of list <code>X</code></li>
+</ul>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -821,12 +826,12 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">insertSort        :: (Ord a) => [a] -> IncList a 
-insertSort []     = Emp 
-insertSort (x:xs) = insert x (insertSort xs) </div>
+  <div id="program-13" class="programbox">{-@ type ListSub a X = {v:[a]| Set_sub (elts v) (elts X)} @-}</div>
 </div>
 
-<p>The hard work is done by <code>insert</code> which places an element into the correct position of a sorted list. LiquidHaskell infers that if you give <code>insert</code> an element and a sorted list, it returns a sorted list.</p>
+<ul>
+<li>A list whose contents are the union of lists <code>X</code> and <code>Y</code></li>
+</ul>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -866,17 +871,12 @@ insertSort (x:xs) = insert x (insertSort xs) </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">insert             :: (Ord a) => a -> IncList a -> IncList a
-insert y Emp       = y :< Emp
-insert y (x :< xs) 
-  | y <= x         = y :< x :< xs 
-  | otherwise      = x :< insert y xs</div>
+  <div id="program-14" class="programbox">{-@ type ListUn a X Y = ListS a {Set_cup (elts X) (elts Y)} @-}</div>
 </div>
 
-<div id="Insertion Sort" class="hwex">
-<br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.
-<br /><br />
-</div>
+<ul>
+<li>A list whose contents are exactly <code>X</code> and the contents of <code>Y</code></li>
+</ul>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -916,14 +916,15 @@ insert y (x :< xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">insertSort'     :: (Ord a) => [a] -> IncList a
-insertSort' xs  = foldr f b xs
-  where
-     f          = undefined    -- Fill this in
-     b          = undefined    -- Fill this in</div>
+  <div id="program-15" class="programbox">{-@ type ListUn1 a X Y = ListS a {Set_cup (Set_sng X) (elts Y)} @-}</div>
 </div>
 
-<p><br /><strong>Merge Sort</strong> Similarly, it is easy to write merge sort, by implementing the three steps. First, we write a function that <em>splits</em> the input into two equal sized halves:</p>
+<p><br /><strong>The Measures strengthens</strong> the data constructors for lists. That is we get the automatically refined types for &quot;nil&quot; and &quot;cons&quot;:</p>
+
+
+<p>\</p>
+<p>Lets take our new vocabulary out for a spin!</p>
+<p><br /><strong>The Append</strong> function returns a list whose elements are the <em>union</em> of the elements of the input Lists:</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -963,14 +964,15 @@ insertSort' xs  = foldr f b xs
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">split          :: [a] -> ([a], [a])
-split (x:y:zs) = (x:xs, y:ys) 
-  where 
-    (xs, ys)   = split zs
-split xs       = (xs, [])</div>
+  <div id="program-16" class="programbox">{-@ append'       :: xs:_ -> ys:_ -> ListUn a xs ys @-}
+append' []     ys = ys
+append' (x:xs) ys = x : append' xs ys</div>
 </div>
 
-<p>Second, we need a function that <em>combines</em> two ordered lists</p>
+<div id="Reverse" class="hwex">
+<br /><strong>Exercise: (Reverse): </strong>Write down a type for <code>revHelper</code> so that <code>reverse'</code> is verified by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1010,15 +1012,17 @@ split xs       = (xs, [])</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">merge         :: (Ord a) => IncList a -> IncList a -> IncList a 
-merge xs  Emp = xs
-merge Emp ys  = ys
-merge (x :< xs) (y :< ys) 
-  | x <= y    = x :< merge xs (y :< ys)
-  | otherwise = y :< merge (x :< xs) ys</div>
+  <div id="program-17" class="programbox">{-@ reverse' :: xs:List a -> ListEq a xs @-}
+reverse' xs = revHelper [] xs
+
+revHelper acc []     = acc
+revHelper acc (x:xs) = revHelper (x:acc) xs</div>
 </div>
 
-<p>Finally, we compose the above steps to divide (i.e. <code>split</code>) and conquer (<code>sort</code> and <code>merge</code>) the input list:</p>
+<div id="Halve" class="hwex">
+<br /><strong>Exercise: (Halve): </strong>Write down a specification for <code>halve</code> such that the subsequent &quot;theorem&quot; <code>prop_halve_append</code> is proved by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1058,20 +1062,23 @@ merge (x :< xs) (y :< ys)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">mergeSort :: (Ord a) => [a] -> IncList a
-mergeSort []  = Emp  
-mergeSort [x] = x :< Emp
-mergeSort xs  = merge (mergeSort ys) (mergeSort zs) 
-  where 
-    (ys, zs)  = split xs</div>
+  <div id="program-18" class="programbox">halve            :: Int -> [a] -> ([a], [a])
+halve 0 xs       = ([], xs)
+halve n (x:y:zs) = (x:xs, y:ys) where (xs, ys) = halve (n-1) zs
+halve _ xs       = ([], xs)
+
+{-@ prop_halve_append  :: _ -> _ -> True @-}
+prop_halve_append n xs = elts xs == elts xs'
+  where
+    xs'      =  append' ys zs
+    (ys, zs) =  halve n xs </div>
 </div>
 
-<div id="QuickSort" class="hwex">
-<br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.
+<p><strong>Hint: </strong>You may want to remind yourself about the <em>dimension-aware</em> signature for <code>partition</code> from <a href="#listreducing">the earlier chapter</a>.</p>
+<div id="Membership" class="hwex">
+<br /><strong>Exercise: (Membership): </strong>Write down a signature for <code>elem</code> that suffices to verify <code>test1</code> and <code>test2</code>.
 <br /><br />
 </div>
-<p><strong>Hint: </strong>Think about how <code>append</code> should behave so that the <code>quickSort</code> has the desired property. Next, can you bottle that intuition into a suitable <em>specification</em> for <code>append</code> and then ensure that the code satisfies that specification.</p>
-<p><strong>FIXME</strong> This is too big a jump for an exercise; explain it.</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1111,25 +1118,22 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">quickSort           :: (Ord a) => [a] -> IncList a
-quickSort []        = Emp 
-quickSort (x:xs)    = append x lessers greaters 
-  where 
-    lessers         = quickSort [y | y <- xs, y < x ]
-    greaters        = quickSort [z | z <- xs, z >= x]
+  <div id="program-19" class="programbox">{-@ elem      :: (Eq a) => a -> [a] -> Bool @-}
+elem x (y:ys) = x == y || elem x ys
+elem _ []     = False
 
-{-@ append :: x:a -> IncList {v:a | v < x}
-                  -> IncList {v:a | x <= v}
-                  -> IncList a
-  @-}
-append z Emp       ys = z :< ys
-append z (x :< xs) ys = x :< append z xs ys </div>
+{-@ test1 :: True @-}
+test1      = elem 2 [1,2,3]
+
+{-@ test2 :: False @-}
+test2      = elem 2 [1,3] </div>
 </div>
 
 </section>
-<section id="binarysearchtree" class="level2">
-<h2>Ordered Trees</h2>
-<p>As a last example of refined data types, let us consider binary search ordered trees, defined thus:</p>
+<section id="permutations" class="level2">
+<h2>Permutations</h2>
+<p>Next, lets use the refined list API to prove that various sorting routines return <em>permutations</em> of their inputs, that is, return output lists whose elements are the <em>same as</em> those of the input lists.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br /><strong>Insertion Sort</strong> is the simplest of all the list sorting routines; we build up an (ordered) output list <code>insert</code>ing each element of the input list into the appropriate position of the output:</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1169,23 +1173,13 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">data BST a = Leaf
-           | Node { root  :: a
-                  , left  :: BST a
-                  , right :: BST a }</div>
+  <div id="program-20" class="programbox">insert x []     = [x]
+insert x (y:ys)
+  | x <= y      = x : y : ys
+  | otherwise   = y : insert x ys</div>
 </div>
 
-<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
-<div id="fig:bst" style="align: left; text-align:center;">
-  <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Binary Search Tree with values between 1 and 9.
-           Each root's value lies between the values appearing
-           in its left and right subtrees. </div>
-</div>
-<br>
-
-
-<p>Figure <a href="#fig:bst">1.1</a> shows a binary search tree whose nodes are labeled with a subset of values from <code>1</code> to <code>9</code>. We might represent such a tree with the Haskell value:</p>
+<p>Thus, the output of <code>insert</code> has all the elements of the input <code>xs</code>, plus the new element <code>x</code>:</p>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1225,17 +1219,10 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-21" class="programbox">okBST :: BST Int
-okBST =  Node 6 
-             (Node 2
-                 (Node 1 Leaf Leaf)
-                 (Node 4 Leaf Leaf))
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-21" class="programbox">{-@ insert :: x:a -> xs:List a -> ListUn1 a x xs @-}</div>
 </div>
 
-<p><br /><strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p>The above signature lets us prove that the output of the sorting routine indeed has the elements of the input:</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1275,22 +1262,15 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-22" class="programbox">{-@ data BST a    = Leaf
-                  | Node { root  :: a
-                         , left  :: BSTL a root
-                         , right :: BSTR a root } @-}
-             
-{-@ type BSTL a X = BST {v:a | v < X}             @-}
-{-@ type BSTR a X = BST {v:a | X < v}             @-}</div>
+  <div id="program-22" class="programbox">{-@ insertSort :: (Ord a) => xs:List a -> ListEq a xs @-}
+insertSort []     = []
+insertSort (x:xs) = insert x (insertSort xs)</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> As before, the above data definition creates a refined smart constructor for <code>BST</code></p>
-<pre class="spec"><code>data BST a where
-  Leaf :: BST a
-  Node :: r:a -&gt; BST {v:a| v &lt; r}
-       -&gt; BST {v:a | r &lt; v}
-       -&gt; BST a</code></pre>
-<p>which <em>prevents</em> us from creating illegal trees</p>
+<div id="Merge" class="hwex">
+<br /><strong>Exercise: (Merge): </strong>Fix the specification of <code>merge</code> so that the subsequent property <code>prop_merge_app</code> is verified by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1330,20 +1310,28 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-23" class="programbox">badBST =  Node 6 
-             (Node 4
-                 (Node 1 Leaf Leaf)
-                 (Node 2 Leaf Leaf))  -- Out of order, rejected 
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-23" class="programbox">{-@ merge :: xs:List a -> ys:List a -> List a @-}
+merge (x:xs) (y:ys)
+  | x <= y           = x : merge xs (y:ys)
+  | otherwise        = y : merge (x:xs) ys
+merge [] ys          = ys
+merge xs []          = xs
+
+{-@ prop_merge_app   :: _ -> _ -> True   @-}
+prop_merge_app xs ys = elts zs == elts zs'
+  where
+    zs               = append' xs ys
+    zs'              = merge   xs ys</div>
 </div>
 
-<div id="Duplicates" class="hwex">
-<br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?
+<div id="Merge Sort" class="hwex">
+<p><br /><strong>Exercise: (Merge Sort): </strong>Once you write the correct type for <code>merge</code> above, you should be able to prove the er, unexpected signature for <code>mergeSort</code> below.</p>
+<ol type="1">
+<li><p>Make sure you are able verify the given signature.</p></li>
+<li>Obviously we don't want <code>mergeSort</code> to return the empty list, so there's a bug. Find and fix it, so that you <em>cannot</em> prove that the output is empty, but <em>can</em> instead prove that the output is <code>ListEq a xs</code>.</li>
+</ol>
 <br /><br />
 </div>
-<p><br /><strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1383,15 +1371,19 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-24" class="programbox">mem                 :: (Ord a) => a -> BST a -> Bool
-mem _ Leaf          = False
-mem k (Node k' l r)
-  | k == k'         = True
-  | k <  k'         = mem k l
-  | otherwise       = mem k r </div>
+  <div id="program-24" class="programbox">{-@ mergeSort :: (Ord a) => xs:List a -> ListEmp a @-}
+mergeSort []  = []
+mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
+  where
+   (ys, zs)   = halve mid xs
+   mid        = length xs `div` 2</div>
 </div>
 
-<p><br /><strong>Singleton</strong> Next, another easy warm-up: a function to create a <code>BST</code> with a single given element:</p>
+</section>
+<section id="uniqueness" class="level2">
+<h2>Uniqueness</h2>
+<p>Often, we want to enforce the invariant that a particular collection contains <em>no duplicates</em>; as multiple copies in a collection of file handles or system resources can create unpleasant leaks. For example, the <a href="http://xmonad.org/">XMonad</a> window manager creates a sophisticated <em>zipper</em> data structure to hold the list of active user windows and carefully maintains the invariant that that the zipper contains no duplicates. Next, lets see how to specify and verify this invariant using LiquidHaskell, first for lists, and then for a simplified zipper.</p>
+<p><br /><strong>To Specify Uniqueness</strong> we need a way of saying that a list has <em>no duplicates</em>. There are many ways to do so; the simplest is a <em>measure</em>:</p>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1431,11 +1423,13 @@ mem k (Node k' l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-25" class="programbox">one   :: a -> BST a
-one x = Node x Leaf Leaf</div>
+  <div id="program-25" class="programbox">{-@ measure unique @-}
+unique        :: (Ord a) => List a -> Bool
+unique []     = True
+unique (x:xs) = unique xs && not (member x (elts xs)) </div>
 </div>
 
-<p><br /><strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p>We can use the above to write an alias for duplicate-free lists</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1475,15 +1469,10 @@ one x = Node x Leaf Leaf</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-26" class="programbox">add                  :: (Ord a) => a -> BST a -> BST a
-add k' Leaf          = one k'
-add k' t@(Node k l r)
-  | k' < k           = Node k (add k' l) r
-  | k  < k'          = Node k l (add k' r)
-  | otherwise        = t </div>
+  <div id="program-26" class="programbox">{-@ type UList a = {v:List a | unique v }@-}</div>
 </div>
 
-<p><br /><strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p>Lets quickly check that the right lists are indeed <code>unique</code></p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1523,10 +1512,14 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-27" class="programbox">data MinPair a = MP { mElt :: a, rest :: BST a }</div>
+  <div id="program-27" class="programbox">{-@ isUnique    :: UList Int @-}
+isUnique        = [1, 2, 3]        -- accepted by LH
+
+{-@ isNotUnique :: UList Int @-}
+isNotUnique     = [1, 2, 3, 1]     -- rejected by LH</div>
 </div>
 
-<p>We can specify that <code>mElt</code> is indeed smaller than all the elements in <code>rest</code> via the data type refinement:</p>
+<p><br /><strong>The Filter</strong> function returns a <em>subset</em> of its elements, and hence, <em>preserves</em> uniqueness. That is, if the input is unique, the output is too:</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1566,10 +1559,22 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-28" class="programbox">{-@ data MinPair a = MP { mElt :: a, rest :: BSTR a mElt} @-}</div>
+  <div id="program-28" class="programbox">{-@ filter   :: (a -> Bool)
+             -> xs:UList a
+             -> {v:ListSub a xs | unique v}
+  @-}
+filter _ []   = []
+filter f (x:xs)
+  | f x       = x : xs' 
+  | otherwise = xs' 
+  where
+    xs'       = filter f xs</div>
 </div>
 
-<p>Finally, we can write the code to compute <code>MinPair</code></p>
+<div id="Filter" class="hwex">
+<br /><strong>Exercise: (Filter): </strong>It seems a bit draconian to require that <code>filter</code> only be called with unique lists. Write down a more permissive type for <code>filter'</code> below such that the subsequent uses are verified by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1609,16 +1614,22 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-29" class="programbox">delMin                 :: (Ord a) => BST a -> MinPair a
-delMin (Node k Leaf r) = MP k r
-delMin (Node k l r)    = MP k' (Node k l' r)
+  <div id="program-29" class="programbox">filter' _ []   = []
+filter' f (x:xs)
+  | f x       = x : xs' 
+  | otherwise = xs' 
   where
-    MP k' l'           = delMin l 
-delMin Leaf            = die "Don't say I didn't warn ya!"</div>
+    xs'       = filter' f xs
+
+{-@ test3 :: UList _ @-}
+test3     = filter' (> 2) [1,2,3,4]
+
+{-@ test4 :: [_] @-}
+test4     = filter' (> 3) [3,1,2,3]</div>
 </div>
 
-<div id="Delete" class="hwex">
-<br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.
+<div id="Reverse" class="hwex">
+<br /><strong>Exercise: (Reverse): </strong>When we <code>reverse</code> their order, the set of elements is unchanged, and hence unique (if the input was unique). Why does LiquidHaskell reject the below? Can you fix things so that we can prove that the output is a <code>UList a</code>?
 <br /><br />
 </div>
 <div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
@@ -1660,21 +1671,15 @@ delMin Leaf            = die "Don't say I didn't warn ya!"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-30" class="programbox">del                   :: (Ord a) => a -> BST a -> BST a
-del k' t@(Node k l r) = undefined
-del _  Leaf           = Leaf </div>
+  <div id="program-30" class="programbox">{-@ reverse    :: xs:UList a -> UList a    @-}
+reverse         = go []
+  where 
+    {-@ go     :: a:List a -> xs:List a -> List a @-}
+    go a []     = a
+    go a (x:xs) = go (x:a) xs </div>
 </div>
 
-<p><strong>FIXME</strong> See issue about using RAW FIELDS vs PATTERN MATCHING.</p>
-<div id="Safely Deleting Minimum" class="hwex">
-<br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.
-<br /><br />
-</div>
-<p><strong>FIXME</strong> I shouldn't have to read a future chapter to complete an exercise in this chapter.</p>
-<div id="BST Sort" class="hwex">
-<br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.
-<br /><br />
-</div>
+<p><br /><strong>The Nub</strong> function constructs a <code>unique</code> list from an arbitrary input by traversing the input and tossing out elements that are already <code>seen</code>:</p>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1714,34 +1719,521 @@ del _  Leaf           = Leaf </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-31" class="programbox">bstSort   :: (Ord a) => [a] -> IncList a
-bstSort   = toIncList . toBST
-
-toBST     :: (Ord a) => [a] -> BST a
-toBST     = foldr add Leaf  
-
-toIncList :: BST a -> IncList a
-toIncList (Node x l r) = undefined
-toIncList Leaf         = undefined</div>
+  <div id="program-31" class="programbox">{-@ nub              :: List a -> UList a @-}
+nub xs                = go [] xs 
+  where
+    go seen []        = seen
+    go seen (x:xs)
+      | x `isin` seen = go seen     xs
+      | otherwise     = go (x:seen) xs</div>
 </div>
 
-<p><strong>Hint: </strong>This exercise will be a lot easier <em>if</em> you first finish the <code>quickSort</code> exercise. Note that the signature for <code>toIncList</code> does not use <code>Ord</code> and so you cannot use a sorting procedure to implement it.</p>
+<p>The key membership test is done by <code>isin</code>, whose output is <code>True</code> exactly when the element is in the given list. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-32" class="programbox">-- FIXME
+{-@ predicate In X Xs = Set_mem X (elts Xs) @-}
+
+{-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys }@-}
+isin x (y:ys)
+  | x == y    = True
+  | otherwise = x `isin` ys
+isin _ []     = False</div>
+</div>
+
+<div id="Append" class="hwex">
+<br /><strong>Exercise: (Append): </strong>Why does <code>append</code>ing two <code>UList</code>s not return a <code>UList</code>? Fix the type signature below so that you can prove that the output is indeed <code>unique</code>.
+<br /><br />
+</div>
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-33" class="programbox">{-@ append       :: UList a -> UList a -> UList a @-}
+append []     ys = ys
+append (x:xs) ys = x : append xs ys</div>
+</div>
+
+<div id="Range" class="hwex">
+<br /><strong>Exercise: (Range): </strong><code>range i j</code> returns the list of <code>Int</code> between <code>i</code> and <code>j</code>. LiquidHaskell refuses to acknowledge that the output is indeed a <code>UList</code>. Fix the code so that LiquidHaskell verifies that it implements the given signature (and of course, computes the same result.)
+<br /><br />
+</div>
+<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-34" class="programbox">{-@ type Btwn I J = {v:_ | I <= v && v < J} @-}
+                   
+{-@ range     :: i:Int -> j:Int -> UList (Btwn i j) @-}
+range i j
+  | i < j     = i : range (i + 1) j
+  | otherwise = [] </div>
+</div>
+
+<p><strong>Hint: </strong>This may be easier to do <em>after</em> you read this chapter <a href="#lemmas">about lemmas</a>.</p>
+</section>
+<section id="unique-zippers" class="level2">
+<h2>Unique Zippers</h2>
+<p>A <a href="wiki-zipper">zipper</a> is an aggregate data stucture that is used to arbitrarily traverse the structure and update its contents. For example, a zipper for a list is a data type that contains an element (called <code>focus</code>) that we are currently <code>focus</code>-ed on, a list of elements to the <code>left</code> of (i.e. before) the focus, and a list of elements to the <code>right</code> (i.e. after) the focus.</p>
+<div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-35" class="programbox">data Zipper a = Zipper {
+    focus  :: a      
+  , left   :: List a 
+  , right  :: List a
+  }  </div>
+</div>
+
+<p><br /><strong>XMonad</strong> is a wonderful tiling window manager, that uses a <a href="http://hackage.haskell.org/package/xmonad-0.11/docs/XMonad-StackSet.html">zipper</a> to store the set of windows being managed. Xmonad requires the crucial invariant that the values in the zipper be unique, that is, be free of duplicates.</p>
+<p><br /><strong>We Refine Zipper</strong> to capture the requirement that legal zippers are unique. To this end, we state that the <code>left</code> and <code>right</code> lists are unique, disjoint, and do not contain <code>focus</code>.</p>
+<div id="program-pane-36" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-36" class="programbox">{-@ data Zipper a = Zipper {
+      focus :: a
+    , left  :: {v: UList a | not (In focus v)}
+    , right :: {v: UList a | not (In focus v) && Disj v left }
+    } @-}
+
+{-@ predicate Disj X Y = Disjoint (elts X) (elts Y)        @-}</div>
+</div>
+
+<p><br /><strong>Our Refined Zipper Constructor</strong> makes <em>illegal states unrepresentable</em>. That is, by construction, we will ensure that every <code>Zipper</code> is free of duplicates. For example, it is straightforward to create a valid <code>Zipper</code> from a <code>unique</code> list:</p>
+<div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-37" class="programbox">{-@ differentiate    :: UList a -> Maybe (Zipper a) @-}
+differentiate []     = Nothing
+differentiate (x:xs) = Just $ Zipper x [] xs</div>
+</div>
+
+<div id="Deconstructing Zippers" class="hwex">
+<br /><strong>Exercise: (Deconstructing Zippers): </strong>Dually, the elements of a unique zipper tumble out into a unique list. Strengthen the types of <code>reverse</code> and <code>append</code> above so that LiquidHaskell accepts the below signatures for <code>integrate</code>:
+<br /><br />
+</div>
+<div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-38" class="programbox">{-@ integrate            :: Zipper a -> UList a @-}
+integrate (Zipper x l r) = reverse l `append` (x : r)</div>
+</div>
+
+<p><br /><strong>We can Shift the Focus</strong> element to the left or right while preserving the uniqueness invariant. Here's the code that shifts the focus to the left:</p>
+<div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-39" class="programbox">focusLeft                      :: Zipper a -> Zipper a
+focusLeft (Zipper t (l:ls) rs) = Zipper l ls (t:rs)
+focusLeft (Zipper t [] rs)     = Zipper x xs []
+  where
+    (x:xs)                     = reverse (t:rs)</div>
+</div>
+
+<p>To shift to the right, we simply <em>reverse</em> the elements and shift to the left:</p>
+<div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-40" class="programbox">focusRight    :: Zipper a -> Zipper a
+focusRight    = reverseZipper . focusLeft . reverseZipper
+
+reverseZipper :: Zipper a -> Zipper a
+reverseZipper (Zipper t ls rs) = Zipper t rs ls</div>
+</div>
+
+<p><br /><strong>To Filter</strong> elements from a zipper, we need to take care when the <code>focus</code> itself, or all the elements get eliminated. In the latter case, there is no <code>Zipper</code> and so the operation returns a <code>Maybe</code>:</p>
+<div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-41" class="programbox">filterZipper :: (a -> Bool) -> Zipper a -> Maybe (Zipper a)
+filterZipper p (Zipper f ls rs)
+  = case filter p (f:rs) of
+      f':rs' -> Just $ Zipper f' (filter p ls) rs' 
+      []     -> case filter p ls of                 
+                  f':ls' -> Just $ Zipper f' ls' []
+                  []     -> Nothing</div>
+</div>
+
+<p>Thus, by using LiquidHaskell's refinement types, and the SMT solvers native reasoning about sets, we can ensure the key uniqueness invariant holds in the presence of various tricky operations that are performed over <code>Zipper</code>s.</p>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them &quot;smart&quot; in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
-<p>One recurring theme in this chapter was that we had to create new versions of standard datatypes, just in order to specify certain invariants. For example, we had to write a special list type, with its own <em>copies</em> of nil and cons. Similarly, to implement <code>delMin</code> we had to create our own pair type.</p>
-<p><br /><strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
+<p>In this chapter, we saw how SMT solvers can let us reason precisely about the actual <em>contents</em> of data structures, via the theory of sets. In particular, we saw how to:</p>
+<ul>
+<li><p><em>Lift set-theoretic primitives</em> to refined Haskell functions from the <code>Data.Set</code> library,</p></li>
+<li><p><em>Define measures</em> like <code>elts</code> that characterize the set of elements of structures, and <code>unique</code> that describe high-level application specific properties about those sets,</p></li>
+<li><p><em>Specify and verify</em> that implementations enjoy various functional correctness properties, e.g. that sorting routines return permutations of their inputs, and various zipper operators preserve uniqueness.</p></li>
+</ul>
+<p>Next, we present a variety of longer <em>case-studies</em> that illustrate the techniques developed so far on particular application domains.</p>
 </section>
 </section>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>The standard approach is to use abstract types and <a href="https://www.haskell.org/haskellwiki/Smart_constructors">smart constructors</a> but even then there is only the informal guarantee that the smart constructor establishes the right invariants.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Note that <em>inside</em> a refined <code>data</code> definition, a field name like <code>spDim</code> refers to the value of the field, but <em>outside</em> it refers to the field selector measure or function.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>We could also just <em>inline</em> the definitions of <code>BSTL</code> and <code>BSTR</code> into that of <code>BST</code> but they will be handy later.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>While writing this exercise I inadvertently swapped the <code>k</code> and <code>k'</code> which caused LiquidHaskell to protest.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>This helper type approach is rather verbose. We should be able to just use plain old pairs and specify the above requirement as a <em>dependency</em> between the pairs' elements. Later, we will see how to do so using <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstract refinements</a>.<a href="#fnref5">↩</a></p></li>
+<li id="fn1"><p>See <a href="http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/03/26/talking-about-sets.lhs/">this</a> for a brief description of how to work directly with the set operators natively supported by LiquidHaskell.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>See <a href="http://research.microsoft.com/en-us/um/people/leonardo/fmcad09.pdf">this recent paper</a> to learn how modern SMT solvers prove equalities like the above.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>The <a href="https://github.com/LeventErkok/sbv">SBV</a> and <a href="http://lara.epfl.ch/w/leon">Leon</a> projects describe a different DSL based approach for using SMT solvers from Haskell and Scala respectively.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Since we are focusing on the elements, lets not distract ourselves with the <a href="#orderedlists">ordering invariant</a> and reuse plain old lists. See <a href="http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/07/29/putting-things-in-order.lhs/">this</a> for how to specify and verify order with plain old lists.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>Which should be clear by now, if you did a certain exercise above .<a href="#fnref5">↩</a></p></li>
 </ol>
 </section>
 
@@ -1759,7 +2251,7 @@ toIncList Leaf         = undefined</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://localhost:8090/" ;
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

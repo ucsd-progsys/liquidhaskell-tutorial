@@ -158,13 +158,17 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id='page-wrapper'>
 <div id='page'>
  
-<section id="refineddatatypes" class="level1">
-<h1>Refined Datatypes</h1>
+<section id="refinement-types" class="level1">
+<h1>Refinement Types</h1>
 
-<p>So far, we have seen how to refine the types of <em>functions</em>, to specify, for example, pre-conditions on the inputs, or postconditions on the outputs. Very often, we wish to define <em>datatypes</em> that satisfy certain invariants. In these cases, it is handy to be able to directly refine the the <code>data</code> definition, making it impossible to create illegal inhabitants.</p>
-<section id="autosmart" class="level2">
-<h2>Sparse Vectors Revisited</h2>
-<p>As our first example of a refined datatype, let's revisit the sparse vector representation that we <a href="#sparsetype">saw earlier</a>. The <code>SparseN</code> type alias we used got the job done, but is not pleasant to work with because we have no way of determining the <em>dimension</em> of the sparse vector. Instead, let's create a new datatype to represent such vectors:</p>
+<p><br /><strong>What is a Refinement Type?</strong> In a nutshell,</p>
+<blockquote>
+<p><em>Refinement Types</em> = <em>Types</em> + <em>Predicates</em></p>
+</blockquote>
+<p>That is, refinement types allow us to decorate types with <em>logical predicates</em>, which you can think of as <em>boolean-valued</em> Haskell expressions, that constrain the set of values described by the type. This lets us specify sophisticated invariants of the underlying values.</p>
+<section id="definetype" class="level2">
+<h2>Defining Types</h2>
+<p>Let us define some refinement types:</p>
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -204,13 +208,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-0" class="programbox">data Sparse a = SP { spDim   :: Int
-                   , spElems :: [(Int, a)] } </div>
+  <div id="program-0" class="programbox">{-@ type Zero    = {v:Int | v == 0} @-}
+{-@ type NonZero = {v:Int | v /= 0} @-}</div>
 </div>
 
-<p>Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
-<p><br /><strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
+<p><br /><strong>The Value Variable</strong> <code>v</code> denotes the set of valid inhabitants of each refinement type. Hence, <code>Zero</code> describes the <em>set of</em> <code>Int</code> values that are equal to <code>0</code>, that is, the singleton set containing just <code>0</code>, and <code>NonZero</code> describes the set of <code>Int</code> values that are <em>not</em> equal to <code>0</code>, that is, the set <code>{1, -1, 2, -2, ...}</code> and so on. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><br /><strong>To use</strong> these types we can write:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -250,11 +253,19 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">{-@ data Sparse a = SP { spDim   :: Nat 
-                       , spElems :: [(Btwn 0 spDim, a)]} @-}</div>
+  <div id="program-1" class="programbox">{-@ zero :: Zero @-}
+zero  = 0 :: Int
+
+{-@ one, two, three :: NonZero @-}
+one   = 1 :: Int
+two   = 2 :: Int
+three = 3 :: Int</div>
 </div>
 
-<p>Where, as before, the we use the aliases:</p>
+</section>
+<section id="errors" class="level2">
+<h2>Errors</h2>
+<p>If we try to say nonsensical things like:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -294,17 +305,26 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">{-@ type Nat        = {v:Int | 0 <= v}            @-}
-{-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
+  <div id="program-2" class="programbox">{-@ one' :: Zero @-}
+one' = 1 :: Int</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> The refined data definition is internally converted into refined types for the data constructor <code>SP</code>:</p>
-<pre class="spec"><code>-- Generated Internal representation
-data Sparse a where
-  SP :: spDim:Nat
-     -&gt; spElems:[(Btwn 0 spDim, a)]
-     -&gt; Sparse a </code></pre>
-<p>In other words, by using refined input types for <code>SP</code> we have automatically converted it into a <em>smart</em> constructor that ensures that <em>every</em> instance of a <code>Sparse</code> is legal. Consequently, LiquidHaskell verifies:</p>
+<p>LiquidHaskell will complain with an error message:</p>
+<pre class="sh"><code>    02-basic.lhs:58:8: Error: Liquid Type Mismatch
+       Inferred type
+         VV : Int | VV == (1  :  int)
+      
+       not a subtype of Required type
+         VV : Int | VV == 0</code></pre>
+<p>The message says that the expression <code>1 :: Int</code> has the type</p>
+<pre class="sh"><code>    {v:Int | v == 1}</code></pre>
+<p>which is <em>not</em> (a subtype of) the <em>required</em> type</p>
+<pre class="sh"><code>    {v:Int | v == 0}</code></pre>
+<p>as <code>1</code> is not equal to <code>0</code>.</p>
+</section>
+<section id="subtyping" class="level2">
+<h2>Subtyping</h2>
+<p>What is this business of <em>subtyping</em>? Suppose we have some more refinements of <code>Int</code></p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -344,12 +364,12 @@ data Sparse a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">okSP :: Sparse String
-okSP = SP 5 [ (0, "cat")
-            , (3, "dog") ] </div>
+  <div id="program-3" class="programbox">{-@ type Nat   = {v:Int | 0 <= v}        @-}
+{-@ type Even  = {v:Int | v mod 2 == 0 } @-}
+{-@ type Lt100 = {v:Int | v < 100}       @-}</div>
 </div>
 
-<p>but rejects, due to the invalid index:</p>
+<p><br /><strong>What is the type of</strong> <code>zero</code>? <code>Zero</code> of course, but also <code>Nat</code>:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -389,12 +409,11 @@ okSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">badSP :: Sparse String
-badSP = SP 5 [ (0, "cat")
-             , (6, "dog") ]</div>
+  <div id="program-4" class="programbox">{-@ zero' :: Nat @-}
+zero'     = zero </div>
 </div>
 
-<p><br /><strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>and also <code>Even</code>:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -434,10 +453,11 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-} </div>
+  <div id="program-5" class="programbox">{-@ zero'' :: Even @-}
+zero''     = zero </div>
 </div>
 
-<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<p>and also any other satisfactory refinement, such as <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -477,15 +497,18 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ dotProd :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd x (SP _ y) = go 0 y
-  where 
-    go sum ((i, v) : y') = go (sum + (x ! i) * v) y' 
-    go sum []            = sum</div>
+  <div id="program-6" class="programbox">{-@ zero''' :: Lt100  @-}
+zero'''     = zero </div>
 </div>
 
-<p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br /><strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
+<p><br /><strong>Subtyping and Implication</strong> <code>Zero</code> is the most precise type for <code>0::Int</code>, as it is <em>subtype</em> of <code>Nat</code>, <code>Even</code> and <code>Lt100</code>. This is because the set of values defined by <code>Zero</code> is a <em>subset</em> of the values defined by <code>Nat</code>, <code>Even</code> and <code>Lt100</code>, as the following <em>logical implications</em> are valid:</p>
+<ul>
+<li><span class="math">\(v = 0 \Rightarrow 0 \leq v\)</span></li>
+<li><span class="math">\(v = 0 \Rightarrow v \ \mbox{mod}\ 2 = 0\)</span></li>
+<li><span class="math">\(v = 0 \Rightarrow v &lt; 100\)</span></li>
+</ul>
+<p><br /><strong>Composing Refinements</strong> If <span class="math">\(P \Rightarrow Q\)</span> and <span class="math">\(P \Rightarrow R\)</span> then <span class="math">\(P \Rightarrow Q \wedge R\)</span>. Thus, when a term satisfies multiple refinements, we can compose those refinements with <code>&amp;&amp;</code>:</p>
+
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -525,17 +548,21 @@ dotProd x (SP _ y) = go 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">{-@ dotProd' :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd' x (SP _ y) = foldl' body 0 y   
-  where 
-    body sum (i, v) = sum + (x ! i)  * v</div>
+  <div id="program-7" class="programbox">{-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
+zero''''     = 0</div>
 </div>
 
-<p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
-<div id="Sanitization" class="hwex">
-<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to writing a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
-<br /><br />
-</div>
+<p><br /><strong>In Summary</strong> the key points about refinement types are:</p>
+<ol type="1">
+<li>A refinement type is just a type <em>decorated</em> with logical predicates.</li>
+<li>A term can have <em>different</em> refinements for different properties.</li>
+<li>When we <em>erase</em> the predicates we get the standard Haskell types.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></li>
+</ol>
+</section>
+<section id="writing-specifications" class="level2">
+<h2>Writing Specifications</h2>
+<p>Let's write some more interesting specifications.</p>
+<p><br /><strong>Typing Dead Code</strong> We can wrap the usual <code>error</code> function in a function <code>die</code> with the type:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -575,17 +602,11 @@ dotProd' x (SP _ y) = foldl' body 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
-fromList dim elts = undefined   
-
-{-@ test1 :: SparseN String 3 @-}
-test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
+  <div id="program-8" class="programbox">{-@ die :: {v:String | false} -> a  @-}
+die msg = error msg</div>
 </div>
 
-<div id="Addition" class="hwex">
-<br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:
-<br /><br />
-</div>
+<p>The interesting thing about <code>die</code> is that the input type has the refinement <code>false</code>, meaning the function must only be called with <code>String</code>s that satisfy the predicate <code>false</code>. This seems bizarre; isn't it <em>impossible</em> to satisfy <code>false</code>? Indeed! Thus, a program containing <code>die</code> typechecks <em>only</em> when LiquidHaskell can prove that <code>die</code> is <em>never called</em>. For example, LiquidHaskell will <em>accept</em></p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -625,20 +646,12 @@ test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">plus     :: (Num a) => Sparse a -> Sparse a -> Sparse a
-plus x y = undefined 
-
-{-@ test2 :: SparseN Int 3 @-}   
-test2    = plus vec1 vec2 
-  where 
-    vec1 = SP 3 [(0, 12), (2, 9)]
-    vec2 = SP 3 [(0, 8),  (1, 100)]</div>
+  <div id="program-9" class="programbox">cantDie = if 1 + 1 == 3
+            then die "horrible death"
+            else ()</div>
 </div>
 
-</section>
-<section id="orderedlists" class="level2">
-<h2>Ordered Lists</h2>
-<p>As a second example of refined data types, let's consider a different problem: representing <em>ordered</em> sequences. Here's a type for sequences that mimics the classical list:</p>
+<p>by inferring that the branch condition is always <code>False</code> and so <code>die</code> cannot be called. However, LiquidHaskell will <em>reject</em></p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -678,14 +691,16 @@ test2    = plus vec1 vec2
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">data IncList a =
-    Emp
-  | (:<) { hd :: a, tl :: IncList a }   
-
-infixr 9 :<</div>
+  <div id="program-10" class="programbox">canDie = if 1 + 1 == 2
+           then die "horrible death"
+           else ()</div>
 </div>
 
-<p>The Haskell type above does not state that the elements be in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
+<p>as the branch may (will!) be <code>True</code> and so <code>die</code> can be called.</p>
+</section>
+<section id="refining-function-types-pre-conditions" class="level2">
+<h2>Refining Function Types: Pre-conditions</h2>
+<p>Let's use <code>die</code> to write a <em>safe division</em> function that <em>only accepts</em> non-zero denominators.</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -725,17 +740,13 @@ infixr 9 :<</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ data IncList a =
-        Emp
-      | (:<) { hd :: a, tl :: IncList {v:a | hd <= v}}  @-}</div>
+  <div id="program-11" class="programbox">divide'     :: Int -> Int -> Int
+divide' n 0 = die "divide by zero"
+divide' n d = n `div` d</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
-<pre class="spec"><code>-- Generated Internal representation
-data IncList a where
-  Emp  :: IncList a
-  (:&lt;) :: hd:a -&gt; tl:IncList {v:a | hd &lt;= v} -&gt; IncList a</code></pre>
-<p>which ensures that we can only create legal ordered lists.</p>
+<p>From the above, it is clear to <em>us</em> that <code>div</code> is only called with non-zero divisors. However, LiquidHaskell reports an error at the call to <code>&quot;die&quot;</code> because, what if <code>divide'</code> is actually invoked with a <code>0</code> divisor?</p>
+<p>We can specify that will not happen, with a <em>pre-condition</em> that says that the second argument is non-zero:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -775,13 +786,15 @@ data IncList a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">okList  = 1 :< 2 :< 3 :< Emp      -- accepted by LH
-
-badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
+  <div id="program-12" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
+divide _ 0 = die "divide by zero"
+divide n d = n `div` d</div>
 </div>
 
-<p>Its all very well to <em>specify</em> ordered lists. Next, lets see how its equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
-<p><br /><strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<p><br /><strong>To Verify</strong> that <code>divide</code> never calls <code>die</code>, LiquidHaskell infers that <code>&quot;divide by zero&quot;</code> is not merely of type <code>String</code>, but in fact has the the refined type <code>{v:String | false}</code> <em>in the context</em> in which the call to <code>die</code> occurs. LiquidHaskell arrives at this conclusion by using the fact that in the first equation for <code>divide</code> the <em>denominator</em> is in fact</p>
+<pre class="sh"><code>    0 :: {v: Int | v == 0}</code></pre>
+<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradition, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
+<p><br /><strong>Establishing Pre-conditions</strong> The above signature forces us to ensure that that when we <em>use</em> <code>divide</code>, we only supply provably <code>NonZero</code> arguments. Hence, these two uses of <code>divide</code> are fine:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -821,12 +834,18 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">insertSort        :: (Ord a) => [a] -> IncList a 
-insertSort []     = Emp 
-insertSort (x:xs) = insert x (insertSort xs) </div>
+  <div id="program-13" class="programbox">avg2 x y   = divide (x + y) 2
+avg3 x y z = divide (x + y + z) 3</div>
 </div>
 
-<p>The hard work is done by <code>insert</code> which places an element into the correct position of a sorted list. LiquidHaskell infers that if you give <code>insert</code> an element and a sorted list, it returns a sorted list.</p>
+<div id="List Average" class="hwex">
+<p><br /><strong>Exercise: (List Average): </strong>Consider the function <code>avg</code>:</p>
+<ol type="1">
+<li>Why does LiquidHaskell flag an error at <code>n</code> ?</li>
+<li>How can you change the code so LiquidHaskell verifies it?</li>
+</ol>
+<br /><br />
+</div>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -866,17 +885,17 @@ insertSort (x:xs) = insert x (insertSort xs) </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">insert             :: (Ord a) => a -> IncList a -> IncList a
-insert y Emp       = y :< Emp
-insert y (x :< xs) 
-  | y <= x         = y :< x :< xs 
-  | otherwise      = x :< insert y xs</div>
+  <div id="program-14" class="programbox">avg       :: [Int] -> Int
+avg xs    = divide total n
+  where
+    total = sum xs
+    n     = length xs</div>
 </div>
 
-<div id="Insertion Sort" class="hwex">
-<br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.
-<br /><br />
-</div>
+</section>
+<section id="refining-function-types-post-conditions" class="level2">
+<h2>Refining Function Types: Post-conditions</h2>
+<p>Next, let's see how we can use refinements to describe the <em>outputs</em> of a function. Consider the following simple <em>absolute value</em> function</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -916,14 +935,13 @@ insert y (x :< xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">insertSort'     :: (Ord a) => [a] -> IncList a
-insertSort' xs  = foldr f b xs
-  where
-     f          = undefined    -- Fill this in
-     b          = undefined    -- Fill this in</div>
+  <div id="program-15" class="programbox">abs           :: Int -> Int
+abs n
+  | 0 < n     = n
+  | otherwise = 0 - n</div>
 </div>
 
-<p><br /><strong>Merge Sort</strong> Similarly, it is easy to write merge sort, by implementing the three steps. First, we write a function that <em>splits</em> the input into two equal sized halves:</p>
+<p>We can use a refinement on the output type to specify that the function returns non-negative values</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -963,14 +981,14 @@ insertSort' xs  = foldr f b xs
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">split          :: [a] -> ([a], [a])
-split (x:y:zs) = (x:xs, y:ys) 
-  where 
-    (xs, ys)   = split zs
-split xs       = (xs, [])</div>
+  <div id="program-16" class="programbox">{-@ abs :: Int -> Nat @-}</div>
 </div>
 
-<p>Second, we need a function that <em>combines</em> two ordered lists</p>
+<p>LiquidHaskell <em>verifies</em> that <code>abs</code> indeed enjoys the above type by deducing that <code>n</code> is trivially non-negative when <code>0 &lt; n</code> and that in the <code>otherwise</code> case, the value <code>0 - n</code> is indeed non-negative. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+</section>
+<section id="testing-values-booleans-and-propositions" class="level2">
+<h2>Testing Values: Booleans and Propositions</h2>
+<p>In the above example, we <em>compute</em> a value that is guaranteed to be a <code>Nat</code>. Sometimes, we need to <em>test</em> if a value satisfies some property, e.g., is <code>NonZero</code>. For example, let's write a command-line <em>calculator</em>:</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1010,15 +1028,15 @@ split xs       = (xs, [])</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">merge         :: (Ord a) => IncList a -> IncList a -> IncList a 
-merge xs  Emp = xs
-merge Emp ys  = ys
-merge (x :< xs) (y :< ys) 
-  | x <= y    = x :< merge xs (y :< ys)
-  | otherwise = y :< merge (x :< xs) ys</div>
+  <div id="program-17" class="programbox">calc = do putStrLn "Enter numerator"
+          n <- readLn
+          putStrLn "Enter denominator"
+          d <- readLn 
+          putStrLn (result n d)
+          calc </div>
 </div>
 
-<p>Finally, we compose the above steps to divide (i.e. <code>split</code>) and conquer (<code>sort</code> and <code>merge</code>) the input list:</p>
+<p>which takes two numbers and divides them. The function <code>result</code> checks if <code>d</code> is strictly positive (and hence, non-zero), and does the division, or otherwise complains to the user:</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1058,20 +1076,12 @@ merge (x :< xs) (y :< ys)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">mergeSort :: (Ord a) => [a] -> IncList a
-mergeSort []  = Emp  
-mergeSort [x] = x :< Emp
-mergeSort xs  = merge (mergeSort ys) (mergeSort zs) 
-  where 
-    (ys, zs)  = split xs</div>
+  <div id="program-18" class="programbox">result n d
+  | isPositive d = "Result = " ++ show (n `divide` d) 
+  | otherwise    = "Humph, please enter positive denominator!"</div>
 </div>
 
-<div id="QuickSort" class="hwex">
-<br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.
-<br /><br />
-</div>
-<p><strong>Hint: </strong>Think about how <code>append</code> should behave so that the <code>quickSort</code> has the desired property. Next, can you bottle that intuition into a suitable <em>specification</em> for <code>append</code> and then ensure that the code satisfies that specification.</p>
-<p><strong>FIXME</strong> This is too big a jump for an exercise; explain it.</p>
+<p>Finally, <code>isPositive</code> is a test that returns a <code>True</code> if its input is strictly greater than <code>0</code> or <code>False</code> otherwise:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1111,25 +1121,11 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">quickSort           :: (Ord a) => [a] -> IncList a
-quickSort []        = Emp 
-quickSort (x:xs)    = append x lessers greaters 
-  where 
-    lessers         = quickSort [y | y <- xs, y < x ]
-    greaters        = quickSort [z | z <- xs, z >= x]
-
-{-@ append :: x:a -> IncList {v:a | v < x}
-                  -> IncList {v:a | x <= v}
-                  -> IncList a
-  @-}
-append z Emp       ys = z :< ys
-append z (x :< xs) ys = x :< append z xs ys </div>
+  <div id="program-19" class="programbox">isPositive :: Int -> Bool
+isPositive x = x > 0</div>
 </div>
 
-</section>
-<section id="binarysearchtree" class="level2">
-<h2>Ordered Trees</h2>
-<p>As a last example of refined data types, let us consider binary search ordered trees, defined thus:</p>
+<p><br /><strong>To verify</strong> the call to <code>divide</code> inside <code>result</code> we need to tell LiquidHaskell that the division only happens with a <code>NonZero</code> value <code>d</code>. However, the non-zero-ness is established via the <em>test</em> that occurs inside the guard <code>isPositive d</code>. Hence, we require a <em>post-condition</em> that states that <code>isPositive</code> only returns <code>True</code> when the argument is positive:</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1169,23 +1165,18 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">data BST a = Leaf
-           | Node { root  :: a
-                  , left  :: BST a
-                  , right :: BST a }</div>
+  <div id="program-20" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}</div>
 </div>
 
-<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
-<div id="fig:bst" style="align: left; text-align:center;">
-  <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Binary Search Tree with values between 1 and 9.
-           Each root's value lies between the values appearing
-           in its left and right subtrees. </div>
+<p>In the above signature, read <code>Prop v</code> as &quot;<code>v</code> is <code>True</code>&quot;; dually, read <code>not (Prop v)</code> as &quot;<code>v</code> is <code>False</code>&quot;. Hence, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
+<div id="Propositions" class="hwex">
+<br /><strong>Exercise: (Propositions): </strong>What happens if you <em>delete</em> the type for <code>isPositive</code> ? Can you <em>change</em> the type for <code>isPositive</code> (i.e. write some other type) while preserving safety?
+<br /><br />
 </div>
-<br>
-
-
-<p>Figure <a href="#fig:bst">1.1</a> shows a binary search tree whose nodes are labeled with a subset of values from <code>1</code> to <code>9</code>. We might represent such a tree with the Haskell value:</p>
+<div id="Assertions" class="hwex">
+<br /><strong>Exercise: (Assertions): </strong>Consider the following <a href="https://www.haskell.org/hoogle/?hoogle=assert">assert</a> function, and two use sites. Write a suitable refinement type signature for <code>lAssert</code> so that <code>lAssert</code> and <code>yes</code> are accepted but <code>no</code> is rejected.
+<br /><br />
+</div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1225,17 +1216,19 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-21" class="programbox">okBST :: BST Int
-okBST =  Node 6 
-             (Node 2
-                 (Node 1 Leaf Leaf)
-                 (Node 4 Leaf Leaf))
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-21" class="programbox">{-@ lAssert  :: Bool -> a -> a @-}
+lAssert True  x = x
+lAssert False _ = die "yikes, assertion fails!"
+
+yes = lAssert (1 + 1 == 2) () 
+no  = lAssert (1 + 1 == 3) ()</div>
 </div>
 
-<p><br /><strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p><strong>Hint: </strong>You need a pre-condition that <code>lAssert</code> is only called with <code>True</code>.</p>
+</section>
+<section id="putting-it-all-together" class="level2">
+<h2>Putting It All Together</h2>
+<p>Let's wrap up this introduction with a simple <code>truncate</code> function that connects all the dots.</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1275,473 +1268,40 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-22" class="programbox">{-@ data BST a    = Leaf
-                  | Node { root  :: a
-                         , left  :: BSTL a root
-                         , right :: BSTR a root } @-}
-             
-{-@ type BSTL a X = BST {v:a | v < X}             @-}
-{-@ type BSTR a X = BST {v:a | X < v}             @-}</div>
+  <div id="program-22" class="programbox">truncate :: Int -> Int -> Int
+truncate i max  
+  | i' <= max' = i
+  | otherwise  = max' * (i `divide` i')
+    where
+      i'       = abs i
+      max'     = abs max </div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> As before, the above data definition creates a refined smart constructor for <code>BST</code></p>
-<pre class="spec"><code>data BST a where
-  Leaf :: BST a
-  Node :: r:a -&gt; BST {v:a| v &lt; r}
-       -&gt; BST {v:a | r &lt; v}
-       -&gt; BST a</code></pre>
-<p>which <em>prevents</em> us from creating illegal trees</p>
-<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-23" class="programbox">badBST =  Node 6 
-             (Node 4
-                 (Node 1 Leaf Leaf)
-                 (Node 2 Leaf Leaf))  -- Out of order, rejected 
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
-</div>
-
-<div id="Duplicates" class="hwex">
-<br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?
-<br /><br />
-</div>
-<p><br /><strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
-<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-24" class="programbox">mem                 :: (Ord a) => a -> BST a -> Bool
-mem _ Leaf          = False
-mem k (Node k' l r)
-  | k == k'         = True
-  | k <  k'         = mem k l
-  | otherwise       = mem k r </div>
-</div>
-
-<p><br /><strong>Singleton</strong> Next, another easy warm-up: a function to create a <code>BST</code> with a single given element:</p>
-<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-25" class="programbox">one   :: a -> BST a
-one x = Node x Leaf Leaf</div>
-</div>
-
-<p><br /><strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-26" class="programbox">add                  :: (Ord a) => a -> BST a -> BST a
-add k' Leaf          = one k'
-add k' t@(Node k l r)
-  | k' < k           = Node k (add k' l) r
-  | k  < k'          = Node k l (add k' r)
-  | otherwise        = t </div>
-</div>
-
-<p><br /><strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
-<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-27" class="programbox">data MinPair a = MP { mElt :: a, rest :: BST a }</div>
-</div>
-
-<p>We can specify that <code>mElt</code> is indeed smaller than all the elements in <code>rest</code> via the data type refinement:</p>
-<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-28" class="programbox">{-@ data MinPair a = MP { mElt :: a, rest :: BSTR a mElt} @-}</div>
-</div>
-
-<p>Finally, we can write the code to compute <code>MinPair</code></p>
-<div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-29" class="programbox">delMin                 :: (Ord a) => BST a -> MinPair a
-delMin (Node k Leaf r) = MP k r
-delMin (Node k l r)    = MP k' (Node k l' r)
-  where
-    MP k' l'           = delMin l 
-delMin Leaf            = die "Don't say I didn't warn ya!"</div>
-</div>
-
-<div id="Delete" class="hwex">
-<br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.
-<br /><br />
-</div>
-<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-30" class="programbox">del                   :: (Ord a) => a -> BST a -> BST a
-del k' t@(Node k l r) = undefined
-del _  Leaf           = Leaf </div>
-</div>
-
-<p><strong>FIXME</strong> See issue about using RAW FIELDS vs PATTERN MATCHING.</p>
-<div id="Safely Deleting Minimum" class="hwex">
-<br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.
-<br /><br />
-</div>
-<p><strong>FIXME</strong> I shouldn't have to read a future chapter to complete an exercise in this chapter.</p>
-<div id="BST Sort" class="hwex">
-<br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.
-<br /><br />
-</div>
-<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-31" class="programbox">bstSort   :: (Ord a) => [a] -> IncList a
-bstSort   = toIncList . toBST
-
-toBST     :: (Ord a) => [a] -> BST a
-toBST     = foldr add Leaf  
-
-toIncList :: BST a -> IncList a
-toIncList (Node x l r) = undefined
-toIncList Leaf         = undefined</div>
-</div>
-
-<p><strong>Hint: </strong>This exercise will be a lot easier <em>if</em> you first finish the <code>quickSort</code> exercise. Note that the signature for <code>toIncList</code> does not use <code>Ord</code> and so you cannot use a sorting procedure to implement it.</p>
+<p>The expression <code>truncate i n</code> evaluates to <code>i</code> when the absolute value of <code>i</code> is less than the upper bound <code>max</code>, and otherwise <em>truncates</em> the value at the maximum <code>n</code>. LiquidHaskell verifies that the use of <code>divide</code> is safe by inferring that:</p>
+<ol type="1">
+<li><code>max' &lt; i'</code> from the branch condition,</li>
+<li><code>0 &lt;= i'</code> from the <code>abs</code> post-condition, and</li>
+<li><code>0 &lt;= max'</code> from the <code>abs</code> post-condition.</li>
+</ol>
+<p>From the above, LiquidHaskell infers that <code>i' /= 0</code>. That is, at the call site <code>i' :: NonZero</code>, thereby satisfying the pre-condition for <code>divide</code> and verifying that the program has no pesky divide-by-zero errors.</p>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them &quot;smart&quot; in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
-<p>One recurring theme in this chapter was that we had to create new versions of standard datatypes, just in order to specify certain invariants. For example, we had to write a special list type, with its own <em>copies</em> of nil and cons. Similarly, to implement <code>delMin</code> we had to create our own pair type.</p>
-<p><br /><strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
+<p>This concludes our quick introduction to Refinement Types and LiquidHaskell. Hopefully you have some sense of how to</p>
+<ol type="1">
+<li><strong>Specify</strong> fine-grained properties of values by decorating their types with logical predicates.</li>
+<li><strong>Encode</strong> assertions, pre-conditions, and post-conditions with suitable function types.</li>
+<li><strong>Verify</strong> semantic properties of code by using automatic logic engines (SMT solvers) to track and establish the key relationships between program values.</li>
+</ol>
 </section>
 </section>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>The standard approach is to use abstract types and <a href="https://www.haskell.org/haskellwiki/Smart_constructors">smart constructors</a> but even then there is only the informal guarantee that the smart constructor establishes the right invariants.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Note that <em>inside</em> a refined <code>data</code> definition, a field name like <code>spDim</code> refers to the value of the field, but <em>outside</em> it refers to the field selector measure or function.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>We could also just <em>inline</em> the definitions of <code>BSTL</code> and <code>BSTR</code> into that of <code>BST</code> but they will be handy later.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>While writing this exercise I inadvertently swapped the <code>k</code> and <code>k'</code> which caused LiquidHaskell to protest.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>This helper type approach is rather verbose. We should be able to just use plain old pairs and specify the above requirement as a <em>dependency</em> between the pairs' elements. Later, we will see how to do so using <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstract refinements</a>.<a href="#fnref5">↩</a></p></li>
+<li id="fn1"><p>We will use <code>@</code>-marked comments to write refinement type annotations the Haskell source file, making these types, quite literally, machine-checked comments!<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>We use a different names <code>zero'</code>, <code>zero''</code> etc. as (currently) LiquidHaskell supports <em>at most</em> one refinement type for each top-level name.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Dually, a standard Haskell type, has the trivial refinement <code>true</code>. For example, <code>Int</code> is equivalent to <code>{v:Int|true}</code>.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>LiquidHaskell is able to automatically make these arithmetic deductions by using an <a href="http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories">SMT solver</a> which has built-in decision procedures for arithmetic, to reason about the logical refinements.<a href="#fnref4">↩</a></p></li>
 </ol>
 </section>
 
@@ -1759,7 +1319,7 @@ toIncList Leaf         = undefined</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://localhost:8090/" ;
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

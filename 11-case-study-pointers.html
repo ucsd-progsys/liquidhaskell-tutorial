@@ -158,13 +158,14 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id='page-wrapper'>
 <div id='page'>
  
-<section id="refineddatatypes" class="level1">
-<h1>Refined Datatypes</h1>
+<section id="case-study-pointers" class="level1">
+<h1>Case Study: Pointers &amp; Bytes</h1>
 
-<p>So far, we have seen how to refine the types of <em>functions</em>, to specify, for example, pre-conditions on the inputs, or postconditions on the outputs. Very often, we wish to define <em>datatypes</em> that satisfy certain invariants. In these cases, it is handy to be able to directly refine the the <code>data</code> definition, making it impossible to create illegal inhabitants.</p>
-<section id="autosmart" class="level2">
-<h2>Sparse Vectors Revisited</h2>
-<p>As our first example of a refined datatype, let's revisit the sparse vector representation that we <a href="#sparsetype">saw earlier</a>. The <code>SparseN</code> type alias we used got the job done, but is not pleasant to work with because we have no way of determining the <em>dimension</em> of the sparse vector. Instead, let's create a new datatype to represent such vectors:</p>
+<p>A large part of the allure of Haskell is its elegant, high-level ADTs that ensure that programs won't be plagued by problems like the infamous <a href="heartbleed.com">SSL heartbleed bug</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> However, another part of Haskell's charm is that when you really really need to, you can drop down to low-level pointer twiddling to squeeze the most performance out of your machine. But of course, that opens the door to the heartbleeds.</p>
+<p>Wouldn't it be nice to have have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
+<section id="heartbleeds-in-haskell" class="level2">
+<h2>HeartBleeds in Haskell</h2>
+<p><br /><strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a a function that uses the <code>ByteString</code> library to truncate strings:</p>
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -204,13 +205,52 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-0" class="programbox">data Sparse a = SP { spDim   :: Int
-                   , spElems :: [(Int, a)] } </div>
+  <div id="program-0" class="programbox">chop'     :: String -> Int -> String
+chop' s n = s'
+  where 
+    b     = pack s          -- down to low-level
+    b'    = unsafeTake n b  -- grab n chars
+    s'    = unpack b'       -- up to high-level</div>
 </div>
 
-<p>Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
-<p><br /><strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
+<p>First, the function <code>pack</code>s the string into a low-level bytestring <code>b</code>, then it grabs the first <code>n</code> <code>Char</code>acters from <code>b</code> and translates them back into a high-level <code>String</code>. Lets see how the function works on a small test:</p>
+
+<p>We get the right result when we <code>chop</code> a <em>valid</em> prefix:</p>
+
+<p>But, as illustrated in Figure <a href="#fig:overflow">1.1</a>, the machine silently reveals (or more colorfully, <em>bleeds</em>) the contents of adjacent memory or if we use an <em>invalid</em> prefix:</p>
+
+<div id="fig:overflow" style="align: left; text-align:center;">
+  <img src="img/overflow.png" height="100px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> Can we prevent the program from leaking secrets via overflows? </div>
+</div>
+<br>
+
+
+<p><br /><strong>Types against Overflows</strong> Now that we have stared the problem straight in the eye, look at how we can use LiquidHaskell to prevent the above at compile time. To this end, we decompose the system into a hierarchy of levels (i.e. modules). Here, we have three levels:</p>
+<ol type="1">
+<li><em>Machine</em> level <code>Pointers</code></li>
+<li><em>Library</em> level <code>ByteString</code></li>
+<li><em>User</em> level <code>Application</code></li>
+</ol>
+<p>Our strategy, as before, is to develop an <em>refined API</em> for each level such that errors at each level are prevented by using the typed interfaces for the lower levels. Next, lets see how this strategy lets us safely manipulate pointers.</p>
+</section>
+<section id="low-level-pointer-api" class="level2">
+<h2>Low-level Pointer API</h2>
+<p>To get started, lets look at the low-level pointer API that is offered by GHC and the run-time. First, lets see who the <em>dramatis personae</em> are and how they might let heartbleeds in. Then we will see how to batten down the hatches with LiquidHaskell.</p>
+<p><br /><strong>Pointers</strong> are an (abstract) type <code>Ptr a</code> implemented by GHC.</p>
+
+<p><br /><strong>Foreign Pointers</strong> are <em>wrapped</em> pointers that can be exported to and from C code via the <a href="http://hackage.haskell.org/package/base/docs/Foreign-Ptr.html">Foreign Function Interface</a>.</p>
+
+<p><br /><strong>To Create</strong> a pointer we use <code>mallocForeignPtrBytes n</code> which creates a <code>Ptr</code> to a buffer of size <code>n</code> and wraps it as a <code>ForeignPtr</code></p>
+
+<p><br /><strong>To Unwrap</strong> and actually use the <code>ForeignPtr</code> we use</p>
+
+<p>That is, <code>withForeignPtr fp act</code> lets us execute a action <code>act</code> on the actual <code>Ptr</code> wrapped within the <code>fp</code>. These actions are typically sequences of <em>dereferences</em>, i.e. reads or writes.</p>
+<p><br /><strong>To Dereference</strong> a pointer, i.e. to read or update the contents at the corresponding memory location, we use <code>peek</code> and <code>poke</code> respectively. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+
+<p><br /><strong>For Fine Grained Access</strong> we can directly shift pointers to arbitrary offsets using the <em>pointer arithmetic</em> operation <code>plusPtr p off</code> which takes a pointer <code>p</code> an integer <code>off</code> and returns the address obtained shifting <code>p</code> by <code>off</code>:</p>
+
+<p><br /><strong>Example</strong> That was rather dry; lets look at a concrete example of how one might use the low-level API. The following function allocates a block of 4 bytes and fills it with zeros:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -250,11 +290,18 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">{-@ data Sparse a = SP { spDim   :: Nat 
-                       , spElems :: [(Btwn 0 spDim, a)]} @-}</div>
+  <div id="program-1" class="programbox">zero4 = do fp <- mallocForeignPtrBytes 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero 
+             poke (p `plusPtr` 1) zero 
+             poke (p `plusPtr` 2) zero 
+             poke (p `plusPtr` 3) zero 
+           return fp
+        where
+           zero = 0 :: Word8</div>
 </div>
 
-<p>Where, as before, the we use the aliases:</p>
+<p>While the above is perfectly all right, a small typo could easily slip past the type system (and run-time!) leading to hard to find errors:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -294,17 +341,36 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">{-@ type Nat        = {v:Int | 0 <= v}            @-}
-{-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
+  <div id="program-2" class="programbox">zero4' = do fp <- mallocForeignPtrBytes 4
+            withForeignPtr fp $ \p -> do
+              poke (p `plusPtr` 0) zero 
+              poke (p `plusPtr` 1) zero 
+              poke (p `plusPtr` 2) zero 
+              poke (p `plusPtr` 8) zero 
+            return fp
+         where
+            zero = 0 :: Word8</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> The refined data definition is internally converted into refined types for the data constructor <code>SP</code>:</p>
-<pre class="spec"><code>-- Generated Internal representation
-data Sparse a where
-  SP :: spDim:Nat
-     -&gt; spElems:[(Btwn 0 spDim, a)]
-     -&gt; Sparse a </code></pre>
-<p>In other words, by using refined input types for <code>SP</code> we have automatically converted it into a <em>smart</em> constructor that ensures that <em>every</em> instance of a <code>Sparse</code> is legal. Consequently, LiquidHaskell verifies:</p>
+</section>
+<section id="a-refined-pointer-api" class="level2">
+<h2>A Refined Pointer API</h2>
+<p>Wouldn't it be great if we had an assistant to helpfully point out the error above as soon as we <em>wrote</em> it? <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> We will use the following strategy to turn LiquidHaskell into such an assistant:</p>
+<ol type="1">
+<li><em>Refine</em> pointers with allocated buffer size,</li>
+<li><em>Track</em> sizes in pointer operations,</li>
+<li><em>Enforce</em> pointer are valid at reads and writes.</li>
+</ol>
+<p><br /><strong>To Refine Pointers</strong> with the <em>size</em> of their associated buffers, we can use an <em>abstract measure</em>, i.e. a measure specification <em>without</em> any underlying implementation.</p>
+
+<p>It is helpful to define aliases for pointers of a given size <code>N</code>:</p>
+
+<p><br /><strong>Abstract Measures</strong> are extremely useful when we don't have a concrete implementation of the underlying value, but we know that the value <em>exists</em>. Here, we don't have the value -- inside Haskell -- because the buffers are manipulated within C. However, this is no cause for alarm as we will simply use measures to refine the API, not to perform any computations. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br /><strong>To Refine Allocation</strong> we stipulate that the size parameter be non-negative, and that the returned pointer indeed refers to a buffer with exactly <code>n</code> bytes:</p>
+
+<p><br /><strong>To Refine Unwrapping</strong> we specify that the <em>action</em> gets as input, an unwrapped <code>Ptr</code> whose size <em>equals</em> that of the given <code>ForeignPtr</code>.</p>
+
+<p>This is a rather interesting <em>higher-order</em> specification. Consider a call <code>withForeignPtr fp act</code>. If the <code>act</code> requires a <code>Ptr</code> whose size <em>exceeds</em> that of <code>fp</code> then LiquidHaskell will flag a (subtyping) error indicating the overflow. If instead the <code>act</code> requires a buffer of size less than <code>fp</code> then it is always safe to run the <code>act</code> on a larger buffer. For example, the below variant of <code>zero4</code> where we only set the first three bytes is fine as the <code>act</code>, namely the function <code>\p -&gt; ...</code>, can be typed with the requirement that the buffer <code>p</code> has size <code>4</code>, even though only <code>3</code> bytes are actually touched.</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -344,12 +410,27 @@ data Sparse a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">okSP :: Sparse String
-okSP = SP 5 [ (0, "cat")
-            , (3, "dog") ] </div>
+  <div id="program-3" class="programbox">zero3 = do fp <- mallocForeignPtrBytes 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero 
+             poke (p `plusPtr` 1) zero 
+             poke (p `plusPtr` 2) zero 
+           return fp
+        where
+           zero = 0 :: Word8</div>
 </div>
 
-<p>but rejects, due to the invalid index:</p>
+<p><br /><strong>To Refine Reads and Writes</strong> we specify that they can only be done if the pointer refers to a non-empty (remaining) buffer. That is, we define an alias:</p>
+
+<p>that describes pointers referring to <em>non-empty</em> buffers (of strictly positive <code>plen</code>), and then use the alias to refine:</p>
+
+<p>In essence the above type says that no matter how arithmetic was used to shift pointers around, when the actual dereference happens, the size <em>remaining</em> after the pointer must be non-negative, so that a byte can be safely read from or written to the underlying buffer.</p>
+<p><br /><strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+
+<p>using the alias <code>BNat</code>, defined as:</p>
+
+<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<p><br /><strong>Types Prevent Overflows</strong> Lets revisit the zero-fill example from above to understand how the refinements help detect the error:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -389,12 +470,33 @@ okSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">badSP :: Sparse String
-badSP = SP 5 [ (0, "cat")
-             , (6, "dog") ]</div>
+  <div id="program-4" class="programbox">exBad = do fp <- mallocForeignPtrBytes 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero 
+             poke (p `plusPtr` 1) zero 
+             poke (p `plusPtr` 2) zero 
+             poke (p `plusPtr` 5) zero     -- LH complains 
+           return fp
+        where
+           zero = 0 :: Word8</div>
 </div>
 
-<p><br /><strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>Lets read the tea leaves to understand the above error:</p>
+
+<p>The error says we're bumping <code>p</code> up by <code>VV == 5</code> using <code>plusPtr</code> but the latter <em>requires</em> that bump-offset be within the size of the buffer referred to by <code>p</code>, i.e. <code>VV &lt;= plen p</code>. Indeed, in this context, we have:</p>
+
+<p>that is, the size of <code>p</code>, namely <code>plen p</code> equals the size of <code>fp</code>, namely <code>fplen fp</code> (thanks to the <code>withForeignPtr</code> call). The latter equals to <code>?c</code> which is <code>4</code> bytes. Thus, since the offset <code>5</code> is not less than the buffer size <code>4</code>, LiquidHaskell cannot prove that the call to <code>plusPtr</code> is safe, hence the error.</p>
+</section>
+<section id="assumptions-vs-guarantees" class="level2">
+<h2>Assumptions vs Guarantees</h2>
+<p>At this point you ought to wonder: where is the code for <code>peek</code>, <code>poke</code> or <code>mallocForeignPtrBytes</code> and so on? How can we be sure that the types we assigned to them are in fact legitimate?</p>
+<p><br /><strong>Frankly, we cannot</strong> as those functions are <em>externally</em> implemented (in this case, in <code>C</code>), and hence, invisible to the otherwise all-seeing eyes of LiquidHaskell. Thus, we are <em>assuming</em> or <em>trusting</em> that those functions behave according to their types. Put another way, the types for the low-level API are our <em>specification</em> for what low-level pointer safety. We shall now <em>guarantee</em> that the higher level modules that build upon this API in fact use the low-level function in a manner consistent with this specification.</p>
+<p><br /><strong>Assumptions are a Feature</strong> and not a bug, as they let us to verify systems that use some modules for which we do not have the code. Here, we can <em>assume</em> a boundary specification, and then <em>guarantee</em> that the rest of the system is safe with respect to that specification. <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+</section>
+<section id="bytestring-api" class="level2">
+<h2>ByteString API</h2>
+<p>Next, lets see how the low-level API can be used to implement to implement <a href="https://hackage.haskell.org/package/bytestring">ByteStrings</a>, in a way that lets us perform fast string operations without opening the door to overflows.</p>
+<p><br /><strong>A ByteString</strong> is implemented as a record of three fields:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -434,10 +536,27 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-} </div>
+  <div id="program-5" class="programbox">data ByteString = BS {
+    bPtr :: ForeignPtr Word8
+  , bOff :: !Int
+  , bLen :: !Int
+  }</div>
 </div>
 
-<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<ul>
+<li><code>bPtr</code> is a <em>pointer</em> to a block of memory,</li>
+<li><code>bOff</code> is the <em>offset</em> in the block where the string begins,</li>
+<li><code>bLen</code> is the number of bytes from the offset that belong to the string.</li>
+</ul>
+<p>These entities are illustrated in Figure <a href="#fig:bytestring">1.2</a>; the green portion represents the actual contents of a particular <code>ByteString</code>. This representation makes it possible to implement various operations like computing prefixes and suffixes extremely quickly, simply by pointer arithmetic.</p>
+<div id="fig:bytestring" style="align: left; text-align:center;">
+  <img src="img/bytestring.png" height="100px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.2:</b> Representing ByteStrings in memory. </div>
+</div>
+<br>
+
+
+<p><br /><strong>In a Legal ByteString</strong> the <em>start</em> (<code>bOff</code>) and <em>end</em> (<code>bOff + bLen</code>) offsets lie inside the buffer referred to by the pointer <code>bPtr</code>. We can formalize this invariant with a data definition that will then make it impossible to create illegal <code>ByteString</code>s:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -477,15 +596,17 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ dotProd :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd x (SP _ y) = go 0 y
-  where 
-    go sum ((i, v) : y') = go (sum + (x ! i) * v) y' 
-    go sum []            = sum</div>
+  <div id="program-6" class="programbox">{-@ data ByteString = BS {
+      bPtr :: ForeignPtr Word8
+    , bOff :: {v:Nat| v        <= fplen bPtr}
+    , bLen :: {v:Nat| v + bOff <= fplen bPtr}
+    }
+  @-}</div>
 </div>
 
-<p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br /><strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
+
+<p>The refinements on <code>bOff</code> and <code>bLen</code> correspond exactly to the legality requirements that the start and end of the <code>ByteString</code> be <em>within</em> the block of memory referred to by <code>bPtr</code>.</p>
+<p><br /><strong>For brevity</strong> lets define an alias for <code>ByteString</code>s of a given size:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -525,17 +646,10 @@ dotProd x (SP _ y) = go 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">{-@ dotProd' :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd' x (SP _ y) = foldl' body 0 y   
-  where 
-    body sum (i, v) = sum + (x ! i)  * v</div>
+  <div id="program-7" class="programbox">{-@ type ByteStringN N = {v:ByteString | bLen v = N} @-}</div>
 </div>
 
-<p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
-<div id="Sanitization" class="hwex">
-<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to writing a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
-<br /><br />
-</div>
+<p><br /><strong>Legal Bytestrings</strong> can be created by directly using the constructor, as long as we pass in suitable offsets and lengths. For example,</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -575,17 +689,12 @@ dotProd' x (SP _ y) = foldl' body 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
-fromList dim elts = undefined   
-
-{-@ test1 :: SparseN String 3 @-}
-test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
+  <div id="program-8" class="programbox">{-@ good1 :: IO (ByteStringN 5) @-}
+good1 = do fp <- mallocForeignPtrBytes 5
+           return (BS fp 0 5)</div>
 </div>
 
-<div id="Addition" class="hwex">
-<br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:
-<br /><br />
-</div>
+<p>creates a valid <code>ByteString</code> of size <code>5</code>; however we need not start at the beginning of the block, or use up all the buffer, and can instead create <code>ByteString</code>s whose length is less than the size of the allocated block, as shown in <code>good2</code> whose length is <code>2</code> while the allocated block has size <code>5</code>.</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -625,20 +734,12 @@ test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">plus     :: (Num a) => Sparse a -> Sparse a -> Sparse a
-plus x y = undefined 
-
-{-@ test2 :: SparseN Int 3 @-}   
-test2    = plus vec1 vec2 
-  where 
-    vec1 = SP 3 [(0, 12), (2, 9)]
-    vec2 = SP 3 [(0, 8),  (1, 100)]</div>
+  <div id="program-9" class="programbox">{-@ good2 :: IO (ByteStringN 2) @-}
+good2 = do fp <- mallocForeignPtrBytes 5
+           return (BS fp 3 2)</div>
 </div>
 
-</section>
-<section id="orderedlists" class="level2">
-<h2>Ordered Lists</h2>
-<p>As a second example of refined data types, let's consider a different problem: representing <em>ordered</em> sequences. Here's a type for sequences that mimics the classical list:</p>
+<p><br /><strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>'s length is exceeds its buffer size, and is flagged as such:</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -678,14 +779,11 @@ test2    = plus vec1 vec2
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">data IncList a =
-    Emp
-  | (:<) { hd :: a, tl :: IncList a }   
-
-infixr 9 :<</div>
+  <div id="program-10" class="programbox">bad1 = do fp <- mallocForeignPtrBytes 3 
+          return (BS fp 0 10)</div>
 </div>
 
-<p>The Haskell type above does not state that the elements be in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
+<p>Similarly, <code>bad2</code> does have <code>2</code> bytes but <em>not</em> if we start at the offset of <code>2</code>:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -725,17 +823,17 @@ infixr 9 :<</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ data IncList a =
-        Emp
-      | (:<) { hd :: a, tl :: IncList {v:a | hd <= v}}  @-}</div>
+  <div id="program-11" class="programbox">bad2 = do fp <- mallocForeignPtrBytes 3
+          return (BS fp 2 2)</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
-<pre class="spec"><code>-- Generated Internal representation
-data IncList a where
-  Emp  :: IncList a
-  (:&lt;) :: hd:a -&gt; tl:IncList {v:a | hd &lt;= v} -&gt; IncList a</code></pre>
-<p>which ensures that we can only create legal ordered lists.</p>
+<div id="Legal ByteStrings" class="hwex">
+<br /><strong>Exercise: (Legal ByteStrings): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so they are <em>accepted</em> by LiquidHaskell.
+<br /><br />
+</div>
+<div class="toolinfo">
+<br /><strong>Measures are generated from Fields</strong> in the datatype definition. As GHC lets us use the fields as accessor functions, we can <em>refine</em> the types of those functions to specify their behavior to LiquidHaskell. For example, we can type the (automatically generated) field-accessor function <code>bLen</code> so that it actually returns the exact size of the <code>ByteString</code> argument.
+</div>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -775,13 +873,10 @@ data IncList a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">okList  = 1 :< 2 :< 3 :< Emp      -- accepted by LH
-
-badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
+  <div id="program-12" class="programbox">{-@ bLen :: b:ByteString -> {v: Nat | v = bLen b} @-}</div>
 </div>
 
-<p>Its all very well to <em>specify</em> ordered lists. Next, lets see how its equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
-<p><br /><strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<p><br /><strong>To Safely Create</strong> a <code>ByteString</code> the implementation defines a higher order <code>create</code> function, that takes a size <code>n</code> and accepts a <code>fill</code> action, and runs the action after allocating the pointer. After running the action, the function tucks the pointer into and returns a <code>ByteString</code> of size <code>n</code>.</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -821,12 +916,17 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">insertSort        :: (Ord a) => [a] -> IncList a 
-insertSort []     = Emp 
-insertSort (x:xs) = insert x (insertSort xs) </div>
+  <div id="program-13" class="programbox">{-@ create :: n:Nat -> (Ptr Word8 -> IO ()) -> ByteStringN n @-}
+create n fill = unsafePerformIO $ do
+  fp  <- mallocForeignPtrBytes n
+  withForeignPtr fp fill 
+  return (BS fp 0 n)</div>
 </div>
 
-<p>The hard work is done by <code>insert</code> which places an element into the correct position of a sorted list. LiquidHaskell infers that if you give <code>insert</code> an element and a sorted list, it returns a sorted list.</p>
+<div id="Create" class="hwex">
+<br /><strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?
+<br /><br />
+</div>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -866,17 +966,14 @@ insertSort (x:xs) = insert x (insertSort xs) </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">insert             :: (Ord a) => a -> IncList a -> IncList a
-insert y Emp       = y :< Emp
-insert y (x :< xs) 
-  | y <= x         = y :< x :< xs 
-  | otherwise      = x :< insert y xs</div>
+  <div id="program-14" class="programbox">bsGHC = create 3 $ \p -> do
+  poke (p `plusPtr` 0) (c2w 'G') 
+  poke (p `plusPtr` 1) (c2w 'H')
+  poke (p `plusPtr` 2) (c2w 'C')</div>
 </div>
 
-<div id="Insertion Sort" class="hwex">
-<br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.
-<br /><br />
-</div>
+<p><strong>Hint: </strong>The function writes into 3 slots starting at <code>p</code>. How big should <code>plen p</code> be to allow this? What type does LiquidHaskell infer for <code>p</code> above? Does it meet the requirement? Which part of the <em>specification</em> or <em>implementation</em> needs to be modified so that the relevant information about <code>p</code> becomes available within the <code>do</code>-block above? Make sure you figure out the above before proceeding.</p>
+<p><br /><strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -916,14 +1013,18 @@ insert y (x :< xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">insertSort'     :: (Ord a) => [a] -> IncList a
-insertSort' xs  = foldr f b xs
+  <div id="program-15" class="programbox">pack str      = create' n $ \p -> go p xs
   where
-     f          = undefined    -- Fill this in
-     b          = undefined    -- Fill this in</div>
+  n           = length str
+  xs          = map c2w str
+  go p (x:xs) = poke p x >> go (plusPtr p 1) xs
+  go _ []     = return  ()</div>
 </div>
 
-<p><br /><strong>Merge Sort</strong> Similarly, it is easy to write merge sort, by implementing the three steps. First, we write a function that <em>splits</em> the input into two equal sized halves:</p>
+<div id="Pack" class="hwex">
+<br /><strong>Exercise: (Pack): </strong>We can compute the size of a <code>ByteString</code> by using the function: Fix the specification for <code>pack</code> so that (it still typechecks!) and furthermore, the following <a href="#quickcheck">QuickCheck style property</a> is proved.
+<br /><br />
+</div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -963,14 +1064,16 @@ insertSort' xs  = foldr f b xs
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">split          :: [a] -> ([a], [a])
-split (x:y:zs) = (x:xs, y:ys) 
-  where 
-    (xs, ys)   = split zs
-split xs       = (xs, [])</div>
+  <div id="program-16" class="programbox">{-@ prop_pack_length  :: String -> True @-}
+prop_pack_length xs   = bLen (pack xs) == length xs</div>
 </div>
 
-<p>Second, we need a function that <em>combines</em> two ordered lists</p>
+<p><strong>Hint: </strong>Look at the type of <code>length</code>, and recall that <code>len</code> is a <a href="#numericmeasure">numeric measure</a> denoting the size of a list.</p>
+<p><br /><strong>The magic of inference</strong> ensures that <code>pack</code> just works. Notice there is a tricky little recursive loop <code>go</code> that is used to recursively fill in the <code>ByteString</code> and actually, it has a rather subtle type signature that LiquidHaskell is able to automatically infer.</p>
+<div id="Pack Invariant" class="hwex">
+<br /><strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)
+<br /><br />
+</div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1010,15 +1113,21 @@ split xs       = (xs, [])</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">merge         :: (Ord a) => IncList a -> IncList a -> IncList a 
-merge xs  Emp = xs
-merge Emp ys  = ys
-merge (x :< xs) (y :< ys) 
-  | x <= y    = x :< merge xs (y :< ys)
-  | otherwise = y :< merge (x :< xs) ys</div>
+  <div id="program-17" class="programbox">packEx str     = create' n $ \p -> pLoop p xs
+  where
+  n            = length str
+  xs           = map c2w str
+
+{-@ pLoop      :: (Storable a) => p:Ptr a -> xs:[a] -> IO () @-}
+pLoop p (x:xs) = poke p x >> pLoop (plusPtr p 1) xs
+pLoop _ []     = return ()</div>
 </div>
 
-<p>Finally, we compose the above steps to divide (i.e. <code>split</code>) and conquer (<code>sort</code> and <code>merge</code>) the input list:</p>
+<p><strong>Hint: </strong>Remember that <code>len xs</code> denotes the size of the list <code>xs</code>.</p>
+<div id="Unsafe Take and Drop" class="hwex">
+<br /><strong>Exercise: (Unsafe Take and Drop): </strong>The functions <code>unsafeTake</code> and <code>unsafeDrop</code> respectively extract the prefix and suffix of a <code>ByteString</code> from a given position. They are really fast since we only have to change the offsets. But why does LiquidHaskell reject them? Can you fix the specifications so that they are accepted?
+<br /><br />
+</div>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1058,20 +1167,15 @@ merge (x :< xs) (y :< ys)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">mergeSort :: (Ord a) => [a] -> IncList a
-mergeSort []  = Emp  
-mergeSort [x] = x :< Emp
-mergeSort xs  = merge (mergeSort ys) (mergeSort zs) 
-  where 
-    (ys, zs)  = split xs</div>
+  <div id="program-18" class="programbox">{-@ unsafeTake :: n:Nat -> b:_ -> ByteStringN n @-}
+unsafeTake n (BS x s _) = BS x s n
+
+{-@ unsafeDrop :: n:Nat -> b:_ -> ByteStringN {bLen b - n} @-}
+unsafeDrop n (BS x s l) = BS x (s + n) (l - n)</div>
 </div>
 
-<div id="QuickSort" class="hwex">
-<br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.
-<br /><br />
-</div>
-<p><strong>Hint: </strong>Think about how <code>append</code> should behave so that the <code>quickSort</code> has the desired property. Next, can you bottle that intuition into a suitable <em>specification</em> for <code>append</code> and then ensure that the code satisfies that specification.</p>
-<p><strong>FIXME</strong> This is too big a jump for an exercise; explain it.</p>
+<p><strong>Hint: </strong>Under what conditions are the returned <code>ByteString</code>s legal?</p>
+<p><br /><strong>To Unpack</strong> a <code>ByteString</code> into a plain old <code>String</code>, we essentially run <code>pack</code> in reverse, by walking over the pointer, and reading out the characters one by one till we reach the end:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1111,25 +1215,22 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">quickSort           :: (Ord a) => [a] -> IncList a
-quickSort []        = Emp 
-quickSort (x:xs)    = append x lessers greaters 
-  where 
-    lessers         = quickSort [y | y <- xs, y < x ]
-    greaters        = quickSort [z | z <- xs, z >= x]
-
-{-@ append :: x:a -> IncList {v:a | v < x}
-                  -> IncList {v:a | x <= v}
-                  -> IncList a
-  @-}
-append z Emp       ys = z :< ys
-append z (x :< xs) ys = x :< append z xs ys </div>
+  <div id="program-19" class="programbox">unpack              :: ByteString -> String 
+unpack (BS _  _ 0)  = []
+unpack (BS ps s l)  = unsafePerformIO
+                        $ withForeignPtr ps
+                        $ \p -> go (p `plusPtr` s) (l - 1) []
+  where
+    {-@ go     :: p:_ -> n:_ -> acc:_ -> IO {v:_ | true } @-}
+    go p 0 acc = peekAt p 0 >>= \e -> return (w2c e : acc)
+    go p n acc = peekAt p n >>= \e -> go p (n-1) (w2c e : acc)
+    peekAt p n = peek (p `plusPtr` n)</div>
 </div>
 
-</section>
-<section id="binarysearchtree" class="level2">
-<h2>Ordered Trees</h2>
-<p>As a last example of refined data types, let us consider binary search ordered trees, defined thus:</p>
+<div id="Unpack" class="hwex">
+<br /><strong>Exercise: (Unpack): </strong>Fix the specification for <code>unpack</code> so that the below QuickCheck style property is proved by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1169,23 +1270,16 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">data BST a = Leaf
-           | Node { root  :: a
-                  , left  :: BST a
-                  , right :: BST a }</div>
+  <div id="program-20" class="programbox">{-@ prop_unpack_length :: ByteString -> True  @-}
+prop_unpack_length b   = bLen b == length (unpack b)</div>
 </div>
 
-<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
-<div id="fig:bst" style="align: left; text-align:center;">
-  <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Binary Search Tree with values between 1 and 9.
-           Each root's value lies between the values appearing
-           in its left and right subtrees. </div>
-</div>
-<br>
+<p><strong>Hint: </strong>You will also have to fix the specification of the helper <code>go</code>. Can you determine the output refinement should be (instead of just <code>true</code>?) How <em>big</em> is the output list in terms of <code>p</code>, <code>n</code> and <code>acc</code>.</p>
+</section>
+<section id="application-api" class="level2">
+<h2>Application API</h2>
 
-
-<p>Figure <a href="#fig:bst">1.1</a> shows a binary search tree whose nodes are labeled with a subset of values from <code>1</code> to <code>9</code>. We might represent such a tree with the Haskell value:</p>
+<p>Finally, lets revisit our potentially &quot;bleeding&quot; <code>chop</code> function to see how the refined <code>ByteString</code> API can prevent errors. We require that the prefix size <code>n</code> be less than the size of the input string <code>s</code>:</p>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1225,17 +1319,15 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-21" class="programbox">okBST :: BST Int
-okBST =  Node 6 
-             (Node 2
-                 (Node 1 Leaf Leaf)
-                 (Node 4 Leaf Leaf))
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-21" class="programbox">{-@ chop :: s:String -> n:BNat (len s) -> String @-} 
+chop s n = s'
+  where 
+    b    = pack s          -- down to low-level
+    b'   = unsafeTake n b  -- grab n chars
+    s'   = unpack b'       -- up to high-level</div>
 </div>
 
-<p><br /><strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p><br /><strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">1.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1275,22 +1367,15 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-22" class="programbox">{-@ data BST a    = Leaf
-                  | Node { root  :: a
-                         , left  :: BSTL a root
-                         , right :: BSTR a root } @-}
-             
-{-@ type BSTL a X = BST {v:a | v < X}             @-}
-{-@ type BSTR a X = BST {v:a | X < v}             @-}</div>
+  <div id="program-22" class="programbox">demo     = [ex6, ex30]
+  where
+    ex   = ['L','I','Q','U','I','D']
+    ex6  = chop ex 6   -- accepted by LH 
+    ex30 = chop ex 30  -- rejected by LH </div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> As before, the above data definition creates a refined smart constructor for <code>BST</code></p>
-<pre class="spec"><code>data BST a where
-  Leaf :: BST a
-  Node :: r:a -&gt; BST {v:a| v &lt; r}
-       -&gt; BST {v:a | r &lt; v}
-       -&gt; BST a</code></pre>
-<p>which <em>prevents</em> us from creating illegal trees</p>
+<div class="hwex" id="Chop">
+<p>Fix the specification for <code>chop</code> so that the following property is proved:</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1330,20 +1415,16 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-23" class="programbox">badBST =  Node 6 
-             (Node 4
-                 (Node 1 Leaf Leaf)
-                 (Node 2 Leaf Leaf))  -- Out of order, rejected 
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-23" class="programbox">{-@ prop_chop_length  :: String -> Nat -> True @-}
+prop_chop_length s n
+  | n <= length s     = length (chop s n) == n
+  | otherwise         = True</div>
 </div>
 
-<div id="Duplicates" class="hwex">
-<br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?
+<div id="Checked Chop" class="hwex">
+<br /><strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:
 <br /><br />
 </div>
-<p><br /><strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1383,15 +1464,31 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-24" class="programbox">mem                 :: (Ord a) => a -> BST a -> Bool
-mem _ Leaf          = False
-mem k (Node k' l r)
-  | k == k'         = True
-  | k <  k'         = mem k l
-  | otherwise       = mem k r </div>
+  <div id="program-24" class="programbox">safeChop      :: String -> Int -> String
+safeChop str n
+  | ok        = chop str n
+  | otherwise = ""
+  where
+    ok        = True 
+    
+queryAndChop  :: IO String
+queryAndChop  = do putStrLn "Give me a string:"
+                   str  <-  getLine   
+                   putStrLn "Give me a number:"
+                   ns   <-  getLine
+                   let n =  read ns :: Int
+                   return $ safeChop str n</div>
 </div>
 
-<p><br /><strong>Singleton</strong> Next, another easy warm-up: a function to create a <code>BST</code> with a single given element:</p>
+</section>
+<section id="nested-bytestrings" class="level2">
+<h2>Nested ByteStrings</h2>
+<p>For a more in-depth example, let's take a look at <code>group</code>, which transforms strings like <code>&quot;foobaaar&quot;</code> into <em>lists</em> of strings like <code>[&quot;f&quot;,&quot;oo&quot;, &quot;b&quot;, &quot;aaa&quot;, &quot;r&quot;]</code>. The specification is that <code>group</code> should produce a</p>
+<ol type="1">
+<li>list of <em>non-empty</em> <code>ByteStrings</code>,</li>
+<li>the <em>sum of</em> whose lengths equals that of the input string.</li>
+</ol>
+<p><br /><strong>Non-empty ByteStrings</strong> are those whose length is non-zero:</p>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1431,11 +1528,11 @@ mem k (Node k' l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-25" class="programbox">one   :: a -> BST a
-one x = Node x Leaf Leaf</div>
+  <div id="program-25" class="programbox">{-@ predicate Null B  = bLen B == 0                   @-}
+{-@ type ByteStringNE = {v:ByteString | not (Null v)} @-}</div>
 </div>
 
-<p><br /><strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p>We can use these to enrich the API with a <code>null</code> check</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1475,15 +1572,11 @@ one x = Node x Leaf Leaf</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-26" class="programbox">add                  :: (Ord a) => a -> BST a -> BST a
-add k' Leaf          = one k'
-add k' t@(Node k l r)
-  | k' < k           = Node k (add k' l) r
-  | k  < k'          = Node k l (add k' r)
-  | otherwise        = t </div>
+  <div id="program-26" class="programbox">{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
+null (BS _ _ l) = l == 0</div>
 </div>
 
-<p><br /><strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p>This check is used to determine if it is safe to extract the head and tail of the <code>ByteString</code>. we can use refinements to ensure the safety of the operations and also track the sizes. <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1523,10 +1616,16 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-27" class="programbox">data MinPair a = MP { mElt :: a, rest :: BST a }</div>
+  <div id="program-27" class="programbox">{-@ unsafeHead :: ByteStringNE -> Word8 @-}
+unsafeHead (BS x s _) = unsafePerformIO $
+                          withForeignPtr x $ \p ->
+                            peekByteOff p s
+
+{-@ unsafeTail :: b:ByteStringNE -> ByteStringN {bLen b -1} @-}
+unsafeTail (BS ps s l) = BS ps (s + 1) (l - 1)</div>
 </div>
 
-<p>We can specify that <code>mElt</code> is indeed smaller than all the elements in <code>rest</code> via the data type refinement:</p>
+<p><br /><strong>The Group`</strong> function recursively calls <code>spanByte</code> to carve off the next group, and then returns the accumulated results:</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1566,10 +1665,15 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-28" class="programbox">{-@ data MinPair a = MP { mElt :: a, rest :: BSTR a mElt} @-}</div>
+  <div id="program-28" class="programbox">{-@ group :: b:_ -> {v: [ByteStringNE] | bsLen v = bLen b} @-}
+group xs
+    | null xs   = []
+    | otherwise = let  y        = unsafeHead xs
+                       (ys, zs) = spanByte y (unsafeTail xs)
+                  in (y `cons` ys) : group zs</div>
 </div>
 
-<p>Finally, we can write the code to compute <code>MinPair</code></p>
+<p>The first requirement, that the groups be non-empty is captured by the fact that the output is a <code>[ByteStringNE]</code>. The second requirement, that the sum of the lengths is preserved, is expressed by a writing a <a href="#numericmeasure">numeric measure</a>:</p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1609,18 +1713,13 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-29" class="programbox">delMin                 :: (Ord a) => BST a -> MinPair a
-delMin (Node k Leaf r) = MP k r
-delMin (Node k l r)    = MP k' (Node k l' r)
-  where
-    MP k' l'           = delMin l 
-delMin Leaf            = die "Don't say I didn't warn ya!"</div>
+  <div id="program-29" class="programbox">{-@ measure bsLen @-}
+bsLen        :: [ByteString] -> Int
+bsLen []     = 0
+bsLen (b:bs) = bLen b + bsLen bs</div>
 </div>
 
-<div id="Delete" class="hwex">
-<br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.
-<br /><br />
-</div>
+<p><br /><strong>SpanByte</strong> does a lot of the heavy lifting. It uses low-level pointer arithmetic to find the <em>first</em> position in the <code>ByteString</code> that is different from the input character <code>c</code> and then splits the <code>ByteString</code> into a pair comprising the prefix and suffix at that point.</p>
 <div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1660,21 +1759,22 @@ delMin Leaf            = die "Don't say I didn't warn ya!"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-30" class="programbox">del                   :: (Ord a) => a -> BST a -> BST a
-del k' t@(Node k l r) = undefined
-del _  Leaf           = Leaf </div>
+  <div id="program-30" class="programbox">{-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
+spanByte c ps@(BS x s l)
+  = unsafePerformIO
+      $ withForeignPtr x $ \p ->
+         go (p `plusPtr` s) 0
+  where
+    go p i
+      | i >= l    = return (ps, empty)
+      | otherwise = do c' <- peekByteOff p i
+                       if c /= c'
+                         then return $ splitAt i 
+                         else go p (i+1)
+    splitAt i     = (unsafeTake i ps, unsafeDrop i ps)</div>
 </div>
 
-<p><strong>FIXME</strong> See issue about using RAW FIELDS vs PATTERN MATCHING.</p>
-<div id="Safely Deleting Minimum" class="hwex">
-<br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.
-<br /><br />
-</div>
-<p><strong>FIXME</strong> I shouldn't have to read a future chapter to complete an exercise in this chapter.</p>
-<div id="BST Sort" class="hwex">
-<br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.
-<br /><br />
-</div>
+<p>LiquidHaskell infers that <code>0 &lt;= i &lt;= l</code> and therefore that all of the memory accesses are safe. Furthermore, due to the precise specifications given to <code>unsafeTake</code> and <code>unsafeDrop</code>, it is able to prove that the output pair's lengths add up to the size of the input <code>ByteString</code>.</p>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1714,34 +1814,36 @@ del _  Leaf           = Leaf </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-31" class="programbox">bstSort   :: (Ord a) => [a] -> IncList a
-bstSort   = toIncList . toBST
-
-toBST     :: (Ord a) => [a] -> BST a
-toBST     = foldr add Leaf  
-
-toIncList :: BST a -> IncList a
-toIncList (Node x l r) = undefined
-toIncList Leaf         = undefined</div>
+  <div id="program-31" class="programbox">{-@ type ByteString2 B
+      = {v:_ | bLen (fst v) + bLen (snd v) = bLen B} @-}</div>
 </div>
 
-<p><strong>Hint: </strong>This exercise will be a lot easier <em>if</em> you first finish the <code>quickSort</code> exercise. Note that the signature for <code>toIncList</code> does not use <code>Ord</code> and so you cannot use a sorting procedure to implement it.</p>
 </section>
-<section id="recap" class="level2">
-<h2>Recap</h2>
-<p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them &quot;smart&quot; in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
-<p>One recurring theme in this chapter was that we had to create new versions of standard datatypes, just in order to specify certain invariants. For example, we had to write a special list type, with its own <em>copies</em> of nil and cons. Similarly, to implement <code>delMin</code> we had to create our own pair type.</p>
-<p><br /><strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
+<section id="recap-types-against-overflows" class="level2">
+<h2>Recap: Types Against Overflows</h2>
+<p>In this chapter we saw a case study illustrating how measures and refinements enable safe low-level pointer arithmetic in Haskell. The take away messages are that we can:</p>
+<ol type="1">
+<li><em>compose</em> larger systems from layers of smaller ones,</li>
+<li><em>refine</em> APIs for each layer, which can be used to</li>
+<li><em>design and validate</em> the layers above.</li>
+</ol>
+<p>We saw this recipe in action by developing a low-level <code>Pointer</code> API, using it to implement fast <code>ByteString</code>s API, and then building some higher-level functions on top of the <code>ByteStrings</code>.</p>
+<p><br /><strong>The Trusted Computing Base</strong> in this approach includes exactly those layers for which the code is <em>not</em> available, for example, because they are implemented outside the language and accessed via the FFI as with <code>mallocForeignPtrBytes</code> and <code>peek</code> and <code>poke</code>. In this case, we can make progress by <em>assuming</em> the APIs hold for those layers and verify the rest of the system with respect to that API. It is important to note that in the entire case study, it is only the above FFI signatures that are <em>trusted</em>; the rest are all verified by LiquidHaskell.</p>
+
 </section>
 </section>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>The standard approach is to use abstract types and <a href="https://www.haskell.org/haskellwiki/Smart_constructors">smart constructors</a> but even then there is only the informal guarantee that the smart constructor establishes the right invariants.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Note that <em>inside</em> a refined <code>data</code> definition, a field name like <code>spDim</code> refers to the value of the field, but <em>outside</em> it refers to the field selector measure or function.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>We could also just <em>inline</em> the definitions of <code>BSTL</code> and <code>BSTR</code> into that of <code>BST</code> but they will be handy later.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>While writing this exercise I inadvertently swapped the <code>k</code> and <code>k'</code> which caused LiquidHaskell to protest.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>This helper type approach is rather verbose. We should be able to just use plain old pairs and specify the above requirement as a <em>dependency</em> between the pairs' elements. Later, we will see how to do so using <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstract refinements</a>.<a href="#fnref5">↩</a></p></li>
+<li id="fn1"><p>Assuming, of course, the absence of errors in the compiler and run-time...<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>We elide the <code>Storable</code> type class constraint to strip this presentation down to the absolute essentials.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>In Vim or Emacs or online, you'd see the error helpfully highlighted.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>This is another <em>ghost</em> specification.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>This signature precludes <em>left</em> or <em>backward</em> shifts; for that there is an analogous <code>minusPtr</code> which we elide for simplicity.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>Did you notice that we have strengthened the type of <code>plusPtr</code> to prevent the pointer from wandering outside the boundary of the buffer? We could instead use a weaker requirement for <code>plusPtr</code> that omits this requirement, and instead have the error be flagged when the pointer was used to read or write memory.<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>If we so desire, we can also <em>check</em> the boundary specifications at <a href="http://en.wikipedia.org/wiki/Design_by_contract">run-time</a>, but that is outside the scope of LiquidHaskell.<a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>The code uses <code>create'</code> which is just <code>create</code> with the <em>correct</em> signature in case you want to skip the previous exercise. (But don't!)<a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p><code>peekByteOff p i</code> is equivalent to <code>peek (plusPtr p i)</code>.<a href="#fnref9">↩</a></p></li>
 </ol>
 </section>
 
@@ -1759,7 +1861,7 @@ toIncList Leaf         = undefined</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://localhost:8090/" ;
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

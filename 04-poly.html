@@ -158,62 +158,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id='page-wrapper'>
 <div id='page'>
  
-<section id="lazyqueue" class="level1">
-<h1>Case Study: Okasaki's Lazy Queues</h1>
-<p>Lets start with a case study that is simple enough to explain without pages of code, yet complex enough to show off whats cool about dependency: Chris Okasaki's beautiful <a href="http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf">Lazy Queues</a>. This structure leans heavily on an invariant to provide fast <em>insertion</em> and <em>deletion</em>. Let's see how to enforce that invariant with LiquidHaskell.</p>
+<section id="vectorbounds" class="level1">
+<h1>Polymorphism</h1>
 
-<section id="queues" class="level2">
-<h2>Queues</h2>
-<p>A <a href="http://en.wikipedia.org/wiki/Queue_%28abstract_data_type%29">queue</a> is a structure into which we can <code>insert</code> and <code>remove</code> data such that the order in which the data is removed is the same as the order in which it was inserted.</p>
-<div id="fig:queue" style="align: left; text-align:center;">
-  <img src="img/queue.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Queue is a structure into which we can insert
-           and remove elements. The order in which the elements are
-           removed is the same as the order in which they were inserted. </div>
-</div>
-<br>
+<p>Refinement types shine when we want to establish properties of <em>polymorphic</em> datatypes and higher-order functions. Rather than be abstract, let's illustrate this with a <a href="http://www.cs.bu.edu/~hwxi/academic/papers/pldi98.pdf">classic</a> use-case.</p>
+<p><br /><strong>Array Bounds Verification</strong> aims to ensure that the indices used to retrieve values from an array are indeed <em>valid</em> for the array, i.e. are between <code>0</code> and the <em>size</em> of the array. For example, suppose we create an <code>array</code> with two elements:</p>
 
-
-<p><br /><strong>To efficiently implement</strong> a queue we need to have rapid access to both the front as well as the back because we <code>remove</code> elements from former and <code>insert</code> elements into the latter. This is quite straightforward with explicit pointers and mutation -- one uses an old school linked list and maintains pointers to the head and the tail. But can we implement the structure efficiently without having stoop so low?</p>
-<p><br /><strong>Chris Okasaki</strong> came up with a very cunning way to implement queues using a <em>pair</em> of lists -- let's call them <code>front</code> and <code>back</code> which represent the corresponding parts of the Queue.</p>
-<ul>
-<li>To <code>insert</code> elements, we just <em>cons</em> them onto the <code>back</code> list,</li>
-<li>To <code>remove</code> elements, we just <em>un-cons</em> them from the <code>front</code> list.</li>
-</ul>
-<div id="fig:queue-pair" style="align: left; text-align:center;">
-  <img src="img/queue-lists.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.2:</b> We can implement a Queue with a pair of lists;
-              respectively representing the front and back. </div>
-</div>
-<br>
-
-
-<p><br /><strong>The catch</strong> is that we need to shunt elements from the back to the front every so often, e.g. we can transfer the elements from the <code>back</code> to the <code>front</code>, when:</p>
-<ol type="1">
-<li>a <code>remove</code> call is triggered, and</li>
-<li>the <code>front</code> list is empty.</li>
-</ol>
-<div id="fig:queue-transfer" style="align: left; text-align:center;">
-  <img src="img/queue-rotate.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.3:</b> Transferring Elements from back to front. </div>
-</div>
-<br>
-
-
-<p><br /><strong>Okasaki's first insight</strong> was to note that every element is only moved <em>once</em> from the front to the back; hence, the time for <code>insert</code> and <code>lookup</code> could be <code>O(1)</code> when <em>amortized</em> over all the operations. This is perfect, <em>except</em> that some set of unlucky <code>remove</code> calls (which occur when the <code>front</code> is empty) are stuck paying the bill. They have a rather high latency up to <code>O(n)</code> where <code>n</code> is the total number of operations.</p>
-<p><br /><strong>Okasaki's second insight</strong> saves the day: he observed that all we need to do is to enforce a simple <em>balance invariant</em>:</p>
-<p><span class="math">\[\mbox{Size of front} \geq \mbox{Size of back}\]</span></p>
-<p>If the lists are lazy i.e. only constructed as the head value is demanded, then a single <code>remove</code> needs only a tiny <code>O(log n)</code> in the worst case, and so no single <code>remove</code> is stuck paying the bill.</p>
-<p><br /><strong>Lets implement Queues</strong> and ensure the crucial invariant(s) with LiquidHaskell. What we need are the following ingredients:</p>
-<ol type="1">
-<li><p>A type for <code>List</code>s, and a way to track their <code>size</code>,</p></li>
-<li><p>A type for <code>Queue</code>s which encodes the balance invariant</p></li>
-<li><p>A way to implement the <code>insert</code>, <code>remove</code> and <code>transfer</code> operations.</p></li>
-</ol>
-</section>
-<section id="sized-lists" class="level2">
-<h2>Sized Lists</h2>
-<p>The first part is super easy. Let's define a type:</p>
+<p>Lets attempt to look it up at various indices:</p>
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -253,11 +204,37 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-0" class="programbox">data SList a = SL { size :: Int, elems :: [a]}</div>
+  <div id="program-0" class="programbox">eeks      = [ok, yup, nono]
+  where
+    ok    = twoLangs ! 0
+    yup   = twoLangs ! 1
+    nono  = twoLangs ! 3</div>
 </div>
 
-<p>We have a special field that saves the <code>size</code> because otherwise, we have a linear time computation that wrecks Okasaki's careful analysis. (Actually, he presents a variant which does <em>not</em> require saving the size as well, but that's for another day.)</p>
-<p>How can we be sure that <code>size</code> is indeed the <em>real size</em> of <code>elems</code>? Let's write a function to <em>measure</em> the real size:</p>
+<p>If we try to <em>run</em> the above, we get a nasty shock: an exception that says we're trying to look up <code>twoLangs</code> at index <code>3</code> whereas the size of <code>twoLangs</code> is just <code>2</code>.</p>
+<pre class="sh"><code>Prelude&gt; :l 03-poly.lhs
+[1 of 1] Compiling VectorBounds     ( 03-poly.lhs, interpreted )
+Ok, modules loaded: VectorBounds.
+*VectorBounds&gt; eeks
+Loading package ... done.
+&quot;*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)</code></pre>
+<p><br /><strong>In a suitable Editor</strong> e.g. Vim or Emacs, or if you push the &quot;play&quot; button in the online demo, you will literally see the error <em>without</em> running the code. Lets see how LiquidHaskell checks <code>ok</code> and <code>yup</code> but flags <code>nono</code>, and along the way, learn how it reasons about <em>recursion</em>, <em>higher-order functions</em>, <em>data types</em> and <em>polymorphism</em>.</p>
+<section id="vectorbounds" class="level2">
+<h2>Specification: Vector Bounds</h2>
+<p>First, let's see how to <em>specify</em> array bounds safety by <em>refining</em> the types for the <a href="https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/Data/Vector.spec">key functions</a> exported by <code>Data.Vector</code>, i.e. how to</p>
+<ol type="1">
+<li><em>define</em> the size of a <code>Vector</code></li>
+<li><em>compute</em> the size of a <code>Vector</code></li>
+<li><em>restrict</em> the indices to those that are valid for a given size.</li>
+</ol>
+<div class="toolinfo">
+<p><br /><strong>Imports</strong> We can write specifications for imported modules -- for which we <em>lack</em> the code -- either directly in the client's source file or better, in <code>.spec</code> files which can be reused across multiple client modules. For example, we can write specifications for <code>Data.Vector</code> inside <code>include/Data/Vector.spec</code> which contains:</p>
+
+</div>
+<p><br /><strong>Measures</strong> are used to define <em>properties</em> of Haskell data values that are useful for specification and verification. Think of <code>vlen</code> as the <em>actual</em> size of a <code>Vector</code> regardless of how the size was computed.</p>
+<p><br /><strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don't have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is betwen <code>0</code> and the real size of the input vector <code>x</code>.</p>
+<p><br /><strong>Dependent Refinements</strong> are used to describe relationships <em>between</em> the elements of a specification. For example, notice how the signature for <code>length</code> names the input with the binder <code>x</code> that then appears in the output type to constrain the output <code>Int</code>. Similarly, the signature for <code>(!)</code> names the input vector <code>x</code> so that the index can be constrained to be valid for <code>x</code>. Thus, dependency lets us write properties that connect <em>multiple</em> program values.</p>
+<p><br /><strong>Aliases</strong> are extremely useful for defining <em>abbreviations</em> for commonly occuring types. Just as we enjoy abstractions when programming, we will find it handy to have abstractions in the specification mechanism. To this end, LiquidHaskell supports <em>type aliases</em>. For example, we can define <code>Vector</code>s of a given size <code>N</code> as:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -297,13 +274,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">{-@ measure realSize @-}
-realSize      :: [a] -> Int
-realSize []     = 0
-realSize (_:xs) = 1 + realSize xs</div>
+  <div id="program-1" class="programbox">{-@ type VectorN a N = {v:Vector a | vlen v == N} @-}</div>
 </div>
 
-<p>Now, we can simply specify a <em>refined</em> type for <code>SList</code> that ensures that the <em>real</em> size is saved in the <code>size</code> field:</p>
+<p>and now use this to type <code>twoLangs</code> above as:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -343,14 +317,11 @@ realSize (_:xs) = 1 + realSize xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">{-@ data SList a = SL {
-       size  :: Nat 
-     , elems :: {v:[a] | realSize v = size}
-     }
-  @-}</div>
+  <div id="program-2" class="programbox">{-@ twoLangs :: VectorN String 2 @-}
+twoLangs     = fromList ["haskell", "javascript"]</div>
 </div>
 
-<p>As a sanity check, consider this:</p>
+<p>Similarly, we can define an alias for <code>Int</code> values between <code>Lo</code> and <code>Hi</code>:</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -390,12 +361,15 @@ realSize (_:xs) = 1 + realSize xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">okList  = SL 1 ["cat"]    -- accepted
-
-badList = SL 1 []         -- rejected</div>
+  <div id="program-3" class="programbox">{-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
 </div>
 
-<p><br /><strong>Lets define an alias</strong> for lists of a given size <code>N</code>:</p>
+<p>after which we can specify <code>(!)</code> as:</p>
+
+</section>
+<section id="verification-vector-lookup" class="level2">
+<h2>Verification: Vector Lookup</h2>
+<p>Let's try write some functions to sanity check the specifications. First, find the starting element -- or <code>head</code> of a <code>Vector</code></p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -435,11 +409,29 @@ badList = SL 1 []         -- rejected</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">{-@ type SListN a N = {v:SList a | size v = N} @-}</div>
+  <div id="program-4" class="programbox">head     :: Vector a -> a
+head vec = vec ! 0</div>
 </div>
 
-<p>Finally, we can define a basic API for <code>SList</code>.</p>
-<p><br /><strong>To Construct lists</strong>, we use <code>nil</code> and <code>cons</code>:</p>
+<p>When we check the above, we get an error:</p>
+<pre class="liquiderror"><code>     src/03-poly.lhs:127:23: Error: Liquid Type Mismatch
+       Inferred type
+         VV : Int | VV == ?a &amp;&amp; VV == 0
+      
+       not a subtype of Required type
+         VV : Int | VV &gt;= 0 &amp;&amp; VV &lt; vlen vec
+      
+       In Context
+         VV  : Int | VV == ?a &amp;&amp; VV == 0 
+         vec : Vector a | 0 &lt;= vlen vec
+         ?a  : Int | ?a == (0  :  int)</code></pre>
+<p>LiquidHaskell is saying that <code>0</code> is <em>not</em> a valid index as it is not between <code>0</code> and <code>vlen vec</code>. Say what? Well, what if <code>vec</code> had <em>no</em> elements! A formal verifier doesn't make <em>off by one</em> errors.</p>
+<p><br /><strong>To Fix</strong> the problem we can do one of two things.</p>
+<ol type="1">
+<li><em>Require</em> that the input <code>vec</code> be non-empty, or</li>
+<li><em>Return</em> an output if <code>vec</code> is non-empty, or</li>
+</ol>
+<p>Here's an implementation of the first approach, where we define and use an alias <code>NEVector</code> for non-empty <code>Vector</code>s</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -479,15 +471,14 @@ badList = SL 1 []         -- rejected</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ nil :: SListN a 0 @-}
-nil = SL 0 []
+  <div id="program-5" class="programbox">{-@ type NEVector a = {v:Vector a | 0 < vlen v} @-}
 
-{-@ cons :: a -> xs:SList a -> SListN a {size xs + 1} @-}
-cons x (SL n xs) = SL (n+1) (x:xs)</div>
+{-@ head' :: NEVector a -> a @-}
+head' vec = vec ! 0</div>
 </div>
 
-<div id="Destructing Lists" class="hwex">
-<br /><strong>Exercise: (Destructing Lists): </strong>We can destruct lists by writing a <code>hd</code> and <code>tl</code> function as shown below. Fix the specification or implementation such that the definitions typecheck.
+<div id="Vector Head" class="hwex">
+<br /><strong>Exercise: (Vector Head): </strong>Replace the <code>undefined</code> with an <em>implementation</em> of <code>head''</code> which accepts <em>all</em> <code>Vector</code>s but returns a value only when the input <code>vec</code> is not empty.
 <br /><br />
 </div>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
@@ -529,16 +520,14 @@ cons x (SL n xs) = SL (n+1) (x:xs)</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ tl           :: xs:SList a -> SListN a {size xs - 1}  @-}
-tl (SL n (_:xs)) = SL (n-1) xs
-tl _             = die "empty SList"
-
-{-@ hd           :: xs:SList a -> a @-}
-hd (SL _ (x:_))  = x 
-hd _             = die "empty SList"</div>
+  <div id="program-6" class="programbox">head''     :: Vector a -> Maybe a 
+head'' vec = undefined</div>
 </div>
 
-<p><strong>Hint: </strong>When you are done, <code>okHd</code> should be verified, but <code>badHd</code> should be rejected.</p>
+<div id="Unsafe Lookup" class="hwex">
+<br /><strong>Exercise: (Unsafe Lookup): </strong>The function <code>unsafeLookup</code> is a wrapper around the <code>(!)</code> with the arguments flipped. Modify the specification for <code>unsafeLookup</code> so that the <em>implementation</em> is accepted by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -578,15 +567,14 @@ hd _             = die "empty SList"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">okHd  = hd okList       -- accepted
-
-badHd = hd (tl okList)  -- rejected</div>
+  <div id="program-7" class="programbox">{-@ unsafeLookup :: Int -> Vector a -> a @-}
+unsafeLookup index vec = vec ! index</div>
 </div>
 
-</section>
-<section id="queue-type" class="level2">
-<h2>Queue Type</h2>
-<p>It is quite straightforward to define the <code>Queue</code> type, as a pair of lists, <code>front</code> and <code>back</code>, such that the latter is always smaller than the former:</p>
+<div id="Safe Lookup" class="hwex">
+<br /><strong>Exercise: (Safe Lookup): </strong>Complete the implementation of <code>safeLookup</code> by filling in the implementation of <code>ok</code> so that it performs a bounds check before the access.
+<br /><br />
+</div>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -626,13 +614,18 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">{-@ data Queue a = Q {
-       front :: SList a 
-     , back  :: SListLE a (size front)
-     }                                    @-}</div>
+  <div id="program-8" class="programbox">{-@ safeLookup :: Vector a -> Int -> Maybe a @-}
+safeLookup x i 
+  | ok        = Just (x ! i)
+  | otherwise = Nothing 
+  where
+    ok        = undefined</div>
 </div>
 
-<p><br /><strong>The alias</strong> <code>SListLE a L</code> corresponds to lists with at most <code>N</code> elements:</p>
+</section>
+<section id="inference-our-first-recursive-function" class="level2">
+<h2>Inference: Our First Recursive Function</h2>
+<p>Ok, let's write some code! Let's start with a recursive function that adds up the values of the elements of an <code>Int</code> vector.</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -672,10 +665,25 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">{-@ type SListLE a N = {v:SList a | size v <= N} @-}</div>
+  <div id="program-9" class="programbox">-- >>> vectorSum (fromList [1, -2, 3])
+-- 2 
+vectorSum         :: Vector Int -> Int 
+vectorSum vec     = go 0 0
+  where
+    go acc i 
+      | i < sz    = go (acc + (vec ! i)) (i + 1)
+      | otherwise = acc 
+    sz            = length vec</div>
 </div>
 
-<p>As a quick check, notice that we <em>cannot represent illegal Queues</em>:</p>
+<div id="Guards" class="hwex">
+<br /><strong>Exercise: (Guards): </strong>What happens if you <em>replace</em> the guard with <code>i &lt;= sz</code>?
+<br /><br />
+</div>
+<div id="Absolute Sum" class="hwex">
+<br /><strong>Exercise: (Absolute Sum): </strong>Write a variant of the above function that computes the <code>absoluteSum</code> of the elements of the vector.
+<br /><br />
+</div>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -715,16 +723,23 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">okQ  = Q okList nil  -- accepted, |front| > |back| 
-
-badQ = Q nil okList  -- rejected, |front| < |back|</div>
+  <div id="program-10" class="programbox">-- >>> absoluteSum (fromList [1, -2, 3])
+-- 6
+{-@ absoluteSum :: Vector Int -> Nat @-}
+absoluteSum     = undefined</div>
 </div>
 
+<p><br /><strong>Inference</strong> LiquidHaskell verifies <code>vectorSum</code> -- or, to be precise, the safety of the vector accesses <code>vec ! i</code>. The verification works out because LiquidHaskell is able to <em>automatically infer</em> <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+
+<p>which states that the second parameter <code>i</code> is between <code>0</code> and the length of <code>vec</code> (inclusive). LiquidHaskell uses this and the test that <code>i &lt; sz</code> to establish that <code>i</code> is between <code>0</code> and <code>(vlen vec)</code> to prove safety.</p>
+<div id="Off by one?" class="hwex">
+<br /><strong>Exercise: (Off by one?): </strong>Why does the type of <code>go</code> have <code>v &lt;= sz</code> and not <code>v &lt; sz</code> ?
+<br /><br />
+</div>
 </section>
-<section id="queue-operations" class="level2">
-<h2>Queue Operations</h2>
-<p>Almost there! Now all that remains is to define the <code>Queue</code> API. The code below is more or less identical to Okasaki's (I prefer <code>front</code> and <code>back</code> to his <code>left</code> and <code>right</code>.)</p>
-<p><br /><strong>The Empty Queue</strong> is simply one where both <code>front</code> and <code>back</code> are both empty:</p>
+<section id="higher-order-functions-bottling-recursion-in-a-loop" class="level2">
+<h2>Higher-Order Functions: Bottling Recursion in a <code>loop</code></h2>
+<p>Let's refactor the above low-level recursive function into a generic higher-order <code>loop</code>.</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -764,10 +779,15 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">emp = Q nil nil</div>
+  <div id="program-11" class="programbox">loop :: Int -> Int -> a -> (Int -> a -> a) -> a 
+loop lo hi base f =  go base lo
+  where
+    go acc i     
+      | i < hi    = go (f i acc) (i + 1)
+      | otherwise = acc</div>
 </div>
 
-<p><br /><strong>To Remove</strong> an element we pop it off the <code>front</code> by using <code>hd</code> and <code>tl</code>. Notice that the <code>remove</code> is only called on non-empty <code>Queue</code>s, which together with the key balance invariant, ensures that the calls to <code>hd</code> and <code>tl</code> are safe.</p>
+<p>We can now use <code>loop</code> to implement <code>vectorSum</code>:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -807,23 +827,27 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">remove (Q f b)   = (hd f, makeq (tl f) b)</div>
+  <div id="program-12" class="programbox">vectorSum'      :: Vector Int -> Int 
+vectorSum' vec  = loop 0 n 0 body
+  where
+    body i acc  = acc + (vec ! i)
+    n           = length vec</div>
 </div>
 
-<div id="Whither pattern matching?" class="hwex">
-<br /><strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn't use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?
+<p><br /><strong>Inference</strong> is a convenient option. LiquidHaskell finds:</p>
+
+<p>In english, the above type states that</p>
+<ul>
+<li><code>lo</code> the loop <em>lower</em> bound is a non-negative integer</li>
+<li><code>hi</code> the loop <em>upper</em> bound is a greater than <code>lo</code>,</li>
+<li><code>f</code> the loop <em>body</em> is only called with integers between <code>lo</code> and <code>hi</code>.</li>
+</ul>
+<p>It can be tedious to have to keep typing things like the above. If we wanted to make <code>loop</code> a public or exported function, we could use the inferred type to generate an explicit signature.</p>
+<p>At the call <code>loop 0 n 0 body</code> the parameters <code>lo</code> and <code>hi</code> are instantiated with <code>0</code> and <code>n</code> respectively, which, by the way is where the inference engine deduces non-negativity. Thus LiquidHaskell concludes that <code>body</code> is only called with values of <code>i</code> that are <em>between</em> <code>0</code> and <code>(vlen vec)</code>, which verifies the safety of the call <code>vec ! i</code>.</p>
+<div id="Using Higher-Order Loops" class="hwex">
+<br /><strong>Exercise: (Using Higher-Order Loops): </strong>Complete the implementation of <code>absoluteSum'</code> below. When you are done, what is the type that is inferred for <code>body</code>?
 <br /><br />
 </div>
-<div id="Queue Sizes" class="hwex">
-<p><br /><strong>Exercise: (Queue Sizes): </strong>If you did the <em>List Destructing</em> exercise above, then you will notice that the code for <code>remove</code> has a type error: namely, the calls to <code>hd</code> and <code>tl</code> may fail if the <code>f</code> list is empty.</p>
-<ol type="1">
-<li>Write a <em>measure</em> to describe the queue size,</li>
-<li>Use it to complete the definition of <code>QueueN</code> below, and</li>
-<li>Use it to give <code>remove</code> a type that verifies the safety of the calls made to <code>hd</code> and <code>tl</code>.</li>
-</ol>
-<br /><br />
-</div>
-<p><strong>Hint: </strong>When you are done, <code>okRemove</code> should be accepted, <code>badRemove</code> should be rejected, and <code>emp</code> should have the type shown below:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -863,22 +887,20 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">-- | Queues of size `N`
-{-@ type QueueN a N = {v:Queue a | true} @-}
-
-okRemove  = remove example2Q   -- accept
-badRemove = remove example0Q   -- reject
-
-{-@ emp :: QueueN _ 0 @-}
-
-{-@ example2Q :: QueueN _ 2 @-}
-example2Q = Q (1 `cons` (2 `cons` nil)) nil 
-
-{-@ example0Q :: QueueN _ 0 @-}
-example0Q = Q nil nil</div>
+  <div id="program-13" class="programbox">-- >>> absoluteSum' (fromList [1, -2, 3])
+-- 6
+{-@ absoluteSum' :: Vector Int -> Nat @-}
+absoluteSum' vec = loop 0 n 0 body
+  where
+    n            = length vec
+    body i acc   = undefined</div>
 </div>
 
-<p><br /><strong>To Insert</strong> an element we just <code>cons</code> it to the <code>back</code> list, and call the <em>smart constructor</em> <code>makeq</code> to ensure that the balance invariant holds:</p>
+<div id="Dot Product" class="hwex">
+<br /><strong>Exercise: (Dot Product): </strong>The following uses <code>loop</code> to compute <code>dotProduct</code>s. Why does LiquidHaskell flag an error? Fix the code or specification so that LiquidHaskell accepts it.
+<br /><br />
+</div>
+
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -918,13 +940,19 @@ example0Q = Q nil nil</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">insert e (Q f b) = makeq f (e `cons` b)</div>
+  <div id="program-14" class="programbox">-- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
+-- 32 
+{-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
+dotProduct x y = loop 0 sz 0 body 
+  where
+    sz         = length x
+    body i acc = acc + (x ! i)  *  (y ! i)</div>
 </div>
 
-<div id="Insert" class="hwex">
-<br /><strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.
-<br /><br />
-</div>
+</section>
+<section id="sparsetype" class="level2">
+<h2>Refinements and Polymorphism</h2>
+<p>While the standard <code>Vector</code> is great for <em>dense</em> arrays, often we have to manipulate <em>sparse</em> vectors where most elements are just <code>0</code>. We might represent such vectors as a list of index-value tuples:</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -964,18 +992,12 @@ example0Q = Q nil nil</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">{-@ replicate :: n:Nat -> a -> QueueN a n @-}
-replicate 0 _ = emp
-replicate n x = insert x (replicate (n-1) x)
-
-{-@ y3 :: QueueN _ 3 @-}
-y3     = replicate 3 "Yeah!" 
-
-{-@ y2 :: QueueN _ 3 @-}
-y2     = replicate 1 "No!" </div>
+  <div id="program-15" class="programbox">{-@ type SparseN a N = [(Btwn 0 N, a)] @-}</div>
 </div>
 
-<p><br /><strong>To Ensure the Invariant</strong> we use the smart constructor <code>makeq</code>, which is where the heavy lifting happens. The constructor takes two lists, the front <code>f</code> and back <code>b</code> and if they are balanced, directly returns the <code>Queue</code>, and otherwise transfers the elements from <code>b</code> over using the rotate function <code>rot</code> described next.</p>
+<p>Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> (or the equivalent value for the type <code>a</code>).</p>
+<p><br /><strong>The Alias</strong> <code>SparseN</code> is just a shorthand for the (longer) type on the right, it does not <em>define</em> a new type. If you are familiar with the <em>index-style</em> length encoding e.g. as found in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, then note that despite appearances, our <code>Sparse</code> definition is <em>not</em> indexed.</p>
+<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1015,17 +1037,17 @@ y2     = replicate 1 "No!" </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
-makeq f b 
-  | size b <= size f = Q f b
-  | otherwise        = Q (rot f b nil) nil</div>
+  <div id="program-16" class="programbox">{-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+sparseProduct x y   = go 0 y
+  where 
+    go n ((i,v):y') = go (n + (x!i) * v) y' 
+    go n []         = n</div>
 </div>
 
-<div id="Rotate" class="hwex">
-<br /><strong>Exercise: (Rotate): </strong>The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.
-<br /><br />
-</div>
-<p><strong>Hint: </strong>You may have to modify a precondition in <code>makeq</code> to capture the relationship between <code>f</code> and <code>b</code>.</p>
+<p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
+<p><br /><strong>Folds</strong> The sharp reader will have undoubtedly noticed that the sparse product can be more cleanly expressed as a <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html">fold</a>:</p>
+
+<p>We can simply fold over the sparse vector, accumulating the <code>sum</code> as we go along</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1065,79 +1087,29 @@ makeq f b
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">rot f b a
-  | size f == 0 = hd b `cons` a
-  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` a)</div>
+  <div id="program-17" class="programbox">{-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+sparseProduct' x y  = foldl' body 0 y   
+  where 
+    body sum (i, v) = sum + (x ! i)  * v</div>
 </div>
 
-<div id="Transfer" class="hwex">
-<br /><strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.
-<br /><br />
-</div>
-<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-18" class="programbox">take           :: Int -> Queue a -> (Queue a, Queue a)
-take 0 q       = (emp          , q)
-take n q       = (insert x out , q')
-  where
-    (x  , q')  = remove q
-    (out, q'') = take (n-1) q'
-
-{-@ okTake :: (QueueN _ 2, QueueN _ 1) @-}
-okTake   = take 2 exampleQ  -- accept
-
-badTake  = take 10 exampleQ -- reject
-
-exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp</div>
-</div>
-
+<p>LiquidHaskell digests this without difficulty. The main trick is in how the polymorphism of <code>foldl'</code> is instantiated.</p>
+<ol type="1">
+<li><p>GHC infers that at this site, the type variable <code>b</code> from the signature of <code>foldl'</code> is instantiated to the Haskell type <code>(Int, a)</code>.</p></li>
+<li><p>Correspondingly, LiquidHaskell infers that in fact <code>b</code> can be instantiated to the <em>refined</em> <code>(Btwn 0 v (vlen x), a)</code>.</p></li>
+</ol>
+<p>Thus, the inference mechanism saves us a fair bit of typing and allows us to reuse existing polymorphic functions over containers and such without ceremony.</p>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>Well there you have it; Okasaki's beautiful lazy Queue, with the invariants easily expressed and checked with LiquidHaskell. This example is particularly interesting because</p>
-<ol type="1">
-<li>The refinements express invariants that are critical for efficiency,</li>
-<li>The code introspects on the <code>size</code> to guarantee the invariants, and</li>
-<li>The code is quite simple and we hope, easy to follow!</li>
-</ol>
+<p>This chapter gave you an idea of how one can use refinements to verify size related properties, and more generally, to specify and verify properties of recursive and polymorphic functions. Next, let's see how we can use LiquidHaskell to prevent the creation of illegal values by refining data type definitions.</p>
 </section>
+</section>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>In your editor, click on <code>go</code> to see the inferred type.<a href="#fnref1">↩</a></p></li>
+</ol>
 </section>
 
 </div>
@@ -1154,7 +1126,7 @@ exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://localhost:8090/" ;
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

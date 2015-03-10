@@ -254,7 +254,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
                        , spElems :: [(Btwn 0 spDim, a)]} @-}</div>
 </div>
 
-<p>Where, as before, the we use the aliases:</p>
+<p>Where, as before, we use the aliases:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -533,7 +533,7 @@ dotProd' x (SP _ y) = foldl' body 0 y
 
 <p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
 <div id="Sanitization" class="hwex">
-<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to writing a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
+<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
 <br /><br />
 </div>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
@@ -685,7 +685,7 @@ test2    = plus vec1 vec2
 infixr 9 :<</div>
 </div>
 
-<p>The Haskell type above does not state that the elements be in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
+<p>The Haskell type above does not state that the elements are in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1175,7 +1175,7 @@ append z (x :< xs) ys = x :< append z xs ys </div>
                   , right :: BST a }</div>
 </div>
 
-<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
+<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
 <div id="fig:bst" style="align: left; text-align:center;">
   <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
   <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Binary Search Tree with values between 1 and 9.
@@ -1759,7 +1759,7 @@ toIncList Leaf         = undefined</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://localhost:8090/" ;
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

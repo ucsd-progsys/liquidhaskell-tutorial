@@ -161,74 +161,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <section id="boolmeasures" class="level1">
 <h1>Boolean Measures</h1>
 <p>In the last two chapters, we saw how refinements could be used to reason about the properties of basic <code>Int</code> values like vector indices, or the elements of a list. Next, lets see how we can describe properties of aggregate structures like lists and trees, and use these properties to improve the APIs for operating over such structures.</p>
-<div id="program-pane-0" class="welleditor hidden" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--diff"           @-}
-{-@ LIQUID "--short-names"    @-}
-
-module Measures where
-
-import Prelude hiding(foldr, foldr1, map, sum, head, tail, null)
-
-main = putStrLn "Hello"
-
--- | Old Definitions
-
-{-@ type Nat     = {v:Int | 0 <= v} @-}
-{-@ type Pos     = {v:Int | 0 <  v} @-}
-{-@ type NonZero = {v:Int | 0 /= v} @-}
-
-{-@ die :: {v:_ | false} -> a @-}
-die msg = error msg
-
--- Type Definitions
-divide     :: Int -> Int -> Int
-size1, size2 :: [a] -> Int
-</div>
-</div>
 
 <section id="partial-functions" class="level2">
 <h2>Partial Functions</h2>
 <p>As a motivating example, let us return to problem of ensuring the safety of division. Recall that we wrote:</p>
-<div id="program-pane-1" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -267,13 +204,13 @@ size1, size2 :: [a] -> Int
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
+  <div id="program-0" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
 divide _ 0 = die "divide-by-zero"
 divide x n = x `div` n</div>
 </div>
 
 <p><br /><strong>The Precondition</strong> asserted by the input type <code>NonZero</code> allows LiquidHaskell to prove that the <code>die</code> is <em>never</em> executed at run-time, but consequently, requires us to establish that wherever <code>divide</code> is <em>used</em>, the second parameter be provably non-zero. This is requirement is not onerous when we know what the divisor is <em>statically</em></p>
-<div id="program-pane-2" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -312,13 +249,13 @@ divide x n = x `div` n</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">avg2 x y   = divide (x + y)     2
+  <div id="program-1" class="programbox">avg2 x y   = divide (x + y)     2
 
 avg3 x y z = divide (x + y + z) 3</div>
 </div>
 
 <p>However, it can be more of a challenge when the divisor is obtained <em>dynamically</em>. For example, lets write a function to find the number of elements in a list</p>
-<div id="program-pane-3" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -357,13 +294,13 @@ avg3 x y z = divide (x + y + z) 3</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">size        :: [a] -> Int
+  <div id="program-2" class="programbox">size        :: [a] -> Int
 size []     =  0
 size (_:xs) =  1 + size xs</div>
 </div>
 
 <p>and use it to compute the average value of a list:</p>
-<div id="program-pane-4" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -402,7 +339,7 @@ size (_:xs) =  1 + size xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">avgMany xs = divide total elems 
+  <div id="program-3" class="programbox">avgMany xs = divide total elems 
   where
     total  = sum  xs
     elems  = size xs</div>
@@ -415,7 +352,7 @@ size (_:xs) =  1 + size xs</div>
 <section id="usingmeasures" class="level2">
 <h2>Lifting Functions to Measures</h2>
 <p><br /><strong>How</strong> shall we tell LiquidHaskell that a list is <em>non-empty</em>? Recall the notion of <code>measure</code> previously <a href="#vectorbounds">introduced</a> to describe the size of a <code>Data.Vector</code>. In that spirit, lets write a function that computes whether a list is not empty:</p>
-<div id="program-pane-5" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -454,7 +391,7 @@ size (_:xs) =  1 + size xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">notEmpty       :: [a] -> Bool 
+  <div id="program-4" class="programbox">notEmpty       :: [a] -> Bool 
 notEmpty []    = False
 notEmpty (_:_) = True </div>
 </div>
@@ -465,7 +402,7 @@ notEmpty (_:_) = True </div>
 <li>Guaranteed to <em>terminate</em>, typically via structural recursion.</li>
 </ol>
 <p>We can tell LiquidHaskell to <em>lift</em> a function meeting the above requirements into the refinement logic by declaring:</p>
-<div id="program-pane-6" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -504,11 +441,11 @@ notEmpty (_:_) = True </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ measure notEmpty @-}</div>
+  <div id="program-5" class="programbox">{-@ measure notEmpty @-}</div>
 </div>
 
 <p><br /><strong>Non-Empty Lists</strong> can now be described as the <em>subset</em> of plain old Haskell lists <code>[a]</code> for which the predicate <code>notEmpty</code> holds</p>
-<div id="program-pane-7" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -547,12 +484,12 @@ notEmpty (_:_) = True </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">{-@ type NEList a = {v:[a] | notEmpty v} @-}</div>
+  <div id="program-6" class="programbox">{-@ type NEList a = {v:[a] | notEmpty v} @-}</div>
 </div>
 
 <p>We can now refine various signatures to establish the safety of the list-average function.</p>
 <p><br /><strong>Size</strong> returns a non-zero value when the the input list is not-empty:</p>
-<div id="program-pane-8" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -591,12 +528,12 @@ notEmpty (_:_) = True </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">{-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}</div>
+  <div id="program-7" class="programbox">{-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}</div>
 </div>
 
 <p><strong>FIXME:</strong> see chris' note explaining the need for implies here in detail and an explanation that foreshadoes the null/safeHead exercise later</p>
 <p><br /><strong>Average</strong> is only sensible for non-empty lists. Happily, we can specify this using the refined <code>NEList</code> type:</p>
-<div id="program-pane-9" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -635,7 +572,7 @@ notEmpty (_:_) = True </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">{-@ average :: NEList Int -> Int @-}
+  <div id="program-8" class="programbox">{-@ average :: NEList Int -> Int @-}
 average xs = divide total elems
   where
     total  = sum xs
@@ -646,7 +583,7 @@ average xs = divide total elems
 <br /><strong>Exercise: (Average, Maybe): </strong>Fix the code below to obtain an alternate variant <code>average'</code> that returns <code>Nothing</code> for empty lists:
 <br /><br />
 </div>
-<div id="program-pane-10" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -685,7 +622,7 @@ average xs = divide total elems
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">average'      :: [Int] -> Maybe Int
+  <div id="program-9" class="programbox">average'      :: [Int] -> Maybe Int
 average' xs
   | ok        = Just $ divide total elems 
   | otherwise = Nothing 
@@ -699,7 +636,7 @@ average' xs
 <br /><strong>Exercise: (Debugging Specifications): </strong>An important aspect of formal verifiers like LiquidHaskell is that they help establish properties not just of your <em>implementations</em> but equally, or more importantly, of your <em>specifications</em>. In that spirit, can you explain why the following two variants of <code>size</code> are <em>rejected</em> by LiquidHaskell?
 <br /><br />
 </div>
-<div id="program-pane-11" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -738,7 +675,7 @@ average' xs
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ size1    :: xs:NEList a -> Pos @-}
+  <div id="program-10" class="programbox">{-@ size1    :: xs:NEList a -> Pos @-}
 size1 []     =  0
 size1 (_:xs) =  1 + size1 xs
 
@@ -752,7 +689,7 @@ size2 (_:xs) =  1 + size2 xs</div>
 <h2>A Safe List API</h2>
 <p>Now that we can talk about non-empty lists, we can ensure the safety of various list-manipulating functions which are only well-defined on non-empty lists and crash otherwise.</p>
 <p><br /><strong>Head and Tail</strong> are two of the canonical <em>dangerous</em> functions, that only work on non-empty lists, and burn horribly otherwise. We can type them simple as:</p>
-<div id="program-pane-12" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -791,7 +728,7 @@ size2 (_:xs) =  1 + size2 xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">{-@ head    :: NEList a -> a @-}
+  <div id="program-11" class="programbox">{-@ head    :: NEList a -> a @-}
 head (x:_)  = x
 head []     = die "Fear not! 'twill ne'er come to pass"
 
@@ -805,7 +742,7 @@ tail []     = die "Relaxeth! this too shall ne'er be"</div>
 <br /><strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified:
 <br /><br />
 </div>
-<div id="program-pane-13" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -844,7 +781,7 @@ tail []     = die "Relaxeth! this too shall ne'er be"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">safeHead      :: [a] -> Maybe a
+  <div id="program-12" class="programbox">safeHead      :: [a] -> Maybe a
 safeHead xs
   | null xs   = Nothing
   | otherwise = Just $ head xs
@@ -856,7 +793,7 @@ null (_:_)    =  False</div>
 </div>
 
 <p><br /><strong>Groups</strong> Lets use the above to write a function that chunks sequences into non-empty groups of equal elements:</p>
-<div id="program-pane-14" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -895,7 +832,7 @@ null (_:_)    =  False</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">{-@ groupEq    :: (Eq a) => [a] -> [NEList a] @-}
+  <div id="program-13" class="programbox">{-@ groupEq    :: (Eq a) => [a] -> [NEList a] @-}
 groupEq []     = []
 groupEq (x:xs) = (x:ys) : groupEq zs
   where
@@ -904,7 +841,7 @@ groupEq (x:xs) = (x:ys) : groupEq zs
 
 <p>By using the fact that <em>each element</em> in the output returned by <code>groupEq</code> is in fact of the form <code>x:ys</code>, LiquidHaskell infers that <code>groupEq</code> returns a <code>[NEList a]</code> that is, a list of <em>non-empty lists</em>.</p>
 <p><br /><strong>To Eliminate Stuttering</strong> from a string, we can use <code>groupEq</code> to split the string into blocks of repeating <code>Char</code>s, and then just extract the first <code>Char</code> from each block:</p>
-<div id="program-pane-15" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -943,14 +880,14 @@ groupEq (x:xs) = (x:ys) : groupEq zs
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">-- >>> eliminateStutter "ssstringssss liiiiiike thisss"
+  <div id="program-14" class="programbox">-- >>> eliminateStutter "ssstringssss liiiiiike thisss"
 -- "strings like this"
 eliminateStutter xs = map head $ groupEq xs</div>
 </div>
 
 <p>LiquidHaskell automatically instantiates the type parameter for <code>map</code> in <code>eliminateStutter</code> to <code>notEmpty v</code> to deduce that <code>head</code> is only called on non-empty lists.</p>
 <p><br /><strong>Foldr1</strong> is one of my favorite folds; it uses the first element of the sequence as the initial value. Of course, it should only be called with non-empty sequences!</p>
-<div id="program-pane-16" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -989,7 +926,7 @@ eliminateStutter xs = map head $ groupEq xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">{-@ foldr1         :: (a -> a -> a) -> NEList a -> a @-} 
+  <div id="program-15" class="programbox">{-@ foldr1         :: (a -> a -> a) -> NEList a -> a @-} 
 foldr1 f (x:xs)    = foldr f x xs
 foldr1 _ []        = die "foldr1" 
 
@@ -999,7 +936,7 @@ foldr f acc (x:xs) = f x (foldr f acc xs)</div>
 </div>
 
 <p><br /><strong>To Sum</strong> a non-empty list of numbers, we can just perform a <code>foldr1</code> with the <code>+</code> operator: Thanks to the precondition, LiquidHaskell will prove that the <code>die</code> code is indeed dead. Thus, we can write</p>
-<div id="program-pane-17" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1038,13 +975,13 @@ foldr f acc (x:xs) = f x (foldr f acc xs)</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">{-@ sum :: (Num a) => NEList a -> a  @-}
+  <div id="program-16" class="programbox">{-@ sum :: (Num a) => NEList a -> a  @-}
 sum []  = die "cannot add up empty list"
 sum xs  = foldr1 (+) xs</div>
 </div>
 
 <p>Consequently, we can only invoke <code>sum</code> on non-empty lists, so:</p>
-<div id="program-pane-18" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1083,7 +1020,7 @@ sum xs  = foldr1 (+) xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">sumOk  = sum [1,2,3,4,5]    -- is accepted by LH, but
+  <div id="program-17" class="programbox">sumOk  = sum [1,2,3,4,5]    -- is accepted by LH, but
 
 sumBad = sum []             -- is rejected by LH</div>
 </div>
@@ -1092,7 +1029,7 @@ sumBad = sum []             -- is rejected by LH</div>
 <br /><strong>Exercise: (Weighted Average): </strong>The function below computes a weighted average of its input. Unfortunately, LiquidHaskell is not very happy about it. Can you figure out why, and fix the code or specification appropriately?
 <br /><br />
 </div>
-<div id="program-pane-19" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1131,7 +1068,7 @@ sumBad = sum []             -- is rejected by LH</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">{-@ wtAverage :: NEList (Pos, Pos) -> Int @-}
+  <div id="program-18" class="programbox">{-@ wtAverage :: NEList (Pos, Pos) -> Int @-}
 wtAverage wxs = divide totElems totWeight 
   where
     elems     = map (\(w, x) -> w * x) wxs
@@ -1151,7 +1088,7 @@ map f (x:xs)  =  f x : map f xs</div>
 <br /><strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up in many places, and it is rather convenient to have the type system track non-emptiness without having to make up special types. Consider the <code>risers</code> function, popularized by by <a href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil Mitchell</a>. <code>safeSplit</code> requires its input be non-empty; but LiquidHaskell believes that the call inside <code>risers</code> fails this requirement. Fix the specification for <code>risers</code> so that it is verified.
 <br /><br />
 </div>
-<div id="program-pane-20" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1190,7 +1127,7 @@ map f (x:xs)  =  f x : map f xs</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">risers           :: (Ord a) => [a] -> [[a]]
+  <div id="program-19" class="programbox">risers           :: (Ord a) => [a] -> [[a]]
 risers []        = []
 risers [x]       = [[x]]
 risers (x:y:etc)
@@ -1231,7 +1168,7 @@ safeSplit _      = die "don't worry, be happy"</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+    var queryServerURL = "http://localhost:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

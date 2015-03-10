@@ -158,13 +158,14 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id='page-wrapper'>
 <div id='page'>
  
-<section id="refineddatatypes" class="level1">
-<h1>Refined Datatypes</h1>
+<section id="numericmeasure" class="level1">
+<h1>Numeric Measures</h1>
 
-<p>So far, we have seen how to refine the types of <em>functions</em>, to specify, for example, pre-conditions on the inputs, or postconditions on the outputs. Very often, we wish to define <em>datatypes</em> that satisfy certain invariants. In these cases, it is handy to be able to directly refine the the <code>data</code> definition, making it impossible to create illegal inhabitants.</p>
-<section id="autosmart" class="level2">
-<h2>Sparse Vectors Revisited</h2>
-<p>As our first example of a refined datatype, let's revisit the sparse vector representation that we <a href="#sparsetype">saw earlier</a>. The <code>SparseN</code> type alias we used got the job done, but is not pleasant to work with because we have no way of determining the <em>dimension</em> of the sparse vector. Instead, let's create a new datatype to represent such vectors:</p>
+<p>Many of the programs we have seen so far, for example those in <a href="#vectorbounds">here</a>, suffer from <em>indexitis</em>. This is a term coined by <a href="http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383">Richard Bird</a> which describes a tendency to perform low-level manipulations to iterate over the indices into a collection, opening the door to various off-by-one errors. Such errors can be eliminated by instead programming at a higher level, using a <a href="http://www.cs.ox.ac.uk/ralf.hinze/publications/ICFP09.pdf">wholemeal approach</a> where the emphasis is on using aggregate operations, like <code>map</code>, <code>fold</code> and <code>reduce</code>.</p>
+<p><br /><strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<section id="wholemeal-programming" class="level2">
+<h2>Wholemeal Programming</h2>
+<p>Indexitis begone! As an example of wholemeal programming, lets write a small library that represents vectors as lists and matrices as nested vectors:</p>
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -204,13 +205,19 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-0" class="programbox">data Sparse a = SP { spDim   :: Int
-                   , spElems :: [(Int, a)] } </div>
+  <div id="program-0" class="programbox">data Vector a = V { vDim  :: Int
+                  , vElts :: [a]
+                  }
+              deriving (Eq)
+                         
+data Matrix a = M { mRow  :: Int
+                  , mCol  :: Int
+                  , mElts :: Vector (Vector a)
+                  }
+              deriving (Eq)</div>
 </div>
 
-<p>Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
-<p><br /><strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
+<p><br /><strong>The Dot Product</strong> of two <code>Vector</code>s can be easily computed using a fold:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -250,11 +257,15 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">{-@ data Sparse a = SP { spDim   :: Nat 
-                       , spElems :: [(Btwn 0 spDim, a)]} @-}</div>
+  <div id="program-1" class="programbox">dotProd       :: (Num a) => Vector a -> Vector a -> a
+dotProd vx vy = sum (prod xs ys)
+  where
+    prod      = zipWith (\x y -> x * y)
+    xs        = vElts vx
+    ys        = vElts vy</div>
 </div>
 
-<p>Where, as before, the we use the aliases:</p>
+<p><br /><strong>Matrix Multiplication</strong> can similarly be expressed in a high-level, wholemeal fashion, by eschewing low level index manipulations in favor of a high-level <em>iterator</em> over the <code>Matrix</code> elements:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -294,17 +305,28 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">{-@ type Nat        = {v:Int | 0 <= v}            @-}
-{-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
+  <div id="program-2" class="programbox">matProd       :: (Num a) => Matrix a -> Matrix a -> Matrix a
+matProd (M rx _ xs) (M _ cy ys)
+                 = M rx cy elts
+  where
+    elts         = for xs $ \xi ->
+                     for ys $ \yj ->
+                       dotProd xi yj</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> The refined data definition is internally converted into refined types for the data constructor <code>SP</code>:</p>
-<pre class="spec"><code>-- Generated Internal representation
-data Sparse a where
-  SP :: spDim:Nat
-     -&gt; spElems:[(Btwn 0 spDim, a)]
-     -&gt; Sparse a </code></pre>
-<p>In other words, by using refined input types for <code>SP</code> we have automatically converted it into a <em>smart</em> constructor that ensures that <em>every</em> instance of a <code>Sparse</code> is legal. Consequently, LiquidHaskell verifies:</p>
+<p><br /><strong>The Iteration</strong> embodied by the <code>for</code> combinator, is simply a <code>map</code> over the elements of the vector.</p>
+
+<p><br /><strong>Wholemeal programming frees</strong> us from having to fret about low-level index range manipulation, but is hardly a panacea. Instead, we must now think carefully about the <em>compatibility</em> of the various aggreates. For example,</p>
+<ul>
+<li><p><code>dotProd</code> is only sensible on vectors of the same dimension; if one vector is shorter than another (i.e. has fewer elements) then we will won't get a run-time crash but instead will get some gibberish result that will be dreadfully hard to debug.</p></li>
+<li><p><code>matProd</code> is only well defined on matrices of compatible dimensions; the number of columns of <code>mx</code> must equal the number of rows of <code>my</code>. Otherwise, again, rather than an error, we will get the wrong output.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p></li>
+</ul>
+</section>
+<section id="specifying-list-dimensions" class="level2">
+<h2>Specifying List Dimensions</h2>
+<p>In order to start reasoning about dimensions, we need a way to represent the <em>dimension</em> of a list inside the refinement logic. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p><br /><strong>Measures</strong> are ideal for this task. <a href="#boolmeasures">Previously</a> we saw how we could lift Haskell functions up to the refinement logic. Lets write a measure to describe the length of a list: <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -344,12 +366,16 @@ data Sparse a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">okSP :: Sparse String
-okSP = SP 5 [ (0, "cat")
-            , (3, "dog") ] </div>
+  <div id="program-3" class="programbox">{-@ measure size @-}
+{-@ size    :: [a] -> Nat @-}
+size []     = 0
+size (_:rs) = 1 + size rs</div>
 </div>
 
-<p>but rejects, due to the invalid index:</p>
+
+<p><br /><strong>Measures Refine Constructors</strong> As with <a href="#autosmart">refined data definitions</a>, the measures are translated into strengthened types for the type's constructors. For example, the <code>size</code> measure is translated into:</p>
+
+<p><br /><strong>Multiple Measures</strong> may be defined for the same data type. For example, in addition to the <code>size</code> measure, we can define a <code>notEmpty</code> measure for the list type:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -389,12 +415,17 @@ okSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">badSP :: Sparse String
-badSP = SP 5 [ (0, "cat")
-             , (6, "dog") ]</div>
+  <div id="program-4" class="programbox">{-@ measure notEmpty @-}
+notEmpty       :: [a] -> Bool
+notEmpty []    = False
+notEmpty (_:_) = True </div>
 </div>
 
-<p><br /><strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><br /><strong>We Compose Different Measures</strong> simply by <em>conjoining</em> the refinements in the strengthened constructors. For example, the two measures for lists end up yielding the constructors:</p>
+
+<p>This is a very significant advantage of using measures instead of indices as in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, as <em>decouples property from structure</em>, which crucially enables the use of the same structure for many different purposes. That is, we need not know <em>a priori</em> what indices to bake into the structure, but can define a generic structure and refine it <em>a posteriori</em> as needed with new measures.</p>
+<p>We are almost ready to begin creating a dimension aware API for lists; one last thing that is useful is a couple of aliases for describing lists of a given dimension.</p>
+<p><br /><strong>To make signatures symmetric</strong> lets define an alias for plain old (unrefined) lists:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -434,10 +465,12 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-} </div>
+  <div id="program-5" class="programbox">type List a = [a]</div>
 </div>
 
-<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<div class="toolinfo">
+<br /><strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.
+</div>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -477,15 +510,15 @@ badSP = SP 5 [ (0, "cat")
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">{-@ dotProd :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd x (SP _ y) = go 0 y
-  where 
-    go sum ((i, v) : y') = go (sum + (x ! i) * v) y' 
-    go sum []            = sum</div>
+  <div id="program-6" class="programbox">{-@ type ListN a N = {v:List a | size v = N} @-}
+{-@ type ListX a X = ListN a {size X}        @-}</div>
 </div>
 
-<p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br /><strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
+</section>
+<section id="lists-size-preserving-api" class="level2">
+<h2>Lists: Size Preserving API</h2>
+<p>With the types and aliases firmly in our pockets, let us write dimension-aware variants of the usual list functions. The implementations are the same as in the standard library i.e. <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html"><code>Data.List</code></a>, but the specifications are enriched with dimension information.</p>
+<p><br /><strong>map</strong> yields a list with the same size as the input:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -525,17 +558,12 @@ dotProd x (SP _ y) = go 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">{-@ dotProd' :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd' x (SP _ y) = foldl' body 0 y   
-  where 
-    body sum (i, v) = sum + (x ! i)  * v</div>
+  <div id="program-7" class="programbox">{-@ map      :: (a -> b) -> xs:List a -> ListX b xs @-}
+map _ []     = []
+map f (x:xs) = f x : map f xs</div>
 </div>
 
-<p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
-<div id="Sanitization" class="hwex">
-<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to writing a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
-<br /><br />
-</div>
+<p><br /><strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -575,17 +603,16 @@ dotProd' x (SP _ y) = foldl' body 0 y
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
-fromList dim elts = undefined   
-
-{-@ test1 :: SparseN String 3 @-}
-test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
+  <div id="program-8" class="programbox">{-@ zipWith :: (a -> b -> c) -> xs:List a
+                             -> ListX b xs
+                             -> ListX c xs
+  @-}
+zipWith f (a:as) (b:bs) = f a b : zipWith f as bs
+zipWith _ [] []         = []
+zipWith _ _  _          = die "no other cases"</div>
 </div>
 
-<div id="Addition" class="hwex">
-<br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:
-<br /><br />
-</div>
+<p><br /><strong>unsafeZip</strong> The signature for <code>zipWith</code> is quite severe -- it rules out the case where the zipping occurs only upto the shorter input. Here's a function that actually allows for that case, where the output type is the <em>shorter</em> of the two inputs:</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -625,20 +652,14 @@ test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">plus     :: (Num a) => Sparse a -> Sparse a -> Sparse a
-plus x y = undefined 
-
-{-@ test2 :: SparseN Int 3 @-}   
-test2    = plus vec1 vec2 
-  where 
-    vec1 = SP 3 [(0, 12), (2, 9)]
-    vec2 = SP 3 [(0, 8),  (1, 100)]</div>
+  <div id="program-9" class="programbox">{-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Tinier v as bs} @-}
+zip (a:as) (b:bs) = (a, b) : zip as bs
+zip [] _          = []
+zip _  []         = [] </div>
 </div>
 
-</section>
-<section id="orderedlists" class="level2">
-<h2>Ordered Lists</h2>
-<p>As a second example of refined data types, let's consider a different problem: representing <em>ordered</em> sequences. Here's a type for sequences that mimics the classical list:</p>
+<p><strong>FIXME: what is a predicate?</strong> <strong>FIXME: what is <code>=&gt;</code> </strong> <strong>FIXME: simpler exercises first</strong></p>
+<p>The output type uses the predicate <code>Tinier Xs Ys Zs</code> which defines the length of <code>Xs</code> to be the smaller of that of <code>Ys</code> and <code>Zs</code>.<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -678,14 +699,15 @@ test2    = plus vec1 vec2
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">data IncList a =
-    Emp
-  | (:<) { hd :: a, tl :: IncList a }   
-
-infixr 9 :<</div>
+  <div id="program-10" class="programbox">{-@ predicate Tinier X Y Z = Min (size X) (size Y) (size Z) @-}
+{-@ predicate Min X Y Z = (if Y < Z then X = Y else X = Z)  @-}</div>
 </div>
 
-<p>The Haskell type above does not state that the elements be in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
+<div id="Zip Unless Empty" class="hwex">
+<br /><strong>Exercise: (Zip Unless Empty): </strong>In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.
+<br /><br />
+</div>
+<p><strong>FIXME:this is a HARD exercise</strong></p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -725,17 +747,26 @@ infixr 9 :<</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ data IncList a =
-        Emp
-      | (:<) { hd :: a, tl :: IncList {v:a | hd <= v}}  @-}</div>
+  <div id="program-11" class="programbox">zipOrNull       :: [a] -> [b] -> [(a, b)]
+zipOrNull [] _  = []
+zipOrNull _ []  = []
+zipOrNull xs ys = zipWith (,) xs ys
+
+{-@ test1 :: {v: _ | size v = 2} @-}
+test1     = zipOrNull [0, 1] [True, False]
+
+{-@ test2 :: {v: _ | size v = 0} @-}
+test2     = zipOrNull [] [True, False]
+
+{-@ test3 :: {v: _ | size v = 0} @-}
+test3     = zipOrNull ["cat", "dog"] []</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
-<pre class="spec"><code>-- Generated Internal representation
-data IncList a where
-  Emp  :: IncList a
-  (:&lt;) :: hd:a -&gt; tl:IncList {v:a | hd &lt;= v} -&gt; IncList a</code></pre>
-<p>which ensures that we can only create legal ordered lists.</p>
+<p><strong>Hint: </strong>Yes, the type is rather gross; it uses a bunch of disjunctions <code>||</code> , conjunctions <code>&amp;&amp;</code> and implications <code>=&gt;</code>.</p>
+<div id="Reverse" class="hwex">
+<br /><strong>Exercise: (Reverse): </strong>We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.
+<br /><br />
+</div>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -775,13 +806,20 @@ data IncList a where
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">okList  = 1 :< 2 :< 3 :< Emp      -- accepted by LH
-
-badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
+  <div id="program-12" class="programbox">{-@ reverse       :: xs:[a] -> {v:[a] | size v = size xs} @-}
+reverse xs        = go [] xs
+  where 
+    {-@ go        :: xs:[a] -> ys:[a] -> [a] @-}
+    go acc []     = acc
+    go acc (x:xs) = go (x:acc) xs</div>
 </div>
 
-<p>Its all very well to <em>specify</em> ordered lists. Next, lets see how its equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
-<p><br /><strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<p><strong>Hint: </strong>How big is the list returned by <code>go</code>?</p>
+</section>
+<section id="listreducing" class="level2">
+<h2>Lists: Size Reducing API</h2>
+<p>Next, lets look at some functions that truncate lists, in one way or another.</p>
+<p><br /><strong>Take</strong> lets us grab the first <code>k</code> elements from a list:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -821,12 +859,13 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">insertSort        :: (Ord a) => [a] -> IncList a 
-insertSort []     = Emp 
-insertSort (x:xs) = insert x (insertSort xs) </div>
+  <div id="program-13" class="programbox">{-@ take'     :: n:Nat -> ListGE a n -> ListN a n @-}
+take' 0 _      = []
+take' n (x:xs) = x : take' (n-1) xs
+take' _ _      = die "won't  happen"</div>
 </div>
 
-<p>The hard work is done by <code>insert</code> which places an element into the correct position of a sorted list. LiquidHaskell infers that if you give <code>insert</code> an element and a sorted list, it returns a sorted list.</p>
+<p>The alias <code>ListGE a n</code> denotes lists whose length is at least <code>n</code>:</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -866,15 +905,11 @@ insertSort (x:xs) = insert x (insertSort xs) </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">insert             :: (Ord a) => a -> IncList a -> IncList a
-insert y Emp       = y :< Emp
-insert y (x :< xs) 
-  | y <= x         = y :< x :< xs 
-  | otherwise      = x :< insert y xs</div>
+  <div id="program-14" class="programbox">{-@ type ListGE a N = {v:List a | N <= size v} @-} </div>
 </div>
 
-<div id="Insertion Sort" class="hwex">
-<br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.
+<div id="Drop" class="hwex">
+<br /><strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>'s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.
 <br /><br />
 </div>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
@@ -916,14 +951,18 @@ insert y (x :< xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">insertSort'     :: (Ord a) => [a] -> IncList a
-insertSort' xs  = foldr f b xs
-  where
-     f          = undefined    -- Fill this in
-     b          = undefined    -- Fill this in</div>
+  <div id="program-15" class="programbox">drop 0 xs     = xs
+drop n (_:xs) = drop (n-1) xs
+drop _ _      = die "won't happen"
+
+{-@ test4 :: ListN String 2 @-}
+test4 = drop 1 ["cat", "dog", "mouse"] </div>
 </div>
 
-<p><br /><strong>Merge Sort</strong> Similarly, it is easy to write merge sort, by implementing the three steps. First, we write a function that <em>splits</em> the input into two equal sized halves:</p>
+<div id="Take it easy" class="hwex">
+<br /><strong>Exercise: (Take it easy): </strong>The version <code>take'</code> above is too restrictive; it insists that the list actually have at least <code>n</code> elements. Modify the signature for the <em>real</em> <code>take</code> function so that the code below is accepted by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -963,14 +1002,16 @@ insertSort' xs  = foldr f b xs
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">split          :: [a] -> ([a], [a])
-split (x:y:zs) = (x:xs, y:ys) 
-  where 
-    (xs, ys)   = split zs
-split xs       = (xs, [])</div>
+  <div id="program-16" class="programbox">take 0 _       = []
+take _ []      = []
+take n (x:xs)  = x : take (n-1) xs
+
+{-@ test5 :: [ListN String 2] @-}
+test5 = [ take 2  ["cat", "dog", "mouse"]
+        , take 20 ["cow", "goat"]        ] </div>
 </div>
 
-<p>Second, we need a function that <em>combines</em> two ordered lists</p>
+<p><br /><strong>The Partition</strong> function breaks a list into two sub-lists of elements that either satisfy or fail a user supplied predicate.</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1010,15 +1051,18 @@ split xs       = (xs, [])</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">merge         :: (Ord a) => IncList a -> IncList a -> IncList a 
-merge xs  Emp = xs
-merge Emp ys  = ys
-merge (x :< xs) (y :< ys) 
-  | x <= y    = x :< merge xs (y :< ys)
-  | otherwise = y :< merge (x :< xs) ys</div>
+  <div id="program-17" class="programbox">partition          :: (a -> Bool) -> [a] -> ([a], [a])
+partition _ []     = ([], [])
+partition f (x:xs)
+  | f x            = (x:ys, zs)
+  | otherwise      = (ys, x:zs)
+  where
+    (ys, zs)       = partition f xs</div>
 </div>
 
-<p>Finally, we compose the above steps to divide (i.e. <code>split</code>) and conquer (<code>sort</code> and <code>merge</code>) the input list:</p>
+<p>We would like to specify that the <em>sum</em> of the output tuple's dimensions equal the input list's dimension. Lets write measures to access the elements of the output:</p>
+
+<p>We can now refine the type of <code>partition</code> as:</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1058,20 +1102,10 @@ merge (x :< xs) (y :< ys)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">mergeSort :: (Ord a) => [a] -> IncList a
-mergeSort []  = Emp  
-mergeSort [x] = x :< Emp
-mergeSort xs  = merge (mergeSort ys) (mergeSort zs) 
-  where 
-    (ys, zs)  = split xs</div>
+  <div id="program-18" class="programbox">{-@ partition :: _ -> xs:_ -> {v:_ | Sum2 v (size xs)} @-}</div>
 </div>
 
-<div id="QuickSort" class="hwex">
-<br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.
-<br /><br />
-</div>
-<p><strong>Hint: </strong>Think about how <code>append</code> should behave so that the <code>quickSort</code> has the desired property. Next, can you bottle that intuition into a suitable <em>specification</em> for <code>append</code> and then ensure that the code satisfies that specification.</p>
-<p><strong>FIXME</strong> This is too big a jump for an exercise; explain it.</p>
+<p>where <code>Sum2 V N</code> holds for a pair of lists dimensions add to <code>N</code>:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1111,25 +1145,13 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">quickSort           :: (Ord a) => [a] -> IncList a
-quickSort []        = Emp 
-quickSort (x:xs)    = append x lessers greaters 
-  where 
-    lessers         = quickSort [y | y <- xs, y < x ]
-    greaters        = quickSort [z | z <- xs, z >= x]
-
-{-@ append :: x:a -> IncList {v:a | v < x}
-                  -> IncList {v:a | x <= v}
-                  -> IncList a
-  @-}
-append z Emp       ys = z :< ys
-append z (x :< xs) ys = x :< append z xs ys </div>
+  <div id="program-19" class="programbox">{-@ predicate Sum2 X N = size (fst X) + size (snd X) = N @-}</div>
 </div>
 
-</section>
-<section id="binarysearchtree" class="level2">
-<h2>Ordered Trees</h2>
-<p>As a last example of refined data types, let us consider binary search ordered trees, defined thus:</p>
+<div id="QuickSort" class="hwex">
+<br /><strong>Exercise: (QuickSort): </strong>Use <code>partition</code> to implement <code>quickSort</code>.
+<br /><br />
+</div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1169,23 +1191,22 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">data BST a = Leaf
-           | Node { root  :: a
-                  , left  :: BST a
-                  , right :: BST a }</div>
+  <div id="program-20" class="programbox">-- >> quickSort [1,4,3,2]
+-- [1,2,3,4]
+
+{-@ quickSort    :: (Ord a) => xs:List a -> ListX a xs @-}
+quickSort []     = []
+quickSort (x:xs) = undefined
+
+{-@ test10 :: ListN String 2 @-}
+test10 = quickSort test4 </div>
 </div>
 
-<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
-<div id="fig:bst" style="align: left; text-align:center;">
-  <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Binary Search Tree with values between 1 and 9.
-           Each root's value lies between the values appearing
-           in its left and right subtrees. </div>
-</div>
-<br>
-
-
-<p>Figure <a href="#fig:bst">1.1</a> shows a binary search tree whose nodes are labeled with a subset of values from <code>1</code> to <code>9</code>. We might represent such a tree with the Haskell value:</p>
+</section>
+<section id="dimension-safe-vector-api" class="level2">
+<h2>Dimension Safe Vector API</h2>
+<p>We can use the dimension aware lists to create a safe vector API.</p>
+<p><br /><strong>Legal Vectors</strong> are those whose <code>vDim</code> field actually equals the size of the underlying list:</p>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1225,17 +1246,12 @@ append z (x :< xs) ys = x :< append z xs ys </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-21" class="programbox">okBST :: BST Int
-okBST =  Node 6 
-             (Node 2
-                 (Node 1 Leaf Leaf)
-                 (Node 4 Leaf Leaf))
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-21" class="programbox">{-@ data Vector a = V { vDim  :: Nat
+                      , vElts :: ListN a vDim }         @-}</div>
 </div>
 
-<p><br /><strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+
+<p>The refined data type prevents the creation of illegal vectors:</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1275,22 +1291,12 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-22" class="programbox">{-@ data BST a    = Leaf
-                  | Node { root  :: a
-                         , left  :: BSTL a root
-                         , right :: BSTR a root } @-}
-             
-{-@ type BSTL a X = BST {v:a | v < X}             @-}
-{-@ type BSTR a X = BST {v:a | X < v}             @-}</div>
+  <div id="program-22" class="programbox">okVec  = V 2 [10, 20]       -- accepted by LH
+
+badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> As before, the above data definition creates a refined smart constructor for <code>BST</code></p>
-<pre class="spec"><code>data BST a where
-  Leaf :: BST a
-  Node :: r:a -&gt; BST {v:a| v &lt; r}
-       -&gt; BST {v:a | r &lt; v}
-       -&gt; BST a</code></pre>
-<p>which <em>prevents</em> us from creating illegal trees</p>
+<p>As usual, it will be handy to have a few aliases.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1330,20 +1336,17 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-23" class="programbox">badBST =  Node 6 
-             (Node 4
-                 (Node 1 Leaf Leaf)
-                 (Node 2 Leaf Leaf))  -- Out of order, rejected 
-             (Node 9
-                 (Node 7 Leaf Leaf)
-                 Leaf)</div>
+  <div id="program-23" class="programbox">-- | Non Empty Vectors
+{-@ type VectorNE a  = {v:Vector a | vDim v > 0} @-}
+
+-- | Vectors of size N          
+{-@ type VectorN a N = {v:Vector a | vDim v = N} @-}
+
+-- | Vectors of Size Equal to Another Vector X 
+{-@ type VectorX a X = VectorN a {vDim X}        @-}</div>
 </div>
 
-<div id="Duplicates" class="hwex">
-<br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?
-<br /><br />
-</div>
-<p><br /><strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
+<p><br /><strong>To Create</strong> a <code>Vector</code> safely, we can start with the empty vector <code>vEmp</code> and then add elements one-by-one with <code>vCons</code>:</p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1383,15 +1386,14 @@ okBST =  Node 6
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-24" class="programbox">mem                 :: (Ord a) => a -> BST a -> Bool
-mem _ Leaf          = False
-mem k (Node k' l r)
-  | k == k'         = True
-  | k <  k'         = mem k l
-  | otherwise       = mem k r </div>
+  <div id="program-24" class="programbox">{-@ vEmp :: VectorN a 0 @-}
+vEmp = V 0 []
+
+{-@ vCons :: a -> x:Vector a -> VectorN a {vDim x + 1} @-}
+vCons x (V n xs) = V (n+1) (x:xs)</div>
 </div>
 
-<p><br /><strong>Singleton</strong> Next, another easy warm-up: a function to create a <code>BST</code> with a single given element:</p>
+<p><br /><strong>To Access</strong> vectors at a low-level, we can use equivalents of <em>head</em> and <em>tail</em>, which only work on non-empty <code>Vector</code>s:</p>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1431,11 +1433,16 @@ mem k (Node k' l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-25" class="programbox">one   :: a -> BST a
-one x = Node x Leaf Leaf</div>
+  <div id="program-25" class="programbox">{-@ vHd :: VectorNE a -> a @-}
+vHd (V _ (x:_))  = x
+vHd _            = die "nope"
+
+{-@ vTl          :: x:VectorNE a -> VectorN a {vDim x - 1} @-}
+vTl (V n (_:xs)) = V (n-1) xs 
+vTl _            = die "nope"</div>
 </div>
 
-<p><br /><strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br /><strong>To Iterate</strong> over a vector we can use the <code>for</code> combinator:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1475,15 +1482,11 @@ one x = Node x Leaf Leaf</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-26" class="programbox">add                  :: (Ord a) => a -> BST a -> BST a
-add k' Leaf          = one k'
-add k' t@(Node k l r)
-  | k' < k           = Node k (add k' l) r
-  | k  < k'          = Node k l (add k' r)
-  | otherwise        = t </div>
+  <div id="program-26" class="programbox">{-@ for        :: x:Vector a -> (a -> b) -> VectorX b x @-}
+for (V n xs) f = V n (map f xs) </div>
 </div>
 
-<p><br /><strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p><br /><strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1523,10 +1526,14 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-27" class="programbox">data MinPair a = MP { mElt :: a, rest :: BST a }</div>
+  <div id="program-27" class="programbox">{-@ vBin :: (a -> b -> c) -> x:Vector a
+                          -> VectorX b x
+                          -> VectorX c x
+  @-}
+vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)</div>
 </div>
 
-<p>We can specify that <code>mElt</code> is indeed smaller than all the elements in <code>rest</code> via the data type refinement:</p>
+<p><br /><strong>The Dot Product</strong> of two <code>Vector</code>s can be now implemented in a wholemeal <em>and</em> dimension safe manner, as:</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1566,10 +1573,14 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-28" class="programbox">{-@ data MinPair a = MP { mElt :: a, rest :: BSTR a mElt} @-}</div>
+  <div id="program-28" class="programbox">{-@ dotProduct :: (Num a) => x:Vector a -> VectorX a x -> a @-}
+dotProduct x y = sum $ vElts $ vBin (*) x y </div>
 </div>
 
-<p>Finally, we can write the code to compute <code>MinPair</code></p>
+<div id="Vector Constructor" class="hwex">
+<br /><strong>Exercise: (Vector Constructor): </strong>Complete the <em>specification</em> and <em>implementation</em> of <code>vecFromList</code> which <em>creates</em> a <code>Vector</code> from a plain list.
+<br /><br />
+</div>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1609,16 +1620,17 @@ add k' t@(Node k l r)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-29" class="programbox">delMin                 :: (Ord a) => BST a -> MinPair a
-delMin (Node k Leaf r) = MP k r
-delMin (Node k l r)    = MP k' (Node k l' r)
-  where
-    MP k' l'           = delMin l 
-delMin Leaf            = die "Don't say I didn't warn ya!"</div>
+  <div id="program-29" class="programbox">vecFromList     :: [a] -> Vector a
+vecFromList xs  =  undefined
+
+test6  = dotProduct vx vy    -- should be accepted by LH
+  where 
+    vx = vecFromList [1,2,3]
+    vy = vecFromList [4,5,6]</div>
 </div>
 
-<div id="Delete" class="hwex">
-<br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.
+<div id="Flatten" class="hwex">
+<br /><strong>Exercise: (Flatten): </strong>Write a function to <code>flatten</code> a nested <code>Vector</code>.
 <br /><br />
 </div>
 <div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
@@ -1660,21 +1672,15 @@ delMin Leaf            = die "Don't say I didn't warn ya!"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-30" class="programbox">del                   :: (Ord a) => a -> BST a -> BST a
-del k' t@(Node k l r) = undefined
-del _  Leaf           = Leaf </div>
+  <div id="program-30" class="programbox">{-@ flatten :: n:Nat
+            -> m:Nat
+            -> VectorN (VectorN a m) n
+            -> VectorN a {m * n}
+  @-}
+flatten = undefined</div>
 </div>
 
-<p><strong>FIXME</strong> See issue about using RAW FIELDS vs PATTERN MATCHING.</p>
-<div id="Safely Deleting Minimum" class="hwex">
-<br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.
-<br /><br />
-</div>
-<p><strong>FIXME</strong> I shouldn't have to read a future chapter to complete an exercise in this chapter.</p>
-<div id="BST Sort" class="hwex">
-<br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.
-<br /><br />
-</div>
+<p><br /><strong>The Cross Product</strong> of two vectors can now be computed in a nice wholemeal style, by a nested iteration followed by a <code>flatten</code>.</p>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1714,34 +1720,532 @@ del _  Leaf           = Leaf </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-31" class="programbox">bstSort   :: (Ord a) => [a] -> IncList a
-bstSort   = toIncList . toBST
-
-toBST     :: (Ord a) => [a] -> BST a
-toBST     = foldr add Leaf  
-
-toIncList :: BST a -> IncList a
-toIncList (Node x l r) = undefined
-toIncList Leaf         = undefined</div>
+  <div id="program-31" class="programbox">{-@ product   :: xs:Vector _
+              -> ys:Vector _
+              -> VectorN _ {vDim xs * vDim ys}
+  @-}
+product xs ys = flatten (vDim ys) (vDim xs) xys
+  where
+    xys       = for ys $ \y ->
+                  for xs $ \x ->
+                    x * y</div>
 </div>
 
-<p><strong>Hint: </strong>This exercise will be a lot easier <em>if</em> you first finish the <code>quickSort</code> exercise. Note that the signature for <code>toIncList</code> does not use <code>Ord</code> and so you cannot use a sorting procedure to implement it.</p>
+</section>
+<section id="dimension-safe-matrix-api" class="level2">
+<h2>Dimension Safe Matrix API</h2>
+<p>The same methods let us create a dimension safe Matrix API which ensures that only legal matrices are created and that operations are performed on compatible matrices.</p>
+<p><br /><strong>Legal Matrices</strong> are those where the dimension of the outer vector equals the number of rows <code>mRow</code> and the dimension of each inner vector is <code>mCol</code>. We can specify legality in a refined data definition:</p>
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-32" class="programbox">{-@ data Matrix a =
+      M { mRow  :: Pos
+        , mCol  :: Pos 
+        , mElts :: VectorN (VectorN a mCol) mRow
+        }
+  @-}</div>
+</div>
+
+<p>Notice that we avoid disallow degenerate matrices by requiring the dimensions to be positive.</p>
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-33" class="programbox">{-@ type Pos = {v:Int | 0 < v} @-}</div>
+</div>
+
+<p>It is convenient to have an alias for matrices of a given size:</p>
+<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-34" class="programbox">{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C } @-}
+{-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}</div>
+</div>
+
+<p>For example, we can use the above to write type:</p>
+<div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-35" class="programbox">{-@ ok23 :: MatrixN _ 2 3 @-}
+ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
+                      , V 3 [4, 5, 6] ])</div>
+</div>
+
+<div id="Legal Matrix" class="hwex">
+<br /><strong>Exercise: (Legal Matrix): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so that they are legal matrices accepted by LiquidHaskell.
+<br /><br />
+</div>
+<div id="program-pane-36" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-36" class="programbox">bad1 :: Matrix Int
+bad1 = M 2 3 (V 2 [ V 3 [1, 2   ]
+                  , V 3 [4, 5, 6]])
+
+bad2 :: Matrix Int
+bad2 = M 2 3 (V 2 [ V 2 [1, 2]
+                  , V 2 [4, 5] ])</div>
+</div>
+
+<div id="Matrix Constructor" class="hwex">
+<br /><strong>Exercise: (Matrix Constructor): </strong>Write a function to construct a <code>Matrix</code> from a nested list.
+<br /><br />
+</div>
+<div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-37" class="programbox">matFromList      :: [[a]] -> Maybe (Matrix a)
+matFromList []   = Nothing
+matFromList xss@(xs:_)
+  | ok           = Just (M r c vs) 
+  | otherwise    = Nothing 
+  where
+    r            = size xss
+    c            = size xs
+    ok           = undefined
+    vs           = undefined </div>
+</div>
+
+<div id="Refined Matrix Constructor" class="hwex">
+<br /><strong>Exercise: (Refined Matrix Constructor): </strong>Refine the specification for <code>matFromList</code> so that the following is accepted by LiquidHaskell.
+<br /><br />
+</div>
+<div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-38" class="programbox">{-@ mat23 :: Maybe (MatrixN Integer 2 2) @-} 
+mat23     = matFromList [ [1, 2]
+                        , [3, 4] ]</div>
+</div>
+
+<p><strong>Hint: </strong>It is easy to specify the number of rows from <code>xss</code>. How will you figure out the number of columns? A measure may be useful.</p>
+<p><br /><strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You'd think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second -- after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
+<div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-39" class="programbox">{-@ matProduct :: (Num a) => x:Matrix a
+                          -> y:{Matrix a  | mCol x = mRow y}
+                          -> MatrixN a (mRow x) (mCol y)
+  @-}
+matProduct (M rx _ xs) my@(M _ cy _)
+                 = M rx cy elts
+  where
+    elts         = for xs $ \xi ->
+                     for ys' $ \yj ->
+                       dotProduct xi yj
+    M _ _ ys'    = transpose my </div>
+</div>
+
+<p>To iterate over the <em>columns</em> of the matrix <code>my</code> we just <code>transpose</code> it so the columns become rows.</p>
+<div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-40" class="programbox">-- >>> ok32 == transpose ok23
+-- True
+ok32 = M 3 2 (V 3 [ V 2 [1, 4]
+                  , V 2 [2, 5]
+                  , V 2 [3, 6] ])</div>
+</div>
+
+<div id="Matrix Transpose" class="hwex">
+<br /><strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to Complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don't.
+<br /><br />
+</div>
+<div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+
+  <div id="program-41" class="programbox">{-@ transpose :: m:Matrix a -> MatrixN a (mCol m) (mRow m) @-}
+transpose (M r c rows) = M c r $ txgo c r rows
+
+{-@ txgo      :: c:Nat -> r:Nat
+              -> VectorN (VectorN a c) r
+              -> VectorN (VectorN a r) c
+  @-}
+txgo c r rows = undefined</div>
+</div>
+
+<p><strong>Hint: </strong>As shown by <code>ok23</code> and <code>ok32</code>, <code>transpose</code> works by stripping out the <code>head</code>s of the input rows, to create the corresponding output rows.</p>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them &quot;smart&quot; in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
-<p>One recurring theme in this chapter was that we had to create new versions of standard datatypes, just in order to specify certain invariants. For example, we had to write a special list type, with its own <em>copies</em> of nil and cons. Similarly, to implement <code>delMin</code> we had to create our own pair type.</p>
-<p><br /><strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
+<p>In this chapter, we saw how to use measures to describe numeric properties of structures like lists (<code>Vector</code>) and nested lists (<code>Matrix</code>).</p>
+<ol type="1">
+<li><p>Measures are <em>structurally recursive</em> functions, with a single equation per data constructor,</p></li>
+<li><p>Measures can be used to create refined data definitions that prevent the creation of illegal values,</p></li>
+<li><p>Measures can then be used to enable safe wholemeal programming, via dimension-aware APIs that ensure that operators only apply to compatible values.</p></li>
+</ol>
+<p>We can use numeric measures to encode various other properties of data structures. We will see examples ranging from high-level <a href="#case-study-avltree">AVL trees</a>, to low-level safe <a href="#case-study-pointers">pointer arithmetic</a>.</p>
 </section>
 </section>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>The standard approach is to use abstract types and <a href="https://www.haskell.org/haskellwiki/Smart_constructors">smart constructors</a> but even then there is only the informal guarantee that the smart constructor establishes the right invariants.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Note that <em>inside</em> a refined <code>data</code> definition, a field name like <code>spDim</code> refers to the value of the field, but <em>outside</em> it refers to the field selector measure or function.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>We could also just <em>inline</em> the definitions of <code>BSTL</code> and <code>BSTR</code> into that of <code>BST</code> but they will be handy later.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>While writing this exercise I inadvertently swapped the <code>k</code> and <code>k'</code> which caused LiquidHaskell to protest.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>This helper type approach is rather verbose. We should be able to just use plain old pairs and specify the above requirement as a <em>dependency</em> between the pairs' elements. Later, we will see how to do so using <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstract refinements</a>.<a href="#fnref5">↩</a></p></li>
+<li id="fn1"><p>In a <a href="#kmeans-case-study">later chapter</a> we will use this API to implement K-means clustering.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>In fact, while the implementation of <code>matProd</code> breezes past GHC it is quite wrong!<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>We could just use <code>vDim</code>, but that is a cheat as there is no guarantee that the field's value actually equals the size of the list!<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="#usingmeasures">Recall</a> that these must be inductively defined functions, with a single equation per data-constructor<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>As made explicit by the call to <code>die</code>, the input type <em>rules out</em> the case where one list is empty and the other is not, as in that case the former's length is zero while the latter's is not, and hence, different.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>In logic, <code>if p then q else r</code> is the same as <code>p =&gt; q &amp;&amp; not p =&gt; r</code>.<a href="#fnref6">↩</a></p></li>
 </ol>
 </section>
 
@@ -1759,7 +2263,7 @@ toIncList Leaf         = undefined</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://localhost:8090/" ;
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

@@ -160,87 +160,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
  
 <section id="case-study-associative-maps" class="level1">
 <h1>Case Study: Associative Maps</h1>
-<div id="program-pane-0" class="welleditor hidden" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--diff"           @-}
-
-module AssocativeMap where
-
-import Data.Set hiding (elems)
--- | Boilerplate 
-
-{-@ die :: {v:_ | false} -> a @-}
-die x   = error x
-
--- | Haskell Definitions
-
-data Map k v = Node { key   :: k
-                    , value :: v
-                    , left  :: Map k v
-                    , right :: Map k v }
-             | Tip 
-
-lemma_notMem :: k -> Map k v -> Bool 
-set    :: (Ord k) => k -> v -> Map k v -> Map k v
-get    :: (Ord k) => k -> Map k v -> v 
-get'   :: (Ord k) => k -> Map k v -> v 
-mem    :: (Ord k) => k -> Map k v -> Bool
-emp    :: Map k v
-elems  :: (Ord a) => [a] -> Set a
-fresh  :: [Int] -> Int
-
--- | Set Interface 
-{-@ predicate In X Xs      = Set_mem X Xs               @-}
-{-@ predicate Subset X Y   = Set_sub X Y                @-}
-{-@ predicate Empty  X     = Set_emp X                  @-}
-{-@ predicate Union X Y Z  = X = Set_cup Y Z            @-}
-{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z      @-}
-
--- | Predicate Aliases
-{-@ predicate NoKeys M     = Empty (keys M)             @-}
-{-@ predicate HasKey K M   = In K (keys M)              @-}
-{-@ predicate AddKey K M N = Union1 (keys N) K (keys M) @-}
-          
-</div>
-</div>
 
 
 <p>Recall the following from the <a href="#intro">introduction</a>:</p>
@@ -251,36 +170,24 @@ fresh  :: [Int] -> Int
 <h2>Specifying Maps</h2>
 <p>Lets start by defining a <em>refined API</em> for Associative Maps that tracks the set of keys stored in the map, in order to statically ensure the safety of lookups.</p>
 <p><br /><strong>Types</strong> First, we need a type for <code>Map</code>s. As usual, lets parameterize the type with <code>k</code> for the type of keys and <code>v</code> for the type of values:</p>
-<pre class="spec"><code>data Map k v    -- Currently left abstract
-</code></pre>
+
 <p><br /><strong>Keys</strong> To talk about the set of keys in a map, we will use a <em>measure</em></p>
-<pre class="spec"><code>measure keys :: Map k v -&gt; Set k
-</code></pre>
+
 <p>that associates each <code>Map</code> to the <code>Set</code> of its defined keys. Next, we use the above measure, and the usual <code>Set</code> operators to refine the types of the functions that <em>create</em>, <em>add</em> and <em>lookup</em> key-value bindings, in order to precisely track, within the type system, the <code>keys</code> that are dynamically defined within each <code>Map</code>. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <p><br /><strong>Empty</strong> <code>Map</code>s have no keys in them. Hence, we type the empty <code>Map</code> as:</p>
-<pre class="spec"><code>emp :: {m:Map k v | Empty (keys m)}
-</code></pre>
+
 <p><br /><strong>Add</strong> The function <code>set</code> takes a key <span class="math">\(k\)</span> a value <span class="math">\(v\)</span> and a map <code>m</code> and returns the new map obtained by extending <code>m</code> with the binding <span class="math">\({k \mapsto v}\)</span>. Thus, the set of <code>keys</code> of the output <code>Map</code> includes those of the input plus the singleton <span class="math">\(k\)</span>, that is:</p>
-<pre class="spec"><code>set :: k:k -&gt; v -&gt; m:Map k v -&gt; {n: Map k v| AddKey k m n}
 
-predicate AddKey K M N = keys N = Set_cup (Set_sng K) (keys M)
-</code></pre>
 <p><br /><strong>Query</strong> Finally, queries will only succeed for keys that are defined a given <code>Map</code>. Thus, we define an alias:</p>
-<pre class="spec"><code>predicate HasKey K M = In K (keys M)
-</code></pre>
-<p>and use it to type <code>mem</code> which <em>checks</em> if a key is defined in the <code>Map</code> and <code>get</code> which actually returns the value associated with a given key.</p>
-<pre class="spec"><code>-- | Check if key is defined 
-mem :: k:k -&gt; m:Map k v -&gt; {v:Bool|Prop v &lt;=&gt; HasKey k m}
 
--- | Lookup key&#39;s value 
-get :: k:k -&gt; {m:Map k v | HasKey k m} -&gt; v
-</code></pre>
+<p>and use it to type <code>mem</code> which <em>checks</em> if a key is defined in the <code>Map</code> and <code>get</code> which actually returns the value associated with a given key.</p>
+
 </section>
 <section id="using-maps-well-scoped-expressions" class="level2">
 <h2>Using Maps: Well Scoped Expressions</h2>
 <p>Rather than jumping into the <em>implementation</em> of the above <code>Map</code> API, lets write a <em>client</em> that uses <code>Map</code>s to implement an interpreter for a tiny language. In particular, we will use maps as an <em>environment</em> containing the values of <em>bound variables</em>, and we will use the refined API to ensure that <em>lookups never fail</em>, and hence, that well-scoped programs always reduce to a value.</p>
 <p><br /><strong>Expressions</strong> Lets work with a simple language with integer constants, variables, binding and arithmetic operators:<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
-<div id="program-pane-1" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -319,7 +226,7 @@ get :: k:k -&gt; {m:Map k v | HasKey k m} -&gt; v
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">type Var  = String 
+  <div id="program-0" class="programbox">type Var  = String 
 
 data Expr = Const Int
           | Var   Var
@@ -328,7 +235,7 @@ data Expr = Const Int
 </div>
 
 <p><br /><strong>Values</strong> We can use refinements to formally describe <em>values</em> as a subset of <code>Expr</code> allowing us to reuse a bunch of code. To this end, we simply define a (<code>measure</code>) predicate characterizing values:</p>
-<div id="program-pane-2" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -367,7 +274,7 @@ data Expr = Const Int
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-2" class="programbox">{-@ measure val @-}
+  <div id="program-1" class="programbox">{-@ measure val @-}
 val              :: Expr -> Bool 
 val (Const _)    = True 
 val (Var _)      = False 
@@ -376,7 +283,7 @@ val (Let _ _ _ ) = False </div>
 </div>
 
 <p>and then we can use the lifted <code>measure</code> to define an alias for <code>Val</code> denoting values:</p>
-<div id="program-pane-3" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -415,11 +322,11 @@ val (Let _ _ _ ) = False </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-3" class="programbox">{-@ type Val = {v:Expr | val v} @-}</div>
+  <div id="program-2" class="programbox">{-@ type Val = {v:Expr | val v} @-}</div>
 </div>
 
 <p>we can use the above to write simple <em>operators</em> on <code>Val</code>, for example:</p>
-<div id="program-pane-4" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -458,13 +365,13 @@ val (Let _ _ _ ) = False </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-4" class="programbox">{-@ plus                 :: Val -> Val -> Val @-}
+  <div id="program-3" class="programbox">{-@ plus                 :: Val -> Val -> Val @-}
 plus (Const i) (Const j) = Const (i+j)
 plus _         _         = die "Bad call to plus"</div>
 </div>
 
 <p><br /><strong>Environments</strong> let us save values for the local&quot; i.e. <em>let-bound</em> variables; when evaluating an expression <code>Var x</code> we simply look up the value of <code>x</code> in the environment. This is why <code>Map</code>s were invented! Lets define our environments as <code>Map</code>s from <code>Var</code>iables to <code>Val</code>ues:</p>
-<div id="program-pane-5" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -503,12 +410,12 @@ plus _         _         = die "Bad call to plus"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-5" class="programbox">{-@ type Env = Map Var Val @-}</div>
+  <div id="program-4" class="programbox">{-@ type Env = Map Var Val @-}</div>
 </div>
 
 <p>The above definition essentially specifies, inside the types, an <em>eager</em> evaluation strategy: LiquidHaskell will prevent us from sticking unevaluated <code>Expr</code>s inside the environments.</p>
 <p><br /><strong>Evaluation</strong> proceeds via a straightforward recursion over the structure of the expression. When we hit a <code>Var</code> we simply query its value from the environment. When we hit a <code>Let</code> we compute the bound expression and tuck its value into the environment before proceeding within.</p>
-<div id="program-pane-6" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -547,7 +454,7 @@ plus _         _         = die "Bad call to plus"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-6" class="programbox">eval _ i@(Const _)   = i
+  <div id="program-5" class="programbox">eval _ i@(Const _)   = i
 eval g (Var x)       = get x g 
 eval g (Plus e1 e2)  = plus  (eval g e1) (eval g e2) 
 eval g (Let x e1 e2) = eval g' e2 
@@ -560,7 +467,7 @@ eval g (Let x e1 e2) = eval g' e2
 
 <p>will lead to some unpleasant crash. Shouldn't we <em>check</em> if the variables is present and if not, fail with some sort of <code>Variable Not Bound</code> error? We could, but we can do better: we can prove at compile time, that such errors will not occur.</p>
 <p><br /><strong>Free Variables</strong> are those whose values are <em>not</em> bound within an expression, that is, the set of variables that <em>appear</em> in the expression, but are not <em>bound</em> by a dominating <code>Let</code>. We can formalize this notion as a (lifted) function:</p>
-<div id="program-pane-7" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -599,7 +506,7 @@ eval g (Let x e1 e2) = eval g' e2
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-7" class="programbox">{-@ measure free @-}
+  <div id="program-6" class="programbox">{-@ measure free @-}
 free               :: Expr -> (Set Var) 
 free (Const _)     = empty
 free (Var x)       = singleton x
@@ -615,7 +522,7 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
 </div>
 
 <p><br /><strong>An Expression is Closed</strong> with respect to an environment <code>G</code> if all the <em>free</em> variables in the expression appear in <code>G</code>, i.e. the environment contains bindings for all the variables in the expression that are <em>not</em> bound within the expression. As we've seen repeatedly, often a whole pile of informal handwaving, can be succinctly captured by a type definition that says the <code>free</code> variables in the <code>Expr</code> must be contained in the <code>keys</code> of the environment <code>G</code>:</p>
-<div id="program-pane-8" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -654,11 +561,11 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-8" class="programbox">{-@ type ClosedExpr G = {v:Expr | Subset (free v) (keys G)} @-}</div>
+  <div id="program-7" class="programbox">{-@ type ClosedExpr G = {v:Expr | Subset (free v) (keys G)} @-}</div>
 </div>
 
 <p><br /><strong>Closed Evaluation</strong> never goes wrong, i.e. we can ensure that <code>eval</code> will not crash with unbound variables, as long as it is invoked with suitable environments:</p>
-<div id="program-pane-9" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -697,11 +604,11 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-9" class="programbox">{-@ eval :: g:Env -> ClosedExpr g -> Val @-}</div>
+  <div id="program-8" class="programbox">{-@ eval :: g:Env -> ClosedExpr g -> Val @-}</div>
 </div>
 
 <p>We can be sure an <code>Expr</code> is well-scoped if it has <em>no</em> free variables.Lets use that to write a &quot;top-level&quot; evaluator:</p>
-<div id="program-pane-10" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -740,7 +647,7 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-10" class="programbox">{-@ topEval :: {v:Expr | Empty (free v)} -> Val @-}
+  <div id="program-9" class="programbox">{-@ topEval :: {v:Expr | Empty (free v)} -> Val @-}
 topEval     = eval emp </div>
 </div>
 
@@ -748,7 +655,7 @@ topEval     = eval emp </div>
 <br /><strong>Exercise: (Wellformedness Check): </strong>Complete the definition of the below function which <em>checks</em> if an <code>Expr</code> is well formed before <code>eval</code>uating it:
 <br /><br />
 </div>
-<div id="program-pane-11" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -787,7 +694,7 @@ topEval     = eval emp </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-11" class="programbox">{-@ evalAny   :: Env -> Expr -> Maybe Val @-} 
+  <div id="program-10" class="programbox">{-@ evalAny   :: Env -> Expr -> Maybe Val @-} 
 evalAny g e
   | ok        = Just $ eval g e
   | otherwise = Nothing
@@ -796,7 +703,7 @@ evalAny g e
 </div>
 
 <p>Proof is all well and good, in the end, you need a few sanity tests to kick the tires. So:</p>
-<div id="program-pane-12" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -835,7 +742,7 @@ evalAny g e
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-12" class="programbox">tests   = [v1, v2]
+  <div id="program-11" class="programbox">tests   = [v1, v2]
   where
     v1  = topEval e1          -- Rejected by LH
     v2  = topEval e2          -- Accepted by LH
@@ -850,15 +757,14 @@ evalAny g e
 <br /><strong>Exercise: (Closures): </strong>Extend the language above to include functions. That is, extend <code>Expr</code> as below, (and <code>eval</code> and <code>free</code> respectively.)
 <br /><br />
 </div>
-<pre class="spec"><code>data Expr = ... | Fun Var Expr | App Expr Expr
-</code></pre>
+
 <p>Just focus on ensuring the safety of variable lookups; ensuring full type-safety (i.e. every application is to a function) is rather more complicated and beyond the scope of what we've seen so far.</p>
 </section>
 <section id="lemmas" class="level2">
 <h2>Implementing Maps: Binary Search Trees</h2>
 <p>We just saw how easy it is to <em>use</em> the Associative Map <a href="#mapapi">API</a> to ensure the safety of lookups, even though the <code>Map</code> has a &quot;dynamically&quot; generated set of keys. Next, lets see how we can <em>implement</em> a <code>Map</code> library that respects the API using <a href="#binarysearchtree">Binary Search Trees</a></p>
 <p><br /><strong>Data Type</strong> First, lets provide an implementation of the hitherto abstract data type for <code>Map</code>. We shall use Binary Search Trees, wherein, at each <code>Node</code>, the <code>left</code> (resp. <code>right</code>) subtree has keys that are less than (resp. greater than) the root <code>key</code>.</p>
-<div id="program-pane-13" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -897,7 +803,7 @@ evalAny g e
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-13" class="programbox">{-@ data Map k v = Node { key   :: k
+  <div id="program-12" class="programbox">{-@ data Map k v = Node { key   :: k
                         , value :: v
                         , left  :: Map {v:k | v < key} v
                         , right :: Map {v:k | key < v} v }
@@ -907,7 +813,7 @@ evalAny g e
 
 <p><a href="#binarysearchtree">Recall</a> that the above refined data definition yields strengthened data constructors that statically ensure that only legal, <em>binary-search ordered</em> trees are created in the program.</p>
 <p><br /><strong>Defined Keys</strong> Next, we must provide an implementation of the notion of the <code>keys</code> that are defined for a given <code>Map</code>. This is achieved via the lifted measure function:</p>
-<div id="program-pane-14" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -946,7 +852,7 @@ evalAny g e
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-14" class="programbox">{-@ measure keys @-}
+  <div id="program-13" class="programbox">{-@ measure keys @-}
 keys                :: (Ord k) => Map k v -> Set k
 keys Tip            = empty
 keys (Node k _ l r) = ks `union` kl `union` kr 
@@ -962,7 +868,7 @@ keys (Node k _ l r) = ks `union` kl `union` kr
 <br /><strong>Exercise: (Empty Maps): </strong>To make sure you are following, fill in the definition for an <code>emp</code>ty Map:
 <br /><br />
 </div>
-<div id="program-pane-15" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1001,7 +907,7 @@ keys (Node k _ l r) = ks `union` kl `union` kr
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-15" class="programbox">{-@ emp :: {m:Map k v | Empty (keys m)} @-}
+  <div id="program-14" class="programbox">{-@ emp :: {m:Map k v | Empty (keys m)} @-}
 emp     = undefined  </div>
 </div>
 
@@ -1009,7 +915,7 @@ emp     = undefined  </div>
 <br /><strong>Exercise: (Insert): </strong>To add a key <code>k'</code> to a <code>Map</code> we recursively traverse the <code>Map</code> zigging <code>left</code> or <code>right</code> depending on the result of comparisons with the keys along the path. Unfortunately, the version below has an (all too common!) bug, and hence, is <em>rejected</em> by LiquidHaskell. Find and fix the bug so that the function is verified.
 <br /><br />
 </div>
-<div id="program-pane-16" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1048,7 +954,7 @@ emp     = undefined  </div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-16" class="programbox">{-@ set :: (Ord k) => k:k -> v -> m:Map k v
+  <div id="program-15" class="programbox">{-@ set :: (Ord k) => k:k -> v -> m:Map k v
                    -> {n: Map k v | AddKey k m n} @-}
 set k' v' (Node k v l r)
   | k' == k   = Node k v' l r
@@ -1058,7 +964,7 @@ set k' v' Tip = Node k' v' Tip Tip</div>
 </div>
 
 <p><br /><strong>Lookup</strong> Next, lets write the <code>mem</code> function that returns the value associated with a key <code>k'</code>. To do so we just compare <code>k'</code> with the root key, if they are equal, we return the binding, and otherwise we go down the <code>left</code> (resp. <code>right</code>) subtree if sought for key is less (resp. greater) than the root <code>key</code>. Crucially, we want to check that lookup <em>never fails</em>, and hence, we implement the <code>Tip</code> (i.e. empty) case with <code>die</code> gets LiquidHaskell to prove that that case is indeed dead code, i.e. never happens at run-time.</p>
-<div id="program-pane-17" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1097,7 +1003,7 @@ set k' v' Tip = Node k' v' Tip Tip</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-17" class="programbox">{-@ get' :: (Ord k) =>  k:k -> m:{Map k v| HasKey k m} -> v @-}
+  <div id="program-16" class="programbox">{-@ get' :: (Ord k) =>  k:k -> m:{Map k v| HasKey k m} -> v @-}
 get' k' m@(Node k v l r)
   | k' == k   = v
   | k' <  k   = get' k' l
@@ -1118,7 +1024,7 @@ get'  _ Tip   = die  "Lookup Never Fails"</div>
                         \lnot (\vHasKey\ \vkey\ \vt)\]</span></p>
 <p><br /><strong>Conversion Lemmas</strong> Unfortunately, LiquidHaskell <em>cannot automatically</em> deduce facts like the above, as they relate refinements of a container's <em>type parameters</em> (here: <span class="math">\(\vkey&#39; \not = \vkey\)</span>, which refines the <code>Map</code>s first type parameter) with properties of the entire container (here: <span class="math">\(\vHasKey\ \vkey\ \vt\)</span>). Fortunately, it is easy to <em>state</em>, <em>prove</em> and <em>use</em> facts like the above, via <em>lemmas</em> which are just functions. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <p><br /><strong>Defining Lemmas</strong> To state a lemma, we need only convert it into a <a href="curry-howard">type</a> by viewing universal quantifiers as function parameters, and implications as function types:</p>
-<div id="program-pane-18" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1157,7 +1063,7 @@ get'  _ Tip   = die  "Lookup Never Fails"</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-18" class="programbox">{-@ lemma_notMem :: key:k
+  <div id="program-17" class="programbox">{-@ lemma_notMem :: key:k
                  -> m:Map {k:k | k /= key} v
                  -> {v:Bool | not (HasKey key m)}
   @-}
@@ -1168,7 +1074,7 @@ lemma_notMem key (Node _ _ l r) = lemma_notMem key l &&
 
 <p><br /><strong>Proving Lemmas</strong> Note how the signature for <code>lemma_notMem</code> corresponds exactly to the missing fact from above. The &quot;output&quot; type is a <code>Bool</code> refined with the proposition that we desire. We <em>prove</em> the lemma simply by <em>traversing</em> the tree which lets LiquidHaskell build up a proof for the output fact by inductively combining the proofs from the subtrees.</p>
 <p><br /><strong>Using Lemmas</strong> To use a lemma, we need to <em>instantiate</em> it to the particular keys and trees we care about, by &quot;calling&quot; the lemma function, and forcing its result to be in the <em>environment</em> used to typecheck the expression where we want to use the lemma. Say what? Here's how to use lemmas to verify <code>get</code>:</p>
-<div id="program-pane-19" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1207,7 +1113,7 @@ lemma_notMem key (Node _ _ l r) = lemma_notMem key l &&
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-19" class="programbox">{-@ get :: (Ord k) => k:k -> m:{Map k v | HasKey k m} -> v @-}
+  <div id="program-18" class="programbox">{-@ get :: (Ord k) => k:k -> m:{Map k v | HasKey k m} -> v @-}
 get k' (Node k v l r)
   | k' == k   = v
   | k' <  k   = assert (lemma_notMem k' r) $
@@ -1218,7 +1124,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
 </div>
 
 <p>By calling <code>lemma_notMem</code> we create a dummy <code>Bool</code> refined with the fact <code>not (HasKey k' r)</code> (resp. <code>not (HasKey k' l)</code>). We force the calls to <code>get k' l</code> (resp. <code>get k' r</code>) to be typechecked using the materialized refinement by wrapping the calls in <code>assert</code>:</p>
-<div id="program-pane-20" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1257,7 +1163,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-20" class="programbox">assert _ x = x</div>
+  <div id="program-19" class="programbox">assert _ x = x</div>
 </div>
 
 <p><br /><strong>Ghost Values</strong> This technique of materializing auxiliary facts via <em>ghost values</em> is a well known idea in program verification. Usually, one has to take care to ensure that ghost computations do not interfere with the regular computations. If we had to actually <em>execute</em> <code>lemma_notMem</code> it would wreck the efficient logarithmic lookup time, assuming we kept the trees <a href="#avltrees">balanced</a>, as we would traverse the <em>entire</em> tree instead of just the short path to a node. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
@@ -1266,7 +1172,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
 <br /><strong>Exercise: (Membership Test): </strong>Capisce? Fix the definition of <code>mem</code> so that it verifiably implements the given signature.
 <br /><br />
 </div>
-<div id="program-pane-21" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1305,7 +1211,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-21" class="programbox">{-@ mem :: (Ord k) => k:k -> m:Map k v
+  <div id="program-20" class="programbox">{-@ mem :: (Ord k) => k:k -> m:Map k v
                    -> {v:_ | Prop v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
@@ -1318,7 +1224,7 @@ mem _ Tip     = False</div>
 <br /><strong>Exercise: (Fresh): </strong>To make sure you really understand this business of ghosts values and proofs, complete the implementation of the following function which returns a <code>fresh</code> integer that is <em>distinct</em> from all the values in its input list:
 <br /><br />
 </div>
-<div id="program-pane-22" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1357,12 +1263,12 @@ mem _ Tip     = False</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-22" class="programbox">{-@ fresh :: xs:[Int] -> {v:Int | not (Elem v xs)} @-}
+  <div id="program-21" class="programbox">{-@ fresh :: xs:[Int] -> {v:Int | not (Elem v xs)} @-}
 fresh = undefined</div>
 </div>
 
 <p>To refresh your memory, here are the definitions for <code>Elem</code> we <a href="#listelems">saw earlier</a></p>
-<div id="program-pane-23" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1401,7 +1307,7 @@ fresh = undefined</div>
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-23" class="programbox">{-@ predicate Elem X Ys  = In X (elems Ys) @-}
+  <div id="program-22" class="programbox">{-@ predicate Elem X Ys  = In X (elems Ys) @-}
 {-@ measure elems @-}
 elems []     = empty
 elems (x:xs) = (singleton x) `union` (elems xs)</div>
@@ -1442,7 +1348,7 @@ elems (x:xs) = (singleton x) `union` (elems xs)</div>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+    var queryServerURL = "http://localhost:8090/" ;
   </script>
   
   <!-- rust nav JS --> 

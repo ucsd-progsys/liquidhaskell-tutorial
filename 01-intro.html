@@ -160,56 +160,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
  
 <section id="intro" class="level1">
 <h1>Introduction</h1>
-<div id="program-pane-0" class="welleditor hidden" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
- 
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-0" class="programbox">module Introduction where
-main = putStrLn "Intro"
-</div>
-</div>
 
 <p>One of the great things about Haskell is its brainy type system that allows one to enforce a variety of invariants at compile time, thereby nipping in the bud a large swathe of run-time <a href="#getting-started">errors</a>.</p>
 <section id="gowrong" class="level2">
 <h2>Well-Typed Programs Do Go Wrong</h2>
 <p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
 <p><br /><strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
-<div id="program-pane-1" class="welleditor " style="background:#fff; position:relative">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -248,7 +205,7 @@ main = putStrLn "Intro"
     <span class="glyphicon glyphicon-exclamation-sign"></span>
   </button>
 
-  <div id="program-1" class="programbox">average    :: [Int] -> Int
+  <div id="program-0" class="programbox">average    :: [Int] -> Int
 average xs = sum xs `div` length xs</div>
 </div>
 
@@ -281,7 +238,7 @@ ghci&gt; unsafeIndex v 0
 ghci&gt; let t = pack &quot;Voltage&quot;
 ghci&gt; takeWord16 5 t
 &quot;Volta&quot;</code></pre>
-<p>A cunning adversary can use invalid, or rather, <em>well-crafted</em>, inputs that go well outside the size of the given text` to read extra bytes and thus <em>extract secrets</em> without anyone being any the wiser.</p>
+<p>A cunning adversary can use invalid, or rather, <em>well-crafted</em>, inputs that go well outside the size of the given <code>text</code> to read extra bytes and thus <em>extract secrets</em> without anyone being any the wiser.</p>
 <pre class="ghci"><code>ghci&gt; takeWord16 20 t
 &quot;Voltage\1912\3148\SOH\NUL\15928\2486\SOH\NUL&quot;</code></pre>
 <p>The above call returns the bytes residing in memory <em>immediately after</em> the string <code>Voltage</code>. These bytes could be junk, or could be either the name of your favorite TV show, or, more worryingly, your bank account password.</p>
