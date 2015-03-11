@@ -723,7 +723,7 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
 \end{code}
 
 <div class="hwex" id="Matrix Transpose">
-\doublestar Use the `Vector` API to Complete the implementation
+\doublestar Use the `Vector` API to complete the implementation
 of `txgo`. For inspiration, you might look at the implementation
 of `Data.List.transpose` from the [prelude][URL-transpose].
 Better still, don't.
