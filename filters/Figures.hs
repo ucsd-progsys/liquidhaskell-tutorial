@@ -12,13 +12,14 @@ import Data.List (isSuffixOf, isPrefixOf)
 import Debug.Trace
 import Text.Printf (printf)
 
-import System.FilePath (takeExtension)
+import System.FilePath (takeFileName, takeExtension)
 -- import Data.Monoid (mempty)
 -- import System.Environment (getEnv)
 
 import System.Directory
 import System.IO
 import Control.Applicative ((<$>))
+import Control.Monad (replicateM_)
 
 import qualified Data.ByteString.Lazy as S
 import qualified Data.Text as T
@@ -28,11 +29,15 @@ import qualified Data.Map as M
 import Data.Maybe (fromMaybe)
 import System.Environment (getEnv)
 
+import Data.Char (isDigit)
 import Data.Text.Template
 
 main :: IO ()
-main = do tgt <- output <$> getEnv "PANDOC_TARGET"
-          txFig tgt
+main = do
+  tgt <- getEnv "PANDOC_TARGET"
+  let out = output tgt
+  let ch  = fileChapter tgt
+  txFig ch out
 
 data Output = HTML | LATEX deriving (Eq)
 
@@ -47,17 +52,28 @@ output = extOut . takeExtension
     extOut ".pdf"  = LATEX
     extOut s       = error $ "Figures : unknown target: " ++ s
 
-txFig :: Output -> IO ()
-txFig HTML  = txFigures HTML  "" "templates/figHtml.template"
-txFig LATEX = txFigures LATEX "" "templates/figLatex.template"
+fileChapter :: FilePath -> Maybe Int
+fileChapter = toInt . takeWhile isDigit . takeFileName
+  where
+    toInt "" = Nothing
+    toInt xs = Just $ read xs
+
+txFig :: Maybe Int -> Output -> IO ()
+txFig ch HTML  = txFigures ch HTML  "" "templates/figHtml.template"
+txFig ch LATEX = txFigures ch LATEX "" "templates/figLatex.template"
 
 
-txFigures :: Output -> FilePath -> FilePath -> IO ()
-txFigures tgt prefix templateF
+txFigures :: Maybe Int -> Output -> FilePath -> FilePath -> IO ()
+txFigures ch tgt prefix templateF
   = do r    <- newIORef emptyInfo
        tplt <- TIO.readFile templateF
+       resetChapter tgt ch r
        toJSONFilter (tx tgt (T.pack prefix) tplt r)
 
+resetChapter LATEX _        _ = return ()
+resetChapter HTML  Nothing  _ = return ()
+resetChapter HTML  (Just n) r = replicateM_ (n-1) (newChapter r)
+ 
 tx tgt prefix t r b0
   = do b1 <- txBlock tgt prefix t r b0
        b2 <- txLink               r b1
