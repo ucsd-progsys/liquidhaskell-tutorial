@@ -228,12 +228,12 @@ chop' s n = s'
 <p>We get the right result when we <code>chop</code> a <em>valid</em> prefix:</p>
 <pre class="spec"><code>ghci&gt; chop&#39; ex 10
 &quot;Ranjit Lov&quot;</code></pre>
-<p>But, as illustrated in Figure <a href="#fig:overflow">1.1</a>, the machine silently reveals (or more colorfully, <em>bleeds</em>) the contents of adjacent memory or if we use an <em>invalid</em> prefix:</p>
+<p>But, as illustrated in Figure <a href="#fig:overflow">11.1</a>, the machine silently reveals (or more colorfully, <em>bleeds</em>) the contents of adjacent memory or if we use an <em>invalid</em> prefix:</p>
 <pre class="spec"><code>ghci&gt; heartBleed ex 30
 &quot;Ranjit Loves Burritos\NUL\201\&amp;1j\DC3\SOH\NUL&quot;</code></pre>
 <div id="fig:overflow" style="align: left; text-align:center;">
   <img src="img/overflow.png" height="100px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> Can we prevent the program from leaking secrets via overflows? </div>
+  <div class="caption" style="text-align:center"><b>Figure 11.1:</b> Can we prevent the program from leaking secrets via overflows? </div>
 </div>
 <br>
 
@@ -590,10 +590,10 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
 <li><code>bOff</code> is the <em>offset</em> in the block where the string begins,</li>
 <li><code>bLen</code> is the number of bytes from the offset that belong to the string.</li>
 </ul>
-<p>These entities are illustrated in Figure <a href="#fig:bytestring">1.2</a>; the green portion represents the actual contents of a particular <code>ByteString</code>. This representation makes it possible to implement various operations like computing prefixes and suffixes extremely quickly, simply by pointer arithmetic.</p>
+<p>These entities are illustrated in Figure <a href="#fig:bytestring">11.2</a>; the green portion represents the actual contents of a particular <code>ByteString</code>. This representation makes it possible to implement various operations like computing prefixes and suffixes extremely quickly, simply by pointer arithmetic.</p>
 <div id="fig:bytestring" style="align: left; text-align:center;">
   <img src="img/bytestring.png" height="100px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.2:</b> Representing ByteStrings in memory. </div>
+  <div class="caption" style="text-align:center"><b>Figure 11.2:</b> Representing ByteStrings in memory. </div>
 </div>
 <br>
 
@@ -1369,7 +1369,7 @@ chop s n = s'
     s'   = unpack b'       -- up to high-level</div>
 </div>
 
-<p><br /><strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">1.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
+<p><br /><strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->

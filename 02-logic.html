@@ -330,7 +330,9 @@ True  <=> False = False</div>
 <p>is an assignment under <code>G</code> that maps <code>x</code>, <code>y</code> and <code>z</code> to the <code>Int</code> values <code>1</code>, <code>2</code> and <code>3</code> respectively.</p>
 <p><br /><strong>A Predicate Evaluates</strong> to either <code>True</code> or <code>False</code> under a given assignment. For example, the predicate</p>
 <pre class="spec"><code>    x + y &gt; 10</code></pre>
-<p>evaluates to <code>False</code> given the above assignment but evaluates to <code>True</code> under the assignment <code>x := 10, y := 10</code>.</p>
+<p>evaluates to <code>False</code> given the above assignment but evaluates to <code>True</code> under the assignment</p>
+<pre class="spec"><code>    x := 10
+    y := 10</code></pre>
 <p><br /><strong>A Predicate is Satisfiable</strong> in an environment if <em>there exists</em> an assignment (in that environment) that makes the predicate evaluate to <code>True</code>. For example, in <code>G</code> the predicate</p>
 <pre class="spec"><code>    x + y == z</code></pre>
 <p>is satisfiable, as the above assignment makes the predicate evaluate to <code>True</code>.</p>

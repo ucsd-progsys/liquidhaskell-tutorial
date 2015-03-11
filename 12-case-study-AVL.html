@@ -226,16 +226,16 @@ code > span.er { color: #ff0000; font-weight: bold; }
     deriving (Show)</div>
 </div>
 
-<p>While the Haskell type signature describes any old binary tree, an <code>AVL</code> tree like that shown in Figure <a href="#fig:avl">1.1</a> actually satisfies two crucial invariants: it should be binary search ordered and balanced.</p>
+<p>While the Haskell type signature describes any old binary tree, an <code>AVL</code> tree like that shown in Figure <a href="#fig:avl">12.1</a> actually satisfies two crucial invariants: it should be binary search ordered and balanced.</p>
 <div id="fig:avl" style="align: left; text-align:center;">
   <img src="img/avl.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> An AVL tree is an ordered, height-balanced tree. </div>
+  <div class="caption" style="text-align:center"><b>Figure 12.1:</b> An AVL tree is an ordered, height-balanced tree. </div>
 </div>
 <br>
 
 
-<p><br /><strong>A Binary Search Ordered</strong> tree is one where at <em>each</em> <code>Node</code>, the values of the <code>left</code> and <code>right</code> subtrees are strictly less and greater than the values at the <code>Node</code>. In the tree in Figure <a href="#fig:avl">1.1</a> the root has value <code>50</code> while its left and right subtrees have values in the range <code>9-23</code> and <code>54-76</code> respectively. This holds at all nodes, not just the root. For example, the node <code>12</code> has left and right children strictly less and greater than <code>12</code>.</p>
-<p><br /><strong>A Balanced</strong> tree is one where at <em>each</em> node, the <em>heights</em> of the left and right subtrees differ by at most <code>1</code>. In Figure <a href="#fig:avl">1.1</a>, at the root, the heights of the left and right subtrees are the same, but at the node <code>72</code> the left subtree has height <code>2</code> which is one more then the right subtree.</p>
+<p><br /><strong>A Binary Search Ordered</strong> tree is one where at <em>each</em> <code>Node</code>, the values of the <code>left</code> and <code>right</code> subtrees are strictly less and greater than the values at the <code>Node</code>. In the tree in Figure <a href="#fig:avl">12.1</a> the root has value <code>50</code> while its left and right subtrees have values in the range <code>9-23</code> and <code>54-76</code> respectively. This holds at all nodes, not just the root. For example, the node <code>12</code> has left and right children strictly less and greater than <code>12</code>.</p>
+<p><br /><strong>A Balanced</strong> tree is one where at <em>each</em> node, the <em>heights</em> of the left and right subtrees differ by at most <code>1</code>. In Figure <a href="#fig:avl">12.1</a>, at the root, the heights of the left and right subtrees are the same, but at the node <code>72</code> the left subtree has height <code>2</code> which is one more then the right subtree.</p>
 <p><br /><strong>The Invariants Lead To Fast Operations.</strong> Order ensures that there is at most a single path of <code>left</code> and <code>right</code> moves from the root at which an element can be found; balance ensures that each such path in the tree is of size <span class="math">\(O(\log\ n)\)</span> where <span class="math">\(n\)</span> is the numbers of nodes. Thus, together they ensure that the collection operations are efficient: they take time logarithmic in the size of the collection.</p>
 </section>
 <section id="specifying-avl-trees" class="level2">
@@ -762,12 +762,12 @@ insR0 y (Node x l r _) = node x l (insert0 y r)</div>
        , ah = 3}</code></pre>
 <div id="fig:avl-insert0" style="align: left; text-align:center;">
   <img src="img/avl-insert0.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.2:</b> Naive insertion breaks balancedness </div>
+  <div class="caption" style="text-align:center"><b>Figure 12.2:</b> Naive insertion breaks balancedness </div>
 </div>
 <br>
 
 
-<p>In the above, illustrated in Figure <a href="#fig:avl-insert0">1.2</a> the value <code>'e'</code> is inserted into the valid tree <code>t0</code>; it is inserted using <code>insR0</code>, into the <em>right</em> subtree of <code>t0</code> which already has height <code>1</code> and causes its height to go up to <code>2</code> which is too large relative to the empty left subtree of height <code>0</code>.</p>
+<p>In the above, illustrated in Figure <a href="#fig:avl-insert0">12.2</a> the value <code>'e'</code> is inserted into the valid tree <code>t0</code>; it is inserted using <code>insR0</code>, into the <em>right</em> subtree of <code>t0</code> which already has height <code>1</code> and causes its height to go up to <code>2</code> which is too large relative to the empty left subtree of height <code>0</code>.</p>
 <p><br /><strong>LiquidHaskell catches the imbalance</strong> by rejecting <code>insert0</code>. The new value <code>y</code> is inserted into the right subtree <code>r</code>, which (may already be bigger than the left by a factor of <code>1</code>). As insert can return a tree with arbitrary height, possibly much larger than <code>l</code> and hence, LiquidHaskell rejects the call to the constructor <code>node</code> as the balance requirement does not hold.</p>
 <p><br /><strong>Two lessons</strong> can be drawn from the above exercise. First, <code>insert</code> may <em>increase</em> the height of a tree by at most <code>1</code>. So, second, we need a way to <em>rebalance</em> sibling trees where one has height <code>2</code> more than the other.</p>
 </section>
@@ -980,12 +980,12 @@ noHeavy    t = balFac t == 0</div>
 <p>Adelson-Velsky and Landis observed that once you've drilled down into these three cases, the shuffling suggests itself.</p>
 <div id="fig:avl-balL0" style="align: left; text-align:center;">
   <img src="img/avl-balL0.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.3:</b> Rotating when in the LeftBig, NoHeavy case. </div>
+  <div class="caption" style="text-align:center"><b>Figure 12.3:</b> Rotating when in the LeftBig, NoHeavy case. </div>
 </div>
 <br>
 
 
-<p><br /><strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">1.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here's how you would implement the rotation. Note how the preconditions capture the exact case we're in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
+<p><br /><strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">12.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here's how you would implement the rotation. Note how the preconditions capture the exact case we're in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1035,12 +1035,12 @@ balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
 
 <div id="fig:avl-balLL" style="align: left; text-align:center;">
   <img src="img/avl-balLL.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.4:</b> Rotating when in the LeftBig, LeftHeavy case. </div>
+  <div class="caption" style="text-align:center"><b>Figure 12.4:</b> Rotating when in the LeftBig, LeftHeavy case. </div>
 </div>
 <br>
 
 
-<p><br /><strong>In the LeftHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLL">1.4</a>, the subtree <code>ll</code> is larger than <code>lr</code>; hence <code>lr</code> has the same height as <code>r</code>, and again we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. As in the <em>NoHeavy</em> case, the input types capture the exact case, and the output the height of the resulting tree.</p>
+<p><br /><strong>In the LeftHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLL">12.4</a>, the subtree <code>ll</code> is larger than <code>lr</code>; hence <code>lr</code> has the same height as <code>r</code>, and again we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. As in the <em>NoHeavy</em> case, the input types capture the exact case, and the output the height of the resulting tree.</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1090,12 +1090,12 @@ balLL v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
 
 <div id="fig:avl-balLR" style="align: left; text-align:center;">
   <img src="img/avl-balLR.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.5:</b> Rotating when in the LeftBig, RightHeavy case. </div>
+  <div class="caption" style="text-align:center"><b>Figure 12.5:</b> Rotating when in the LeftBig, RightHeavy case. </div>
 </div>
 <br>
 
 
-<p><br /><strong>In the RightHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLR">1.5</a>, the subtree <code>lr</code> is larger than <code>ll</code>. We cannot directly link it with <code>r</code> as the result would again be too large. Hence, we split it further into its own subtrees <code>lrl</code> and <code>lrr</code> and link the latter with <code>r</code>. Again, the types capture the requirements and guarantees of the rotation.</p>
+<p><br /><strong>In the RightHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLR">12.5</a>, the subtree <code>lr</code> is larger than <code>ll</code>. We cannot directly link it with <code>r</code> as the result would again be too large. Hence, we split it further into its own subtrees <code>lrl</code> and <code>lrr</code> and link the latter with <code>r</code>. Again, the types capture the requirements and guarantees of the rotation.</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->

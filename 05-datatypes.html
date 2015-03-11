@@ -1188,14 +1188,14 @@ append z (x :< xs) ys = x :< append z xs ys </div>
 <p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
 <div id="fig:bst" style="align: left; text-align:center;">
   <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Binary Search Tree with values between 1 and 9.
+  <div class="caption" style="text-align:center"><b>Figure 5.1:</b> A Binary Search Tree with values between 1 and 9.
            Each root's value lies between the values appearing
            in its left and right subtrees. </div>
 </div>
 <br>
 
 
-<p>Figure <a href="#fig:bst">1.1</a> shows a binary search tree whose nodes are labeled with a subset of values from <code>1</code> to <code>9</code>. We might represent such a tree with the Haskell value:</p>
+<p>Figure <a href="#fig:bst">5.1</a> shows a binary search tree whose nodes are labeled with a subset of values from <code>1</code> to <code>9</code>. We might represent such a tree with the Haskell value:</p>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
