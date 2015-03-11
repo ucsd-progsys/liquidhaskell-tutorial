@@ -1,5 +1,5 @@
-A Quick Primer on Logic & SMT
-=============================
+Logic & SMT
+===========
 
 \begin{comment}
 \begin{code}

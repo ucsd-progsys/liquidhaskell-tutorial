@@ -78,14 +78,14 @@ txVerb s
   | otherwise    = s
   where
     ls           = lines s
-    l0           = head ls  
+    l0           = head ls
     ln           = last ls
     c0           = stripLatexCmd l0
     cn           = stripLatexCmd ln
 
 isVerb c0 cn = c0 == cn && c0 `elem` ["ghci", "verbatim", "shell"]
 
-snip xs@(_:_:_) = Just $ dropLast $ dropFirst xs 
+snip xs@(_:_:_) = Just $ dropLast $ dropFirst xs
 snip _          = Nothing
 
 -- BLOCK:CodeBlock ("",["shell"],[]) "$ ls -al"
@@ -106,6 +106,8 @@ conversions
     , ("\\end{shell}"         , "~~~~~")
     , ("\\begin{ghci}"        , "~~~~~{.ghci}")
     , ("\\end{ghci}"          , "~~~~~")
+    , ("\\begin{spec}"        , "~~~~~{.spec}")
+    , ("\\end{spec}"          , "~~~~~")
     , ("\\begin{liquiderror}" , "~~~~~{.liquiderror}")
     , ("\\end{liquiderror}"   , "~~~~~")
-    ] 
+    ]

@@ -98,16 +98,15 @@ modules. For example, we can write specifications for `Data.Vector`
 inside `include/Data/Vector.spec` which contains:
 
 \begin{spec}
--- | Define the size 
-measure vlen :: Vector a -> Int 
+-- | Define the size
+measure vlen :: Vector a -> Int
 
--- | Compute the size 
+-- | Compute the size
 assume length :: x:Vector a -> {v:Int | v = vlen x}
 
--- | Lookup at an index 
-assume (!) :: x:Vector a -> {v:Nat | v < vlen x} -> a 
+-- | Lookup at an index
+assume (!) :: x:Vector a -> {v:Nat | v < vlen x} -> a
 \end{spec}
-
 </div>
 
 \newthought{Measures} are used to define *properties* of
