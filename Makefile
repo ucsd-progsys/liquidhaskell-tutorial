@@ -8,6 +8,8 @@ INDEXER=filters/Toc.hs
 
 METATEMPLATE=templates/pagemeta.template
 INDEXTEMPLATE=templates/index.TEMPLATE
+PREAMBLE=templates/preamble.lhs
+BIB=templates/bib.lhs
 
 # generated
 PAGETEMPLATE=dist/page.template
@@ -55,7 +57,7 @@ all: book
 
 book: $(lhsObjects)
 	cat $(lhsObjects) > dist/pbook.lhs
-	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) dist/pbook.lhs -o dist/pbook.pdf
+	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) $(PREAMBLE) $(BIB) dist/pbook.lhs -o dist/pbook.pdf
 
 web: indexhtml $(htmlObjects)
 	mv src/*.html      _site/
@@ -65,13 +67,13 @@ web: indexhtml $(htmlObjects)
 	cp -r $(LIQUIDCLIENT)/js    _site/
 
 indexhtml: $(INDEX)
-	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) templates/preamble.lhs -o _site/index.html
+	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) $(PREAMBLE) -o _site/index.html
 
 $(INDEX):
 	$(INDEXER) src/ $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS) 
 
 src/%.html: src/%.lhs
-	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) templates/preamble.lhs $? templates/bib.lhs -o $@
+	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
 
 clean:
 	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
