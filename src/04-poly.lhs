@@ -8,11 +8,11 @@ Polymorphism {#vectorbounds}
 {-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
 
-module VectorBounds 
-   ( safeLookup 
+module VectorBounds
+   ( safeLookup
    , unsafeLookup
    , vectorSum, vectorSum'
-   , absoluteSum, absoluteSum' 
+   , absoluteSum, absoluteSum'
    , dotProduct
    , sparseProduct, sparseProduct'
    , eeks
@@ -43,7 +43,7 @@ an `array` with two elements:
 
 \begin{spec}
 twoLangs  = fromList ["haskell", "javascript"]
-\end{spec} 
+\end{spec}
 
 Lets attempt to look it up at various indices:
 
@@ -211,7 +211,7 @@ head' vec = vec ! 0
 <div class="hwex" id="Vector Head">
 Replace the `undefined` with an *implementation* of `head''`
 which accepts *all* `Vector`s but returns a value only when
-the input `vec` is not empty. 
+the input `vec` is not empty.
 </div>
 
 \begin{code}
@@ -294,7 +294,7 @@ go :: Int -> {v:Int | 0 <= v && v <= sz} -> Int
 \noindent which states that the second parameter `i` is
 between `0` and the length of `vec` (inclusive). LiquidHaskell
 uses this and the test that `i < sz` to establish that `i` is
-between `0` and `(vlen vec)` to prove safety. 
+between `0` and `(vlen vec)` to prove safety.
 
 <div class="hwex" id="Off by one?">
 Why does the type of `go` have `v <= sz` and not `v < sz` ?
@@ -303,14 +303,14 @@ Why does the type of `go` have `v <= sz` and not `v < sz` ?
 Higher-Order Functions: Bottling Recursion in a `loop`
 ------------------------------------------------------
 
-Let's refactor the above low-level recursive function 
+Let's refactor the above low-level recursive function
 into a generic higher-order `loop`.
 
 \begin{code}
-loop :: Int -> Int -> a -> (Int -> a -> a) -> a 
+loop :: Int -> Int -> a -> (Int -> a -> a) -> a
 loop lo hi base f =  go base lo
   where
-    go acc i     
+    go acc i
       | i < hi    = go (f i acc) (i + 1)
       | otherwise = acc
 \end{code}
