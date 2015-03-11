@@ -69,25 +69,25 @@ bytestring `b`, then it grabs the first `n` `Char`acters from `b`
 and translates them back into a high-level `String`. Lets see how
 the function works on a small test:
 
-\begin{spec}
+~~~~~{.spec}
 ghci> let ex = "Ranjit Loves Burritos"
-\end{spec}
+~~~~~
 
 \noindent We get the right result when we `chop` a *valid* prefix:
 
-\begin{spec}
+~~~~~{.spec}
 ghci> chop' ex 10
 "Ranjit Lov"
-\end{spec}
+~~~~~
 
 \noindent But, as illustrated in Figure [auto](#fig:overflow), the
 machine silently reveals (or more colorfully, *bleeds*) the contents
 of adjacent memory or if we use an *invalid* prefix:
 
-\begin{spec}
+~~~~~{.spec}
 ghci> heartBleed ex 30
 "Ranjit Loves Burritos\NUL\201\&1j\DC3\SOH\NUL"
-\end{spec}
+~~~~~
 
 
 <div class="figure"
@@ -122,36 +122,36 @@ Then we will see how to batten down the hatches with LiquidHaskell.
 
 \newthought{Pointers} are an (abstract) type `Ptr a` implemented by GHC.
 
-\begin{spec}
+~~~~~{.spec}
 -- | A value of type `Ptr a` represents a pointer to an object,
 --   or an array of objects, which may be marshalled to or from
 --   Haskell values of type `a`.
 
 data Ptr a         
-\end{spec}
+~~~~~
 
 \newthought{Foreign Pointers} are *wrapped* pointers that can be
 exported to and from C code via the [Foreign Function Interface][foreignptr].
 
-\begin{spec}
+~~~~~{.spec}
 data ForeignPtr a 
-\end{spec}
+~~~~~
 
 \newthought{To Create} a pointer we use `mallocForeignPtrBytes n`
 which creates a `Ptr` to a buffer of size `n` and wraps it as a
 `ForeignPtr`
 
-\begin{spec}
+~~~~~{.spec}
 mallocForeignPtrBytes :: Int -> ForeignPtr a
-\end{spec}
+~~~~~
 
 \newthought{To Unwrap} and actually use the `ForeignPtr` we use 
 
-\begin{spec}
+~~~~~{.spec}
 withForeignPtr :: ForeignPtr a     -- pointer 
                -> (Ptr a -> IO b)  -- action 
                -> IO b             -- result
-\end{spec}
+~~~~~
 
 \noindent That is, `withForeignPtr fp act` lets us execute a
 action `act` on the actual `Ptr` wrapped within the `fp`.
@@ -164,19 +164,19 @@ the contents at the corresponding memory location, we use
 type class constraint to strip this presentation down to
 the absolute essentials.]
 
-\begin{spec}
+~~~~~{.spec}
 peek :: Ptr a -> IO a         -- Read  
 poke :: Ptr a -> a -> IO ()   -- Write
-\end{spec}
+~~~~~
 
 \newthought{For Fine Grained Access} we can directly shift
 pointers to arbitrary offsets using the *pointer arithmetic*
 operation `plusPtr p off` which takes a pointer `p` an integer
 `off` and returns the address obtained shifting `p` by `off`:
 
-\begin{spec}
+~~~~~{.spec}
 plusPtr :: Ptr a -> Int -> Ptr b 
-\end{spec}
+~~~~~
 
 \newthought{Example} That was rather dry; lets look at a concrete
 example of how one might use the low-level API. The following
@@ -227,20 +227,20 @@ associated buffers, we can use an *abstract measure*,
 i.e. a measure specification *without* any underlying
 implementation.
 
-\begin{spec}
+~~~~~{.spec}
 -- | Size of `Ptr`
 measure plen  :: Ptr a -> Int 
 
 -- | Size of `ForeignPtr`
 measure fplen :: ForeignPtr a -> Int 
-\end{spec}
+~~~~~
 
 \noindent It is helpful to define aliases for pointers of a given size `N`:
 
-\begin{spec}
+~~~~~{.spec}
 type PtrN a N        = {v:Ptr a        | plen v  = N} 
 type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N} 
-\end{spec}
+~~~~~
 
 \newthought{Abstract Measures} are extremely useful when we don't have
 a concrete implementation of the underlying value, but we know that
@@ -254,19 +254,19 @@ to perform any computations. ^[This is another *ghost* specification.]
 the size parameter be non-negative, and that the returned
 pointer indeed refers to a buffer with exactly `n` bytes:
 
-\begin{spec}
+~~~~~{.spec}
 mallocForeignPtrBytes :: n:Nat -> ForeignPtrN a n
-\end{spec}
+~~~~~
 
 \newthought{To Refine Unwrapping} we specify that the *action*
 gets as input, an unwrapped `Ptr` whose size *equals* that of the
 given `ForeignPtr`.
 
-\begin{spec}
+~~~~~{.spec}
 withForeignPtr :: fp:ForeignPtr a 
                -> (PtrN a (fplen fp) -> IO b)  
                -> IO b             
-\end{spec}
+~~~~~
 
 \noindent This is a rather interesting *higher-order* specification.
 Consider a call `withForeignPtr fp act`. If the `act` requires a `Ptr`
@@ -294,17 +294,17 @@ zero3 = do fp <- mallocForeignPtrBytes 4
 only be done if the pointer refers to a non-empty (remaining) buffer.
 That is, we define an alias:
 
-\begin{spec}
+~~~~~{.spec}
 type OkPtr a = {v:Ptr a | 0 < plen v}
-\end{spec}
+~~~~~
 
 \noindent that describes pointers referring to *non-empty* buffers
 (of strictly positive `plen`), and then use the alias to refine:
 
-\begin{spec}
+~~~~~{.spec}
 peek :: OkPtr a -> IO a  
 poke :: OkPtr a -> a -> IO ()  
-\end{spec}
+~~~~~
 
 \noindent In essence the above type says that no matter how arithmetic
 was used to shift pointers around, when the actual dereference happens,
@@ -317,15 +317,15 @@ to reflect the size remaining after the shift: ^[This signature precludes
 *left* or *backward* shifts; for that there is an analogous `minusPtr`
 which we elide for simplicity.]
 
-\begin{spec}
+~~~~~{.spec}
 plusPtr :: p:Ptr a -> off:BNat (plen p) -> PtrN b (plen p - off)      
-\end{spec}
+~~~~~
 
 \noindent using the alias `BNat`, defined as:
 
-\begin{spec}
+~~~~~{.spec}
 type BNat N = {v:Nat | v <= N}
-\end{spec}
+~~~~~
 
 ^[Did you notice that we have strengthened the type of `plusPtr` to
 prevent the pointer from wandering outside the boundary of the buffer?
@@ -350,7 +350,7 @@ exBad = do fp <- mallocForeignPtrBytes 4
 
 \noindent Lets read the tea leaves to understand the above error:
 
-\begin{liquiderror}
+~~~~~{.liquiderror}
   Error: Liquid Type Mismatch
    Inferred type
      VV : {VV : Int | VV == ?a && VV == 5}
@@ -366,17 +366,17 @@ exBad = do fp <- mallocForeignPtrBytes 4
      ?a   : {?a : Int | ?a == 5}
      ?c   : {?c : Int | ?c == 4}
      ?b   : {?b : Integer | ?b == 0}
-\end{liquiderror}
+~~~~~
 
 \noindent The error says we're bumping `p` up by `VV == 5`
 using `plusPtr` but the latter *requires* that bump-offset
 be within the size of the buffer referred to by `p`, i.e.
 `VV <= plen p`. Indeed, in this context, we have:
 
-\begin{liquiderror}
+~~~~~{.liquiderror}
      p    : {p : Ptr a | fplen fp == plen p && ?c <= plen p && ?b <= plen p && zero <= plen p}
      fp   : {fp : ForeignPtr a | fplen fp == ?c && 0 <= fplen fp}
-\end{liquiderror}
+~~~~~
 
 \noindent that is, the size of `p`, namely `plen p` equals the size of
 `fp`, namely `fplen fp` (thanks to the `withForeignPtr` call).  The

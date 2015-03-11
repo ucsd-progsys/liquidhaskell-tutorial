@@ -62,14 +62,14 @@ into the refinement logic. That is, the prelude defines the following
 *logical* functions that correspond to the *Haskell* functions of the
 same name:
 
-\begin{spec}
+~~~~~{.spec}
 measure empty        :: Set a
 measure singleton    :: a -> Set a
 measure member       :: a -> Set a -> Bool  
 measure union        :: Set a -> Set a -> Set a
 measure intersection :: Set a -> Set a -> Set a
 measure difference   :: Set a -> Set a -> Set a
-\end{spec}
+~~~~~
 
 \newthought{Interpreted Operators}
 The above operators are *interpreted* by the SMT solver.
@@ -96,7 +96,7 @@ and operations over them.
 theorems. That is, we give the operators in `Data.Set` refinement
 type signatures that precisely track their set-theoretic behavior:
 
-\begin{spec}
+~~~~~{.spec}
 empty        :: {v:Set a | v = empty} 
 member       :: x:a
              -> s:Set a
@@ -115,7 +115,7 @@ intersection :: x:Set a
 difference   :: x:Set a
              -> y:Set a
              -> {v:Set a | v = difference x y}
-\end{spec}
+~~~~~
 
 \newthought{We Can Assert Theorems} as [QuickCheck](quickcheck) style
 *properties*, that is, as functions from arbitrary inputs to a `Bool`
@@ -290,11 +290,11 @@ type List a = [a]
 \newthought{The Measures strengthens} the data constructors for lists. That is
 we get the automatically refined types for "nil" and "cons":
 
-\begin{spec}
+~~~~~{.spec}
 data List a where
   []  :: ListEmp a
   (:) :: x:a -> xs:List a -> ListUn1 a x xs
-\end{spec}
+~~~~~
 
 \begin{comment}
 \noindent Here, the predicates correspond to various primitive
@@ -313,7 +313,7 @@ SMT solver:
 \end{code}
 
 
-\begin{spec}
+~~~~~{.spec}
 -- FIXME 
 predicate In X Y       = -- X is an element of Y
 predicate Subset X Y   = -- X is a subset of Y
@@ -321,7 +321,7 @@ predicate Disjoint X Y = -- X and Y are Disjoint
 predicate Empty X      = -- X is empty
 predicate Union X Y Z  = -- X is the union of Y and Z
 predicate Union1 X Y Z = -- X is the union of {Y} and Z
-\end{spec}
+~~~~~
 \end{comment}
 
 \\

@@ -83,7 +83,7 @@ avgMany xs = divide total elems
 
 Uh oh. LiquidHaskell wags its finger at us! 
 
-\begin{liquiderror}
+~~~~~{.liquiderror}
      src/04-measure.lhs:77:27-31: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == elems
@@ -94,7 +94,7 @@ Uh oh. LiquidHaskell wags its finger at us!
        In Context
          VV    : Int | VV == elems
          elems : Int
-\end{liquiderror}
+~~~~~
 
 \newthought{We cannot prove} that the divisor is `NonZero`,
 because it *can be* `0` -- when the list is *empty*. Thus, we

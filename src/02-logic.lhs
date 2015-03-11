@@ -51,14 +51,14 @@ drawn from the following grammar comprising *constants*, *expressions* and
 
 \newthought{A Constant} `c` is simply one of the numeric values:
 
-~~~~~{.haskell}
+~~~~~{.spec}
     c := 0, 1, 2, ...
 ~~~~~
 
 \newthought{A Variable} `v` is one of `x`, `y`, `z`, etc., these will refer
 to (the values of) binders in our source programs.
 
-~~~~~{.haskell}
+~~~~~{.spec}
     v := x, y, z, ...
 ~~~~~
 
@@ -66,7 +66,7 @@ to (the values of) binders in our source programs.
 that is, an expression is built up as linear arithmetic expressions
 over variables and constants and uninterpreted function applications.
 
-~~~~~{.haskell}
+~~~~~{.spec}
     e := v                   -- variable
        | c                   -- constant
        | e + e               -- addition
@@ -84,7 +84,7 @@ over variables and constants and uninterpreted function applications.
 \newthought{A Relation} is one of the usual (arithmetic)
 comparison operators:
 
-~~~~~{.haskell}
+~~~~~{.spec}
     r := ==               -- equality
        | /=               -- disequality
        | >=               -- greater than or equal
@@ -99,7 +99,7 @@ or the Boolean combination of the above predicates with the operators `&&` (and)
 `||` (or), `==>` (implies ^[Read `p ==> q` as "if `p` then `q`"]), `<=>` (if and only
 if ^[Read `p <=> q` as "if `p` then `q` **and** if `q` then `p`"]), and `not`.
 
-~~~~~{.haskell}
+~~~~~{.spec}
     p := true
        | false
        | e r e           -- atomic binary relation
@@ -152,7 +152,7 @@ True  <=> False = False
 \newthought{An Environment} is a mapping from variables to their Haskell types.
 For example, the environment `G` defined
 
-~~~~~{.haskell}
+~~~~~{.spec}
     x :: Int
     y :: Int
     z :: Int
@@ -165,7 +165,7 @@ maps each variable `x`, `y` and `z` to the type `Int`.
 \newthought{An Assignment} under an environment, is a mapping from variables
 to values of the type specified in the environment. For example,
 
-~~~~~{.haskell}
+~~~~~{.spec}
     x := 1
     y := 2
     z := 3
@@ -178,20 +178,25 @@ is an assignment under `G` that maps `x`, `y` and `z` to the `Int` values
 \newthought{A Predicate Evaluates} to either `True` or `False` under a given
 assignment. For example, the predicate
 
-~~~~~{.haskell}
+~~~~~{.spec}
     x + y > 10
 ~~~~~
 
 \noindent
 evaluates to `False` given the above assignment but evaluates to `True`
-under the assignment `x := 10, y := 10`.
+under the assignment 
+
+~~~~~{.spec}
+    x := 10
+    y := 10
+~~~~~
 
 
 \newthought{A Predicate is Satisfiable} in an environment if *there exists*
 an assignment (in that environment) that makes the predicate evaluate to `True`.
 For example, in `G` the predicate
 
-~~~~~{.haskell}
+~~~~~{.spec}
     x + y == z
 ~~~~~
 
@@ -203,7 +208,7 @@ evaluate to `True`.
 assignment in that environment makes the predicate evaluate to
 `True`. For example, the predicate
 
-~~~~~{.haskell}
+~~~~~{.spec}
     x < 10 || x == 10 || x > 10
 ~~~~~
 

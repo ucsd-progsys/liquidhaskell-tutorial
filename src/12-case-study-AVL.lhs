@@ -298,7 +298,7 @@ smart constructor, the arguments violate the balance requirement.
 it *too large* relative to its sibling. For example, consider the
 tree `t0` defined as:
 
-\begin{ghci}
+~~~~~{.ghci}
 ghci> let t0 = Node { key = 'a'
                     , l   = Leaf
                     , r   = Node {key = 'd'
@@ -306,14 +306,14 @@ ghci> let t0 = Node { key = 'a'
                                  , r  = Leaf
                                  , ah = 1 }
                     , ah = 2}
-\end{ghci}
+~~~~~
 
 If we use `insert0` to add the key `'e'` (which goes after `'d'`) then we end up
 with the result:
 
 \vfill
 
-\begin{ghci}
+~~~~~{.ghci}
 ghci> insert0 'e' t0 
   Node { key = 'a'
        , l   = Leaf
@@ -325,7 +325,7 @@ ghci> insert0 'e' t0
                                  , ah  = 1   }
                     , ah = 2                 }
        , ah = 3}
-\end{ghci}
+~~~~~
 
 <div class="marginfigure"
      height="150px"

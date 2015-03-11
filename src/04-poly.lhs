@@ -41,9 +41,9 @@ that the indices used to retrieve values from an array are indeed
 *size* of the array. For example, suppose we create
 an `array` with two elements:
 
-\begin{spec}
+~~~~~{.spec}
 twoLangs  = fromList ["haskell", "javascript"]
-\end{spec}
+~~~~~
 
 Lets attempt to look it up at various indices:
 
@@ -97,7 +97,7 @@ better, in `.spec` files which can be reused across multiple client
 modules. For example, we can write specifications for `Data.Vector`
 inside `include/Data/Vector.spec` which contains:
 
-\begin{spec}
+~~~~~{.spec}
 -- | Define the size
 measure vlen :: Vector a -> Int
 
@@ -106,7 +106,7 @@ assume length :: x:Vector a -> {v:Int | v = vlen x}
 
 -- | Lookup at an index
 assume (!) :: x:Vector a -> {v:Nat | v < vlen x} -> a
-\end{spec}
+~~~~~
 </div>
 
 \newthought{Measures} are used to define *properties* of
@@ -156,9 +156,9 @@ between `Lo` and `Hi`:
 
 \noindent after which we can specify `(!)` as:
 
-\begin{spec}
+~~~~~{.spec}
 (!) :: x:Vector a -> Btwn 0 (vlen x) -> a
-\end{spec}
+~~~~~
 
 Verification: Vector Lookup
 ---------------------------
@@ -286,9 +286,9 @@ the safety of the vector accesses `vec ! i`. The verification
 works out because LiquidHaskell is able to
 *automatically infer* ^[In your editor, click on `go` to see the inferred type.]
 
-\begin{spec}
+~~~~~{.spec}
 go :: Int -> {v:Int | 0 <= v && v <= sz} -> Int
-\end{spec}
+~~~~~
 
 \noindent which states that the second parameter `i` is
 between `0` and the length of `vec` (inclusive). LiquidHaskell
@@ -326,9 +326,9 @@ vectorSum' vec  = loop 0 n 0 body
 
 \newthought{Inference} is a convenient option. LiquidHaskell finds:
 
-\begin{spec}
+~~~~~{.spec}
 loop :: lo:Nat -> hi:{Nat|lo <= hi} -> a -> (Btwn lo hi -> a -> a) -> a
-\end{spec}
+~~~~~
 
 \noindent In english, the above type states that 
 
@@ -423,9 +423,9 @@ proving `x ! i` safe.
 The sharp reader will have undoubtedly noticed that the sparse product 
 can be more cleanly expressed as a [fold][foldl]:
 
-\begin{spec}
+~~~~~{.spec}
 foldl' :: (a -> b -> a) -> a -> [b] -> a
-\end{spec}
+~~~~~
 
 \noindent We can simply fold over the sparse vector, accumulating the `sum`
 as we go along

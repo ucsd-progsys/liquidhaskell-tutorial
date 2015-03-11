@@ -57,7 +57,7 @@ fresh  :: [Int] -> Int
 
 Recall the following from the [introduction](#intro):
 
-\begin{ghci}
+~~~~~{.ghci}
 ghci> :m +Data.Map 
 ghci> let m = fromList [ ("haskell"   , "lazy")
                        , ("javascript", "eager")]
@@ -67,7 +67,7 @@ ghci> m ! "haskell"
 
 ghci> m ! "python"
 "*** Exception: key is not in the map
-\end{ghci}
+~~~~~
 
 \noindent
 The problem illustrated above is quite a pervasive one; associative
@@ -93,16 +93,16 @@ statically ensure the safety of lookups.
 lets parameterize the type with `k` for the type of keys and
 `v` for the type of values:
 
-\begin{spec}
+~~~~~{.spec}
 data Map k v    -- Currently left abstract
-\end{spec}
+~~~~~
 
 \newthought{Keys} To talk about the set of keys in a map,
 we will use a *measure*
 
-\begin{spec}
+~~~~~{.spec}
 measure keys :: Map k v -> Set k
-\end{spec}
+~~~~~
 
 \noindent that associates each `Map` to the `Set` of its
 defined keys. Next, we use the above measure, and the usual
@@ -116,9 +116,9 @@ are described [here](#listelems).]
 \newthought{Empty} `Map`s have no keys in them. Hence, we type
 the empty `Map` as:
 
-\begin{spec}
+~~~~~{.spec}
 emp :: {m:Map k v | Empty (keys m)}
-\end{spec}
+~~~~~
 
 \newthought{Add} The function `set` takes a key $k$ a
 value $v$ and a map `m` and returns the new map obtained
@@ -126,30 +126,30 @@ by extending `m` with the binding ${k \mapsto v}$.
 Thus, the set of `keys` of the output `Map` includes
 those of the input plus the singleton $k$, that is:
 
-\begin{spec}
+~~~~~{.spec}
 set :: k:k -> v -> m:Map k v -> {n: Map k v| AddKey k m n}
 
 predicate AddKey K M N = keys N = Set_cup (Set_sng K) (keys M)
-\end{spec}
+~~~~~
 
 \newthought{Query} Finally, queries will only succeed for
 keys that are defined a given `Map`. Thus, we define an alias:
 
-\begin{spec}
+~~~~~{.spec}
 predicate HasKey K M = In K (keys M)
-\end{spec}
+~~~~~
 
 \noindent and use it to type `mem` which *checks* if
 a key is defined in the `Map` and `get` which actually
 returns the value associated with a given key.
 
-\begin{spec}
+~~~~~{.spec}
 -- | Check if key is defined 
 mem :: k:k -> m:Map k v -> {v:Bool|Prop v <=> HasKey k m}
 
 -- | Lookup key's value 
 get :: k:k -> {m:Map k v | HasKey k m} -> v
-\end{spec}
+~~~~~
 
 Using Maps: Well Scoped Expressions 
 ----------------------------------- 
@@ -238,9 +238,9 @@ eval g (Let x e1 e2) = eval g' e2
 The above `eval` seems rather unsafe; whats the guarantee that
 `get x g` will succeed? For example, surely trying:
 
-\begin{ghci}
+~~~~~{.ghci}
 ghci> eval emp (Var "x")
-\end{ghci}
+~~~~~
 
 \noindent will lead to some unpleasant crash. Shouldn't we *check*
 if the variables is present and if not, fail with some sort of
@@ -330,9 +330,9 @@ tests   = [v1, v2]
 That is, extend `Expr` as below, (and `eval` and `free` respectively.)
 </div>
 
-\begin{spec}
+~~~~~{.spec}
 data Expr = ... | Fun Var Expr | App Expr Expr
-\end{spec}
+~~~~~
 
 Just focus on ensuring the safety of variable lookups;
 ensuring full type-safety (i.e. every application is to
@@ -442,7 +442,7 @@ by LiquidHaskell. This is a puzzler (and a bummer!) because
 in fact it *is* correct. So what gives?
 Well, lets look at the error for the call `get' k' l`
 
-\begin{liquiderror}
+~~~~~{.liquiderror}
  src/07-case-study-associative-maps.lhs:411:25: Error: Liquid Type Mismatch
    Inferred type
      VV : Map a b | VV == l
@@ -453,7 +453,7 @@ Well, lets look at the error for the call `get' k' l`
      k  : a
      l  : Map a b
      k' : a
-\end{liquiderror}
+~~~~~
 
 \noindent LiquidHaskell is *unable* to deduce that the the key `k'`
 definitely belongs in the `left` subtree `l`. Well, lets ask ourselves:

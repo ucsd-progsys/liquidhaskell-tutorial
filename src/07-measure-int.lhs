@@ -111,10 +111,10 @@ matProd (M rx _ xs) (M _ cy ys)
 \newthought{The Iteration} embodied by the `for` combinator, is simply
 a `map` over the elements of the vector.
 
-\begin{spec}
+~~~~~{.spec}
 for            :: Vector a -> (a -> b) -> Vector b 
 for (V n xs) f = V n (map f xs) 
-\end{spec}
+~~~~~
 
 \newthought{Wholemeal programming frees} us from having to fret
 about low-level index range manipulation, but is hardly a panacea.
@@ -150,12 +150,12 @@ that these must be inductively defined functions, with a single
 equation per data-constructor]
 
 \begin{comment}
-\begin{spec}
+~~~~~{.spec}
 {-@ measure len @-}
 len        :: [a] -> Int
 len []     = 0
 len (_:xs) = 1 + len xs
-\end{spec}
+~~~~~
 \end{comment}
 
 \begin{code}
@@ -177,11 +177,11 @@ measures are translated into strengthened types for
 the type's constructors. For example, the `size`
 measure is translated into:
 
-\begin{spec}
+~~~~~{.spec}
 data [a] where
   []  :: {v: [a] | size v = 0}
   (:) :: a -> xs:[a] -> {v:[a]|size v = 1 + size xs}
-\end{spec}
+~~~~~
 
 \newthought{Multiple Measures} may be defined for the same data
 type. For example, in addition to the `size` measure, we can define a
@@ -200,13 +200,13 @@ simply by *conjoining* the refinements in the strengthened
 constructors. For example, the two measures for lists end
 up yielding the constructors:
 
-\begin{spec}
+~~~~~{.spec}
 data [a] where
   []  :: {v: [a] | not (notEmpty v) && size v = 0}
   (:) :: a
       -> xs:[a]
       -> {v:[a]| notEmpty v && size v = 1 + size xs}
-\end{spec}
+~~~~~
 
 \noindent 
 This is a very significant advantage of using measures
@@ -419,13 +419,13 @@ We would like to specify that the *sum* of the output tuple's
 dimensions equal the input list's dimension. Lets write measures
 to access the elements of the output:
 
-\begin{spec}
+~~~~~{.spec}
 {-@ measure fst @-}
 fst  (x, _) = x
 
 {-@ measure snd @-}
 snd (_, y) = y
-\end{spec}
+~~~~~
 
 \noindent We can now refine the type of `partition` as: 
 
