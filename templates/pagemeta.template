@@ -55,6 +55,40 @@ code > span.er { color: #ff0000; font-weight: bold; }
 $toc
 </div>
 
+  <!-- BEGIN localstatus --> 
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Crash -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+ 
+  <!-- END localstatus --> 
+
 <div id='page-wrapper'>
 <div id='page'>
  
