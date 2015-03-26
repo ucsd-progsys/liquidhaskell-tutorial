@@ -12,8 +12,8 @@ such structures.
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--short-names"    @-}
+
 
 module Measures where
 
@@ -170,12 +170,11 @@ Fix the code below to obtain an alternate variant
 \begin{code}
 average'      :: [Int] -> Maybe Int
 average' xs
-  | ok        = Just $ divide total elems 
+  | ok        = Just $ divide (sum xs) elems 
   | otherwise = Nothing 
   where
-    total     = sum  xs
     elems     = size xs
-    ok        = True    -- What expression goes here? 
+    ok        = elems > 0 -- What expression goes here? 
 \end{code}
 
 <div class="hwex" id="Debugging Specifications">
@@ -234,8 +233,7 @@ safeHead xs
   | null xs   = Nothing
   | otherwise = Just $ head xs
 
-{-@ predicate Empty Xs = not (notEmpty Xs) @-}
-{-@ null      :: xs:[a] -> {v:Bool | Prop v <=> Empty xs} @-}
+{-@ null      :: [a] -> Bool @-}
 null []       =  True
 null (_:_)    =  False
 \end{code}
@@ -321,7 +319,6 @@ wtAverage wxs = divide totElems totWeight
     totWeight = sum weights
     sum       = foldr1 (+)
 
-{-@ map       :: (a -> b) -> xs:[a] -> {v:[b] | notEmpty v <=> notEmpty xs} @-}
 map           :: (a -> b) -> [a] -> [b]
 map _ []      =  []
 map f (x:xs)  =  f x : map f xs
@@ -341,6 +338,7 @@ specification for `risers` so that it is verified.
 </div>
 
 \begin{code}
+{-@ risers   :: (Ord a) => xs:[a] -> {v: [[a]] | notEmpty xs => notEmpty v} @-}
 risers           :: (Ord a) => [a] -> [[a]]
 risers []        = []
 risers [x]       = [[x]]

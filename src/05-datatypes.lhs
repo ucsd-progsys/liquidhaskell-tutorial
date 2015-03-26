@@ -184,15 +184,22 @@ for the type parameters of `foldl'`, saving us a fair
 bit of typing and enabling the use of the elegant
 polymorphic, higher-order combinators we know and love.
 
-<div class="hwex" id="Sanitization"> Invariants are all well
-and good for data computed *inside* our programs.
-The only way to ensure the legality of data coming
-from *outside*, i.e. from the "real world", is to
-write a sanitizer that will check the appropriate
-invariants before constructing a `Sparse` vector.
-Write the specification and implementation of a
-sanitizer `fromList`, so that the following typechecks:
+<div class="hwex" id="Sanitization"> \singlestar 
+Invariants are all well and good for data computed
+*inside* our programs. The only way to ensure the 
+legality of data coming from *outside*, i.e. from 
+the "real world", is to write a sanitizer that will 
+check the appropriate invariants before constructing 
+a `Sparse` vector. Write the specification and 
+implementation of a sanitizer `fromList`, so that 
+the following typechecks:
 </div>
+
+\hint You need to check that *all* the indices in 
+`elts` are less than `dim`; the easiest way is to 
+compute a new `Maybe [(Int, a)]` which is `Just`
+the original pairs if they are valid, and `Nothing`
+otherwise.
 
 \begin{code}
 fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
@@ -226,6 +233,9 @@ Ordered Lists {#orderedlists}
 As a second example of refined data types, let's consider a
 different problem: representing *ordered* sequences. Here's
 a type for sequences that mimics the classical list:
+
+
+
 
 \begin{code}
 data IncList a =
@@ -455,12 +465,12 @@ data BST a where
 \noindent which *prevents* us from creating illegal trees
 
 \begin{code}
-badBST =  Node 6 
+badBST =  Node 66 
              (Node 4
                  (Node 1 Leaf Leaf)
-                 (Node 2 Leaf Leaf))  -- Out of order, rejected 
-             (Node 9
-                 (Node 7 Leaf Leaf)
+                 (Node 29 Leaf Leaf))  -- Out of order, rejected 
+             (Node 99
+                 (Node 77 Leaf Leaf)
                  Leaf)
 \end{code}
 

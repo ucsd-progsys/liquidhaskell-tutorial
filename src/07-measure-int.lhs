@@ -338,10 +338,10 @@ so that LiquidHaskell can prove the specification for `reverse`.
 </div>
 
 \begin{code}
-{-@ reverse       :: xs:[a] -> {v:[a] | size v = size xs} @-}
+{-@ reverse       :: xs:List a -> ListX a xs @-}
 reverse xs        = go [] xs
   where 
-    {-@ go        :: xs:[a] -> ys:[a] -> [a] @-}
+    {-@ go        :: xs:List a -> ys:List a -> ListN a {size xs + size ys} @-}
     go acc []     = acc
     go acc (x:xs) = go (x:acc) xs
 \end{code}

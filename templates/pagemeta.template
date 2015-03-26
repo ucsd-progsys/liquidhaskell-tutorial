@@ -54,7 +54,41 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id='toc' class='mobile-hidden'>
 $toc
 </div>
-  
+
+  <!-- BEGIN localstatus --> 
+
+  <!-- Verifying ... -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isChecking" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-hourglass"></span>
+  </button>
+ 
+  <!-- Safe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
+          ng-show="isSafe">
+    <span class="glyphicon glyphicon-ok"></span>
+  </button>
+
+  <!-- Unsafe -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
+          ng-show="isUnsafe">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
+
+  <!-- Error -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isError">
+    <span class="glyphicon glyphicon-fire"></span>
+  </button>
+
+  <!-- Crash -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+          ng-show="isCrash">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+  </button>
+ 
+  <!-- END localstatus --> 
+
 <div id='page-wrapper'>
 <div id='page'>
  
@@ -109,41 +143,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
        } else {
          classes.push(className);
        }
-
        el.className = classes.join(' ');
      }
   }
-
-  // The below code is used to add prev and next navigation links to the bottom
-  // of each of the sections.
-  // It works by extracting the current page based on the url and iterates over
-  // the menu links until it finds the menu item for the current page. We then
-  // create a copy of the preceding and following menu links and add the
-  // correct css class and insert them into the bottom of the page.
-  // var toc = document.getElementById('toc').getElementsByTagName('a');
-  // var href = document.location.pathname.split('/').pop();
-  // if (href === 'index.html' || href === '') {
-  //   href = 'README.html';
-  // }
-
-  // for (var i = 0; i < toc.length; i++) {
-  //   if (toc[i].attributes['href'].value === href) {
-  //     var nav = document.createElement('p');
-  //     if (i > 0) {
-  //       var prevNode = toc[i-1].cloneNode(true);
-  //       prevNode.className = 'left';
-  //       nav.appendChild(prevNode);
-  //     }
-  //     if (i < toc.length - 1) {
-  //       var nextNode = toc[i+1].cloneNode(true);
-  //       nextNode.className = 'right';
-  //       nav.appendChild(nextNode);
-  //     }
-  //     document.getElementById('page').appendChild(nav);
-  //     break;
-  //   }
-  // }
-
 });
 </script>
 </body>
