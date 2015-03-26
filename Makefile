@@ -36,6 +36,7 @@ PANDOCHTML=pandoc \
 	 --standalone \
      --parse-raw \
 	 --mathjax \
+   --toc \
 	 --section-divs \
 	 --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
 	 --filter filters/Figures.hs \
@@ -52,8 +53,6 @@ texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 ####################################################################
-thing: src/00-temp.html
-	mv src/00-*.html _site/
 
 all: book
 
@@ -67,6 +66,9 @@ web: indexhtml $(htmlObjects)
 	cp -r $(LIQUIDCLIENT)/fonts _site/
 	cp -r $(LIQUIDCLIENT)/css   _site/
 	cp -r $(LIQUIDCLIENT)/js    _site/
+
+thing: dist/index.lhs src/00-temp.html
+	mv src/00-*.html _site/
 
 indexhtml: $(INDEX)
 	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) $(PREAMBLE) -o _site/index.html
