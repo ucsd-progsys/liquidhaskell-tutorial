@@ -11,7 +11,19 @@
     <link rel="stylesheet" type="text/css" href="$$root$$/css/rust-book.css">
     <link rel="stylesheet" type="text/css" href="$$root$$/css/editor.css">
 
-  <style type="text/css">code{white-space: pre;}</style>
+   
+    <style type="text/css">code{white-space: pre;}
+
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 5px;
+          position: absolute;
+          top: 0;
+          right: 0;
+      }
+    </style>
   <style type="text/css">
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -42,8 +54,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
-    <div id="nav">
-       <button id="toggle-nav">
+    <div id="hhhnav">
+       <button id="toggle-nav" class="toggle-nav">
          <span class="sr-only">Toggle navigation</span>
          <span class="bar"></span>
          <span class="bar"></span>
@@ -51,47 +63,58 @@ code > span.er { color: #ff0000; font-weight: bold; }
        </button>
     </div>
 
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
 <div id='toc' class='mobile-hidden'>
 $toc
 </div>
-
-  <!-- BEGIN localstatus --> 
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
+      
+<!-- BEGIN localstatus --> 
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
 
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
+         <!-- Unsafe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:red; z-index:1"
+                 ng-show="isUnsafe">
+           <span class="glyphicon glyphicon-remove"></span>
+         </button>
 
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
+         <!-- Error -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
+                 ng-show="isError">
+           <span class="glyphicon glyphicon-fire"></span>
+         </button>
 
-  <!-- Crash -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
- 
+         <!-- Crash -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+                 ng-show="isCrash">
+           <span class="glyphicon glyphicon-exclamation-sign"></span>
+         </button>
+       </div>
   <!-- END localstatus --> 
 
 <div id='page-wrapper'>
-<div id='page'>
- 
+  <div id='page'>
+
+
+  
+  
 $$if(notitle)$$
 $$else$$
 <h1 class="title">$$title$$</h1>
@@ -122,9 +145,11 @@ $$body$$
   
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function(event) {
-  document.getElementById("toggle-nav").onclick = toggleNav;
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
   function toggleNav() {
-    var toc = document.getElementById("toc");
+    var toc         = document.getElementById("toc");
     var pagewrapper = document.getElementById("page-wrapper");
     toggleClass(toc, "mobile-hidden");
     toggleClass(pagewrapper, "mobile-hidden");

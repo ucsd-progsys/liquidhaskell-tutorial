@@ -52,7 +52,8 @@ texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 ####################################################################
-thing: src/00-temp.html
+
+thing: dist/index.lhs src/00-temp.html
 	mv src/00-*.html _site/
 
 all: book
