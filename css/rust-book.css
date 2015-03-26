@@ -78,13 +78,10 @@ body {
 }
 
 
-#toggle-nav {
+.toggle-nav {
     height: 20px;
     width:  30px;
     padding: 3px 3px 0 3px;
-}
-
-#toggle-nav {
     margin-top: 5px;
     width: 30px;
     height: 30px;

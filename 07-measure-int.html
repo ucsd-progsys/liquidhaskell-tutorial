@@ -11,7 +11,24 @@
     <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
     <link rel="stylesheet" type="text/css" href="./css/editor.css">
 
-  <style type="text/css">code{white-space: pre;}</style>
+   
+    <style type="text/css">code{white-space: pre;}
+
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
   <style type="text/css">
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -43,7 +60,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
     <div id="nav">
-       <button id="toggle-nav">
+       <button id="toggle-nav" class="toggle-nav">
          <span class="sr-only">Toggle navigation</span>
          <span class="bar"></span>
          <span class="bar"></span>
@@ -164,10 +181,61 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 
 </div>
-  
+      
+<!-- BEGIN localstatus --> 
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+         <!-- Crash -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+                 ng-show="isCrash">
+           <span class="glyphicon glyphicon-exclamation-sign"></span>
+         </button>
+         
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <!-- Unsafe -->
+
+         <div class="dropdown" ng-show="isUnsafe">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove"></span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
+                    -->
+               <li ng-repeat="blockid in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               </li>
+             </ul>
+         </div>
+
+          
+         <!-- Error
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
+                 ng-show="isError">
+           <span class="glyphicon glyphicon-fire"></span>
+         </button>
+         -->
+         
+       </div>
+       
+  <!-- END localstatus --> 
+
 <div id='page-wrapper'>
 <div id='page'>
- 
+   
 <section id="numericmeasure" class="level1">
 <h1>Numeric Measures</h1>
 
@@ -183,38 +251,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-0" class="programbox">data Vector a = V { vDim  :: Int
                   , vElts :: [a]
                   }
@@ -235,38 +272,7 @@ data Matrix a = M { mRow  :: Int
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-1" class="programbox">dotProd       :: (Num a) => Vector a -> Vector a -> a
 dotProd vx vy = sum (prod xs ys)
   where
@@ -283,38 +289,7 @@ dotProd vx vy = sum (prod xs ys)
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-2" class="programbox">matProd       :: (Num a) => Matrix a -> Matrix a -> Matrix a
 matProd (M rx _ xs) (M _ cy ys)
                  = M rx cy elts
@@ -345,38 +320,7 @@ for (V n xs) f = V n (map f xs) </code></pre>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-3" class="programbox">{-@ measure size @-}
 {-@ size    :: [a] -> Nat @-}
 size []     = 0
@@ -396,38 +340,7 @@ size (_:rs) = 1 + size rs</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-4" class="programbox">{-@ measure notEmpty @-}
 notEmpty       :: [a] -> Bool
 notEmpty []    = False
@@ -450,38 +363,7 @@ notEmpty (_:_) = True </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-5" class="programbox">type List a = [a]</div>
 </div>
 
@@ -495,38 +377,7 @@ notEmpty (_:_) = True </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-6" class="programbox">{-@ type ListN a N = {v:List a | size v = N} @-}
 {-@ type ListX a X = ListN a {size X}        @-}</div>
 </div>
@@ -543,38 +394,7 @@ notEmpty (_:_) = True </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-7" class="programbox">{-@ map      :: (a -> b) -> xs:List a -> ListX b xs @-}
 map _ []     = []
 map f (x:xs) = f x : map f xs</div>
@@ -588,38 +408,7 @@ map f (x:xs) = f x : map f xs</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-8" class="programbox">{-@ zipWith :: (a -> b -> c) -> xs:List a
                              -> ListX b xs
                              -> ListX c xs
@@ -637,38 +426,7 @@ zipWith _ _  _          = die "no other cases"</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-9" class="programbox">{-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Tinier v as bs} @-}
 zip (a:as) (b:bs) = (a, b) : zip as bs
 zip [] _          = []
@@ -684,38 +442,7 @@ zip _  []         = [] </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-10" class="programbox">{-@ predicate Tinier X Y Z = Min (size X) (size Y) (size Z) @-}
 {-@ predicate Min X Y Z = (if Y < Z then X = Y else X = Z)  @-}</div>
 </div>
@@ -732,38 +459,7 @@ zip _  []         = [] </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-11" class="programbox">zipOrNull       :: [a] -> [b] -> [(a, b)]
 zipOrNull [] _  = []
 zipOrNull _ []  = []
@@ -791,42 +487,11 @@ test3     = zipOrNull ["cat", "dog"] []</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
-  <div id="program-12" class="programbox">{-@ reverse       :: xs:[a] -> {v:[a] | size v = size xs} @-}
+  <div id="program-12" class="programbox">{-@ reverse       :: xs:List a -> ListX a xs @-}
 reverse xs        = go [] xs
   where 
-    {-@ go        :: xs:[a] -> ys:[a] -> [a] @-}
+    {-@ go        :: xs:List a -> ys:List a -> ListN a {size xs + size ys} @-}
     go acc []     = acc
     go acc (x:xs) = go (x:acc) xs</div>
 </div>
@@ -844,38 +509,7 @@ reverse xs        = go [] xs
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-13" class="programbox">{-@ take'     :: n:Nat -> ListGE a n -> ListN a n @-}
 take' 0 _      = []
 take' n (x:xs) = x : take' (n-1) xs
@@ -890,38 +524,7 @@ take' _ _      = die "won't  happen"</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-14" class="programbox">{-@ type ListGE a N = {v:List a | N <= size v} @-} </div>
 </div>
 
@@ -936,38 +539,7 @@ take' _ _      = die "won't  happen"</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-15" class="programbox">drop 0 xs     = xs
 drop n (_:xs) = drop (n-1) xs
 drop _ _      = die "won't happen"
@@ -987,38 +559,7 @@ test4 = drop 1 ["cat", "dog", "mouse"] </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-16" class="programbox">take 0 _       = []
 take _ []      = []
 take n (x:xs)  = x : take (n-1) xs
@@ -1036,38 +577,7 @@ test5 = [ take 2  ["cat", "dog", "mouse"]
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-17" class="programbox">partition          :: (a -> Bool) -> [a] -> ([a], [a])
 partition _ []     = ([], [])
 partition f (x:xs)
@@ -1091,38 +601,7 @@ snd (_, y) = y</code></pre>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-18" class="programbox">{-@ partition :: _ -> xs:_ -> {v:_ | Sum2 v (size xs)} @-}</div>
 </div>
 
@@ -1134,38 +613,7 @@ snd (_, y) = y</code></pre>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-19" class="programbox">{-@ predicate Sum2 X N = size (fst X) + size (snd X) = N @-}</div>
 </div>
 
@@ -1180,38 +628,7 @@ snd (_, y) = y</code></pre>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-20" class="programbox">-- >> quickSort [1,4,3,2]
 -- [1,2,3,4]
 
@@ -1235,38 +652,7 @@ test10 = quickSort test4 </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-21" class="programbox">{-@ data Vector a = V { vDim  :: Nat
                       , vElts :: ListN a vDim }         @-}</div>
 </div>
@@ -1280,38 +666,7 @@ test10 = quickSort test4 </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-22" class="programbox">okVec  = V 2 [10, 20]       -- accepted by LH
 
 badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
@@ -1325,38 +680,7 @@ badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-23" class="programbox">-- | Non Empty Vectors
 {-@ type VectorNE a  = {v:Vector a | vDim v > 0} @-}
 
@@ -1375,38 +699,7 @@ badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-24" class="programbox">{-@ vEmp :: VectorN a 0 @-}
 vEmp = V 0 []
 
@@ -1422,38 +715,7 @@ vCons x (V n xs) = V (n+1) (x:xs)</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-25" class="programbox">{-@ vHd :: VectorNE a -> a @-}
 vHd (V _ (x:_))  = x
 vHd _            = die "nope"
@@ -1471,38 +733,7 @@ vTl _            = die "nope"</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-26" class="programbox">{-@ for        :: x:Vector a -> (a -> b) -> VectorX b x @-}
 for (V n xs) f = V n (map f xs) </div>
 </div>
@@ -1515,38 +746,7 @@ for (V n xs) f = V n (map f xs) </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-27" class="programbox">{-@ vBin :: (a -> b -> c) -> x:Vector a
                           -> VectorX b x
                           -> VectorX c x
@@ -1562,38 +762,7 @@ vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-28" class="programbox">{-@ dotProduct :: (Num a) => x:Vector a -> VectorX a x -> a @-}
 dotProduct x y = sum $ vElts $ vBin (*) x y </div>
 </div>
@@ -1609,38 +778,7 @@ dotProduct x y = sum $ vElts $ vBin (*) x y </div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-29" class="programbox">vecFromList     :: [a] -> Vector a
 vecFromList xs  =  undefined
 
@@ -1661,38 +799,7 @@ test6  = dotProduct vx vy    -- should be accepted by LH
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-30" class="programbox">{-@ flatten :: n:Nat
             -> m:Nat
             -> VectorN (VectorN a m) n
@@ -1709,38 +816,7 @@ flatten = undefined</div>
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-31" class="programbox">{-@ product   :: xs:Vector _
               -> ys:Vector _
               -> VectorN _ {vDim xs * vDim ys}
@@ -1764,38 +840,7 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-32" class="programbox">{-@ data Matrix a =
       M { mRow  :: Pos
         , mCol  :: Pos 
@@ -1812,38 +857,7 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-33" class="programbox">{-@ type Pos = {v:Int | 0 < v} @-}</div>
 </div>
 
@@ -1855,38 +869,7 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-34" class="programbox">{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C } @-}
 {-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}</div>
 </div>
@@ -1899,38 +882,7 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-35" class="programbox">{-@ ok23 :: MatrixN _ 2 3 @-}
 ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
                       , V 3 [4, 5, 6] ])</div>
@@ -1947,38 +899,7 @@ ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-36" class="programbox">bad1 :: Matrix Int
 bad1 = M 2 3 (V 2 [ V 3 [1, 2   ]
                   , V 3 [4, 5, 6]])
@@ -1999,38 +920,7 @@ bad2 = M 2 3 (V 2 [ V 2 [1, 2]
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-37" class="programbox">matFromList      :: [[a]] -> Maybe (Matrix a)
 matFromList []   = Nothing
 matFromList xss@(xs:_)
@@ -2054,38 +944,7 @@ matFromList xss@(xs:_)
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-38" class="programbox">{-@ mat23 :: Maybe (MatrixN Integer 2 2) @-} 
 mat23     = matFromList [ [1, 2]
                         , [3, 4] ]</div>
@@ -2100,38 +959,7 @@ mat23     = matFromList [ [1, 2]
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-39" class="programbox">{-@ matProduct :: (Num a) => x:Matrix a
                           -> y:{Matrix a  | mCol x = mRow y}
                           -> MatrixN a (mRow x) (mCol y)
@@ -2153,38 +981,7 @@ matProduct (M rx _ xs) my@(M _ cy _)
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-40" class="programbox">-- >>> ok32 == transpose ok23
 -- True
 ok32 = M 3 2 (V 3 [ V 2 [1, 4]
@@ -2203,38 +1000,7 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
           ng-show="isUnknown" ng-click="verifySource()">
     <span class="glyphicon glyphicon-play"></span>
   </button>
-
-  <!-- Verifying ... -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isChecking" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-hourglass"></span>
-  </button>
  
-  <!-- Safe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:green; z-index:1"
-          ng-show="isSafe">
-    <span class="glyphicon glyphicon-ok"></span>
-  </button>
-
-
-  <!-- Unsafe -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:red; z-index:1"
-          ng-show="isUnsafe">
-    <span class="glyphicon glyphicon-remove"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isError">
-    <span class="glyphicon glyphicon-fire"></span>
-  </button>
-
-  <!-- Error -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-          ng-show="isCrash">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-  </button>
-
   <div id="program-41" class="programbox">{-@ transpose :: m:Matrix a -> MatrixN a (mCol m) (mRow m) @-}
 transpose (M r c rows) = M c r $ txgo c r rows
 
@@ -2294,11 +1060,16 @@ txgo c r rows = undefined</div>
   
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function(event) {
-  document.getElementById("toggle-nav").onclick = toggleNav;
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
   function toggleNav() {
-    var toc = document.getElementById("toc");
+    var toc         = document.getElementById("toc");
     var pagewrapper = document.getElementById("page-wrapper");
-    toggleClass(toc, "mobile-hidden");
+    var status      = document.getElementById("checker-status");
+
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
     toggleClass(pagewrapper, "mobile-hidden");
   };
 
@@ -2315,41 +1086,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
        } else {
          classes.push(className);
        }
-
        el.className = classes.join(' ');
      }
   }
-
-  // The below code is used to add prev and next navigation links to the bottom
-  // of each of the sections.
-  // It works by extracting the current page based on the url and iterates over
-  // the menu links until it finds the menu item for the current page. We then
-  // create a copy of the preceding and following menu links and add the
-  // correct css class and insert them into the bottom of the page.
-  // var toc = document.getElementById('toc').getElementsByTagName('a');
-  // var href = document.location.pathname.split('/').pop();
-  // if (href === 'index.html' || href === '') {
-  //   href = 'README.html';
-  // }
-
-  // for (var i = 0; i < toc.length; i++) {
-  //   if (toc[i].attributes['href'].value === href) {
-  //     var nav = document.createElement('p');
-  //     if (i > 0) {
-  //       var prevNode = toc[i-1].cloneNode(true);
-  //       prevNode.className = 'left';
-  //       nav.appendChild(prevNode);
-  //     }
-  //     if (i < toc.length - 1) {
-  //       var nextNode = toc[i+1].cloneNode(true);
-  //       nextNode.className = 'right';
-  //       nav.appendChild(nextNode);
-  //     }
-  //     document.getElementById('page').appendChild(nav);
-  //     break;
-  //   }
-  // }
-
 });
 </script>
 </body>

@@ -40,9 +40,9 @@ function programPaneId(i) { return "program-pane-" + i; }
 // Create Editors
 for (var i = 0; i < numEditors; i++){
     var pi = ace.edit(programId(i));
-    
+
     pi.renderer.setShowGutter(true);        // keep gutter for error-message hook
-    pi.setOption("showLineNumbers", false); // hide line numbers 
+    pi.setOption("showLineNumbers", false); // hide line numbers
 
     pi.setShowPrintMargin(false);
     pi.setOptions({ maxLines: Infinity});
@@ -52,7 +52,7 @@ for (var i = 0; i < numEditors; i++){
         fontSize: "13pt"
     });
     pi.getSession().setMode(new SrcMode());
-    progEditor[i]  = pi; 
+    progEditor[i]  = pi;
     progEditor.typeTooltip[i] = new TokenTooltip(pi, getAnnot(i));
 }
 
@@ -79,7 +79,7 @@ progEditor.getSourceCode = function (){
 }
 
 // Globals
-progEditor.errorMarkers = replicate(numEditors, []); 
+progEditor.errorMarkers = replicate(numEditors, []);
 
 
 /*******************************************************************************/
@@ -87,12 +87,12 @@ progEditor.errorMarkers = replicate(numEditors, []);
 /*******************************************************************************/
 
 function errorRange(err){
-  
+
   var row0 = err.start.line - 1;
   var col0 = err.start.column - 1;
   var row1 = err.stop.line - 1;
   var col1 = err.stop.column - 1;
- 
+
   if (row0 == row1 && col0 == col1){
     return new Range(row0, col0, row0, col0 + 1);
   } else {
@@ -123,7 +123,7 @@ function setBlockErrors(i, errs){
     // Add Error Markers
     progEditor.errorMarkers[i].forEach(function(m){ editor.session.removeMarker(m); });
     progEditor.errorMarkers[i] = errs.map(function(e){ return errorMarker(editor, e);});
-  
+
     // Add Gutter Annotations
     editor.session.clearAnnotations();
     var annotations  = errs.map(errorAceAnnot);
@@ -151,15 +151,15 @@ function blockEnds(blocks) {
 function shiftPos(pos, off){
     return { line   : pos.line - off,
              column : pos.column
-           };  
+           };
 }
 
 /*@ shiftError :: (error, off) => error */
 function shiftError(e, off){
     return { start   : shiftPos(e.start, off),
              stop    : shiftPos(e.stop , off),
-             message : e.message 
-           }; 
+             message : e.message
+           };
 }
 
 /*@ errorBlock :: (array[int], error) => {block:int, error: error} */
@@ -186,31 +186,34 @@ function blockErrors(blocks, errs){
     return res;
 }
 
-/*@ setErrors :: (array[int], array[error]) => void */
+/*@ setErrors :: (array[int], array[error]) => array[int] */
 function setErrors(blocks, errs){
     var errors  = blockErrors(blocks, errs);
-    debugErrors = errors;
+    var res     = [];
     for (var i = 0; i < numEditors; i++){
-        setBlockErrors(i, errors[i]);
-    } 
+        var es = errors[i];
+        setBlockErrors(i, es);
+        if (es.length > 0) res.push(i);
+    }
+    return res;
 }
 
 /*******************************************************************************/
 /************** URLS ***********************************************************/
 /*******************************************************************************/
 
-function isPrefix(p, q) { 
-  return (p == q.slice(0, p.length)) 
+function isPrefix(p, q) {
+  return (p == q.slice(0, p.length))
 }
 
-function getQueryURL(){ 
-  return queryServerURL + 'query'; 
+function getQueryURL(){
+  return queryServerURL + 'query';
 }
 
-function getSrcURL(file){ 
+function getSrcURL(file){
   if (file.match("/")){
     return file;
-  } else { 
+  } else {
     return ('demos/' + file);
   }
 }
@@ -221,9 +224,9 @@ function getSrcURL(file){
 /************** Queries ********************************************************/
 /*******************************************************************************/
 
-function getCheckQuery($scope){ 
+function getCheckQuery($scope){
   return { type    : "check",
-           program : progEditor.getSourceCode() 
+           program : progEditor.getSourceCode()
          };
 }
 
@@ -231,14 +234,14 @@ function getRecheckQuery($scope){
   var p = "";
   if ($scope.filePath) p = $scope.filePath;
 
-  return { type    : "recheck", 
-           program : progEditor.getSourceCode(), 
+  return { type    : "recheck",
+           program : progEditor.getSourceCode(),
            path    : p
          };
 }
 
 function getLoadQuery($scope){
-  return { type    : "load", 
+  return { type    : "load",
            path    : $scope.localFilePath
          };
 }
@@ -266,7 +269,9 @@ function clearStatus($scope){
   $scope.isError      = false;
   $scope.isCrash      = false;
   $scope.isChecking   = false;
+  $scope.isBad        = false;
   $scope.isUnknown    = true ;
+  $scope.errorBlocks  = [];
 }
 
 function setStatusChecking($scope){
@@ -284,6 +289,8 @@ function setStatusResult($scope, data){
   $scope.isUnsafe     = (result == "unsafe");
   $scope.isCrash      = (result == "crash" );
   $scope.isError      = (result == "error" );
+  $scope.isBad        = ($scope.isError || $scope.isUnsafe);
+  debugBad            = $scope.isBad;
   $scope.isUnknown    = !($scope.isSafe || $scope.isError || $scope.isUnsafe || $scope.isCrash);
   $scope.filePath     = data.path;
   return result;
@@ -307,18 +314,18 @@ function fileText(file, k){
 /** Extracting JSON Results ****************************************************/
 /*******************************************************************************/
 
-function getResult(d) { 
+function getResult(d) {
   var res = "crash";
   if (d) {
-    res = d.status; 
+    res = d.status;
   }
   return res;
 }
 
-function getWarns(d){ 
+function getWarns(d){
   var ws = [];
   if (d && d.errors){
-    var ws = d.errors.map(function(x){ 
+    var ws = d.errors.map(function(x){
                return x.message;
              });
   }
@@ -329,6 +336,7 @@ function getWarns(d){
 /************** Top-Level Demo Controller **************************************/
 /*******************************************************************************/
 
+var debugBad    = false;
 var debugErrors = null;
 var debugQuery  = null;
 var debugData   = null;
@@ -342,7 +350,7 @@ var debugZ      = null;
 function LiquidDemoCtrl($scope, $http, $location) {
 
   // Start in non-fullscreen
-  // NUKE $scope.isFullScreen  = false; 
+  // NUKE $scope.isFullScreen  = false;
   // NUKE $scope.embiggen      = "FullScreen";
   // NUKE $scope.demoTitle     = demoTitle;
   // NUKE $scope.demoSubtitle  = demoSubtitle;
@@ -357,46 +365,47 @@ function LiquidDemoCtrl($scope, $http, $location) {
   $scope.gong =  function(s) { alert(s); };
 
   // Clear Status when editor is changed
-  progEditor.on("change", function(e){ 
+  progEditor.on("change", function(e){
     $scope.$apply(function(){
       clearStatus($scope);
     });
   });
- 
+
   // Change editor keybindings
   $scope.keyBindingsNone  = function (){ progEditor.setKeyboardHandler(null); };
   $scope.keyBindingsVim   = function (){ progEditor.setKeyboardHandler("ace/keyboard/vim"); };
   $scope.keyBindingsEmacs = function (){ progEditor.setKeyboardHandler("ace/keyboard/emacs"); };
-  
+
   // http://www.cleverweb.nl/javascript/a-simple-search-with-angularjs-and-php/
-  function verifyQuery(query){ 
+  function verifyQuery(query){
     debugQuery = query;
     setStatusChecking($scope);
     $http.post(getQueryURL(), query)
          .success(function(data, status) {
-            debugResp        = debugResp + 1; 
+            debugResp        = debugResp + 1;
             $scope.status    = status;
             debugData        = data;
-            $scope.warns     = getWarns(data); 
+            $scope.warns     = getWarns(data);
             $scope.annotHtml = data.annotHtml;
             $scope.result    = setStatusResult($scope, data);
-           
+
             // This may be "null" if liquid crashed...
-            if (data) { 
+            if (data) {
                 var blocks = progEditor.getSourceBlocks()
                                        .map(function(str){ return numLines(str); });
 
                 setAnnots(blocks, data.types);
-                setErrors(blocks, data.errors);
+                $scope.errorBlocks = setErrors(blocks, data.errors);
+                debugErrors        = $scope.errorBlocks;
             };
-            
+
         })
          .error(function(data, status) {
             var msg = (data || "Request failed") + status;
             alert(msg);
          });
   };
-  
+
   $scope.verifySource   = function(){ verifyQuery(getCheckQuery($scope));   };
 
   // $scope.reVerifySource = function(){ verifyQuery(getRecheckQuery($scope)); };
