@@ -14,6 +14,10 @@
    
     <style type="text/css">code{white-space: pre;}
 
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
       #checker-status {
           width: 30;
           height: 20;
@@ -82,7 +86,13 @@ $toc
                 ng-show="isChecking" ng-click="verifySource()">
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
- 
+
+         <!-- Crash -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
+                 ng-show="isCrash">
+           <span class="glyphicon glyphicon-exclamation-sign"></span>
+         </button>
+         
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
@@ -90,42 +100,31 @@ $toc
          </button>
 
          <!-- Unsafe -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:red; z-index:1"
-                 ng-show="isUnsafe">
-           <span class="glyphicon glyphicon-remove"></span>
-         </button>
 
-         <!-- Error -->
+         <div class="dropdown" ng-show="isUnsafe">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove"></span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
+                    -->
+               <li ng-repeat="blockid in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               </li>
+             </ul>
+         </div>
+
+          
+         <!-- Error
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
                  ng-show="isError">
            <span class="glyphicon glyphicon-fire"></span>
          </button>
-
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-
-         
-         <!-- NESTED ERRORS 
-         <div class="span2">
-            <div class="btn-group">
-              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Select Demo&nbsp;<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <li ng-repeat="cat in categories" class="dropdown-submenu">
-                   <a tabindex="-1" href="#">{{cat.name}}</a>
-                     <ul class="dropdown-menu">
-                     <li ng-repeat="demo in cat.demos"><a href="" ng-click="changeTarget(demo)">{{demo.name}}</a></li>
-                     </ul>
-                   </a>
-                </li>
-              </ul>
-            </div>
-         </div>
-         --> 
-
-
+         -->
          
        </div>
        
@@ -134,8 +133,22 @@ $toc
 <div id='page-wrapper'>
   <div id='page'>
 
+    <!--
+    <div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Dropdown
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
+  </ul>
+</div>
 
   <a href="#program-1">JUMPJUMP</a>
+  -->
   
 $$if(notitle)$$
 $$else$$
