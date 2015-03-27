@@ -93,11 +93,12 @@ $toc
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
@@ -122,7 +123,7 @@ $toc
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 $$if(notitle)$$
 $$else$$
 <h1 class="title">$$title$$</h1>
