@@ -20,7 +20,7 @@ import Prelude hiding (max)
 main = do
     mapM_ print [a, b, c, d]
   where
-    a = singleton 5 
+    a = singleton 5
     b = insert 2 a
     c = insert 3 b
     d = insert 7 c
@@ -30,7 +30,7 @@ main = do
 {-@ invariant {v:AVL a | 0 <= realHeight v && realHeight v = getHeight v} @-}
 
 {-@ inv_proof  :: t:AVL a -> {v:_ | 0 <= realHeight t && realHeight t = getHeight t } @-}
-inv_proof Leaf           = True 
+inv_proof Leaf           = True
 inv_proof (Node k l r n) = inv_proof l && inv_proof r
 
 {-@ node :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1} -> {v:AVL a | realHeight v = nodeHeight l r} @-}
@@ -42,7 +42,6 @@ merge :: a -> AVL a -> AVL a -> AVL a
 member :: (Ord a) => a -> AVL a -> Bool
 -- FIXME bigHt l r t  = if (realHeight l >= realHeight r) then (eqOrUp l t) else (eqOrUp r t)
 \end{code}
-
 \end{comment}
 
 
@@ -65,7 +64,7 @@ everything is in its right place. Fortunately, LiquidHaskell can help.
 Lets see a concrete example, that should be familiar from your introductory
 data structures class: the Georgy Adelson-Velsky and Landis' or [AVL Tree][avl-wiki].
 
-AVL Trees 
+AVL Trees
 ---------
 
 An `AVL` tree is defined by the following Haskell datatype:^[This chapter is based on code by Michael Beaumont.]
@@ -156,7 +155,7 @@ realHeight (Node _ l r _) = nodeHeight l r
 nodeHeight l r = 1 + max hl hr
   where
     hl         = realHeight l
-    hr         = realHeight r                            
+    hr         = realHeight r
 
 {-@ inline max @-}
 max :: Int -> Int -> Int
@@ -169,7 +168,7 @@ max x y = if x > y then x else y
 \begin{code}
 {-@ inline isReal @-}
 isReal v l r = v == nodeHeight l r
-\end{code} 
+\end{code}
 
 \newthought{A Node is $n$-Balanced} if its left and right subtrees
 have a (real) height difference of at most $n$. We can specify this
@@ -179,7 +178,7 @@ requirement as a predicate `isBal l r n`
 {-@ inline isBal @-}
 isBal l r n = 0 - n <= d && d <= n
   where
-    d       = realHeight l - realHeight r 
+    d       = realHeight l - realHeight r
 \end{code}
 
 \newthought{A Legal AVL Tree} can now be defined via the following
@@ -190,7 +189,7 @@ is $1$-balanced, and that the saved height field is indeed the *real* height:
 {-@ data AVL a = Leaf
                | Node { key :: a
                       , l   :: AVLL a key
-                      , r   :: {v:AVLR a key | isBal l v 1} 
+                      , r   :: {v:AVLR a key | isBal l v 1}
                       , ah  :: {v:Nat        | isReal v l r}
                       }                                  @-}
 \end{code}
@@ -201,7 +200,7 @@ Smart Constructors
 Lets use the type to construct a few small trees which will
 also be handy in a general collection API. First, lets write
 an alias for trees of a given height:
- 
+
 \begin{code}
 -- | Trees of height N
 {-@ type AVLN a N = {v: AVL a | realHeight v = N} @-}
@@ -209,7 +208,7 @@ an alias for trees of a given height:
 -- | Trees of height equal to that of another T
 {-@ type AVLT a T = AVLN a {realHeight T} @-}
 \end{code}
- 
+
 \newthought{An Empty} collection is represented by a `Leaf`,
 which has height `0`:
 
@@ -226,7 +225,7 @@ it is accepted by LiquidHaskell.
 
 \begin{code}
 {-@ singleton :: a -> AVLN a 1 @-}
-singleton x =  Node x empty empty 0 
+singleton x =  Node x empty empty 0
 \end{code}
 
 As you can imagine, it can be quite tedious to keep the saved height
@@ -238,7 +237,7 @@ bother to save the height anyway? Why not just recompute it instead?]
 
 \newthought{The Smart Constructor} `node` takes as input the node's value `x`,
 left and right subtrees `l` and `r` and returns a tree by filling in the right
-value for the height field. 
+value for the height field.
 
 \begin{code}
 {-@ mkNode :: a -> l:AVL a -> r:AVL a
@@ -252,35 +251,35 @@ mkNode v l r = Node v l r h
 \end{code}
 
 <div class="hwex" id="Constructor">Unfortunately, LiquidHaskell  rejects
-the above smart constructor `node`. Can you explain why? Can you fix the 
+the above smart constructor `node`. Can you explain why? Can you fix the
 code (implementation or specification) so that the function is accepted?
 </div>
 
 \hint Think about the (refined) type of the actual constructor `Node`, and
-the properties it requires and ensures. 
+the properties it requires and ensures.
 
 
 Inserting Elements
 ------------------
 
-Next, lets turn our attention to the problem of *adding* elements to 
+Next, lets turn our attention to the problem of *adding* elements to
 an `AVL` tree. The basic strategy is this:
 
-1. *Find* the appropriate location (per ordering) to add the value, 
-2. *Replace* the `Leaf` at that location with the singleton value. 
+1. *Find* the appropriate location (per ordering) to add the value,
+2. *Replace* the `Leaf` at that location with the singleton value.
 
-\noindent If you prefer the spare precision of code to the 
-informality of English, here is a first stab at implementing 
+\noindent If you prefer the spare precision of code to the
+informality of English, here is a first stab at implementing
 insertion: ^[`node` is a fixed variant of the smart
 constructor `mkNode`. Do the exercise *without* looking at it.]
 
 
 \begin{code}
 {-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
-insert0 y t@(Node x l r _) 
-  | y < x      = insL0 y t 
+insert0 y t@(Node x l r _)
+  | y < x      = insL0 y t
   | x < y      = insR0 y t
-  | otherwise  = t 
+  | otherwise  = t
 insert0 y Leaf = singleton y
 
 insL0 y (Node x l r _) = node x (insert0 y l) r
@@ -288,8 +287,8 @@ insR0 y (Node x l r _) = node x l (insert0 y r)
 \end{code}
 
 
-\newthought{Unfortunately} `insert0` does not work. 
-If you did the exercise above, you can replace it with `mkNode` and 
+\newthought{Unfortunately} `insert0` does not work.
+If you did the exercise above, you can replace it with `mkNode` and
 you will see that the above function is rejected by LiquidHaskell.
 The error message would essentially say that at the calls to the
 smart constructor, the arguments violate the balance requirement.
@@ -314,7 +313,7 @@ with the result:
 \vfill
 
 ~~~~~{.ghci}
-ghci> insert0 'e' t0 
+ghci> insert0 'e' t0
   Node { key = 'a'
        , l   = Leaf
        , r   = Node { key = 'd'
@@ -332,19 +331,19 @@ ghci> insert0 'e' t0
      file="img/avl-insert0.png"
      id="fig:avl-insert0"
      caption="Naive insertion breaks balancedness">
-</div> 
+</div>
 
- 
-\noindent In the above, illustrated in Figure [auto](#fig:avl-insert0) 
+
+\noindent In the above, illustrated in Figure [auto](#fig:avl-insert0)
 the value `'e'` is inserted into the valid tree `t0`; it is inserted
-using `insR0`, into the *right* subtree of `t0` which already has 
-height `1` and causes its height to go up to `2` which is too large 
-relative to the empty left subtree of height `0`. 
+using `insR0`, into the *right* subtree of `t0` which already has
+height `1` and causes its height to go up to `2` which is too large
+relative to the empty left subtree of height `0`.
 
 \newthought{LiquidHaskell catches the imbalance} by rejecting `insert0`.
-The new value `y` is inserted into the right subtree `r`, which (may 
-already be bigger than the left by a factor of `1`). 
-As insert can return a tree with arbitrary height, possibly 
+The new value `y` is inserted into the right subtree `r`, which (may
+already be bigger than the left by a factor of `1`).
+As insert can return a tree with arbitrary height, possibly
 much larger than `l` and hence, LiquidHaskell rejects the call to
 the constructor `node` as the balance requirement does not hold.
 
@@ -356,14 +355,14 @@ height `2` more than the other.
 Rebalancing Trees
 -----------------
 
-The brilliant insight of Adelson-Velsky and Landis was that we can, 
-in fact, perform such a rebalancing with a clever bit of gardening. 
-Suppose we have inserted a value into the *left* subtree `l` to 
-obtain a new tree `l'` (the right case is symmetric.) 
+The brilliant insight of Adelson-Velsky and Landis was that we can,
+in fact, perform such a rebalancing with a clever bit of gardening.
+Suppose we have inserted a value into the *left* subtree `l` to
+obtain a new tree `l'` (the right case is symmetric.)
 
 \newthought{The relative heights} of `l'` and `r` fall under one of three cases:
 
-+ *(RightBig)* `r`  is two more than `l'`, 
++ *(RightBig)* `r`  is two more than `l'`,
 + *(LeftBig)*  `l'` is two more than `r`, and otherwise
 + *(NoBig)*    `l'` and `r` are within a factor of `1`,
 
@@ -396,7 +395,7 @@ The *LeftBig* case is the tricky one: we need a way to shuffle
 elements from the left subtree over to the right side.
 
 \newthought{What is a LeftBig tree?} Lets split into the possible
-cases for `l'`, immediately ruling out the *empty* tree because 
+cases for `l'`, immediately ruling out the *empty* tree because
 its height is `0` which cannot be `2` larger than any other tree.
 
 + *(NoHeavy)* the left and right subtrees of `l'` have the same height,
@@ -411,11 +410,11 @@ equal to the `realHeight` of the given tree.
 \begin{code}
 {-@ measure balFac @-}
 balFac Leaf           = 0
-balFac (Node _ l r _) = getHeight l - getHeight r 
+balFac (Node _ l r _) = getHeight l - getHeight r
 \end{code}
 
 \newthought{Heaviness} can be encoded by testing the balance factor:
- 
+
 \begin{code}
 {-@ inline leftHeavy @-}
 leftHeavy  t = balFac t > 0
@@ -427,7 +426,7 @@ rightHeavy t = balFac t < 0
 noHeavy    t = balFac t == 0
 \end{code}
 
-Adelson-Velsky and Landis observed that once you've drilled 
+Adelson-Velsky and Landis observed that once you've drilled
 down  into these three cases, the shuffling suggests itself.
 
 <div class="figure"
@@ -439,11 +438,11 @@ down  into these three cases, the shuffling suggests itself.
 
 \newthought{In the NoHeavy} case, illustrated in
 Figure [auto](#fig:avl-balL0),
-the subtrees  `ll` and `lr` have the same height which is one more than that 
+the subtrees  `ll` and `lr` have the same height which is one more than that
 of `r`. Hence, we can link up `lr` and `r` and link the result with `l`.
 Here's how you would implement the rotation. Note how the preconditions
-capture the exact case we're in: the left subtree is *NoHeavy* and the right 
-subtree is smaller than the left by `2`. Finally, the output type captures 
+capture the exact case we're in: the left subtree is *NoHeavy* and the right
+subtree is smaller than the left by `2`. Finally, the output type captures
 the exact height of the result, relative to the input subtrees.
 
 \begin{code}
@@ -468,7 +467,7 @@ hence `lr` has the same height as `r`, and again we can link up
 `lr` and `r` and link the result with `l`. As in the *NoHeavy* case,
 the input types capture the exact case, and the output the height of
 the resulting tree.
- 
+
  \begin{code}
 {-@ balLL :: x:a
           -> l:{AVLL a x | leftHeavy l}
@@ -494,7 +493,7 @@ the requirements and guarantees of the rotation.
 \begin{code}
 {-@ balLR :: x:a
           -> l:{AVLL a x | rightHeavy l}
-          -> r:{AVLR a x | leftBig l r} 
+          -> r:{AVLR a x | leftBig l r}
           -> AVLT a l
   @-}
 balLR v (Node lv ll (Node lrv lrl lrr _) _) r
@@ -505,7 +504,7 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
 The *RightBig* cases are symmetric to the above cases where the
 left subtree is the larger one.
 
-<div class="hwex" id="RightBig, NoHeavy"> 
+<div class="hwex" id="RightBig, NoHeavy">
 Fix the implementation of `balR0` so that it implements the given type.
 </div>
 
@@ -521,7 +520,7 @@ Fix the implementation of `balR0` so that it implements the given type.
 balR0 v l r = undefined
 \end{code}
 
-<div class="hwex" id="RightBig, RightHeavy"> 
+<div class="hwex" id="RightBig, RightHeavy">
 Fix the implementation of `balRR` so that it implements the given type.
 </div>
 
@@ -535,17 +534,17 @@ Fix the implementation of `balRR` so that it implements the given type.
 balRR v l r = undefined
 \end{code}
 
-<div class="hwex" id="RightBig, LeftHeavy"> 
+<div class="hwex" id="RightBig, LeftHeavy">
 Fix the implementation of `balRL` so that it implements the given type.
 </div>
 
 \begin{code}
 {-@ balRL :: x:a
-          -> l: AVLL a x      
+          -> l: AVLL a x
           -> r:{AVLR a x | rightBig l r && leftHeavy r}
           -> AVLT a r
   @-}
-balRL v l r = undefined 
+balRL v l r = undefined
 \end{code}
 
 
@@ -557,8 +556,8 @@ function which restores the invariants.
 \begin{code}
 {-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert y Leaf = singleton y
-insert y t@(Node x _ _ _) 
-  | y < x     = insL y t 
+insert y t@(Node x _ _ _)
+  | y < x     = insL y t
   | y > x     = insR y t
   | otherwise = t
 \end{code}
@@ -570,7 +569,7 @@ as `s` or goes *up* by atmost `1`.
 {-@ inline eqOrUp @-}
 eqOrUp s t = d == 0 || d == 1
   where
-    d      = diff t s 
+    d      = diff t s
 \end{code}
 
 \newthought{The hard work} happens inside `insL` and `insR`. Here's the
@@ -588,7 +587,7 @@ insL a (Node v l r _)
   | isLeftBig                  = balL0 v l' r
   | otherwise                  = node  v l' r
   where
-    isLeftBig                  = leftBig l' r 
+    isLeftBig                  = leftBig l' r
     l'                         = insert a l
 \end{code}
 
@@ -597,15 +596,15 @@ insL a (Node v l r _)
 following along, why don't you fill it in?
 </div>
 
-\begin{code} 
+\begin{code}
 {-@ insR :: x:a
-         -> t:{AVL a | key t < x && 0 < realHeight t}
-         -> {v: AVL a | eqOrUp s v}
+         -> t:{AVL a  | key t < x && 0 < realHeight t }
+         -> {v: AVL a | eqOrUp t v}
   @-}
 insR = undefined
 \end{code}
 
-Refactoring Rebalance 
+Refactoring Rebalance
 ---------------------
 
 Next, lets write a function to `delete` an element from a tree.
@@ -642,11 +641,11 @@ bal v l r
   | isRightBig                 = balR0 v l r
   | otherwise                  = node  v l r
   where
-    isLeftBig                  = leftBig l r  
-    isRightBig                 = rightBig l r 
+    isLeftBig                  = leftBig l r
+    isRightBig                 = rightBig l r
 \end{code}
 
-The `bal` function is a combination of the case-splits and rotation calls 
+The `bal` function is a combination of the case-splits and rotation calls
 made by `insL` (and ahem, `insR`); it takes as input a value `x` and valid
 left and right subtrees for `x` whose heights are off by at most `2` because
 as we will have created them by inserting or deleting a value from a sibling
@@ -655,7 +654,7 @@ whose height is constrained to satisfy the predicate `reBal l r t`, which says:
 
 + (`bigHt`) The height of `t` is the same or one bigger than the larger of `l` and `r`, and
 + (`balHt`) If `l` and `r` were already balanced (i.e. within `1`) then the height
-   of `t` is exactly equal to that of a tree built by directly linking `l` 
+   of `t` is exactly equal to that of a tree built by directly linking `l`
    and `r`.
 
 \begin{code}
@@ -674,30 +673,30 @@ bigHt l r t = lBig && rBig
     hr      = realHeight r
 \end{code}
 
-\newthought{Insert} can now be written very simply as the following function that 
+\newthought{Insert} can now be written very simply as the following function that
 recursively inserts into the appropriate subtree and then calls `bal` to fix any imbalance:
 
 \begin{code}
 {-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert' a t@(Node v l r n)
-  | a < v      = bal v (insert' a l) r 
+  | a < v      = bal v (insert' a l) r
   | a > v      = bal v l (insert' a r)
   | otherwise  = t
-insert' a Leaf = singleton a 
+insert' a Leaf = singleton a
 \end{code}
 
-Deleting Elements  
+Deleting Elements
 -----------------
 
 Now we can write the `delete` function in a manner similar to `insert`:
-the easy cases are the recursive ones; here we just delete from the 
-subtree and summon `bal` to clean up. Notice that the height of the 
+the easy cases are the recursive ones; here we just delete from the
+subtree and summon `bal` to clean up. Notice that the height of the
 output `t` is at most `1` *less* than that of the input `s`.
 
 \begin{code}
 {-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
 delete y (Node x l r _)
-  | y < x     = bal x (delete y l) r 
+  | y < x     = bal x (delete y l) r
   | x < y     = bal x l (delete y r)
   | otherwise = merge x l r
 delete _ Leaf = Leaf
@@ -711,7 +710,7 @@ element that is to be removed. Here, we call `merge` to link
 up the two subtrees `l` and `r` after hoisting the smallest
 element from the right tree `r` as the new root which replaces
 the deleted element `x`.
- 
+
 \begin{code}
 {-@ merge :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1}
           -> {t:AVL a | bigHt l r t}
@@ -773,7 +772,7 @@ elems Leaf           = S.empty
 actually implements a `Set` or collection API.
 
 
-<div class="hwex" id="Membership">Complete the implementation of the implementation of 
+<div class="hwex" id="Membership">Complete the implementation of the implementation of
 `member` that checks if an element is in an `AVL` tree:
 </div>
 
@@ -790,37 +789,33 @@ hasElem x t = True
 \end{code}
 
 
-<div class="hwex" id="Insertion">Modify `insert'` to obtain 
-a function `insertAPI` that states that the output tree 
+<div class="hwex" id="Insertion">Modify `insert'` to obtain
+a function `insertAPI` that states that the output tree
 contains the newly inserted element (in addition to the old elements):
 </div>
 
 \begin{code}
 {-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
-insertAPI x s = insert' x s 
+insertAPI x s = insert' x s
 
 {-@ inline addElem @-}
 addElem       :: Ord a => a -> AVL a -> AVL a -> Bool
 addElem x s t = True
--- FIXME addElem x s t = (elems t) == (elems s) `S.union` (S.singleton x) 
+-- FIXME addElem x s t = (elems t) == (elems s) `S.union` (S.singleton x)
 \end{code}
 
 
-<div class="hwex" id="Insertion">Modify `delete` to obtain 
+<div class="hwex" id="Insertion">Modify `delete` to obtain
 a function `deleteAPI` that states that the output tree
 contains the old elements minus the removed element:
 </div>
 
 \begin{code}
 {-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
-deleteAPI x s = delete x s 
+deleteAPI x s = delete x s
 
 {-@ inline delElem @-}
 delElem       :: Ord a => a -> AVL a -> AVL a -> Bool
 delElem x s t = True
--- FIXME delElem x s t = (elems t) == (elems s) `S.difference` (S.singleton x)    
+-- FIXME delElem x s t = (elems t) == (elems s) `S.difference` (S.singleton x)
 \end{code}
-
-
-
- 
