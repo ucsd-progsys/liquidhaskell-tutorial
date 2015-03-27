@@ -132,7 +132,7 @@ the above requirements into the refinement logic by declaring:
 \newthought{Non-Empty Lists} can now be described as
 the *subset* of plain old Haskell lists `[a]` for which
 the predicate `notEmpty` holds
-                
+
 \begin{code}
 {-@ type NEList a = {v:[a] | notEmpty v} @-}
 \end{code}
@@ -140,16 +140,13 @@ the predicate `notEmpty` holds
 We can now refine various signatures to establish the safety of
 the list-average function.
 
-\newthought{Size} returns a non-zero value when
-the input list is not-empty:
+\newthought{Size} returns a non-zero value *if* the input list is
+not-empty. We capture this condition with an [implication](#semantics)
+in the output refinement.
 
 \begin{code}
 {-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}
 \end{code}
-
-**FIXME:** see chris' note explaining the need for implies
-here in detail and an explanation that foreshadoes the
-null/safeHead exercise later
 
 \newthought{Average} is only sensible for non-empty lists.
 Happily, we can specify this using the refined `NEList` type:
@@ -224,8 +221,15 @@ requires us to establish that *callers* of `head` and `tail`
 only invoke the respective functions with non-empty lists.
 
 <div class="hwex" id="Safe Head">
-Write down a specification for `null` such that `safeHead` is verified:
+Write down a specification for `null` such that `safeHead`
+is verified. Do *not* force `null` to only take non-empty inputs,
+that defeats the purpose. Instead, it's type should say that it
+works on *all* lists and returns `True` *if and only if* the input
+is non-empty.
 </div>
+
+\hint You may want to refresh your memory about implies `==>`
+and `<=>` from the [chapter on logic](#semantics).
 
 \begin{code}
 safeHead      :: [a] -> Maybe a

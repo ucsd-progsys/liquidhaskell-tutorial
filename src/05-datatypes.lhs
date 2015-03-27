@@ -1,7 +1,7 @@
 Refined Datatypes {#refineddatatypes}
 =================
 
- 
+
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--short-names"    @-}
@@ -14,16 +14,16 @@ module RefinedDatatypes
          Sparse (..)
 
          -- * Sparse: Functions
-       , dotProd, dotProd', plus, fromList  
+       , dotProd, dotProd', plus, fromList
 
          -- * Sparse: Examples
        , okSP, badSP, test1, test2
- 
+
           -- * OrdList: Data
        , IncList  (..)
 
           -- * OrdList: Examples
-       , okList, badList 
+       , okList, badList
 
           -- * OrdList: Functions
        ,  insertSort, insertSort', mergeSort, quickSort
@@ -31,18 +31,18 @@ module RefinedDatatypes
           -- * BST: Data
        , BST (..)
 
-          -- * BST: Functions 
+          -- * BST: Functions
        , mem, add, delMin, del, bstSort, toBST, toIncList
 
           -- * BST: Examples
-       , okBST, badBST 
-                                              
+       , okBST, badBST
+
        )
       where
 
 import Prelude      hiding (abs, length, min)
 import Data.List    (foldl')
-import Data.Vector  hiding (singleton, foldl', foldr, fromList, (++)) 
+import Data.Vector  hiding (singleton, foldl', foldr, fromList, (++))
 import Data.Maybe   (fromJust)
 
 dotProd, dotProd' :: Vector Int -> Sparse Int -> Int
@@ -74,7 +74,7 @@ datatype to represent such vectors:
 
 \begin{code}
 data Sparse a = SP { spDim   :: Int
-                   , spElems :: [(Int, a)] } 
+                   , spElems :: [(Int, a)] }
 \end{code}
 
 \noindent
@@ -98,7 +98,7 @@ smart constructor establishes the right invariants.]
 these invariants with a refined data definition:
 
 \begin{code}
-{-@ data Sparse a = SP { spDim   :: Nat 
+{-@ data Sparse a = SP { spDim   :: Nat
                        , spElems :: [(Btwn 0 spDim, a)]} @-}
 \end{code}
 
@@ -118,7 +118,7 @@ for the data constructor `SP`:
 data Sparse a where
   SP :: spDim:Nat
      -> spElems:[(Btwn 0 spDim, a)]
-     -> Sparse a 
+     -> Sparse a
 ~~~~~
 
 \noindent In other words, by using refined input types for `SP`
@@ -129,7 +129,7 @@ Consequently, LiquidHaskell verifies:
 \begin{code}
 okSP :: Sparse String
 okSP = SP 5 [ (0, "cat")
-            , (3, "dog") ] 
+            , (3, "dog") ]
 \end{code}
 
 \noindent but rejects, due to the invalid index:
@@ -148,7 +148,7 @@ a field name like `spDim` refers to the value of the field, but *outside*
 it refers to the field selector measure or function.]
 
 \begin{code}
-{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-} 
+{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-}
 \end{code}
 
 \newthought{Sparse Products}
@@ -157,8 +157,8 @@ Let's write a function to compute a sparse product
 \begin{code}
 {-@ dotProd :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
 dotProd x (SP _ y) = go 0 y
-  where 
-    go sum ((i, v) : y') = go (sum + (x ! i) * v) y' 
+  where
+    go sum ((i, v) : y') = go (sum + (x ! i) * v) y'
     go sum []            = sum
 \end{code}
 
@@ -173,8 +173,8 @@ to our new representation:
 
 \begin{code}
 {-@ dotProd' :: x:Vector Int -> SparseN Int (vlen x) -> Int @-}
-dotProd' x (SP _ y) = foldl' body 0 y   
-  where 
+dotProd' x (SP _ y) = foldl' body 0 y
+  where
     body sum (i, v) = sum + (x ! i)  * v
 \end{code}
 
@@ -184,26 +184,26 @@ for the type parameters of `foldl'`, saving us a fair
 bit of typing and enabling the use of the elegant
 polymorphic, higher-order combinators we know and love.
 
-<div class="hwex" id="Sanitization"> \singlestar 
+<div class="hwex" id="Sanitization"> \singlestar
 Invariants are all well and good for data computed
-*inside* our programs. The only way to ensure the 
-legality of data coming from *outside*, i.e. from 
-the "real world", is to write a sanitizer that will 
-check the appropriate invariants before constructing 
-a `Sparse` vector. Write the specification and 
-implementation of a sanitizer `fromList`, so that 
+*inside* our programs. The only way to ensure the
+legality of data coming from *outside*, i.e. from
+the "real world", is to write a sanitizer that will
+check the appropriate invariants before constructing
+a `Sparse` vector. Write the specification and
+implementation of a sanitizer `fromList`, so that
 the following typechecks:
 </div>
 
-\hint You need to check that *all* the indices in 
-`elts` are less than `dim`; the easiest way is to 
+\hint You need to check that *all* the indices in
+`elts` are less than `dim`; the easiest way is to
 compute a new `Maybe [(Int, a)]` which is `Just`
 the original pairs if they are valid, and `Nothing`
 otherwise.
 
 \begin{code}
 fromList          :: Int   -> [(Int, a)] -> Maybe (Sparse a)
-fromList dim elts = undefined   
+fromList dim elts = undefined
 
 {-@ test1 :: SparseN String 3 @-}
 test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]
@@ -218,11 +218,11 @@ When you are done, the following code should typecheck:
 
 \begin{code}
 plus     :: (Num a) => Sparse a -> Sparse a -> Sparse a
-plus x y = undefined 
+plus x y = undefined
 
-{-@ test2 :: SparseN Int 3 @-}   
-test2    = plus vec1 vec2 
-  where 
+{-@ test2 :: SparseN Int 3 @-}
+test2    = plus vec1 vec2
+  where
     vec1 = SP 3 [(0, 12), (2, 9)]
     vec2 = SP 3 [(0, 8),  (1, 100)]
 \end{code}
@@ -240,15 +240,15 @@ a type for sequences that mimics the classical list:
 \begin{code}
 data IncList a =
     Emp
-  | (:<) { hd :: a, tl :: IncList a }   
+  | (:<) { hd :: a, tl :: IncList a }
 
 infixr 9 :<
 \end{code}
 
-\noindent 
+\noindent
 The Haskell type above does not state that the elements
 are in order of course, but we can specify that requirement
-by refining *every* element in `tl` to be *greater than* `hd`: 
+by refining *every* element in `tl` to be *greater than* `hd`:
 
 \begin{code}
 {-@ data IncList a =
@@ -276,20 +276,20 @@ okList  = 1 :< 2 :< 3 :< Emp      -- accepted by LH
 badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH
 \end{code}
 
-\noindent 
+\noindent
 Its all very well to *specify* ordered lists.
 Next, lets see how its equally easy to *establish*
 these invariants by implementing several textbook
 sorting routines.
 
-\newthought{Insertion Sort} 
+\newthought{Insertion Sort}
 First, lets implement insertion sort, which converts an ordinary
 list `[a]` into an ordered list `IncList a`.
 
 \begin{code}
-insertSort        :: (Ord a) => [a] -> IncList a 
-insertSort []     = Emp 
-insertSort (x:xs) = insert x (insertSort xs) 
+insertSort        :: (Ord a) => [a] -> IncList a
+insertSort []     = Emp
+insertSort (x:xs) = insert x (insertSort xs)
 \end{code}
 
 The hard work is done by `insert` which places an element into
@@ -300,8 +300,8 @@ sorted list.
 \begin{code}
 insert             :: (Ord a) => a -> IncList a -> IncList a
 insert y Emp       = y :< Emp
-insert y (x :< xs) 
-  | y <= x         = y :< x :< xs 
+insert y (x :< xs)
+  | y <= x         = y :< x :< xs
   | otherwise      = x :< insert y xs
 \end{code}
 
@@ -324,67 +324,69 @@ by implementing the three steps. First, we write a function that
 
 \begin{code}
 split          :: [a] -> ([a], [a])
-split (x:y:zs) = (x:xs, y:ys) 
-  where 
+split (x:y:zs) = (x:xs, y:ys)
+  where
     (xs, ys)   = split zs
 split xs       = (xs, [])
 \end{code}
 
-\noindent 
+\noindent
 Second, we need a function that *combines* two ordered lists
 
 \begin{code}
-merge         :: (Ord a) => IncList a -> IncList a -> IncList a 
+merge         :: (Ord a) => IncList a -> IncList a -> IncList a
 merge xs  Emp = xs
 merge Emp ys  = ys
-merge (x :< xs) (y :< ys) 
+merge (x :< xs) (y :< ys)
   | x <= y    = x :< merge xs (y :< ys)
   | otherwise = y :< merge (x :< xs) ys
 \end{code}
 
-\noindent 
+\noindent
 Finally, we compose the above steps to divide (i.e. `split`)
 and conquer (`sort` and `merge`) the input list:
 
 \begin{code}
 mergeSort :: (Ord a) => [a] -> IncList a
-mergeSort []  = Emp  
+mergeSort []  = Emp
 mergeSort [x] = x :< Emp
-mergeSort xs  = merge (mergeSort ys) (mergeSort zs) 
-  where 
+mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
+  where
     (ys, zs)  = split xs
 \end{code}
 
-<div class="hwex" id="QuickSort">\singlestar
-Why is the following implementation of `quickSort` rejected
-by LiquidHaskell? Modify it so it is accepted.
+<div class="hwex" id="QuickSort"> \doublestar
+Why is the following implementation of `quickSort`
+rejected by LiquidHaskell? Modify it so it is accepted.
 </div>
 
-\hint Think about how `append` should behave so that the `quickSort`
-has the desired property. Next, can you bottle that intuition into a
-suitable *specification* for `append` and then ensure that the code
-satisfies that specification.
-
-**FIXME** This is too big a jump for an exercise; explain it.
+\hint Think about how `append` should behave so that the
+`quickSort` has the desired property. That is, suppose
+that `ys` and `zs` are already in *increasing order*.
+Does that mean that `append x ys zs` are *also* in
+increasing order? No! What other requirement do you need?
+bottle that intuition into a suitable *specification* for
+`append` and then ensure that the code satisfies that
+specification.
 
 \begin{code}
 quickSort           :: (Ord a) => [a] -> IncList a
-quickSort []        = Emp 
-quickSort (x:xs)    = append x lessers greaters 
-  where 
+quickSort []        = Emp
+quickSort (x:xs)    = append x lessers greaters
+  where
     lessers         = quickSort [y | y <- xs, y < x ]
     greaters        = quickSort [z | z <- xs, z >= x]
 
-{-@ append :: x:a -> IncList {v:a | v < x}
-                  -> IncList {v:a | x <= v}
+{-@ append :: x:a -> IncList a
+                  -> IncList a
                   -> IncList a
   @-}
 append z Emp       ys = z :< ys
-append z (x :< xs) ys = x :< append z xs ys 
+append z (x :< xs) ys = x :< append z xs ys
 \end{code}
 
 Ordered Trees {#binarysearchtree}
----------------------------------  
+---------------------------------
 
 As a last example of refined data types, let us consider binary search ordered
 trees, defined thus:
@@ -422,7 +424,7 @@ We might represent such a tree with the Haskell value:
 
 \begin{code}
 okBST :: BST Int
-okBST =  Node 6 
+okBST =  Node 6
              (Node 2
                  (Node 1 Leaf Leaf)
                  (Node 4 Leaf Leaf))
@@ -445,7 +447,7 @@ handy later.]
                   | Node { root  :: a
                          , left  :: BSTL a root
                          , right :: BSTR a root } @-}
-             
+
 {-@ type BSTL a X = BST {v:a | v < X}             @-}
 {-@ type BSTR a X = BST {v:a | X < v}             @-}
 \end{code}
@@ -465,10 +467,10 @@ data BST a where
 \noindent which *prevents* us from creating illegal trees
 
 \begin{code}
-badBST =  Node 66 
+badBST =  Node 66
              (Node 4
                  (Node 1 Leaf Leaf)
-                 (Node 29 Leaf Leaf))  -- Out of order, rejected 
+                 (Node 29 Leaf Leaf))  -- Out of order, rejected
              (Node 99
                  (Node 77 Leaf Leaf)
                  Leaf)
@@ -489,7 +491,7 @@ mem _ Leaf          = False
 mem k (Node k' l r)
   | k == k'         = True
   | k <  k'         = mem k l
-  | otherwise       = mem k r 
+  | otherwise       = mem k r
 \end{code}
 
 \newthought{Singleton} Next, another easy warm-up: a function to create
@@ -511,7 +513,7 @@ add k' Leaf          = one k'
 add k' t@(Node k l r)
   | k' < k           = Node k (add k' l) r
   | k  < k'          = Node k l (add k' r)
-  | otherwise        = t 
+  | otherwise        = t
 \end{code}
 
 \newthought{Minimum} For our next trick, lets write a function to delete the *minimum*
@@ -544,7 +546,7 @@ delMin                 :: (Ord a) => BST a -> MinPair a
 delMin (Node k Leaf r) = MP k r
 delMin (Node k l r)    = MP k' (Node k l' r)
   where
-    MP k' l'           = delMin l 
+    MP k' l'           = delMin l
 delMin Leaf            = die "Don't say I didn't warn ya!"
 \end{code}
 
@@ -558,20 +560,23 @@ a `BST`, if it is present.
 \begin{code}
 del                   :: (Ord a) => a -> BST a -> BST a
 del k' t@(Node k l r) = undefined
-del _  Leaf           = Leaf 
+del _  Leaf           = Leaf
 \end{code}
 
+\begin{comment}
 **FIXME** See issue about using RAW FIELDS vs PATTERN MATCHING.
+\end{comment}
 
-
-<div class="hwex" id="Safely Deleting Minimum">
+<div class="hwex" id="Safely Deleting Minimum"> \singlestar
 The function `delMin` is only sensible for non-empty trees.
 [Read ahead](#usingmeasures) to learn how to specify and verify that
 it is only called with such trees, and then apply that technique here
 to verify the call to `die` in `delMin`.
 </div>
 
+\begin{comment}
 **FIXME**  I shouldn't have to read a future chapter to complete an exercise in this chapter.
+\end{comment}
 
 <div class="hwex" id="BST Sort">
 Complete the implementation of `toIncList` to obtain a `BST`
@@ -583,17 +588,17 @@ bstSort   :: (Ord a) => [a] -> IncList a
 bstSort   = toIncList . toBST
 
 toBST     :: (Ord a) => [a] -> BST a
-toBST     = foldr add Leaf  
+toBST     = foldr add Leaf
 
 toIncList :: BST a -> IncList a
 toIncList (Node x l r) = undefined
 toIncList Leaf         = undefined
 \end{code}
 
-\hint This exercise will be a lot easier *if* you first finish the
+\hint This exercise will be a lot easier *after* you finish the
 `quickSort` exercise. Note that the signature for `toIncList`
-does not use `Ord` and so you cannot use a sorting procedure
-to implement it.
+does not use `Ord` and so you *cannot* (and *need not*) use
+a sorting procedure to implement it.
 
 
 Recap
@@ -619,8 +624,4 @@ on to *existing* types, thereby facilitating their reuse.
 In a few chapters, we will see how to achieve this reuse
 by [abstracting refinements][vazou13] from the definitions of
 datatypes or functions in the same way we abstract
-the element type `a` from containers like `[a]` or `BST a`.   
-
-
-
-
+the element type `a` from containers like `[a]` or `BST a`.

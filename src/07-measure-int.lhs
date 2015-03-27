@@ -11,6 +11,8 @@ Numeric Measures {#numericmeasure}
 module NumericMeasures where
 import Prelude  hiding  (map, zipWith, zip, take, drop, reverse)
 
+{-@ type TRUE = {v:Bool | Prop v} @-}
+
 {-@ die :: {v:_ | false} -> a @-}
 die msg = error msg
 take, drop, take' :: Int -> [a] -> [a]
@@ -132,7 +134,7 @@ equation per data-constructor]
 
 \begin{code}
 {-@ measure size @-}
-{-@ size    :: [a] -> Nat @-}
+{-@ size    :: xs:[a] -> {v:Nat | v = size xs} @-}
 size []     = 0
 size (_:rs) = 1 + size rs
 \end{code}
@@ -218,13 +220,38 @@ The implementations are the same as in the standard library
 i.e. [`Data.List`][data-list], but the specifications are
 enriched with dimension information.
 
-\newthought{map} yields a list with the same size as the input:
+<div class="hwex" id="Map">
+\newthought{map} yields a list with the same size as the input.
+Fix the specification of `map` so that the `prop_map` is verified.
+</div>
 
 \begin{code}
-{-@ map      :: (a -> b) -> xs:List a -> ListX b xs @-}
+{-@ map      :: (a -> b) -> xs:List a -> List b @-}
 map _ []     = []
 map f (x:xs) = f x : map f xs
+
+{-@ prop_map :: List a -> TRUE @-}
+prop_map xs = size ys == size xs
+  where
+    ys      = map id xs
 \end{code}
+
+<div class="hwex" id="Reverse"> \singlestar
+We can `reverse` the elements of a list as shown below, using the
+tail recursive function `go`. Fix the signature for `go`
+so that LiquidHaskell can prove the specification for `reverse`.
+</div>
+
+\hint How big is the list returned by `go`?
+
+\begin{code}
+{-@ reverse       :: xs:List a -> ListX a xs @-}
+reverse xs        = go [] xs
+  where
+    go acc []     = acc
+    go acc (x:xs) = go (x:acc) xs
+\end{code}
+
 
 \newthought{zipWith} requires both lists to have the *same* size,
 and produces a list with that same size. ^[As made explicit by
@@ -254,10 +281,6 @@ zip [] _          = []
 zip _  []         = []
 \end{code}
 
-**FIXME: what is a predicate?**
-**FIXME: what is `=>` **
-**FIXME: simpler exercises first**
-
 \noindent The output type uses the predicate `Tinier Xs Ys Zs`
 which defines the length of `Xs` to be the smaller of that of
 `Ys` and `Zs`.^[In logic, `if p then q else r` is the same as
@@ -268,15 +291,16 @@ which defines the length of `Xs` to be the smaller of that of
 {-@ predicate Min X Y Z = (if Y < Z then X = Y else X = Z)  @-}
 \end{code}
 
-<div class="hwex" id="Zip Unless Empty">
+
+
+
+<div class="hwex" id="Zip Unless Empty"> \doublestar
 In my experience, `zip` as shown above is far too
 permissive and lets all sorts of bugs into my code. As middle
 ground, consider `zipOrNull` below. Write a specification
 for `zipOrNull` such that the code below is verified by
 LiquidHaskell.
 </div>
-
-**FIXME:this is a HARD exercise**
 
 \begin{code}
 zipOrNull       :: [a] -> [b] -> [(a, b)]
@@ -296,23 +320,6 @@ test3     = zipOrNull ["cat", "dog"] []
 
 \hint Yes, the type is rather gross; it uses a bunch of
       disjunctions `||` , conjunctions `&&` and implications `=>`.
-
-<div class="hwex" id="Reverse">
-We can `reverse` the elements of a list as shown below, using the
-tail recursive function `go`. Fix the signature for `go`
-so that LiquidHaskell can prove the specification for `reverse`.
-</div>
-
-\begin{code}
-{-@ reverse       :: xs:List a -> ListX a xs @-}
-reverse xs        = go [] xs
-  where
-    {-@ go        :: xs:List a -> ys:List a -> ListN a {size xs + size ys} @-}
-    go acc []     = acc
-    go acc (x:xs) = go (x:acc) xs
-\end{code}
-
-\hint How big is the list returned by `go`?
 
 Lists: Size Reducing API {#listreducing}
 ------------------------

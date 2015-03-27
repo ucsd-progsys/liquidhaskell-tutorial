@@ -117,8 +117,8 @@ if ^[Read `p <=> q` as "if `p` then `q` **and** if `q` then `p`"]), and `not`.
 + `x < 10 ==> y < 10 ==> x + y < 20`
 + `0 < x + y <=> 0 < y + x`
 
-Semantics
----------
+Semantics {#semantics}
+----------------------
 
 The syntax of predicates tells us what they *look* like, that is, what we
 can *write down* as valid predicates. Next, let us turn our attention to
