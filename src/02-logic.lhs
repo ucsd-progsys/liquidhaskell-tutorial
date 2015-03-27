@@ -7,9 +7,6 @@ module Logic where
 main :: IO ()
 main = return ()
 
-{-@ type TRUE  = {v:Bool | Prop v} @-}
-{-@ type FALSE = {v:Bool | not (Prop v)} @-}
-
 {-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p =>  Prop q)} @-}
 {-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
 {-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
@@ -19,6 +16,7 @@ ax2 :: Int -> Bool
 ax3 :: Int -> Int -> Bool
 ax4 :: Int -> Int -> Bool
 ax5 :: Int -> Int -> Int -> Bool
+ax6 :: Int -> Int -> Bool
 
 infixr 9 ==>
 
@@ -127,7 +125,7 @@ can *write down* as valid predicates. Next, let us turn our attention to
 what a predicate *means*. Intuitively, a predicate is just a Boolean valued
 Haskell function -- `&&`, `||`, `not` are the usual operators and `==>` and
 `<=>` are two special operators.
- 
+
 \newthought{The Implication} operator `==>` is equivalent to the Haskell
 function:
 
@@ -139,7 +137,8 @@ True  ==> True  = True
 True  ==> False = False
 \end{code}
 
-\newthought{The If-and-only-if} operator `<=>` is equivalent to the Haskell function:
+\newthought{The If-and-only-if} operator `<=>` is equivalent to the
+Haskell function:
 
 \begin{code}
 (<=>)  :: Bool -> Bool -> Bool
@@ -149,8 +148,8 @@ True  <=> True  = True
 True  <=> False = False
 \end{code}
 
-\newthought{An Environment} is a mapping from variables to their Haskell types.
-For example, the environment `G` defined
+\newthought{An Environment} is a mapping from variables to their
+Haskell types. For example, the environment `G` defined
 
 ~~~~~{.spec}
     x :: Int
@@ -162,8 +161,9 @@ For example, the environment `G` defined
 maps each variable `x`, `y` and `z` to the type `Int`.
 
 
-\newthought{An Assignment} under an environment, is a mapping from variables
-to values of the type specified in the environment. For example,
+\newthought{An Assignment} under an environment, is a mapping
+from variables to values of the type specified in the environment.
+For example,
 
 ~~~~~{.spec}
     x := 1
@@ -266,12 +266,20 @@ that you may be more familiar with right now, and so that
 we can start to use LiquidHaskell to determine whether a
 predicate is indeed valid or not.
 
-\newthought{Let `TRUE` be a type} for `Bool` valued
-expressions that *always* evaluate to `True` ^[We will
-explain how to define such types shortly.] Thus, a
-*valid predicate* is one that has the type `TRUE`.
-The simplest example of a valid predicate is just
-`True`:
+\newthought{Let `TRUE` be a refined type} for `Bool`
+valued expressions that *always* evaluate to `True`.
+Similarly, we can define `FALSE` for `Bool` valued
+expressions that *always* evaluate to `False`:
+
+\begin{code}
+{-@ type TRUE  = {v:Bool | Prop v}       @-}
+{-@ type FALSE = {v:Bool | not (Prop v)} @-}
+\end{code}
+
+\noindent
+Thus, a *valid predicate* is one that has the type
+`TRUE`. The simplest example of a valid predicate
+is just `True`:
 
 \begin{code}
 {-@ ex0 :: TRUE @-}
@@ -302,10 +310,11 @@ and `False`, and so the below predicate is invalid:
 ex2 b = b && not b
 \end{code}
 
-The next few examples illustrate the `==>` operator.  You should read
-`p ==> q` as *if* `p` is true *then* `q` must also be true.  Thus, the
-below predicates are valid as if both `a` and `b` are true, then well,
-`a` is true, and `b` is true.
+The next few examples illustrate the `==>` operator.
+You should read `p ==> q` as *if* `p` is true *then* `q`
+must also be true.  Thus, the below predicates are valid
+as if both `a` and `b` are true, then well, `a` is true,
+and `b` is true.
 
 \begin{code}
 {-@ ex3 :: Bool -> Bool -> TRUE @-}
@@ -315,7 +324,11 @@ ex3 a b = (a && b) ==> a
 ex4 a b = (a && b) ==> b
 \end{code}
 
-\noindent Of course, if we replace the `&&` with `||` the result is *not valid*:
+<div class="hwex" id="Implications and Or">
+Of course, if we replace the `&&` with `||` the result is *not valid*.
+Can you shuffle the variables around -- *without changing the operators* --
+to make the formula valid?
+</div>
 
 \begin{code}
 {-@ ex3' :: Bool -> Bool -> TRUE @-}
@@ -344,9 +357,16 @@ as the valid predicates:
 \begin{code}
 {-@ exDeMorgan1 :: Bool -> Bool -> TRUE @-}
 exDeMorgan1 a b = not (a || b) <=> (not a && not b)
+\end{code}
 
+<div class="hwex" id="DeMorgan's Law">
+The following version of DeMorgan's law is wrong.
+Can you fix it to get a valid formula?
+</div>
+
+\begin{code}
 {-@ exDeMorgan2 :: Bool -> Bool -> TRUE @-}
-exDeMorgan2 a b = not (a && b) <=> (not a || not b)
+exDeMorgan2 a b = not (a && b) <=> (not a && not b)
 \end{code}
 
 Examples: Arithmetic
@@ -402,6 +422,17 @@ ax4 x y = (x == y - 1) ==> (x + 2 == y + 1)
 ax5 x y z =   (x <= 0 && x >= 0)
           ==> (y == x + z)
           ==> (y == z)
+\end{code}
+
+<div class="hwex" id="Addition and Order">
+The formula below is *not* valid. Do you know why?
+Change the *hypothesis* i.e. the thing to the left
+of the `==>` to make it a valid formula.
+</div>
+
+\begin{code}
+{-@ ax6 :: Int -> Int -> TRUE @-}
+ax6 x y = True ==> (x <= x + y)
 \end{code}
 
 Examples: Uninterpreted Function
