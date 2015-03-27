@@ -72,7 +72,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 $toc
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -102,24 +101,8 @@ $toc
                </li>
              </ul>
          </div>
-
-          <!-- Crash 
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         -->
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
