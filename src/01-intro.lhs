@@ -217,6 +217,10 @@ $ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/src
 ~~~~~
 
+**Note:** This tutorial is a *work in progress*, and we will be **very**
+grateful for feedback and suggestions, ideally via pull-requests on github.
+
+
 \noindent Lets begin!
 
 
