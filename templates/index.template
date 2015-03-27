@@ -45,6 +45,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h4 style="border-bottom: 2px solid #ddd"><i>$$author$$</i></h4>
 <br>
 
+<p><a href="book.pdf">[PDF]</a></p>
+
 $toc
 
 </div>
