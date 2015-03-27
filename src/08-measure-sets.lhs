@@ -22,6 +22,15 @@ die msg = error msg
 isUnique, isNotUnique :: [Int]
 mergeSort :: (Ord a) => [a] -> [a]
 range :: Int -> Int -> [Int]
+-- FIXME
+{-@ predicate In X Xs      = Set_mem X Xs            @-}
+{-@ predicate Subset X Y   = Set_sub X Y             @-}
+{-@ predicate Empty  X     = Set_emp X               @-}
+{-@ predicate Inter X Y Z  = X = Set_cap Y Z         @-}
+{-@ predicate Union X Y Z  = X = Set_cup Y Z         @-}
+{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z   @-}
+{-@ predicate Disjoint X Y = Inter (Set_empty 0) X Y @-}
+type List a = [a]
 \end{code}
 \end{comment}
 
@@ -65,7 +74,7 @@ same name:
 ~~~~~{.spec}
 measure empty        :: Set a
 measure singleton    :: a -> Set a
-measure member       :: a -> Set a -> Bool  
+measure member       :: a -> Set a -> Bool
 measure union        :: Set a -> Set a -> Set a
 measure intersection :: Set a -> Set a -> Set a
 measure difference   :: Set a -> Set a -> Set a
@@ -85,7 +94,7 @@ more general [Theory of Arrays][mccarthy]. ^[See [this recent paper][z3cal]
 to learn how modern SMT solvers prove equalities like the above.]
 
 
-Proving QuickCheck Style Properties {#quickcheck} 
+Proving QuickCheck Style Properties {#quickcheck}
 -----------------------------------
 
 To get the hang of whats going on, lets do a few warmup exercises,
@@ -97,12 +106,12 @@ theorems. That is, we give the operators in `Data.Set` refinement
 type signatures that precisely track their set-theoretic behavior:
 
 ~~~~~{.spec}
-empty        :: {v:Set a | v = empty} 
+empty        :: {v:Set a | v = empty}
 member       :: x:a
              -> s:Set a
-             -> {v:Bool | Prop v <=> member x s}  
+             -> {v:Bool | Prop v <=> member x s}
 
-singleton    :: x:a -> {v:Set a | v = singleton x} 
+singleton    :: x:a -> {v:Set a | v = singleton x}
 
 union        :: x:Set a
              -> y:Set a
@@ -140,7 +149,7 @@ prop_one_plus_one_eq_two x   = (x == 1 + 1) `implies` (x == 2)
 \begin{code}
 {-@ implies        :: p:Bool -> q:Bool -> Implies p q  @-}
 implies False _    = True
-implies _     True = True 
+implies _     True = True
 implies _    _     = False
 \end{code}
 
@@ -157,7 +166,7 @@ $\forall x, y. x < 100 \wedge y < 100 \Rightarrow x + y < 200$.
 
 \begin{code}
 {-@ prop_x_y_200 :: _ -> _ -> True @-}
-prop_x_y_200 x y = False -- fill in the theorem body 
+prop_x_y_200 x y = False -- fill in the theorem body
 \end{code}
 
 
@@ -166,7 +175,7 @@ stated and proved as a QuickCheck style theorem:
 
 \begin{code}
 {-@ prop_intersection_comm :: _ -> _ -> True @-}
-prop_intersection_comm x y 
+prop_intersection_comm x y
   = (x `intersection` y) == (y `intersection` x)
 \end{code}
 
@@ -174,7 +183,7 @@ prop_intersection_comm x y
 
 \begin{code}
 {-@ prop_intersection_comm :: _ -> _ -> True @-}
-prop_union_assoc x y z 
+prop_union_assoc x y z
   = (x `union` (y `union` z)) == (x `union` y) `union` z
 \end{code}
 
@@ -184,10 +193,10 @@ For example, we lets check that `union` distributes over `intersection`:
 
 \begin{code}
 {-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
-prop_intersection_dist x y z 
+prop_intersection_dist x y z
   =  x `intersection` (y `union` z)
      ==
-     (x `intersection` y) `union` (x `intersection` z) 
+     (x `intersection` y) `union` (x `intersection` z)
 \end{code}
 
 \newthought{Non-Theorems} should be rejected.
@@ -244,12 +253,6 @@ elts (x:xs) = singleton x `union` elts xs
 Lets write a few helpful aliases for various refined lists that will
 then make the subsequent specifications pithy and crisp.
 
-\begin{comment}
-\begin{code}
-type List a = [a]
-\end{code}
-\end{comment}
-
 + A list with elements `S`
 
 \begin{code}
@@ -267,7 +270,6 @@ type List a = [a]
 \begin{code}
 {-@ type ListEq a X = ListS a {elts X}    @-}
 \end{code}
-
 
 + A list whose contents are a *subset* of list `X`
 
@@ -301,20 +303,8 @@ data List a where
 relations over `Set`s that are natively implemented within the
 SMT solver:
 
-\begin{code}
--- FIXME
-{-@ predicate In X Xs      = Set_mem X Xs            @-}
-{-@ predicate Subset X Y   = Set_sub X Y             @-}
-{-@ predicate Empty  X     = Set_emp X               @-}
-{-@ predicate Inter X Y Z  = X = Set_cap Y Z         @-}
-{-@ predicate Union X Y Z  = X = Set_cup Y Z         @-}
-{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z   @-}
-{-@ predicate Disjoint X Y = Inter (Set_empty 0) X Y @-}
-\end{code}
-
-
 ~~~~~{.spec}
--- FIXME 
+-- FIXME
 predicate In X Y       = -- X is an element of Y
 predicate Subset X Y   = -- X is a subset of Y
 predicate Disjoint X Y = -- X and Y are Disjoint
@@ -323,8 +313,6 @@ predicate Union X Y Z  = -- X is the union of Y and Z
 predicate Union1 X Y Z = -- X is the union of {Y} and Z
 ~~~~~
 \end{comment}
-
-\\
 
 Lets take our new vocabulary out for a spin!
 
@@ -365,7 +353,7 @@ halve _ xs       = ([], xs)
 prop_halve_append n xs = elts xs == elts xs'
   where
     xs'      =  append' ys zs
-    (ys, zs) =  halve n xs 
+    (ys, zs) =  halve n xs
 \end{code}
 
 \hint You may want to remind yourself about the
@@ -386,7 +374,7 @@ elem _ []     = False
 test1      = elem 2 [1,2,3]
 
 {-@ test2 :: False @-}
-test2      = elem 2 [1,3] 
+test2      = elem 2 [1,3]
 \end{code}
 
 Permutations
@@ -492,7 +480,7 @@ simplest is a *measure*:
 {-@ measure unique @-}
 unique        :: (Ord a) => List a -> Bool
 unique []     = True
-unique (x:xs) = unique xs && not (member x (elts xs)) 
+unique (x:xs) = unique xs && not (member x (elts xs))
 \end{code}
 
 \noindent We can use the above to write an alias for duplicate-free lists
@@ -522,8 +510,8 @@ if the input is unique, the output is too:
   @-}
 filter _ []   = []
 filter f (x:xs)
-  | f x       = x : xs' 
-  | otherwise = xs' 
+  | f x       = x : xs'
+  | otherwise = xs'
   where
     xs'       = filter f xs
 \end{code}
@@ -538,8 +526,8 @@ are verified by LiquidHaskell.
 \begin{code}
 filter' _ []   = []
 filter' f (x:xs)
-  | f x       = x : xs' 
-  | otherwise = xs' 
+  | f x       = x : xs'
+  | otherwise = xs'
   where
     xs'       = filter' f xs
 
@@ -560,10 +548,10 @@ so that we can prove that the output is a `UList a`?
 \begin{code}
 {-@ reverse    :: xs:UList a -> UList a    @-}
 reverse         = go []
-  where 
+  where
     {-@ go     :: a:List a -> xs:List a -> List a @-}
     go a []     = a
-    go a (x:xs) = go (x:a) xs 
+    go a (x:xs) = go (x:a) xs
 \end{code}
 
 \newthought{The Nub} function constructs a `unique` list from
@@ -572,7 +560,7 @@ elements that are already `seen`:
 
 \begin{code}
 {-@ nub              :: List a -> UList a @-}
-nub xs                = go [] xs 
+nub xs                = go [] xs
   where
     go seen []        = seen
     go seen (x:xs)
@@ -619,11 +607,11 @@ computes the same result.)
 
 \begin{code}
 {-@ type Btwn I J = {v:_ | I <= v && v < J} @-}
-                   
+
 {-@ range     :: i:Int -> j:Int -> UList (Btwn i j) @-}
 range i j
   | i < j     = i : range (i + 1) j
-  | otherwise = [] 
+  | otherwise = []
 \end{code}
 
 \hint This may be easier to do *after* you read this chapter [about lemmas](#lemmas).
@@ -632,7 +620,7 @@ range i j
 Unique Zippers
 --------------
 
-A [zipper](wiki-zipper) is an aggregate data stucture 
+A [zipper](wiki-zipper) is an aggregate data stucture
 that is used to arbitrarily traverse the structure and
 update its contents. For example, a zipper for a list is
 a data type that contains an element (called `focus`)
@@ -643,10 +631,10 @@ elements to the `right` (i.e. after) the focus.
 
 \begin{code}
 data Zipper a = Zipper {
-    focus  :: a      
-  , left   :: List a 
+    focus  :: a
+  , left   :: List a
   , right  :: List a
-  }  
+  }
 \end{code}
 
 \newthought{XMonad} is a wonderful tiling window manager, that uses
@@ -723,8 +711,8 @@ the operation returns a `Maybe`:
 filterZipper :: (a -> Bool) -> Zipper a -> Maybe (Zipper a)
 filterZipper p (Zipper f ls rs)
   = case filter p (f:rs) of
-      f':rs' -> Just $ Zipper f' (filter p ls) rs' 
-      []     -> case filter p ls of                 
+      f':rs' -> Just $ Zipper f' (filter p ls) rs'
+      []     -> case filter p ls of
                   f':ls' -> Just $ Zipper f' ls' []
                   []     -> Nothing
 \end{code}
@@ -753,5 +741,3 @@ we saw how to:
 
 Next, we present a variety of longer *case-studies* that illustrate
 the techniques developed so far on particular application domains.
-
-

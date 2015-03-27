@@ -18,8 +18,11 @@ txgo              :: Int -> Int -> Vector (Vector a) -> Vector (Vector a)
 quickSort         :: (Ord a) => [a] -> [a]
 size              :: [a] -> Int
 flatten :: Int -> Int -> Vector (Vector a) -> Vector a
+
+{-@ invariant {v:[a] | 0 <= size v} @-}
 \end{code}
 \end{comment}
+
 
 Many of the programs we have seen so far, for example those in
 [here](#vectorbounds), suffer from *indexitis*. This is a term
@@ -53,7 +56,7 @@ data Vector a = V { vDim  :: Int
                   , vElts :: [a]
                   }
               deriving (Eq)
-                         
+
 data Matrix a = M { mRow  :: Int
                   , mCol  :: Int
                   , mElts :: Vector (Vector a)
@@ -90,8 +93,8 @@ matProd (M rx _ xs) (M _ cy ys)
 a `map` over the elements of the vector.
 
 ~~~~~{.spec}
-for            :: Vector a -> (a -> b) -> Vector b 
-for (V n xs) f = V n (map f xs) 
+for            :: Vector a -> (a -> b) -> Vector b
+for (V n xs) f = V n (map f xs)
 ~~~~~
 
 \newthought{Wholemeal programming frees} us from having to fret
@@ -127,25 +130,12 @@ measure to describe the length of a list: ^[[Recall](#usingmeasures)
 that these must be inductively defined functions, with a single
 equation per data-constructor]
 
-~~~~~{.spec}
-{-@ measure len @-}
-len        :: [a] -> Int
-len []     = 0
-len (_:xs) = 1 + len xs
-~~~~~
-
 \begin{code}
 {-@ measure size @-}
 {-@ size    :: [a] -> Nat @-}
 size []     = 0
 size (_:rs) = 1 + size rs
 \end{code}
-
-\begin{comment}
-\begin{code}
-{-@ invariant {v:[a] | 0 <= size v} @-}
-\end{code}
-\end{comment}
 
 \newthought{Measures Refine Constructors}
 As with [refined data definitions](#autosmart), the
@@ -167,7 +157,7 @@ type. For example, in addition to the `size` measure, we can define a
 {-@ measure notEmpty @-}
 notEmpty       :: [a] -> Bool
 notEmpty []    = False
-notEmpty (_:_) = True 
+notEmpty (_:_) = True
 \end{code}
 
 
@@ -184,7 +174,7 @@ data [a] where
       -> {v:[a]| notEmpty v && size v = 1 + size xs}
 ~~~~~
 
-\noindent 
+\noindent
 This is a very significant advantage of using measures
 instead of indices as in [DML][dml] or [Agda][agdavec],
 as *decouples property from structure*, which crucially
@@ -261,7 +251,7 @@ type is the *shorter* of the two inputs:
 {-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Tinier v as bs} @-}
 zip (a:as) (b:bs) = (a, b) : zip as bs
 zip [] _          = []
-zip _  []         = [] 
+zip _  []         = []
 \end{code}
 
 **FIXME: what is a predicate?**
@@ -316,7 +306,7 @@ so that LiquidHaskell can prove the specification for `reverse`.
 \begin{code}
 {-@ reverse       :: xs:List a -> ListX a xs @-}
 reverse xs        = go [] xs
-  where 
+  where
     {-@ go        :: xs:List a -> ys:List a -> ListN a {size xs + size ys} @-}
     go acc []     = acc
     go acc (x:xs) = go (x:acc) xs
@@ -324,12 +314,12 @@ reverse xs        = go [] xs
 
 \hint How big is the list returned by `go`?
 
-Lists: Size Reducing API {#listreducing} 
+Lists: Size Reducing API {#listreducing}
 ------------------------
 
 Next, lets look at some functions that truncate lists, in one way or another.
 
-\newthought{Take} lets us grab the first `k` elements from a list: 
+\newthought{Take} lets us grab the first `k` elements from a list:
 
 \begin{code}
 {-@ take'     :: n:Nat -> ListGE a n -> ListN a n @-}
@@ -342,7 +332,7 @@ take' _ _      = die "won't  happen"
 length is at least `n`:
 
 \begin{code}
-{-@ type ListGE a N = {v:List a | N <= size v} @-} 
+{-@ type ListGE a N = {v:List a | N <= size v} @-}
 \end{code}
 
 <div class="hwex" id="Drop">
@@ -357,7 +347,7 @@ drop n (_:xs) = drop (n-1) xs
 drop _ _      = die "won't happen"
 
 {-@ test4 :: ListN String 2 @-}
-test4 = drop 1 ["cat", "dog", "mouse"] 
+test4 = drop 1 ["cat", "dog", "mouse"]
 \end{code}
 
 <div class="hwex" id="Take it easy">
@@ -374,7 +364,7 @@ take n (x:xs)  = x : take (n-1) xs
 
 {-@ test5 :: [ListN String 2] @-}
 test5 = [ take 2  ["cat", "dog", "mouse"]
-        , take 20 ["cow", "goat"]        ] 
+        , take 20 ["cow", "goat"]        ]
 \end{code}
 
 \newthought{The Partition} function breaks a list into two
@@ -403,7 +393,7 @@ fst  (x, _) = x
 snd (_, y) = y
 ~~~~~
 
-\noindent We can now refine the type of `partition` as: 
+\noindent We can now refine the type of `partition` as:
 
 \begin{code}
 {-@ partition :: _ -> xs:_ -> {v:_ | Sum2 v (size xs)} @-}
@@ -428,7 +418,7 @@ quickSort []     = []
 quickSort (x:xs) = undefined
 
 {-@ test10 :: ListN String 2 @-}
-test10 = quickSort test4 
+test10 = quickSort test4
 \end{code}
 
 
@@ -437,20 +427,21 @@ Dimension Safe Vector API
 
 We can use the dimension aware lists to create a safe vector API.
 
-\newthought{Legal Vectors} are those whose `vDim` field actually equals the size of the underlying list:
+\newthought{Legal Vectors} are those whose `vDim` field actually
+ equals the size of the underlying list:
 
 \begin{code}
 {-@ data Vector a = V { vDim  :: Nat
                       , vElts :: ListN a vDim }         @-}
 \end{code}
 
-\begin{comment}
+When `vDim` is used a selector function, it returns the `vDim` field of `x`.
+
 \begin{code}
 {-@ vDim :: x:_ -> {v: Nat | v = vDim x} @-}
 \end{code}
-\end{comment}
 
-\noindent 
+\noindent
 The refined data type prevents the creation of illegal vectors:
 
 \begin{code}
@@ -459,17 +450,17 @@ okVec  = V 2 [10, 20]       -- accepted by LH
 badVec = V 2 [10, 20, 30]   -- rejected by LH
 \end{code}
 
-\noindent 
+\noindent
 As usual, it will be handy to have a few aliases.
 
 \begin{code}
 -- | Non Empty Vectors
 {-@ type VectorNE a  = {v:Vector a | vDim v > 0} @-}
 
--- | Vectors of size N          
+-- | Vectors of size N
 {-@ type VectorN a N = {v:Vector a | vDim v = N} @-}
 
--- | Vectors of Size Equal to Another Vector X 
+-- | Vectors of Size Equal to Another Vector X
 {-@ type VectorX a X = VectorN a {vDim X}        @-}
 \end{code}
 
@@ -495,7 +486,7 @@ vHd (V _ (x:_))  = x
 vHd _            = die "nope"
 
 {-@ vTl          :: x:VectorNE a -> VectorN a {vDim x - 1} @-}
-vTl (V n (_:xs)) = V (n-1) xs 
+vTl (V n (_:xs)) = V (n-1) xs
 vTl _            = die "nope"
 \end{code}
 
@@ -503,7 +494,7 @@ vTl _            = die "nope"
 
 \begin{code}
 {-@ for        :: x:Vector a -> (a -> b) -> VectorX b x @-}
-for (V n xs) f = V n (map f xs) 
+for (V n xs) f = V n (map f xs)
 \end{code}
 
 
@@ -525,7 +516,7 @@ in a wholemeal *and* dimension safe manner, as:
 
 \begin{code}
 {-@ dotProduct :: (Num a) => x:Vector a -> VectorX a x -> a @-}
-dotProduct x y = sum $ vElts $ vBin (*) x y 
+dotProduct x y = sum $ vElts $ vBin (*) x y
 \end{code}
 
 <div class="hwex" id="Vector Constructor">
@@ -538,7 +529,7 @@ vecFromList     :: [a] -> Vector a
 vecFromList xs  =  undefined
 
 test6  = dotProduct vx vy    -- should be accepted by LH
-  where 
+  where
     vx = vecFromList [1,2,3]
     vy = vecFromList [4,5,6]
 \end{code}
@@ -573,7 +564,7 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
 \end{code}
 
 
-Dimension Safe Matrix API 
+Dimension Safe Matrix API
 -------------------------
 
 The same methods let us create a dimension safe Matrix API which
@@ -583,12 +574,12 @@ are performed on compatible matrices.
 \newthought{Legal Matrices} are those where the dimension of the
 outer vector equals the number of rows `mRow` and the dimension
 of each inner vector is `mCol`. We can specify legality in a
-refined data definition: 
+refined data definition:
 
 \begin{code}
 {-@ data Matrix a =
       M { mRow  :: Pos
-        , mCol  :: Pos 
+        , mCol  :: Pos
         , mElts :: VectorN (VectorN a mCol) mRow
         }
   @-}
@@ -608,7 +599,7 @@ requiring the dimensions to be positive.
 {-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}
 \end{code}
 
-\noindent For example, we can use the above to write type: 
+\noindent For example, we can use the above to write type:
 
 \begin{code}
 {-@ ok23 :: MatrixN _ 2 3 @-}
@@ -641,13 +632,13 @@ a `Matrix` from a nested list.
 matFromList      :: [[a]] -> Maybe (Matrix a)
 matFromList []   = Nothing
 matFromList xss@(xs:_)
-  | ok           = Just (M r c vs) 
-  | otherwise    = Nothing 
+  | ok           = Just (M r c vs)
+  | otherwise    = Nothing
   where
     r            = size xss
     c            = size xs
     ok           = undefined
-    vs           = undefined 
+    vs           = undefined
 \end{code}
 
 <div class="hwex" id="Refined Matrix Constructor">
@@ -656,7 +647,7 @@ so that the following is accepted by LiquidHaskell.
 </div>
 
 \begin{code}
-{-@ mat23 :: Maybe (MatrixN Integer 2 2) @-} 
+{-@ mat23 :: Maybe (MatrixN Integer 2 2) @-}
 mat23     = matFromList [ [1, 2]
                         , [3, 4] ]
 \end{code}
@@ -684,7 +675,7 @@ matProduct (M rx _ xs) my@(M _ cy _)
     elts         = for xs $ \xi ->
                      for ys' $ \yj ->
                        dotProduct xi yj
-    M _ _ ys'    = transpose my 
+    M _ _ ys'    = transpose my
 \end{code}
 
 \noindent To iterate over the *columns* of the matrix
@@ -736,10 +727,9 @@ and nested lists (`Matrix`).
 
 3. Measures can then be used to enable safe wholemeal programming,
    via dimension-aware APIs that ensure that operators only apply to
-   compatible values. 
+   compatible values.
 
 We can use numeric measures to encode various other
 properties of data structures. We will see examples
 ranging from high-level [AVL trees](#case-study-avltree),
 to low-level safe [pointer arithmetic](#case-study-pointers).
-

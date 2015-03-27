@@ -2,7 +2,6 @@ Case Study: Pointers & Bytes {#case-study-pointers}
 ============================
 
 \begin{comment}
-
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--short-names"    @-}
@@ -26,17 +25,23 @@ spanByte         :: Word8 -> ByteString -> (ByteString, ByteString)
 unsafeHead       :: ByteString -> Word8
 create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
--- boilerplate                    
-{-@ type True  = {v:Bool | Prop v } @-}
+-- boilerplate
+{-@ type TRUE = {v:Bool | Prop v } @-}
+
+-- TODO: we really shouldn't need this...
+{-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
+
+{-@ type StringN N = {v:String | len v = N} @-}
+{-@ type BNat N    = {v:Nat    | v <= N}    @-}
 \end{code}
 \end{comment}
 
 A large part of the allure of Haskell is its elegant, high-level ADTs
 that ensure that programs won't be plagued by problems like the infamous
 [SSL heartbleed bug](heartbleed.com).^[Assuming, of course, the absence of errors in the compiler and run-time...]
-However, another part of Haskell's charm is that when you really really 
-need to, you can drop down to low-level pointer twiddling to squeeze the 
-most performance out of your machine. But of course, that opens the door 
+However, another part of Haskell's charm is that when you really really
+need to, you can drop down to low-level pointer twiddling to squeeze the
+most performance out of your machine. But of course, that opens the door
 to the heartbleeds.
 
 Wouldn't it be nice to have have our cake and eat it too?
@@ -58,7 +63,7 @@ uses the `ByteString` library to truncate strings:
 \begin{code}
 chop'     :: String -> Int -> String
 chop' s n = s'
-  where 
+  where
     b     = pack s          -- down to low-level
     b'    = unsafeTake n b  -- grab n chars
     s'    = unpack b'       -- up to high-level
@@ -109,10 +114,10 @@ a hierarchy of levels (i.e. modules). Here, we have three levels:
 
 \noindent Our strategy, as before, is to develop an *refined API* for
 each level such that errors at each level are prevented by using the typed
-interfaces for the lower levels. Next, lets see how this strategy lets us 
+interfaces for the lower levels. Next, lets see how this strategy lets us
 safely manipulate pointers.
 
-Low-level Pointer API 
+Low-level Pointer API
 ---------------------
 
 To get started, lets look at the low-level pointer API that is
@@ -127,14 +132,14 @@ Then we will see how to batten down the hatches with LiquidHaskell.
 --   or an array of objects, which may be marshalled to or from
 --   Haskell values of type `a`.
 
-data Ptr a         
+data Ptr a
 ~~~~~
 
 \newthought{Foreign Pointers} are *wrapped* pointers that can be
 exported to and from C code via the [Foreign Function Interface][foreignptr].
 
 ~~~~~{.spec}
-data ForeignPtr a 
+data ForeignPtr a
 ~~~~~
 
 \newthought{To Create} a pointer we use `mallocForeignPtrBytes n`
@@ -145,11 +150,11 @@ which creates a `Ptr` to a buffer of size `n` and wraps it as a
 mallocForeignPtrBytes :: Int -> ForeignPtr a
 ~~~~~
 
-\newthought{To Unwrap} and actually use the `ForeignPtr` we use 
+\newthought{To Unwrap} and actually use the `ForeignPtr` we use
 
 ~~~~~{.spec}
-withForeignPtr :: ForeignPtr a     -- pointer 
-               -> (Ptr a -> IO b)  -- action 
+withForeignPtr :: ForeignPtr a     -- pointer
+               -> (Ptr a -> IO b)  -- action
                -> IO b             -- result
 ~~~~~
 
@@ -165,7 +170,7 @@ type class constraint to strip this presentation down to
 the absolute essentials.]
 
 ~~~~~{.spec}
-peek :: Ptr a -> IO a         -- Read  
+peek :: Ptr a -> IO a         -- Read
 poke :: Ptr a -> a -> IO ()   -- Write
 ~~~~~
 
@@ -175,7 +180,7 @@ operation `plusPtr p off` which takes a pointer `p` an integer
 `off` and returns the address obtained shifting `p` by `off`:
 
 ~~~~~{.spec}
-plusPtr :: Ptr a -> Int -> Ptr b 
+plusPtr :: Ptr a -> Int -> Ptr b
 ~~~~~
 
 \newthought{Example} That was rather dry; lets look at a concrete
@@ -185,10 +190,10 @@ function allocates a block of 4 bytes and fills it with zeros:
 \begin{code}
 zero4 = do fp <- mallocForeignPtrBytes 4
            withForeignPtr fp $ \p -> do
-             poke (p `plusPtr` 0) zero 
-             poke (p `plusPtr` 1) zero 
-             poke (p `plusPtr` 2) zero 
-             poke (p `plusPtr` 3) zero 
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+             poke (p `plusPtr` 3) zero
            return fp
         where
            zero = 0 :: Word8
@@ -201,10 +206,10 @@ errors:
 \begin{code}
 zero4' = do fp <- mallocForeignPtrBytes 4
             withForeignPtr fp $ \p -> do
-              poke (p `plusPtr` 0) zero 
-              poke (p `plusPtr` 1) zero 
-              poke (p `plusPtr` 2) zero 
-              poke (p `plusPtr` 8) zero 
+              poke (p `plusPtr` 0) zero
+              poke (p `plusPtr` 1) zero
+              poke (p `plusPtr` 2) zero
+              poke (p `plusPtr` 8) zero
             return fp
          where
             zero = 0 :: Word8
@@ -229,17 +234,17 @@ implementation.
 
 ~~~~~{.spec}
 -- | Size of `Ptr`
-measure plen  :: Ptr a -> Int 
+measure plen  :: Ptr a -> Int
 
 -- | Size of `ForeignPtr`
-measure fplen :: ForeignPtr a -> Int 
+measure fplen :: ForeignPtr a -> Int
 ~~~~~
 
 \noindent It is helpful to define aliases for pointers of a given size `N`:
 
 ~~~~~{.spec}
-type PtrN a N        = {v:Ptr a        | plen v  = N} 
-type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N} 
+type PtrN a N        = {v:Ptr a        | plen v  = N}
+type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}
 ~~~~~
 
 \newthought{Abstract Measures} are extremely useful when we don't have
@@ -263,9 +268,9 @@ gets as input, an unwrapped `Ptr` whose size *equals* that of the
 given `ForeignPtr`.
 
 ~~~~~{.spec}
-withForeignPtr :: fp:ForeignPtr a 
-               -> (PtrN a (fplen fp) -> IO b)  
-               -> IO b             
+withForeignPtr :: fp:ForeignPtr a
+               -> (PtrN a (fplen fp) -> IO b)
+               -> IO b
 ~~~~~
 
 \noindent This is a rather interesting *higher-order* specification.
@@ -282,9 +287,9 @@ even though only `3` bytes are actually touched.
 \begin{code}
 zero3 = do fp <- mallocForeignPtrBytes 4
            withForeignPtr fp $ \p -> do
-             poke (p `plusPtr` 0) zero 
-             poke (p `plusPtr` 1) zero 
-             poke (p `plusPtr` 2) zero 
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
            return fp
         where
            zero = 0 :: Word8
@@ -302,8 +307,8 @@ type OkPtr a = {v:Ptr a | 0 < plen v}
 (of strictly positive `plen`), and then use the alias to refine:
 
 ~~~~~{.spec}
-peek :: OkPtr a -> IO a  
-poke :: OkPtr a -> a -> IO ()  
+peek :: OkPtr a -> IO a
+poke :: OkPtr a -> a -> IO ()
 ~~~~~
 
 \noindent In essence the above type says that no matter how arithmetic
@@ -318,7 +323,7 @@ to reflect the size remaining after the shift: ^[This signature precludes
 which we elide for simplicity.]
 
 ~~~~~{.spec}
-plusPtr :: p:Ptr a -> off:BNat (plen p) -> PtrN b (plen p - off)      
+plusPtr :: p:Ptr a -> off:BNat (plen p) -> PtrN b (plen p - off)
 ~~~~~
 
 \noindent using the alias `BNat`, defined as:
@@ -339,10 +344,10 @@ from above to understand how the refinements help detect the error:
 \begin{code}
 exBad = do fp <- mallocForeignPtrBytes 4
            withForeignPtr fp $ \p -> do
-             poke (p `plusPtr` 0) zero 
-             poke (p `plusPtr` 1) zero 
-             poke (p `plusPtr` 2) zero 
-             poke (p `plusPtr` 5) zero     -- LH complains 
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+             poke (p `plusPtr` 5) zero     -- LH complains
            return fp
         where
            zero = 0 :: Word8
@@ -354,10 +359,10 @@ exBad = do fp <- mallocForeignPtrBytes 4
   Error: Liquid Type Mismatch
    Inferred type
      VV : {VV : Int | VV == ?a && VV == 5}
-  
+
    not a subtype of Required type
      VV : {VV : Int | VV <= plen p}
-  
+
    in Context
      zero : {zero : Word8 | zero == ?b}
      VV   : {VV : Int | VV == ?a && VV == (5  :  int)}
@@ -448,7 +453,7 @@ quickly, simply by pointer arithmetic.
 \newthought{In a Legal ByteString} the *start* (`bOff`) and *end*
 (`bOff + bLen`) offsets lie inside the buffer referred to by the
 pointer `bPtr`. We can formalize this invariant with a data definition
-that will then make it impossible to create illegal `ByteString`s: 
+that will then make it impossible to create illegal `ByteString`s:
 
 \begin{code}
 {-@ data ByteString = BS {
@@ -459,12 +464,6 @@ that will then make it impossible to create illegal `ByteString`s:
   @-}
 \end{code}
 
-\begin{comment}
--- TODO: we really shouldn't need this...
-\begin{code}
-{-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
-\end{code}
-\end{comment}
 
 \noindent The refinements on `bOff` and `bLen` correspond exactly
 to the legality requirements that the start and end of the `ByteString`
@@ -505,7 +504,7 @@ For example, `bad1`'s length is exceeds its buffer
 size, and is flagged as such:
 
 \begin{code}
-bad1 = do fp <- mallocForeignPtrBytes 3 
+bad1 = do fp <- mallocForeignPtrBytes 3
           return (BS fp 0 10)
 \end{code}
 
@@ -545,7 +544,7 @@ of size `n`.
 {-@ create :: n:Nat -> (Ptr Word8 -> IO ()) -> ByteStringN n @-}
 create n fill = unsafePerformIO $ do
   fp  <- mallocForeignPtrBytes n
-  withForeignPtr fp fill 
+  withForeignPtr fp fill
   return (BS fp 0 n)
 \end{code}
 
@@ -556,7 +555,7 @@ that creates a `ByteString` corresponding to `"GHC"`?
 
 \begin{code}
 bsGHC = create 3 $ \p -> do
-  poke (p `plusPtr` 0) (c2w 'G') 
+  poke (p `plusPtr` 0) (c2w 'G')
   poke (p `plusPtr` 1) (c2w 'H')
   poke (p `plusPtr` 2) (c2w 'C')
 \end{code}
@@ -593,7 +592,7 @@ is proved.
 </div>
 
 \begin{code}
-{-@ prop_pack_length  :: String -> True @-}
+{-@ prop_pack_length  :: String -> TRUE @-}
 prop_pack_length xs   = bLen (pack xs) == length xs
 \end{code}
 
@@ -651,7 +650,7 @@ we essentially run `pack` in reverse, by walking over the pointer,
 and reading out the characters one by one till we reach the end:
 
 \begin{code}
-unpack              :: ByteString -> String 
+unpack              :: ByteString -> String
 unpack (BS _  _ 0)  = []
 unpack (BS ps s l)  = unsafePerformIO
                         $ withForeignPtr ps
@@ -669,7 +668,7 @@ so that the below QuickCheck style property is proved by LiquidHaskell.
 </div>
 
 \begin{code}
-{-@ prop_unpack_length :: ByteString -> True  @-}
+{-@ prop_unpack_length :: ByteString -> TRUE @-}
 prop_unpack_length b   = bLen b == length (unpack b)
 \end{code}
 
@@ -678,25 +677,17 @@ Can you determine the output refinement should be (instead of just `true`?)
 How *big* is the output list in terms of `p`, `n` and `acc`.
 
 
-Application API 
+Application API
 ---------------
 
-\begin{comment}
-\begin{code}
-{-@ type StringN N = {v:String | len v = N} @-}
-{-@ type BNat N    = {v:Nat    | v <= N}    @-}
-\end{code}
-\end{comment}
-
 Finally, lets revisit our potentially "bleeding" `chop` function to
-see how the refined `ByteString` API can prevent errors.  We
-require that the prefix size `n` be less than the
-size of the input string `s`:
+see how the refined `ByteString` API can prevent errors.  We require
+that the prefix size `n` be less than the size of the input string `s`:
 
 \begin{code}
-{-@ chop :: s:String -> n:BNat (len s) -> String @-} 
+{-@ chop :: s:String -> n:BNat (len s) -> String @-}
 chop s n = s'
-  where 
+  where
     b    = pack s          -- down to low-level
     b'   = unsafeTake n b  -- grab n chars
     s'   = unpack b'       -- up to high-level
@@ -714,15 +705,15 @@ call is rejected as `30 > len ex`.
 demo     = [ex6, ex30]
   where
     ex   = ['L','I','Q','U','I','D']
-    ex6  = chop ex 6   -- accepted by LH 
-    ex30 = chop ex 30  -- rejected by LH 
+    ex6  = chop ex 6   -- accepted by LH
+    ex30 = chop ex 30  -- rejected by LH
 \end{code}
 
 <div class="hwex" id="Chop"> Fix the specification for `chop` so that
 the following property is proved:
 
 \begin{code}
-{-@ prop_chop_length  :: String -> Nat -> True @-}
+{-@ prop_chop_length  :: String -> Nat -> TRUE @-}
 prop_chop_length s n
   | n <= length s     = length (chop s n) == n
   | otherwise         = True
@@ -741,18 +732,18 @@ safeChop str n
   | ok        = chop str n
   | otherwise = ""
   where
-    ok        = True 
-    
+    ok        = True
+
 queryAndChop  :: IO String
 queryAndChop  = do putStrLn "Give me a string:"
-                   str  <-  getLine   
+                   str  <-  getLine
                    putStrLn "Give me a number:"
                    ns   <-  getLine
                    let n =  read ns :: Int
                    return $ safeChop str n
 \end{code}
 
-Nested ByteStrings 
+Nested ByteStrings
 ------------------
 
 For a more in-depth example, let's take a look at `group`,
@@ -760,7 +751,7 @@ which transforms strings like `"foobaaar"` into *lists* of
 strings like `["f","oo", "b", "aaa", "r"]`.
 The specification is that `group` should produce a
 
-1. list of *non-empty* `ByteStrings`, 
+1. list of *non-empty* `ByteStrings`,
 2. the *sum of* whose lengths equals that of the input string.
 
 \newthought{Non-empty ByteStrings} are those whose length is non-zero:
@@ -832,7 +823,7 @@ spanByte c ps@(BS x s l)
       | i >= l    = return (ps, empty)
       | otherwise = do c' <- peekByteOff p i
                        if c /= c'
-                         then return $ splitAt i 
+                         then return $ splitAt i
                          else go p (i+1)
     splitAt i     = (unsafeTake i ps, unsafeDrop i ps)
 \end{code}
@@ -856,7 +847,7 @@ and refinements enable safe low-level pointer arithmetic in
 Haskell. The take away messages are that we can:
 
 1. *compose* larger systems from layers of smaller ones,
-2. *refine* APIs for each layer, which can be used to 
+2. *refine* APIs for each layer, which can be used to
 3. *design and validate* the layers above.
 
 We saw this recipe in action by developing a low-level
@@ -895,28 +886,28 @@ cons c (BS x s l) = unsafeCreate (l+1) $ \p -> withForeignPtr x $ \f -> do
         poke p c
         memcpy (p `plusPtr` 1) (f `plusPtr` s) (fromIntegral l)
 
-{-@ empty :: {v:ByteString | bLen v = 0} @-} 
+{-@ empty :: {v:ByteString | bLen v = 0} @-}
 empty :: ByteString
 empty = BS nullForeignPtr 0 0
 
 {-@ assume mallocForeignPtrBytes :: n:Nat -> IO (ForeignPtrN a n) @-}
 {-@ type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N} @-}
 {-@ malloc :: n:Nat -> IO (ForeignPtrN a n) @-}
-malloc = mallocForeignPtrBytes 
+malloc = mallocForeignPtrBytes
 
 {-@ assume
     c_memcpy :: dst:PtrV Word8
-             -> src:PtrV Word8 
-             -> size:{CSize | size <= plen src && size <= plen dst} 
+             -> src:PtrV Word8
+             -> size:{CSize | size <= plen src && size <= plen dst}
              -> IO (Ptr Word8)
   @-}
 foreign import ccall unsafe "string.h memcpy" c_memcpy
     :: Ptr Word8 -> Ptr Word8 -> CSize -> IO (Ptr Word8)
 
 {-@ memcpy :: dst:PtrV Word8
-           -> src:PtrV Word8 
-           -> size:{CSize | size <= plen src && size <= plen dst} 
-           -> IO () 
+           -> src:PtrV Word8
+           -> size:{CSize | size <= plen src && size <= plen dst}
+           -> IO ()
   @-}
 memcpy :: Ptr Word8 -> Ptr Word8 -> CSize -> IO ()
 memcpy p q s = c_memcpy p q s >> return ()
@@ -929,9 +920,7 @@ nullForeignPtr = unsafePerformIO $ newForeignPtr_ nullPtr
 {-@ create' :: n:Nat -> (PtrN Word8 n -> IO ()) -> ByteStringN n @-}
 create' n fill = unsafePerformIO $ do
   fp  <- mallocForeignPtrBytes n
-  withForeignPtr fp fill 
+  withForeignPtr fp fill
   return (BS fp 0 n)
-
 \end{code}
-
 \end{comment}

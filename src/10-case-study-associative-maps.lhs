@@ -10,7 +10,7 @@ Case Study: Associative Maps
 module AssocativeMap where
 
 import Data.Set hiding (elems)
--- | Boilerplate 
+-- | Boilerplate
 
 {-@ die :: {v:_ | false} -> a @-}
 die x   = error x
@@ -21,18 +21,18 @@ data Map k v = Node { key   :: k
                     , value :: v
                     , left  :: Map k v
                     , right :: Map k v }
-             | Tip 
+             | Tip
 
-lemma_notMem :: k -> Map k v -> Bool 
+lemma_notMem :: k -> Map k v -> Bool
 set    :: (Ord k) => k -> v -> Map k v -> Map k v
-get    :: (Ord k) => k -> Map k v -> v 
-get'   :: (Ord k) => k -> Map k v -> v 
+get    :: (Ord k) => k -> Map k v -> v
+get'   :: (Ord k) => k -> Map k v -> v
 mem    :: (Ord k) => k -> Map k v -> Bool
 emp    :: Map k v
 elems  :: (Ord a) => [a] -> Set a
 fresh  :: [Int] -> Int
 
--- | Set Interface 
+-- | Set Interface
 {-@ predicate In X Xs      = Set_mem X Xs               @-}
 {-@ predicate Subset X Y   = Set_sub X Y                @-}
 {-@ predicate Empty  X     = Set_emp X                  @-}
@@ -43,14 +43,14 @@ fresh  :: [Int] -> Int
 {-@ predicate NoKeys M     = Empty (keys M)             @-}
 {-@ predicate HasKey K M   = In K (keys M)              @-}
 {-@ predicate AddKey K M N = Union1 (keys N) K (keys M) @-}
-          
+
 \end{code}
 \end{comment}
 
 \begin{comment}
 \begin{figure}[h]
 \includegraphics[height=1.0in]{img/piponi-tweet.png}
-\caption{Wouldn't it be nice to know that a key was in a map?} 
+\caption{Wouldn't it be nice to know that a key was in a map?}
 \label{fig:piponi-tweet}
 \end{figure}
 \end{comment}
@@ -58,7 +58,7 @@ fresh  :: [Int] -> Int
 Recall the following from the [introduction](#intro):
 
 ~~~~~{.ghci}
-ghci> :m +Data.Map 
+ghci> :m +Data.Map
 ghci> let m = fromList [ ("haskell"   , "lazy")
                        , ("javascript", "eager")]
 
@@ -144,15 +144,15 @@ a key is defined in the `Map` and `get` which actually
 returns the value associated with a given key.
 
 ~~~~~{.spec}
--- | Check if key is defined 
+-- | Check if key is defined
 mem :: k:k -> m:Map k v -> {v:Bool|Prop v <=> HasKey k m}
 
--- | Lookup key's value 
+-- | Lookup key's value
 get :: k:k -> {m:Map k v | HasKey k m} -> v
 ~~~~~
 
-Using Maps: Well Scoped Expressions 
------------------------------------ 
+Using Maps: Well Scoped Expressions
+-----------------------------------
 
 Rather than jumping into the *implementation* of the above `Map` API,
 lets write a *client* that uses `Map`s to implement an interpreter for
@@ -167,7 +167,7 @@ free to embellish the language with fancier features like functions,
 tuples etc.]
 
 \begin{code}
-type Var  = String 
+type Var  = String
 
 data Expr = Const Int
           | Var   Var
@@ -182,11 +182,11 @@ reuse a bunch of code. To this end, we simply define a
 
 \begin{code}
 {-@ measure val @-}
-val              :: Expr -> Bool 
-val (Const _)    = True 
-val (Var _)      = False 
-val (Plus _ _)   = False 
-val (Let _ _ _ ) = False 
+val              :: Expr -> Bool
+val (Const _)    = True
+val (Var _)      = False
+val (Plus _ _)   = False
+val (Let _ _ _ ) = False
 \end{code}
 
 \noindent and then we can use the lifted `measure` to
@@ -227,11 +227,11 @@ proceeding within.
 
 \begin{code}
 eval _ i@(Const _)   = i
-eval g (Var x)       = get x g 
-eval g (Plus e1 e2)  = plus  (eval g e1) (eval g e2) 
-eval g (Let x e1 e2) = eval g' e2 
-  where 
-    g'               = set x v1 g 
+eval g (Var x)       = get x g
+eval g (Plus e1 e2)  = plus  (eval g e1) (eval g e2)
+eval g (Let x e1 e2) = eval g' e2
+  where
+    g'               = set x v1 g
     v1               = eval g e1
 \end{code}
 
@@ -254,14 +254,14 @@ formalize this notion as a (lifted) function:
 
 \begin{code}
 {-@ measure free @-}
-free               :: Expr -> (Set Var) 
+free               :: Expr -> (Set Var)
 free (Const _)     = empty
 free (Var x)       = singleton x
 free (Plus e1 e2)  = xs1 `union`  xs2
   where
     xs1            = free e1
     xs2            = free e2
-free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)  
+free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
   where
     xs1            = free e1
     xs2            = free e2
@@ -293,7 +293,7 @@ free variables.Lets use that to write a "top-level" evaluator:
 
 \begin{code}
 {-@ topEval :: {v:Expr | Empty (free v)} -> Val @-}
-topEval     = eval emp 
+topEval     = eval emp
 \end{code}
 
 <div class="hwex" id="Wellformedness Check"> Complete the definition
@@ -302,12 +302,12 @@ before `eval`uating it:
 </div>
 
 \begin{code}
-{-@ evalAny   :: Env -> Expr -> Maybe Val @-} 
+{-@ evalAny   :: Env -> Expr -> Maybe Val @-}
 evalAny g e
   | ok        = Just $ eval g e
   | otherwise = Nothing
   where
-    ok        = undefined  
+    ok        = undefined
 \end{code}
 
 \noindent Proof is all well and good, in the end, you need a few
@@ -318,8 +318,8 @@ tests   = [v1, v2]
   where
     v1  = topEval e1          -- Rejected by LH
     v2  = topEval e2          -- Accepted by LH
-    e1  = (Var x) `Plus` c1 
-    e2  = Let x c10 e1 
+    e1  = (Var x) `Plus` c1
+    e2  = Let x c10 e1
     x   = "x"
     c1  = Const 1
     c10 = Const 10
@@ -340,7 +340,7 @@ a function) is rather more complicated and beyond the
 scope of what we've seen so far.
 
 
-Implementing Maps: Binary Search Trees {#lemmas} 
+Implementing Maps: Binary Search Trees {#lemmas}
 --------------------------------------
 
 We just saw how easy it is to *use* the Associative
@@ -362,7 +362,7 @@ the root `key`.
                         , value :: v
                         , left  :: Map {v:k | v < key} v
                         , right :: Map {v:k | key < v} v }
-                 | Tip 
+                 | Tip
   @-}
 \end{code}
 
@@ -380,12 +380,12 @@ lifted measure function:
 {-@ measure keys @-}
 keys                :: (Ord k) => Map k v -> Set k
 keys Tip            = empty
-keys (Node k _ l r) = ks `union` kl `union` kr 
+keys (Node k _ l r) = ks `union` kl `union` kr
   where
     kl              = keys l
     kr              = keys r
     ks              = singleton k
-                      
+
 \end{code}
 
 Armed with the basic type and measure definition, we
@@ -397,7 +397,7 @@ To make sure you are following, fill in the definition for an `emp`ty Map:
 
 \begin{code}
 {-@ emp :: {m:Map k v | Empty (keys m)} @-}
-emp     = undefined  
+emp     = undefined
 \end{code}
 
 <div class="hwex" id="Insert"> To add a key `k'` to a `Map` we
@@ -499,9 +499,9 @@ function types:
                  -> m:Map {k:k | k /= key} v
                  -> {v:Bool | not (HasKey key m)}
   @-}
-lemma_notMem _   Tip            = True 
+lemma_notMem _   Tip            = True
 lemma_notMem key (Node _ _ l r) = lemma_notMem key l &&
-                                  lemma_notMem key r 
+                                  lemma_notMem key r
 \end{code}
 
 \newthought{Proving Lemmas} Note how the signature for `lemma_notMem`
@@ -606,4 +606,3 @@ in a case study. We learnt how to:
 
 3. *Implement* the API using Binary Search Trees; in particular, using *ghost lemmas*
    to `assert` facts that LiquidHaskell is otherwise unable to deduce automatically.
-
