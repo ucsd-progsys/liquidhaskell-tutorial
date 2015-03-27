@@ -124,14 +124,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#plan'><b>7.1.</b> Plan</a></li>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.2.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.3.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.4.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.5.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.6.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.7.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.8.</b> Recap</a></li>
+<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
 </ul>
 <li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
 <ul class='section'>
@@ -182,7 +181,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -190,60 +188,37 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
 
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         
+        
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
            <span class="glyphicon glyphicon-ok"></span>
          </button>
 
-         <!-- Unsafe -->
-
-         <div class="dropdown" ng-show="isUnsafe">
+         <div class="dropdown" ng-show="isBad">
              <button class="btn btn-xs btn-link dropdown-toggle"
                      type="button"
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
-                    -->
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
-
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 <section id="intro" class="level1">
 <h1>Introduction</h1>
-
-<p>One of the great things about Haskell is its brainy type system that allows one to enforce a variety of invariants at compile time, thereby nipping in the bud a large swathe of run-time <a href="#getting-started">errors</a>.</p>
-<section id="gowrong" class="level2">
-<h2>Well-Typed Programs Do Go Wrong</h2>
-<p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
-<p><br /><strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
+<div class="hidden">
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -252,7 +227,27 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">average    :: [Int] -> Int
+  <div id="program-0" class="programbox">module Introduction where
+main = putStrLn "Intro"
+</div>
+</div>
+
+</div>
+
+<p>One of the great things about Haskell is its brainy type system that allows one to enforce a variety of invariants at compile time, thereby nipping in the bud a large swathe of run-time <a href="#getting-started">errors</a>.</p>
+<section id="gowrong" class="level2">
+<h2>Well-Typed Programs Do Go Wrong</h2>
+<p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
+<p><br /><strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">average    :: [Int] -> Int
 average xs = sum xs `div` length xs</div>
 </div>
 
@@ -334,6 +329,7 @@ ghci&gt; takeWord16 5 t
 <p>This tutorial is written in literate Haskell and the code for it is available <a href="http://github.com/ucsd-progsys/liquidhaskell-tutorial.git">here</a>. We <em>strongly</em> recommend you grab the code, and follow along, and especially that you do the exercises.</p>
 <pre class="sh"><code>$ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/src</code></pre>
+<p><strong>Note:</strong> This tutorial is a <em>work in progress</em>, and we will be <strong>very</strong> grateful for feedback and suggestions, ideally via pull-requests on github.</p>
 <p>Lets begin!</p>
 </section>
 </section>

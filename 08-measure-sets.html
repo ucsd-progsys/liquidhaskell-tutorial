@@ -124,14 +124,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#plan'><b>7.1.</b> Plan</a></li>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.2.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.3.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.4.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.5.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.6.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.7.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.8.</b> Recap</a></li>
+<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
 </ul>
 <li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
 <ul class='section'>
@@ -182,7 +181,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -190,54 +188,74 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
 
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         
+        
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
            <span class="glyphicon glyphicon-ok"></span>
          </button>
 
-         <!-- Unsafe -->
-
-         <div class="dropdown" ng-show="isUnsafe">
+         <div class="dropdown" ng-show="isBad">
              <button class="btn btn-xs btn-link dropdown-toggle"
                      type="button"
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
-                    -->
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
-
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 <section id="setmeasure" class="level1">
 <h1>Elemental Measures</h1>
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
+{-@ LIQUID "--diff"           @-}
+
+module Sets where
+import Data.Set hiding (insert, partition, filter, split, elems)
+import Prelude  hiding (elem, reverse, filter)
+
+main :: IO ()
+main = return ()
+
+{-@ die :: {v:_ | false} -> a @-}
+die msg = error msg
+
+isUnique, isNotUnique :: [Int]
+mergeSort :: (Ord a) => [a] -> [a]
+range :: Int -> Int -> [Int]
+-- FIXME
+{-@ predicate In X Xs      = Set_mem X Xs            @-}
+{-@ predicate Subset X Y   = Set_sub X Y             @-}
+{-@ predicate Empty  X     = Set_emp X               @-}
+{-@ predicate Inter X Y Z  = X = Set_cap Y Z         @-}
+{-@ predicate Union X Y Z  = X = Set_cup Y Z         @-}
+{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z   @-}
+{-@ predicate Disjoint X Y = Inter (Set_empty 0) X Y @-}
+type List a = [a]
+</div>
+</div>
+
+</div>
 
 <p>Often, correctness requires us to reason about the <em>set of elements</em> represented inside a data structure, or manipulated by a function. Examples of this abound: for example, we'd like to know that:</p>
 <ul>
@@ -252,7 +270,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p><br /><strong>LiquidHaskell Lifts</strong> the basic set operators from <code>Data.Set</code> into the refinement logic. That is, the prelude defines the following <em>logical</em> functions that correspond to the <em>Haskell</em> functions of the same name:</p>
 <pre class="spec"><code>measure empty        :: Set a
 measure singleton    :: a -&gt; Set a
-measure member       :: a -&gt; Set a -&gt; Bool  
+measure member       :: a -&gt; Set a -&gt; Bool
 measure union        :: Set a -&gt; Set a -&gt; Set a
 measure intersection :: Set a -&gt; Set a -&gt; Set a
 measure difference   :: Set a -&gt; Set a -&gt; Set a</code></pre>
@@ -262,12 +280,12 @@ measure difference   :: Set a -&gt; Set a -&gt; Set a</code></pre>
 <h2>Proving QuickCheck Style Properties</h2>
 <p>To get the hang of whats going on, lets do a few warmup exercises, using LiquidHaskell to prove various simple theorems about sets and operations over them.</p>
 <p><br /><strong>We Refine The Set API</strong> to make it easy to write down theorems. That is, we give the operators in <code>Data.Set</code> refinement type signatures that precisely track their set-theoretic behavior:</p>
-<pre class="spec"><code>empty        :: {v:Set a | v = empty} 
+<pre class="spec"><code>empty        :: {v:Set a | v = empty}
 member       :: x:a
              -&gt; s:Set a
-             -&gt; {v:Bool | Prop v &lt;=&gt; member x s}  
+             -&gt; {v:Bool | Prop v &lt;=&gt; member x s}
 
-singleton    :: x:a -&gt; {v:Set a | v = singleton x} 
+singleton    :: x:a -&gt; {v:Set a | v = singleton x}
 
 union        :: x:Set a
              -&gt; y:Set a
@@ -281,19 +299,6 @@ difference   :: x:Set a
              -&gt; y:Set a
              -&gt; {v:Set a | v = difference x y}</code></pre>
 <p><br /><strong>We Can Assert Theorems</strong> as <a href="quickcheck">QuickCheck</a> style <em>properties</em>, that is, as functions from arbitrary inputs to a <code>Bool</code> output that must always be <code>True</code>. Lets define aliases for the the <code>Bool</code>eans that are always <code>True</code> or <code>False</code></p>
-<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-0" class="programbox">{-@ type True  = {v:Bool |      Prop v } @-}
-{-@ type False = {v:Bool | not (Prop v)} @-}</div>
-</div>
-
-<p>We can use <code>True</code> to state theorems. For example, the unexciting arithmetic equality above becomes:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -302,11 +307,11 @@ difference   :: x:Set a
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">{-@ prop_one_plus_one_eq_two :: _ -> True @-}
-prop_one_plus_one_eq_two x   = (x == 1 + 1) `implies` (x == 2)</div>
+  <div id="program-1" class="programbox">{-@ type True  = {v:Bool |      Prop v } @-}
+{-@ type False = {v:Bool | not (Prop v)} @-}</div>
 </div>
 
-<p>Where <code>implies</code> is just the implication function over <code>Bool</code></p>
+<p>We can use <code>True</code> to state theorems. For example, the unexciting arithmetic equality above becomes:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -315,13 +320,11 @@ prop_one_plus_one_eq_two x   = (x == 1 + 1) `implies` (x == 2)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">{-@ implies        :: p:Bool -> q:Bool -> Implies p q  @-}
-implies False _    = True
-implies _     True = True 
-implies _    _     = False</div>
+  <div id="program-2" class="programbox">{-@ prop_one_plus_one_eq_two :: _ -> True @-}
+prop_one_plus_one_eq_two x   = (x == 1 + 1) `implies` (x == 2)</div>
 </div>
 
-<p>and <code>Implies p q</code> is defined as</p>
+<p>Where <code>implies</code> is just the implication function over <code>Bool</code></p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -330,13 +333,13 @@ implies _    _     = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">{-@ type Implies P Q = {v:_ | Prop v <=> (Prop P => Prop Q)} @-}</div>
+  <div id="program-3" class="programbox">{-@ implies        :: p:Bool -> q:Bool -> Implies p q  @-}
+implies False _    = True
+implies _     True = True
+implies _    _     = False</div>
 </div>
 
-<div id="Bounded Addition" class="hwex">
-<br /><strong>Exercise: (Bounded Addition): </strong>Write and prove a QuickCheck style theorem that: <span class="math">\(\forall x, y. x &lt; 100 \wedge y &lt; 100 \Rightarrow x + y &lt; 200\)</span>.
-<br /><br />
-</div>
+<p>and <code>Implies p q</code> is defined as</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -345,11 +348,13 @@ implies _    _     = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ prop_x_y_200 :: _ -> _ -> True @-}
-prop_x_y_200 x y = False -- fill in the theorem body </div>
+  <div id="program-4" class="programbox">{-@ type Implies P Q = {v:_ | Prop v <=> (Prop P => Prop Q)} @-}</div>
 </div>
 
-<p><br /><strong>The Commutativity of Intersection</strong> can be easily stated and proved as a QuickCheck style theorem:</p>
+<div id="Bounded Addition" class="hwex">
+<br /><strong>Exercise: (Bounded Addition): </strong>Write and prove a QuickCheck style theorem that: <span class="math">\(\forall x, y. x &lt; 100 \wedge y &lt; 100 \Rightarrow x + y &lt; 200\)</span>.
+<br /><br />
+</div>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -358,12 +363,11 @@ prop_x_y_200 x y = False -- fill in the theorem body </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-5" class="programbox">{-@ prop_intersection_comm :: _ -> _ -> True @-}
-prop_intersection_comm x y 
-  = (x `intersection` y) == (y `intersection` x)</div>
+  <div id="program-5" class="programbox">{-@ prop_x_y_200 :: _ -> _ -> True @-}
+prop_x_y_200 x y = False -- fill in the theorem body</div>
 </div>
 
-<p><br /><strong>The Associativity of Union</strong> can similarly be confirmed:</p>
+<p><br /><strong>The Commutativity of Intersection</strong> can be easily stated and proved as a QuickCheck style theorem:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -373,11 +377,11 @@ prop_intersection_comm x y
   </button>
  
   <div id="program-6" class="programbox">{-@ prop_intersection_comm :: _ -> _ -> True @-}
-prop_union_assoc x y z 
-  = (x `union` (y `union` z)) == (x `union` y) `union` z</div>
+prop_intersection_comm x y
+  = (x `intersection` y) == (y `intersection` x)</div>
 </div>
 
-<p><br /><strong>The Distributivity Laws</strong> for Boolean Algebra can be verified by writing properties over the relevant operators. For example, we lets check that <code>union</code> distributes over <code>intersection</code>:</p>
+<p><br /><strong>The Associativity of Union</strong> can similarly be confirmed:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -386,14 +390,12 @@ prop_union_assoc x y z
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">{-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
-prop_intersection_dist x y z 
-  =  x `intersection` (y `union` z)
-     ==
-     (x `intersection` y) `union` (x `intersection` z) </div>
+  <div id="program-7" class="programbox">{-@ prop_intersection_comm :: _ -> _ -> True @-}
+prop_union_assoc x y z
+  = (x `union` (y `union` z)) == (x `union` y) `union` z</div>
 </div>
 
-<p><br /><strong>Non-Theorems</strong> should be rejected. So, while we're at it, let's make sure LiquidHaskell doesn't prove anything that <em>isn't</em> true ...</p>
+<p><br /><strong>The Distributivity Laws</strong> for Boolean Algebra can be verified by writing properties over the relevant operators. For example, we lets check that <code>union</code> distributes over <code>intersection</code>:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -402,7 +404,23 @@ prop_intersection_dist x y z
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">{-@ prop_cup_dif_bad :: _ -> _ -> True @-}
+  <div id="program-8" class="programbox">{-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
+prop_intersection_dist x y z
+  =  x `intersection` (y `union` z)
+     ==
+     (x `intersection` y) `union` (x `intersection` z)</div>
+</div>
+
+<p><br /><strong>Non-Theorems</strong> should be rejected. So, while we're at it, let's make sure LiquidHaskell doesn't prove anything that <em>isn't</em> true ...</p>
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-9" class="programbox">{-@ prop_cup_dif_bad :: _ -> _ -> True @-}
 prop_cup_dif_bad x y
   = pre `implies` (x == ((x `union` y) `difference` y))
   where
@@ -423,25 +441,6 @@ prop_cup_dif_bad x y
 <h2>Content-Aware List API</h2>
 <p>Lets return to our real goal, which is to to verify properties of programs. First, we need a way to refine the list API to precisely track the set of elements in a list.</p>
 <p><br /><strong>The Elements of a List</strong> can be described by a simple recursive measure that walks over the list, building up the set:</p>
-<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-9" class="programbox">{-@ measure elts @-}
-elts        :: (Ord a) => [a] -> Set a
-elts []     = empty
-elts (x:xs) = singleton x `union` elts xs</div>
-</div>
-
-<p>Lets write a few helpful aliases for various refined lists that will then make the subsequent specifications pithy and crisp.</p>
-
-<ul>
-<li>A list with elements <code>S</code></li>
-</ul>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -450,11 +449,15 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-10" class="programbox">{-@ type ListS a S = {v:[a] | elts v = S} @-}</div>
+  <div id="program-10" class="programbox">{-@ measure elts @-}
+elts        :: (Ord a) => [a] -> Set a
+elts []     = empty
+elts (x:xs) = singleton x `union` elts xs</div>
 </div>
 
+<p>Lets write a few helpful aliases for various refined lists that will then make the subsequent specifications pithy and crisp.</p>
 <ul>
-<li>An <em>empty</em> list</li>
+<li>A list with elements <code>S</code></li>
 </ul>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
@@ -464,11 +467,11 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-11" class="programbox">{-@ type ListEmp a = ListS a {Set_empty 0} @-}</div>
+  <div id="program-11" class="programbox">{-@ type ListS a S = {v:[a] | elts v = S} @-}</div>
 </div>
 
 <ul>
-<li>A list whose contents <em>equal</em> those of list <code>X</code></li>
+<li>An <em>empty</em> list</li>
 </ul>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
@@ -478,11 +481,11 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">{-@ type ListEq a X = ListS a {elts X}    @-}</div>
+  <div id="program-12" class="programbox">{-@ type ListEmp a = ListS a {Set_empty 0} @-}</div>
 </div>
 
 <ul>
-<li>A list whose contents are a <em>subset</em> of list <code>X</code></li>
+<li>A list whose contents <em>equal</em> those of list <code>X</code></li>
 </ul>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
@@ -492,11 +495,11 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">{-@ type ListSub a X = {v:[a]| Set_sub (elts v) (elts X)} @-}</div>
+  <div id="program-13" class="programbox">{-@ type ListEq a X = ListS a {elts X}    @-}</div>
 </div>
 
 <ul>
-<li>A list whose contents are the union of lists <code>X</code> and <code>Y</code></li>
+<li>A list whose contents are a <em>subset</em> of list <code>X</code></li>
 </ul>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
@@ -506,11 +509,11 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">{-@ type ListUn a X Y = ListS a {Set_cup (elts X) (elts Y)} @-}</div>
+  <div id="program-14" class="programbox">{-@ type ListSub a X = {v:[a]| Set_sub (elts v) (elts X)} @-}</div>
 </div>
 
 <ul>
-<li>A list whose contents are exactly <code>X</code> and the contents of <code>Y</code></li>
+<li>A list whose contents are the union of lists <code>X</code> and <code>Y</code></li>
 </ul>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
@@ -520,17 +523,12 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-15" class="programbox">{-@ type ListUn1 a X Y = ListS a {Set_cup (Set_sng X) (elts Y)} @-}</div>
+  <div id="program-15" class="programbox">{-@ type ListUn a X Y = ListS a {Set_cup (elts X) (elts Y)} @-}</div>
 </div>
 
-<p><br /><strong>The Measures strengthens</strong> the data constructors for lists. That is we get the automatically refined types for &quot;nil&quot; and &quot;cons&quot;:</p>
-<pre class="spec"><code>data List a where
-  []  :: ListEmp a
-  (:) :: x:a -&gt; xs:List a -&gt; ListUn1 a x xs</code></pre>
-
-<p>\</p>
-<p>Lets take our new vocabulary out for a spin!</p>
-<p><br /><strong>The Append</strong> function returns a list whose elements are the <em>union</em> of the elements of the input Lists:</p>
+<ul>
+<li>A list whose contents are exactly <code>X</code> and the contents of <code>Y</code></li>
+</ul>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -539,15 +537,14 @@ elts (x:xs) = singleton x `union` elts xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">{-@ append'       :: xs:_ -> ys:_ -> ListUn a xs ys @-}
-append' []     ys = ys
-append' (x:xs) ys = x : append' xs ys</div>
+  <div id="program-16" class="programbox">{-@ type ListUn1 a X Y = ListS a {Set_cup (Set_sng X) (elts Y)} @-}</div>
 </div>
 
-<div id="Reverse" class="hwex">
-<br /><strong>Exercise: (Reverse): </strong>Write down a type for <code>revHelper</code> so that <code>reverse'</code> is verified by LiquidHaskell.
-<br /><br />
-</div>
+<p><br /><strong>The Measures strengthens</strong> the data constructors for lists. That is we get the automatically refined types for &quot;nil&quot; and &quot;cons&quot;:</p>
+<pre class="spec"><code>data List a where
+  []  :: ListEmp a
+  (:) :: x:a -&gt; xs:List a -&gt; ListUn1 a x xs</code></pre>
+<div class="hidden">
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -556,17 +553,24 @@ append' (x:xs) ys = x : append' xs ys</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">{-@ reverse' :: xs:List a -> ListEq a xs @-}
-reverse' xs = revHelper [] xs
+  <div id="program-17" class="programbox">relations over `Set`s that are natively implemented within the
+SMT solver:
 
-revHelper acc []     = acc
-revHelper acc (x:xs) = revHelper (x:acc) xs</div>
+~~~~~{.spec}
+-- FIXME
+predicate In X Y       = -- X is an element of Y
+predicate Subset X Y   = -- X is a subset of Y
+predicate Disjoint X Y = -- X and Y are Disjoint
+predicate Empty X      = -- X is empty
+predicate Union X Y Z  = -- X is the union of Y and Z
+predicate Union1 X Y Z = -- X is the union of {Y} and Z
+</div>
 </div>
 
-<div id="Halve" class="hwex">
-<br /><strong>Exercise: (Halve): </strong>Write down a specification for <code>halve</code> such that the subsequent &quot;theorem&quot; <code>prop_halve_append</code> is proved by LiquidHaskell.
-<br /><br />
 </div>
+
+<p>Lets take our new vocabulary out for a spin!</p>
+<p><br /><strong>The Append</strong> function returns a list whose elements are the <em>union</em> of the elements of the input Lists:</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -575,21 +579,13 @@ revHelper acc (x:xs) = revHelper (x:acc) xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">halve            :: Int -> [a] -> ([a], [a])
-halve 0 xs       = ([], xs)
-halve n (x:y:zs) = (x:xs, y:ys) where (xs, ys) = halve (n-1) zs
-halve _ xs       = ([], xs)
-
-{-@ prop_halve_append  :: _ -> _ -> True @-}
-prop_halve_append n xs = elts xs == elts xs'
-  where
-    xs'      =  append' ys zs
-    (ys, zs) =  halve n xs </div>
+  <div id="program-18" class="programbox">{-@ append'       :: xs:_ -> ys:_ -> ListUn a xs ys @-}
+append' []     ys = ys
+append' (x:xs) ys = x : append' xs ys</div>
 </div>
 
-<p><strong>Hint: </strong>You may want to remind yourself about the <em>dimension-aware</em> signature for <code>partition</code> from <a href="#listreducing">the earlier chapter</a>.</p>
-<div id="Membership" class="hwex">
-<br /><strong>Exercise: (Membership): </strong>Write down a signature for <code>elem</code> that suffices to verify <code>test1</code> and <code>test2</code>.
+<div id="Reverse" class="hwex">
+<br /><strong>Exercise: (Reverse): </strong>Write down a type for <code>revHelper</code> so that <code>reverse'</code> is verified by LiquidHaskell.
 <br /><br />
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
@@ -600,22 +596,17 @@ prop_halve_append n xs = elts xs == elts xs'
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">{-@ elem      :: (Eq a) => a -> [a] -> Bool @-}
-elem x (y:ys) = x == y || elem x ys
-elem _ []     = False
+  <div id="program-19" class="programbox">{-@ reverse' :: xs:List a -> ListEq a xs @-}
+reverse' xs = revHelper [] xs
 
-{-@ test1 :: True @-}
-test1      = elem 2 [1,2,3]
-
-{-@ test2 :: False @-}
-test2      = elem 2 [1,3] </div>
+revHelper acc []     = acc
+revHelper acc (x:xs) = revHelper (x:acc) xs</div>
 </div>
 
-</section>
-<section id="permutations" class="level2">
-<h2>Permutations</h2>
-<p>Next, lets use the refined list API to prove that various sorting routines return <em>permutations</em> of their inputs, that is, return output lists whose elements are the <em>same as</em> those of the input lists.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-<p><br /><strong>Insertion Sort</strong> is the simplest of all the list sorting routines; we build up an (ordered) output list <code>insert</code>ing each element of the input list into the appropriate position of the output:</p>
+<div id="Halve" class="hwex">
+<br /><strong>Exercise: (Halve): </strong>Write down a specification for <code>halve</code> such that the subsequent &quot;theorem&quot; <code>prop_halve_append</code> is proved by LiquidHaskell.
+<br /><br />
+</div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -624,13 +615,23 @@ test2      = elem 2 [1,3] </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">insert x []     = [x]
-insert x (y:ys)
-  | x <= y      = x : y : ys
-  | otherwise   = y : insert x ys</div>
+  <div id="program-20" class="programbox">halve            :: Int -> [a] -> ([a], [a])
+halve 0 xs       = ([], xs)
+halve n (x:y:zs) = (x:xs, y:ys) where (xs, ys) = halve (n-1) zs
+halve _ xs       = ([], xs)
+
+{-@ prop_halve_append  :: _ -> _ -> True @-}
+prop_halve_append n xs = elts xs == elts xs'
+  where
+    xs'      =  append' ys zs
+    (ys, zs) =  halve n xs</div>
 </div>
 
-<p>Thus, the output of <code>insert</code> has all the elements of the input <code>xs</code>, plus the new element <code>x</code>:</p>
+<p><strong>Hint: </strong>You may want to remind yourself about the <em>dimension-aware</em> signature for <code>partition</code> from <a href="#listreducing">the earlier chapter</a>.</p>
+<div id="Membership" class="hwex">
+<br /><strong>Exercise: (Membership): </strong>Write down a signature for <code>elem</code> that suffices to verify <code>test1</code> and <code>test2</code>.
+<br /><br />
+</div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -639,10 +640,22 @@ insert x (y:ys)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-21" class="programbox">{-@ insert :: x:a -> xs:List a -> ListUn1 a x xs @-}</div>
+  <div id="program-21" class="programbox">{-@ elem      :: (Eq a) => a -> [a] -> Bool @-}
+elem x (y:ys) = x == y || elem x ys
+elem _ []     = False
+
+{-@ test1 :: True @-}
+test1      = elem 2 [1,2,3]
+
+{-@ test2 :: False @-}
+test2      = elem 2 [1,3]</div>
 </div>
 
-<p>The above signature lets us prove that the output of the sorting routine indeed has the elements of the input:</p>
+</section>
+<section id="permutations" class="level2">
+<h2>Permutations</h2>
+<p>Next, lets use the refined list API to prove that various sorting routines return <em>permutations</em> of their inputs, that is, return output lists whose elements are the <em>same as</em> those of the input lists.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br /><strong>Insertion Sort</strong> is the simplest of all the list sorting routines; we build up an (ordered) output list <code>insert</code>ing each element of the input list into the appropriate position of the output:</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -651,15 +664,13 @@ insert x (y:ys)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-22" class="programbox">{-@ insertSort :: (Ord a) => xs:List a -> ListEq a xs @-}
-insertSort []     = []
-insertSort (x:xs) = insert x (insertSort xs)</div>
+  <div id="program-22" class="programbox">insert x []     = [x]
+insert x (y:ys)
+  | x <= y      = x : y : ys
+  | otherwise   = y : insert x ys</div>
 </div>
 
-<div id="Merge" class="hwex">
-<br /><strong>Exercise: (Merge): </strong>Fix the specification of <code>merge</code> so that the subsequent property <code>prop_merge_app</code> is verified by LiquidHaskell.
-<br /><br />
-</div>
+<p>Thus, the output of <code>insert</code> has all the elements of the input <code>xs</code>, plus the new element <code>x</code>:</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -668,7 +679,36 @@ insertSort (x:xs) = insert x (insertSort xs)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-23" class="programbox">{-@ merge :: xs:List a -> ys:List a -> List a @-}
+  <div id="program-23" class="programbox">{-@ insert :: x:a -> xs:List a -> ListUn1 a x xs @-}</div>
+</div>
+
+<p>The above signature lets us prove that the output of the sorting routine indeed has the elements of the input:</p>
+<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-24" class="programbox">{-@ insertSort :: (Ord a) => xs:List a -> ListEq a xs @-}
+insertSort []     = []
+insertSort (x:xs) = insert x (insertSort xs)</div>
+</div>
+
+<div id="Merge" class="hwex">
+<br /><strong>Exercise: (Merge): </strong>Fix the specification of <code>merge</code> so that the subsequent property <code>prop_merge_app</code> is verified by LiquidHaskell.
+<br /><br />
+</div>
+<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-25" class="programbox">{-@ merge :: xs:List a -> ys:List a -> List a @-}
 merge (x:xs) (y:ys)
   | x <= y           = x : merge xs (y:ys)
   | otherwise        = y : merge (x:xs) ys
@@ -690,7 +730,7 @@ prop_merge_app xs ys = elts zs == elts zs'
 </ol>
 <br /><br />
 </div>
-<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -698,7 +738,7 @@ prop_merge_app xs ys = elts zs == elts zs'
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-24" class="programbox">{-@ mergeSort :: (Ord a) => xs:List a -> ListEmp a @-}
+  <div id="program-26" class="programbox">{-@ mergeSort :: (Ord a) => xs:List a -> ListEmp a @-}
 mergeSort []  = []
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where
@@ -711,33 +751,6 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
 <h2>Uniqueness</h2>
 <p>Often, we want to enforce the invariant that a particular collection contains <em>no duplicates</em>; as multiple copies in a collection of file handles or system resources can create unpleasant leaks. For example, the <a href="http://xmonad.org/">XMonad</a> window manager creates a sophisticated <em>zipper</em> data structure to hold the list of active user windows and carefully maintains the invariant that that the zipper contains no duplicates. Next, lets see how to specify and verify this invariant using LiquidHaskell, first for lists, and then for a simplified zipper.</p>
 <p><br /><strong>To Specify Uniqueness</strong> we need a way of saying that a list has <em>no duplicates</em>. There are many ways to do so; the simplest is a <em>measure</em>:</p>
-<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-25" class="programbox">{-@ measure unique @-}
-unique        :: (Ord a) => List a -> Bool
-unique []     = True
-unique (x:xs) = unique xs && not (member x (elts xs)) </div>
-</div>
-
-<p>We can use the above to write an alias for duplicate-free lists</p>
-<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-26" class="programbox">{-@ type UList a = {v:List a | unique v }@-}</div>
-</div>
-
-<p>Lets quickly check that the right lists are indeed <code>unique</code></p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -746,14 +759,13 @@ unique (x:xs) = unique xs && not (member x (elts xs)) </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-27" class="programbox">{-@ isUnique    :: UList Int @-}
-isUnique        = [1, 2, 3]        -- accepted by LH
-
-{-@ isNotUnique :: UList Int @-}
-isNotUnique     = [1, 2, 3, 1]     -- rejected by LH</div>
+  <div id="program-27" class="programbox">{-@ measure unique @-}
+unique        :: (Ord a) => List a -> Bool
+unique []     = True
+unique (x:xs) = unique xs && not (member x (elts xs))</div>
 </div>
 
-<p><br /><strong>The Filter</strong> function returns a <em>subset</em> of its elements, and hence, <em>preserves</em> uniqueness. That is, if the input is unique, the output is too:</p>
+<p>We can use the above to write an alias for duplicate-free lists</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -762,22 +774,10 @@ isNotUnique     = [1, 2, 3, 1]     -- rejected by LH</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-28" class="programbox">{-@ filter   :: (a -> Bool)
-             -> xs:UList a
-             -> {v:ListSub a xs | unique v}
-  @-}
-filter _ []   = []
-filter f (x:xs)
-  | f x       = x : xs' 
-  | otherwise = xs' 
-  where
-    xs'       = filter f xs</div>
+  <div id="program-28" class="programbox">{-@ type UList a = {v:List a | unique v }@-}</div>
 </div>
 
-<div id="Filter" class="hwex">
-<br /><strong>Exercise: (Filter): </strong>It seems a bit draconian to require that <code>filter</code> only be called with unique lists. Write down a more permissive type for <code>filter'</code> below such that the subsequent uses are verified by LiquidHaskell.
-<br /><br />
-</div>
+<p>Lets quickly check that the right lists are indeed <code>unique</code></p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -786,10 +786,50 @@ filter f (x:xs)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-29" class="programbox">filter' _ []   = []
+  <div id="program-29" class="programbox">{-@ isUnique    :: UList Int @-}
+isUnique        = [1, 2, 3]        -- accepted by LH
+
+{-@ isNotUnique :: UList Int @-}
+isNotUnique     = [1, 2, 3, 1]     -- rejected by LH</div>
+</div>
+
+<p><br /><strong>The Filter</strong> function returns a <em>subset</em> of its elements, and hence, <em>preserves</em> uniqueness. That is, if the input is unique, the output is too:</p>
+<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-30" class="programbox">{-@ filter   :: (a -> Bool)
+             -> xs:UList a
+             -> {v:ListSub a xs | unique v}
+  @-}
+filter _ []   = []
+filter f (x:xs)
+  | f x       = x : xs'
+  | otherwise = xs'
+  where
+    xs'       = filter f xs</div>
+</div>
+
+<div id="Filter" class="hwex">
+<br /><strong>Exercise: (Filter): </strong>It seems a bit draconian to require that <code>filter</code> only be called with unique lists. Write down a more permissive type for <code>filter'</code> below such that the subsequent uses are verified by LiquidHaskell.
+<br /><br />
+</div>
+<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-31" class="programbox">filter' _ []   = []
 filter' f (x:xs)
-  | f x       = x : xs' 
-  | otherwise = xs' 
+  | f x       = x : xs'
+  | otherwise = xs'
   where
     xs'       = filter' f xs
 
@@ -804,41 +844,6 @@ test4     = filter' (> 3) [3,1,2,3]</div>
 <br /><strong>Exercise: (Reverse): </strong>When we <code>reverse</code> their order, the set of elements is unchanged, and hence unique (if the input was unique). Why does LiquidHaskell reject the below? Can you fix things so that we can prove that the output is a <code>UList a</code>?
 <br /><br />
 </div>
-<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-30" class="programbox">{-@ reverse    :: xs:UList a -> UList a    @-}
-reverse         = go []
-  where 
-    {-@ go     :: a:List a -> xs:List a -> List a @-}
-    go a []     = a
-    go a (x:xs) = go (x:a) xs </div>
-</div>
-
-<p><br /><strong>The Nub</strong> function constructs a <code>unique</code> list from an arbitrary input by traversing the input and tossing out elements that are already <code>seen</code>:</p>
-<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-31" class="programbox">{-@ nub              :: List a -> UList a @-}
-nub xs                = go [] xs 
-  where
-    go seen []        = seen
-    go seen (x:xs)
-      | x `isin` seen = go seen     xs
-      | otherwise     = go (x:seen) xs</div>
-</div>
-
-<p>The key membership test is done by <code>isin</code>, whose output is <code>True</code> exactly when the element is in the given list. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -847,7 +852,42 @@ nub xs                = go [] xs
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-32" class="programbox">-- FIXME
+  <div id="program-32" class="programbox">{-@ reverse    :: xs:UList a -> UList a    @-}
+reverse         = go []
+  where
+    {-@ go     :: a:List a -> xs:List a -> List a @-}
+    go a []     = a
+    go a (x:xs) = go (x:a) xs</div>
+</div>
+
+<p><br /><strong>The Nub</strong> function constructs a <code>unique</code> list from an arbitrary input by traversing the input and tossing out elements that are already <code>seen</code>:</p>
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-33" class="programbox">{-@ nub              :: List a -> UList a @-}
+nub xs                = go [] xs
+  where
+    go seen []        = seen
+    go seen (x:xs)
+      | x `isin` seen = go seen     xs
+      | otherwise     = go (x:seen) xs</div>
+</div>
+
+<p>The key membership test is done by <code>isin</code>, whose output is <code>True</code> exactly when the element is in the given list. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-34" class="programbox">-- FIXME
 {-@ predicate In X Xs = Set_mem X (elts Xs) @-}
 
 {-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys }@-}
@@ -861,44 +901,6 @@ isin _ []     = False</div>
 <br /><strong>Exercise: (Append): </strong>Why does <code>append</code>ing two <code>UList</code>s not return a <code>UList</code>? Fix the type signature below so that you can prove that the output is indeed <code>unique</code>.
 <br /><br />
 </div>
-<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-33" class="programbox">{-@ append       :: UList a -> UList a -> UList a @-}
-append []     ys = ys
-append (x:xs) ys = x : append xs ys</div>
-</div>
-
-<div id="Range" class="hwex">
-<br /><strong>Exercise: (Range): </strong><code>range i j</code> returns the list of <code>Int</code> between <code>i</code> and <code>j</code>. LiquidHaskell refuses to acknowledge that the output is indeed a <code>UList</code>. Fix the code so that LiquidHaskell verifies that it implements the given signature (and of course, computes the same result.)
-<br /><br />
-</div>
-<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-34" class="programbox">{-@ type Btwn I J = {v:_ | I <= v && v < J} @-}
-                   
-{-@ range     :: i:Int -> j:Int -> UList (Btwn i j) @-}
-range i j
-  | i < j     = i : range (i + 1) j
-  | otherwise = [] </div>
-</div>
-
-<p><strong>Hint: </strong>This may be easier to do <em>after</em> you read this chapter <a href="#lemmas">about lemmas</a>.</p>
-</section>
-<section id="unique-zippers" class="level2">
-<h2>Unique Zippers</h2>
-<p>A <a href="wiki-zipper">zipper</a> is an aggregate data stucture that is used to arbitrarily traverse the structure and update its contents. For example, a zipper for a list is a data type that contains an element (called <code>focus</code>) that we are currently <code>focus</code>-ed on, a list of elements to the <code>left</code> of (i.e. before) the focus, and a list of elements to the <code>right</code> (i.e. after) the focus.</p>
 <div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -907,15 +909,15 @@ range i j
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-35" class="programbox">data Zipper a = Zipper {
-    focus  :: a      
-  , left   :: List a 
-  , right  :: List a
-  }  </div>
+  <div id="program-35" class="programbox">{-@ append       :: UList a -> UList a -> UList a @-}
+append []     ys = ys
+append (x:xs) ys = x : append xs ys</div>
 </div>
 
-<p><br /><strong>XMonad</strong> is a wonderful tiling window manager, that uses a <a href="http://hackage.haskell.org/package/xmonad-0.11/docs/XMonad-StackSet.html">zipper</a> to store the set of windows being managed. Xmonad requires the crucial invariant that the values in the zipper be unique, that is, be free of duplicates.</p>
-<p><br /><strong>We Refine Zipper</strong> to capture the requirement that legal zippers are unique. To this end, we state that the <code>left</code> and <code>right</code> lists are unique, disjoint, and do not contain <code>focus</code>.</p>
+<div id="Range" class="hwex">
+<br /><strong>Exercise: (Range): </strong><code>range i j</code> returns the list of <code>Int</code> between <code>i</code> and <code>j</code>. LiquidHaskell refuses to acknowledge that the output is indeed a <code>UList</code>. Fix the code so that LiquidHaskell verifies that it implements the given signature (and of course, computes the same result.)
+<br /><br />
+</div>
 <div id="program-pane-36" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -924,7 +926,45 @@ range i j
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-36" class="programbox">{-@ data Zipper a = Zipper {
+  <div id="program-36" class="programbox">{-@ type Btwn I J = {v:_ | I <= v && v < J} @-}
+
+{-@ range     :: i:Int -> j:Int -> UList (Btwn i j) @-}
+range i j
+  | i < j     = i : range (i + 1) j
+  | otherwise = []</div>
+</div>
+
+<p><strong>Hint: </strong>This may be easier to do <em>after</em> you read this chapter <a href="#lemmas">about lemmas</a>.</p>
+</section>
+<section id="unique-zippers" class="level2">
+<h2>Unique Zippers</h2>
+<p>A <a href="wiki-zipper">zipper</a> is an aggregate data stucture that is used to arbitrarily traverse the structure and update its contents. For example, a zipper for a list is a data type that contains an element (called <code>focus</code>) that we are currently <code>focus</code>-ed on, a list of elements to the <code>left</code> of (i.e. before) the focus, and a list of elements to the <code>right</code> (i.e. after) the focus.</p>
+<div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-37" class="programbox">data Zipper a = Zipper {
+    focus  :: a
+  , left   :: List a
+  , right  :: List a
+  }</div>
+</div>
+
+<p><br /><strong>XMonad</strong> is a wonderful tiling window manager, that uses a <a href="http://hackage.haskell.org/package/xmonad-0.11/docs/XMonad-StackSet.html">zipper</a> to store the set of windows being managed. Xmonad requires the crucial invariant that the values in the zipper be unique, that is, be free of duplicates.</p>
+<p><br /><strong>We Refine Zipper</strong> to capture the requirement that legal zippers are unique. To this end, we state that the <code>left</code> and <code>right</code> lists are unique, disjoint, and do not contain <code>focus</code>.</p>
+<div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-38" class="programbox">{-@ data Zipper a = Zipper {
       focus :: a
     , left  :: {v: UList a | not (In focus v)}
     , right :: {v: UList a | not (In focus v) && Disj v left }
@@ -934,36 +974,6 @@ range i j
 </div>
 
 <p><br /><strong>Our Refined Zipper Constructor</strong> makes <em>illegal states unrepresentable</em>. That is, by construction, we will ensure that every <code>Zipper</code> is free of duplicates. For example, it is straightforward to create a valid <code>Zipper</code> from a <code>unique</code> list:</p>
-<div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-37" class="programbox">{-@ differentiate    :: UList a -> Maybe (Zipper a) @-}
-differentiate []     = Nothing
-differentiate (x:xs) = Just $ Zipper x [] xs</div>
-</div>
-
-<div id="Deconstructing Zippers" class="hwex">
-<br /><strong>Exercise: (Deconstructing Zippers): </strong>Dually, the elements of a unique zipper tumble out into a unique list. Strengthen the types of <code>reverse</code> and <code>append</code> above so that LiquidHaskell accepts the below signatures for <code>integrate</code>:
-<br /><br />
-</div>
-<div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-38" class="programbox">{-@ integrate            :: Zipper a -> UList a @-}
-integrate (Zipper x l r) = reverse l `append` (x : r)</div>
-</div>
-
-<p><br /><strong>We can Shift the Focus</strong> element to the left or right while preserving the uniqueness invariant. Here's the code that shifts the focus to the left:</p>
 <div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -972,14 +982,15 @@ integrate (Zipper x l r) = reverse l `append` (x : r)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-39" class="programbox">focusLeft                      :: Zipper a -> Zipper a
-focusLeft (Zipper t (l:ls) rs) = Zipper l ls (t:rs)
-focusLeft (Zipper t [] rs)     = Zipper x xs []
-  where
-    (x:xs)                     = reverse (t:rs)</div>
+  <div id="program-39" class="programbox">{-@ differentiate    :: UList a -> Maybe (Zipper a) @-}
+differentiate []     = Nothing
+differentiate (x:xs) = Just $ Zipper x [] xs</div>
 </div>
 
-<p>To shift to the right, we simply <em>reverse</em> the elements and shift to the left:</p>
+<div id="Deconstructing Zippers" class="hwex">
+<br /><strong>Exercise: (Deconstructing Zippers): </strong>Dually, the elements of a unique zipper tumble out into a unique list. Strengthen the types of <code>reverse</code> and <code>append</code> above so that LiquidHaskell accepts the below signatures for <code>integrate</code>:
+<br /><br />
+</div>
 <div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -988,14 +999,11 @@ focusLeft (Zipper t [] rs)     = Zipper x xs []
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-40" class="programbox">focusRight    :: Zipper a -> Zipper a
-focusRight    = reverseZipper . focusLeft . reverseZipper
-
-reverseZipper :: Zipper a -> Zipper a
-reverseZipper (Zipper t ls rs) = Zipper t rs ls</div>
+  <div id="program-40" class="programbox">{-@ integrate            :: Zipper a -> UList a @-}
+integrate (Zipper x l r) = reverse l `append` (x : r)</div>
 </div>
 
-<p><br /><strong>To Filter</strong> elements from a zipper, we need to take care when the <code>focus</code> itself, or all the elements get eliminated. In the latter case, there is no <code>Zipper</code> and so the operation returns a <code>Maybe</code>:</p>
+<p><br /><strong>We can Shift the Focus</strong> element to the left or right while preserving the uniqueness invariant. Here's the code that shifts the focus to the left:</p>
 <div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1004,11 +1012,43 @@ reverseZipper (Zipper t ls rs) = Zipper t rs ls</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-41" class="programbox">filterZipper :: (a -> Bool) -> Zipper a -> Maybe (Zipper a)
+  <div id="program-41" class="programbox">focusLeft                      :: Zipper a -> Zipper a
+focusLeft (Zipper t (l:ls) rs) = Zipper l ls (t:rs)
+focusLeft (Zipper t [] rs)     = Zipper x xs []
+  where
+    (x:xs)                     = reverse (t:rs)</div>
+</div>
+
+<p>To shift to the right, we simply <em>reverse</em> the elements and shift to the left:</p>
+<div id="program-pane-42" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-42" class="programbox">focusRight    :: Zipper a -> Zipper a
+focusRight    = reverseZipper . focusLeft . reverseZipper
+
+reverseZipper :: Zipper a -> Zipper a
+reverseZipper (Zipper t ls rs) = Zipper t rs ls</div>
+</div>
+
+<p><br /><strong>To Filter</strong> elements from a zipper, we need to take care when the <code>focus</code> itself, or all the elements get eliminated. In the latter case, there is no <code>Zipper</code> and so the operation returns a <code>Maybe</code>:</p>
+<div id="program-pane-43" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-43" class="programbox">filterZipper :: (a -> Bool) -> Zipper a -> Maybe (Zipper a)
 filterZipper p (Zipper f ls rs)
   = case filter p (f:rs) of
-      f':rs' -> Just $ Zipper f' (filter p ls) rs' 
-      []     -> case filter p ls of                 
+      f':rs' -> Just $ Zipper f' (filter p ls) rs'
+      []     -> case filter p ls of
                   f':ls' -> Just $ Zipper f' ls' []
                   []     -> Nothing</div>
 </div>

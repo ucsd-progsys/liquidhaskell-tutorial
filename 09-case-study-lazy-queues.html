@@ -124,14 +124,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#plan'><b>7.1.</b> Plan</a></li>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.2.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.3.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.4.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.5.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.6.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.7.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.8.</b> Recap</a></li>
+<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
 </ul>
 <li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
 <ul class='section'>
@@ -182,7 +181,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -190,55 +188,74 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
 
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         
+        
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
            <span class="glyphicon glyphicon-ok"></span>
          </button>
 
-         <!-- Unsafe -->
-
-         <div class="dropdown" ng-show="isUnsafe">
+         <div class="dropdown" ng-show="isBad">
              <button class="btn btn-xs btn-link dropdown-toggle"
                      type="button"
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
-                    -->
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
-
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 <section id="lazyqueue" class="level1">
 <h1>Case Study: Okasaki's Lazy Queues</h1>
 <p>Lets start with a case study that is simple enough to explain without pages of code, yet complex enough to show off whats cool about dependency: Chris Okasaki's beautiful <a href="http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf">Lazy Queues</a>. This structure leans heavily on an invariant to provide fast <em>insertion</em> and <em>deletion</em>. Let's see how to enforce that invariant with LiquidHaskell.</p>
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
+{-@ LIQUID "--total"          @-}
+{-@ LIQUID "--maxparams=3"    @-}
+
+module LazyQueue (Queue, insert, remove, emp) where
+
+import Prelude hiding (replicate, take, length)
+
+-- | Size function actually returns the size: (Duh!)
+
+{-@ size :: q:SList a -> {v:Nat | v = size q} @-}
+data Queue a = Q  { front :: SList a
+                  , back  :: SList a
+                  }
+
+{-@ die :: {v:String | false} -> a @-}
+die x = error x
+
+{-@ invariant {v:SList a | size v >= 0} @-}
+        
+-- Source: Okasaki, JFP 1995
+-- http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
+
+replicate :: Int -> a -> Queue a 
+</div>
+</div>
+
+</div>
 
 <section id="queues" class="level2">
 <h2>Queues</h2>
@@ -292,19 +309,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <section id="sized-lists" class="level2">
 <h2>Sized Lists</h2>
 <p>The first part is super easy. Let's define a type:</p>
-<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-0" class="programbox">data SList a = SL { size :: Int, elems :: [a]}</div>
-</div>
-
-<p>We have a special field that saves the <code>size</code> because otherwise, we have a linear time computation that wrecks Okasaki's careful analysis. (Actually, he presents a variant which does <em>not</em> require saving the size as well, but that's for another day.)</p>
-<p>How can we be sure that <code>size</code> is indeed the <em>real size</em> of <code>elems</code>? Let's write a function to <em>measure</em> the real size:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -313,13 +317,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">{-@ measure realSize @-}
-realSize      :: [a] -> Int
-realSize []     = 0
-realSize (_:xs) = 1 + realSize xs</div>
+  <div id="program-1" class="programbox">data SList a = SL { size :: Int, elems :: [a]}</div>
 </div>
 
-<p>Now, we can simply specify a <em>refined</em> type for <code>SList</code> that ensures that the <em>real</em> size is saved in the <code>size</code> field:</p>
+<p>We have a special field that saves the <code>size</code> because otherwise, we have a linear time computation that wrecks Okasaki's careful analysis. (Actually, he presents a variant which does <em>not</em> require saving the size as well, but that's for another day.)</p>
+<p>How can we be sure that <code>size</code> is indeed the <em>real size</em> of <code>elems</code>? Let's write a function to <em>measure</em> the real size:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -328,14 +330,13 @@ realSize (_:xs) = 1 + realSize xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">{-@ data SList a = SL {
-       size  :: Nat 
-     , elems :: {v:[a] | realSize v = size}
-     }
-  @-}</div>
+  <div id="program-2" class="programbox">{-@ measure realSize @-}
+realSize      :: [a] -> Int
+realSize []     = 0
+realSize (_:xs) = 1 + realSize xs</div>
 </div>
 
-<p>As a sanity check, consider this:</p>
+<p>Now, we can simply specify a <em>refined</em> type for <code>SList</code> that ensures that the <em>real</em> size is saved in the <code>size</code> field:</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -344,12 +345,14 @@ realSize (_:xs) = 1 + realSize xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">okList  = SL 1 ["cat"]    -- accepted
-
-badList = SL 1 []         -- rejected</div>
+  <div id="program-3" class="programbox">{-@ data SList a = SL {
+       size  :: Nat 
+     , elems :: {v:[a] | realSize v = size}
+     }
+  @-}</div>
 </div>
 
-<p><br /><strong>Lets define an alias</strong> for lists of a given size <code>N</code>:</p>
+<p>As a sanity check, consider this:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -358,11 +361,12 @@ badList = SL 1 []         -- rejected</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ type SListN a N = {v:SList a | size v = N} @-}</div>
+  <div id="program-4" class="programbox">okList  = SL 1 ["cat"]    -- accepted
+
+badList = SL 1 []         -- rejected</div>
 </div>
 
-<p>Finally, we can define a basic API for <code>SList</code>.</p>
-<p><br /><strong>To Construct lists</strong>, we use <code>nil</code> and <code>cons</code>:</p>
+<p><br /><strong>Lets define an alias</strong> for lists of a given size <code>N</code>:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -371,7 +375,20 @@ badList = SL 1 []         -- rejected</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-5" class="programbox">{-@ nil :: SListN a 0 @-}
+  <div id="program-5" class="programbox">{-@ type SListN a N = {v:SList a | size v = N} @-}</div>
+</div>
+
+<p>Finally, we can define a basic API for <code>SList</code>.</p>
+<p><br /><strong>To Construct lists</strong>, we use <code>nil</code> and <code>cons</code>:</p>
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-6" class="programbox">{-@ nil :: SListN a 0 @-}
 nil = SL 0 []
 
 {-@ cons :: a -> xs:SList a -> SListN a {size xs + 1} @-}
@@ -382,7 +399,7 @@ cons x (SL n xs) = SL (n+1) (x:xs)</div>
 <br /><strong>Exercise: (Destructing Lists): </strong>We can destruct lists by writing a <code>hd</code> and <code>tl</code> function as shown below. Fix the specification or implementation such that the definitions typecheck.
 <br /><br />
 </div>
-<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -390,7 +407,7 @@ cons x (SL n xs) = SL (n+1) (x:xs)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-6" class="programbox">{-@ tl           :: xs:SList a -> SListN a {size xs - 1}  @-}
+  <div id="program-7" class="programbox">{-@ tl           :: xs:SList a -> SListN a {size xs - 1}  @-}
 tl (SL n (_:xs)) = SL (n-1) xs
 tl _             = die "empty SList"
 
@@ -400,23 +417,6 @@ hd _             = die "empty SList"</div>
 </div>
 
 <p><strong>Hint: </strong>When you are done, <code>okHd</code> should be verified, but <code>badHd</code> should be rejected.</p>
-<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-7" class="programbox">okHd  = hd okList       -- accepted
-
-badHd = hd (tl okList)  -- rejected</div>
-</div>
-
-</section>
-<section id="queue-type" class="level2">
-<h2>Queue Type</h2>
-<p>It is quite straightforward to define the <code>Queue</code> type, as a pair of lists, <code>front</code> and <code>back</code>, such that the latter is always smaller than the former:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -425,13 +425,15 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">{-@ data Queue a = Q {
-       front :: SList a 
-     , back  :: SListLE a (size front)
-     }                                    @-}</div>
+  <div id="program-8" class="programbox">okHd  = hd okList       -- accepted
+
+badHd = hd (tl okList)  -- rejected</div>
 </div>
 
-<p><br /><strong>The alias</strong> <code>SListLE a L</code> corresponds to lists with at most <code>N</code> elements:</p>
+</section>
+<section id="queue-type" class="level2">
+<h2>Queue Type</h2>
+<p>It is quite straightforward to define the <code>Queue</code> type, as a pair of lists, <code>front</code> and <code>back</code>, such that the latter is always smaller than the former:</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -440,10 +442,13 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">{-@ type SListLE a N = {v:SList a | size v <= N} @-}</div>
+  <div id="program-9" class="programbox">{-@ data Queue a = Q {
+       front :: SList a 
+     , back  :: SListLE a (size front)
+     }                                    @-}</div>
 </div>
 
-<p>As a quick check, notice that we <em>cannot represent illegal Queues</em>:</p>
+<p><br /><strong>The alias</strong> <code>SListLE a L</code> corresponds to lists with at most <code>N</code> elements:</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -452,7 +457,19 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-10" class="programbox">okQ  = Q okList nil  -- accepted, |front| > |back| 
+  <div id="program-10" class="programbox">{-@ type SListLE a N = {v:SList a | size v <= N} @-}</div>
+</div>
+
+<p>As a quick check, notice that we <em>cannot represent illegal Queues</em>:</p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">okQ  = Q okList nil  -- accepted, |front| > |back| 
 
 badQ = Q nil okList  -- rejected, |front| < |back|</div>
 </div>
@@ -462,18 +479,6 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 <h2>Queue Operations</h2>
 <p>Almost there! Now all that remains is to define the <code>Queue</code> API. The code below is more or less identical to Okasaki's (I prefer <code>front</code> and <code>back</code> to his <code>left</code> and <code>right</code>.)</p>
 <p><br /><strong>The Empty Queue</strong> is simply one where both <code>front</code> and <code>back</code> are both empty:</p>
-<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-11" class="programbox">emp = Q nil nil</div>
-</div>
-
-<p><br /><strong>To Remove</strong> an element we pop it off the <code>front</code> by using <code>hd</code> and <code>tl</code>. Notice that the <code>remove</code> is only called on non-empty <code>Queue</code>s, which together with the key balance invariant, ensures that the calls to <code>hd</code> and <code>tl</code> are safe.</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -482,7 +487,19 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">remove (Q f b)   = (hd f, makeq (tl f) b)</div>
+  <div id="program-12" class="programbox">emp = Q nil nil</div>
+</div>
+
+<p><br /><strong>To Remove</strong> an element we pop it off the <code>front</code> by using <code>hd</code> and <code>tl</code>. Notice that the <code>remove</code> is only called on non-empty <code>Queue</code>s, which together with the key balance invariant, ensures that the calls to <code>hd</code> and <code>tl</code> are safe.</p>
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-13" class="programbox">remove (Q f b)   = (hd f, makeq (tl f) b)</div>
 </div>
 
 <div id="Whither pattern matching?" class="hwex">
@@ -499,7 +516,7 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>When you are done, <code>okRemove</code> should be accepted, <code>badRemove</code> should be rejected, and <code>emp</code> should have the type shown below:</p>
-<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -507,7 +524,7 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">-- | Queues of size `N`
+  <div id="program-14" class="programbox">-- | Queues of size `N`
 {-@ type QueueN a N = {v:Queue a | true} @-}
 
 okRemove  = remove example2Q   -- accept
@@ -523,21 +540,6 @@ example0Q = Q nil nil</div>
 </div>
 
 <p><br /><strong>To Insert</strong> an element we just <code>cons</code> it to the <code>back</code> list, and call the <em>smart constructor</em> <code>makeq</code> to ensure that the balance invariant holds:</p>
-<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-14" class="programbox">insert e (Q f b) = makeq f (e `cons` b)</div>
-</div>
-
-<div id="Insert" class="hwex">
-<br /><strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.
-<br /><br />
-</div>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -546,7 +548,22 @@ example0Q = Q nil nil</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-15" class="programbox">{-@ replicate :: n:Nat -> a -> QueueN a n @-}
+  <div id="program-15" class="programbox">insert e (Q f b) = makeq f (e `cons` b)</div>
+</div>
+
+<div id="Insert" class="hwex">
+<br /><strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.
+<br /><br />
+</div>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">{-@ replicate :: n:Nat -> a -> QueueN a n @-}
 replicate 0 _ = emp
 replicate n x = insert x (replicate (n-1) x)
 
@@ -558,7 +575,7 @@ y2     = replicate 1 "No!" </div>
 </div>
 
 <p><br /><strong>To Ensure the Invariant</strong> we use the smart constructor <code>makeq</code>, which is where the heavy lifting happens. The constructor takes two lists, the front <code>f</code> and back <code>b</code> and if they are balanced, directly returns the <code>Queue</code>, and otherwise transfers the elements from <code>b</code> over using the rotate function <code>rot</code> described next.</p>
-<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -566,7 +583,7 @@ y2     = replicate 1 "No!" </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
+  <div id="program-17" class="programbox">{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
 makeq f b 
   | size b <= size f = Q f b
   | otherwise        = Q (rot f b nil) nil</div>
@@ -577,23 +594,6 @@ makeq f b
 <br /><br />
 </div>
 <p><strong>Hint: </strong>You may have to modify a precondition in <code>makeq</code> to capture the relationship between <code>f</code> and <code>b</code>.</p>
-<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-17" class="programbox">rot f b a
-  | size f == 0 = hd b `cons` a
-  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` a)</div>
-</div>
-
-<div id="Transfer" class="hwex">
-<br /><strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.
-<br /><br />
-</div>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -602,7 +602,24 @@ makeq f b
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">take           :: Int -> Queue a -> (Queue a, Queue a)
+  <div id="program-18" class="programbox">rot f b a
+  | size f == 0 = hd b `cons` a
+  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` a)</div>
+</div>
+
+<div id="Transfer" class="hwex">
+<br /><strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.
+<br /><br />
+</div>
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-19" class="programbox">take           :: Int -> Queue a -> (Queue a, Queue a)
 take 0 q       = (emp          , q)
 take n q       = (insert x out , q')
   where

@@ -195,7 +195,7 @@ function setErrors(blocks, errs){
         setBlockErrors(i, es);
         if (es.length > 0) res.push(i);
     }
-    return res;
+    return res.map(function(x, i){ return { index : i, data : x }; });
 }
 
 /*******************************************************************************/

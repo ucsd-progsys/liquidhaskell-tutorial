@@ -124,14 +124,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#plan'><b>7.1.</b> Plan</a></li>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.2.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.3.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.4.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.5.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.6.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.7.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.8.</b> Recap</a></li>
+<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
 </ul>
 <li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
 <ul class='section'>
@@ -182,7 +181,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -190,60 +188,37 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
 
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         
+        
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
            <span class="glyphicon glyphicon-ok"></span>
          </button>
 
-         <!-- Unsafe -->
-
-         <div class="dropdown" ng-show="isUnsafe">
+         <div class="dropdown" ng-show="isBad">
              <button class="btn btn-xs btn-link dropdown-toggle"
                      type="button"
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
-                    -->
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
-
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 <section id="case-study-pointers" class="level1">
 <h1>Case Study: Pointers &amp; Bytes</h1>
-
-<p>A large part of the allure of Haskell is its elegant, high-level ADTs that ensure that programs won't be plagued by problems like the infamous <a href="heartbleed.com">SSL heartbleed bug</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> However, another part of Haskell's charm is that when you really really need to, you can drop down to low-level pointer twiddling to squeeze the most performance out of your machine. But of course, that opens the door to the heartbleeds.</p>
-<p>Wouldn't it be nice to have have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
-<section id="heartbleeds-in-haskell" class="level2">
-<h2>HeartBleeds in Haskell</h2>
-<p><br /><strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a a function that uses the <code>ByteString</code> library to truncate strings:</p>
+<div class="hidden">
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -252,9 +227,57 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">chop'     :: String -> Int -> String
+  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
+{-@ LIQUID "--short-names"    @-}
+{-@ LIQUID "--diffcheck"     @-}
+{-# LANGUAGE ForeignFunctionInterface #-}
+
+module Memory where
+
+import Prelude hiding (null)
+
+import Data.Word
+import Foreign.C.Types
+import Foreign.ForeignPtr
+import Foreign.Ptr
+import Foreign.Storable
+import System.IO.Unsafe
+import Data.ByteString.Internal (c2w, w2c)
+import Language.Haskell.Liquid.Prelude
+
+spanByte         :: Word8 -> ByteString -> (ByteString, ByteString)
+unsafeHead       :: ByteString -> Word8
+create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
+
+-- boilerplate
+{-@ type TRUE = {v:Bool | Prop v } @-}
+
+-- TODO: we really shouldn't need this...
+{-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
+
+{-@ type StringN N = {v:String | len v = N} @-}
+{-@ type BNat N    = {v:Nat    | v <= N}    @-}
+</div>
+</div>
+
+</div>
+
+<p>A large part of the allure of Haskell is its elegant, high-level ADTs that ensure that programs won't be plagued by problems like the infamous <a href="heartbleed.com">SSL heartbleed bug</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> However, another part of Haskell's charm is that when you really really need to, you can drop down to low-level pointer twiddling to squeeze the most performance out of your machine. But of course, that opens the door to the heartbleeds.</p>
+<p>Wouldn't it be nice to have have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
+<section id="heartbleeds-in-haskell" class="level2">
+<h2>HeartBleeds in Haskell</h2>
+<p><br /><strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a a function that uses the <code>ByteString</code> library to truncate strings:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">chop'     :: String -> Int -> String
 chop' s n = s'
-  where 
+  where
     b     = pack s          -- down to low-level
     b'    = unsafeTake n b  -- grab n chars
     s'    = unpack b'       -- up to high-level</div>
@@ -291,42 +314,22 @@ chop' s n = s'
 --   or an array of objects, which may be marshalled to or from
 --   Haskell values of type `a`.
 
-data Ptr a         </code></pre>
+data Ptr a</code></pre>
 <p><br /><strong>Foreign Pointers</strong> are <em>wrapped</em> pointers that can be exported to and from C code via the <a href="http://hackage.haskell.org/package/base/docs/Foreign-Ptr.html">Foreign Function Interface</a>.</p>
-<pre class="spec"><code>data ForeignPtr a </code></pre>
+<pre class="spec"><code>data ForeignPtr a</code></pre>
 <p><br /><strong>To Create</strong> a pointer we use <code>mallocForeignPtrBytes n</code> which creates a <code>Ptr</code> to a buffer of size <code>n</code> and wraps it as a <code>ForeignPtr</code></p>
 <pre class="spec"><code>mallocForeignPtrBytes :: Int -&gt; ForeignPtr a</code></pre>
 <p><br /><strong>To Unwrap</strong> and actually use the <code>ForeignPtr</code> we use</p>
-<pre class="spec"><code>withForeignPtr :: ForeignPtr a     -- pointer 
-               -&gt; (Ptr a -&gt; IO b)  -- action 
+<pre class="spec"><code>withForeignPtr :: ForeignPtr a     -- pointer
+               -&gt; (Ptr a -&gt; IO b)  -- action
                -&gt; IO b             -- result</code></pre>
 <p>That is, <code>withForeignPtr fp act</code> lets us execute a action <code>act</code> on the actual <code>Ptr</code> wrapped within the <code>fp</code>. These actions are typically sequences of <em>dereferences</em>, i.e. reads or writes.</p>
 <p><br /><strong>To Dereference</strong> a pointer, i.e. to read or update the contents at the corresponding memory location, we use <code>peek</code> and <code>poke</code> respectively. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
-<pre class="spec"><code>peek :: Ptr a -&gt; IO a         -- Read  
+<pre class="spec"><code>peek :: Ptr a -&gt; IO a         -- Read
 poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
 <p><br /><strong>For Fine Grained Access</strong> we can directly shift pointers to arbitrary offsets using the <em>pointer arithmetic</em> operation <code>plusPtr p off</code> which takes a pointer <code>p</code> an integer <code>off</code> and returns the address obtained shifting <code>p</code> by <code>off</code>:</p>
-<pre class="spec"><code>plusPtr :: Ptr a -&gt; Int -&gt; Ptr b </code></pre>
+<pre class="spec"><code>plusPtr :: Ptr a -&gt; Int -&gt; Ptr b</code></pre>
 <p><br /><strong>Example</strong> That was rather dry; lets look at a concrete example of how one might use the low-level API. The following function allocates a block of 4 bytes and fills it with zeros:</p>
-<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-1" class="programbox">zero4 = do fp <- mallocForeignPtrBytes 4
-           withForeignPtr fp $ \p -> do
-             poke (p `plusPtr` 0) zero 
-             poke (p `plusPtr` 1) zero 
-             poke (p `plusPtr` 2) zero 
-             poke (p `plusPtr` 3) zero 
-           return fp
-        where
-           zero = 0 :: Word8</div>
-</div>
-
-<p>While the above is perfectly all right, a small typo could easily slip past the type system (and run-time!) leading to hard to find errors:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -335,12 +338,32 @@ poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">zero4' = do fp <- mallocForeignPtrBytes 4
+  <div id="program-2" class="programbox">zero4 = do fp <- mallocForeignPtrBytes 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+             poke (p `plusPtr` 3) zero
+           return fp
+        where
+           zero = 0 :: Word8</div>
+</div>
+
+<p>While the above is perfectly all right, a small typo could easily slip past the type system (and run-time!) leading to hard to find errors:</p>
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-3" class="programbox">zero4' = do fp <- mallocForeignPtrBytes 4
             withForeignPtr fp $ \p -> do
-              poke (p `plusPtr` 0) zero 
-              poke (p `plusPtr` 1) zero 
-              poke (p `plusPtr` 2) zero 
-              poke (p `plusPtr` 8) zero 
+              poke (p `plusPtr` 0) zero
+              poke (p `plusPtr` 1) zero
+              poke (p `plusPtr` 2) zero
+              poke (p `plusPtr` 8) zero
             return fp
          where
             zero = 0 :: Word8</div>
@@ -357,51 +380,21 @@ poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
 </ol>
 <p><br /><strong>To Refine Pointers</strong> with the <em>size</em> of their associated buffers, we can use an <em>abstract measure</em>, i.e. a measure specification <em>without</em> any underlying implementation.</p>
 <pre class="spec"><code>-- | Size of `Ptr`
-measure plen  :: Ptr a -&gt; Int 
+measure plen  :: Ptr a -&gt; Int
 
 -- | Size of `ForeignPtr`
-measure fplen :: ForeignPtr a -&gt; Int </code></pre>
+measure fplen :: ForeignPtr a -&gt; Int</code></pre>
 <p>It is helpful to define aliases for pointers of a given size <code>N</code>:</p>
-<pre class="spec"><code>type PtrN a N        = {v:Ptr a        | plen v  = N} 
-type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N} </code></pre>
+<pre class="spec"><code>type PtrN a N        = {v:Ptr a        | plen v  = N}
+type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}</code></pre>
 <p><br /><strong>Abstract Measures</strong> are extremely useful when we don't have a concrete implementation of the underlying value, but we know that the value <em>exists</em>. Here, we don't have the value -- inside Haskell -- because the buffers are manipulated within C. However, this is no cause for alarm as we will simply use measures to refine the API, not to perform any computations. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <p><br /><strong>To Refine Allocation</strong> we stipulate that the size parameter be non-negative, and that the returned pointer indeed refers to a buffer with exactly <code>n</code> bytes:</p>
 <pre class="spec"><code>mallocForeignPtrBytes :: n:Nat -&gt; ForeignPtrN a n</code></pre>
 <p><br /><strong>To Refine Unwrapping</strong> we specify that the <em>action</em> gets as input, an unwrapped <code>Ptr</code> whose size <em>equals</em> that of the given <code>ForeignPtr</code>.</p>
-<pre class="spec"><code>withForeignPtr :: fp:ForeignPtr a 
-               -&gt; (PtrN a (fplen fp) -&gt; IO b)  
-               -&gt; IO b             </code></pre>
+<pre class="spec"><code>withForeignPtr :: fp:ForeignPtr a
+               -&gt; (PtrN a (fplen fp) -&gt; IO b)
+               -&gt; IO b</code></pre>
 <p>This is a rather interesting <em>higher-order</em> specification. Consider a call <code>withForeignPtr fp act</code>. If the <code>act</code> requires a <code>Ptr</code> whose size <em>exceeds</em> that of <code>fp</code> then LiquidHaskell will flag a (subtyping) error indicating the overflow. If instead the <code>act</code> requires a buffer of size less than <code>fp</code> then it is always safe to run the <code>act</code> on a larger buffer. For example, the below variant of <code>zero4</code> where we only set the first three bytes is fine as the <code>act</code>, namely the function <code>\p -&gt; ...</code>, can be typed with the requirement that the buffer <code>p</code> has size <code>4</code>, even though only <code>3</code> bytes are actually touched.</p>
-<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-3" class="programbox">zero3 = do fp <- mallocForeignPtrBytes 4
-           withForeignPtr fp $ \p -> do
-             poke (p `plusPtr` 0) zero 
-             poke (p `plusPtr` 1) zero 
-             poke (p `plusPtr` 2) zero 
-           return fp
-        where
-           zero = 0 :: Word8</div>
-</div>
-
-<p><br /><strong>To Refine Reads and Writes</strong> we specify that they can only be done if the pointer refers to a non-empty (remaining) buffer. That is, we define an alias:</p>
-<pre class="spec"><code>type OkPtr a = {v:Ptr a | 0 &lt; plen v}</code></pre>
-<p>that describes pointers referring to <em>non-empty</em> buffers (of strictly positive <code>plen</code>), and then use the alias to refine:</p>
-<pre class="spec"><code>peek :: OkPtr a -&gt; IO a  
-poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
-<p>In essence the above type says that no matter how arithmetic was used to shift pointers around, when the actual dereference happens, the size <em>remaining</em> after the pointer must be non-negative, so that a byte can be safely read from or written to the underlying buffer.</p>
-<p><br /><strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
-<pre class="spec"><code>plusPtr :: p:Ptr a -&gt; off:BNat (plen p) -&gt; PtrN b (plen p - off)      </code></pre>
-<p>using the alias <code>BNat</code>, defined as:</p>
-<pre class="spec"><code>type BNat N = {v:Nat | v &lt;= N}</code></pre>
-<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
-<p><br /><strong>Types Prevent Overflows</strong> Lets revisit the zero-fill example from above to understand how the refinements help detect the error:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -410,12 +403,42 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">exBad = do fp <- mallocForeignPtrBytes 4
+  <div id="program-4" class="programbox">zero3 = do fp <- mallocForeignPtrBytes 4
            withForeignPtr fp $ \p -> do
-             poke (p `plusPtr` 0) zero 
-             poke (p `plusPtr` 1) zero 
-             poke (p `plusPtr` 2) zero 
-             poke (p `plusPtr` 5) zero     -- LH complains 
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+           return fp
+        where
+           zero = 0 :: Word8</div>
+</div>
+
+<p><br /><strong>To Refine Reads and Writes</strong> we specify that they can only be done if the pointer refers to a non-empty (remaining) buffer. That is, we define an alias:</p>
+<pre class="spec"><code>type OkPtr a = {v:Ptr a | 0 &lt; plen v}</code></pre>
+<p>that describes pointers referring to <em>non-empty</em> buffers (of strictly positive <code>plen</code>), and then use the alias to refine:</p>
+<pre class="spec"><code>peek :: OkPtr a -&gt; IO a
+poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
+<p>In essence the above type says that no matter how arithmetic was used to shift pointers around, when the actual dereference happens, the size <em>remaining</em> after the pointer must be non-negative, so that a byte can be safely read from or written to the underlying buffer.</p>
+<p><br /><strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<pre class="spec"><code>plusPtr :: p:Ptr a -&gt; off:BNat (plen p) -&gt; PtrN b (plen p - off)</code></pre>
+<p>using the alias <code>BNat</code>, defined as:</p>
+<pre class="spec"><code>type BNat N = {v:Nat | v &lt;= N}</code></pre>
+<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<p><br /><strong>Types Prevent Overflows</strong> Lets revisit the zero-fill example from above to understand how the refinements help detect the error:</p>
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-5" class="programbox">exBad = do fp <- mallocForeignPtrBytes 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+             poke (p `plusPtr` 5) zero     -- LH complains
            return fp
         where
            zero = 0 :: Word8</div>
@@ -425,10 +448,10 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
 <pre class="liquiderror"><code>  Error: Liquid Type Mismatch
    Inferred type
      VV : {VV : Int | VV == ?a &amp;&amp; VV == 5}
-  
+
    not a subtype of Required type
      VV : {VV : Int | VV &lt;= plen p}
-  
+
    in Context
      zero : {zero : Word8 | zero == ?b}
      VV   : {VV : Int | VV == ?a &amp;&amp; VV == (5  :  int)}
@@ -452,7 +475,7 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
 <h2>ByteString API</h2>
 <p>Next, lets see how the low-level API can be used to implement to implement <a href="https://hackage.haskell.org/package/bytestring">ByteStrings</a>, in a way that lets us perform fast string operations without opening the door to overflows.</p>
 <p><br /><strong>A ByteString</strong> is implemented as a record of three fields:</p>
-<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -460,7 +483,7 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-5" class="programbox">data ByteString = BS {
+  <div id="program-6" class="programbox">data ByteString = BS {
     bPtr :: ForeignPtr Word8
   , bOff :: !Int
   , bLen :: !Int
@@ -481,25 +504,6 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
 
 
 <p><br /><strong>In a Legal ByteString</strong> the <em>start</em> (<code>bOff</code>) and <em>end</em> (<code>bOff + bLen</code>) offsets lie inside the buffer referred to by the pointer <code>bPtr</code>. We can formalize this invariant with a data definition that will then make it impossible to create illegal <code>ByteString</code>s:</p>
-<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-6" class="programbox">{-@ data ByteString = BS {
-      bPtr :: ForeignPtr Word8
-    , bOff :: {v:Nat| v        <= fplen bPtr}
-    , bLen :: {v:Nat| v + bOff <= fplen bPtr}
-    }
-  @-}</div>
-</div>
-
-
-<p>The refinements on <code>bOff</code> and <code>bLen</code> correspond exactly to the legality requirements that the start and end of the <code>ByteString</code> be <em>within</em> the block of memory referred to by <code>bPtr</code>.</p>
-<p><br /><strong>For brevity</strong> lets define an alias for <code>ByteString</code>s of a given size:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -508,10 +512,16 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">{-@ type ByteStringN N = {v:ByteString | bLen v = N} @-}</div>
+  <div id="program-7" class="programbox">{-@ data ByteString = BS {
+      bPtr :: ForeignPtr Word8
+    , bOff :: {v:Nat| v        <= fplen bPtr}
+    , bLen :: {v:Nat| v + bOff <= fplen bPtr}
+    }
+  @-}</div>
 </div>
 
-<p><br /><strong>Legal Bytestrings</strong> can be created by directly using the constructor, as long as we pass in suitable offsets and lengths. For example,</p>
+<p>The refinements on <code>bOff</code> and <code>bLen</code> correspond exactly to the legality requirements that the start and end of the <code>ByteString</code> be <em>within</em> the block of memory referred to by <code>bPtr</code>.</p>
+<p><br /><strong>For brevity</strong> lets define an alias for <code>ByteString</code>s of a given size:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -520,12 +530,10 @@ poke :: OkPtr a -&gt; a -&gt; IO ()  </code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">{-@ good1 :: IO (ByteStringN 5) @-}
-good1 = do fp <- mallocForeignPtrBytes 5
-           return (BS fp 0 5)</div>
+  <div id="program-8" class="programbox">{-@ type ByteStringN N = {v:ByteString | bLen v = N} @-}</div>
 </div>
 
-<p>creates a valid <code>ByteString</code> of size <code>5</code>; however we need not start at the beginning of the block, or use up all the buffer, and can instead create <code>ByteString</code>s whose length is less than the size of the allocated block, as shown in <code>good2</code> whose length is <code>2</code> while the allocated block has size <code>5</code>.</p>
+<p><br /><strong>Legal Bytestrings</strong> can be created by directly using the constructor, as long as we pass in suitable offsets and lengths. For example,</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -534,12 +542,12 @@ good1 = do fp <- mallocForeignPtrBytes 5
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">{-@ good2 :: IO (ByteStringN 2) @-}
-good2 = do fp <- mallocForeignPtrBytes 5
-           return (BS fp 3 2)</div>
+  <div id="program-9" class="programbox">{-@ good1 :: IO (ByteStringN 5) @-}
+good1 = do fp <- mallocForeignPtrBytes 5
+           return (BS fp 0 5)</div>
 </div>
 
-<p><br /><strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>'s length is exceeds its buffer size, and is flagged as such:</p>
+<p>creates a valid <code>ByteString</code> of size <code>5</code>; however we need not start at the beginning of the block, or use up all the buffer, and can instead create <code>ByteString</code>s whose length is less than the size of the allocated block, as shown in <code>good2</code> whose length is <code>2</code> while the allocated block has size <code>5</code>.</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -548,11 +556,12 @@ good2 = do fp <- mallocForeignPtrBytes 5
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-10" class="programbox">bad1 = do fp <- mallocForeignPtrBytes 3 
-          return (BS fp 0 10)</div>
+  <div id="program-10" class="programbox">{-@ good2 :: IO (ByteStringN 2) @-}
+good2 = do fp <- mallocForeignPtrBytes 5
+           return (BS fp 3 2)</div>
 </div>
 
-<p>Similarly, <code>bad2</code> does have <code>2</code> bytes but <em>not</em> if we start at the offset of <code>2</code>:</p>
+<p><br /><strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>'s length is exceeds its buffer size, and is flagged as such:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -561,7 +570,20 @@ good2 = do fp <- mallocForeignPtrBytes 5
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-11" class="programbox">bad2 = do fp <- mallocForeignPtrBytes 3
+  <div id="program-11" class="programbox">bad1 = do fp <- mallocForeignPtrBytes 3
+          return (BS fp 0 10)</div>
+</div>
+
+<p>Similarly, <code>bad2</code> does have <code>2</code> bytes but <em>not</em> if we start at the offset of <code>2</code>:</p>
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-12" class="programbox">bad2 = do fp <- mallocForeignPtrBytes 3
           return (BS fp 2 2)</div>
 </div>
 
@@ -572,18 +594,6 @@ good2 = do fp <- mallocForeignPtrBytes 5
 <div class="toolinfo">
 <br /><strong>Measures are generated from Fields</strong> in the datatype definition. As GHC lets us use the fields as accessor functions, we can <em>refine</em> the types of those functions to specify their behavior to LiquidHaskell. For example, we can type the (automatically generated) field-accessor function <code>bLen</code> so that it actually returns the exact size of the <code>ByteString</code> argument.
 </div>
-<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-12" class="programbox">{-@ bLen :: b:ByteString -> {v: Nat | v = bLen b} @-}</div>
-</div>
-
-<p><br /><strong>To Safely Create</strong> a <code>ByteString</code> the implementation defines a higher order <code>create</code> function, that takes a size <code>n</code> and accepts a <code>fill</code> action, and runs the action after allocating the pointer. After running the action, the function tucks the pointer into and returns a <code>ByteString</code> of size <code>n</code>.</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -592,17 +602,10 @@ good2 = do fp <- mallocForeignPtrBytes 5
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">{-@ create :: n:Nat -> (Ptr Word8 -> IO ()) -> ByteStringN n @-}
-create n fill = unsafePerformIO $ do
-  fp  <- mallocForeignPtrBytes n
-  withForeignPtr fp fill 
-  return (BS fp 0 n)</div>
+  <div id="program-13" class="programbox">{-@ bLen :: b:ByteString -> {v: Nat | v = bLen b} @-}</div>
 </div>
 
-<div id="Create" class="hwex">
-<br /><strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?
-<br /><br />
-</div>
+<p><br /><strong>To Safely Create</strong> a <code>ByteString</code> the implementation defines a higher order <code>create</code> function, that takes a size <code>n</code> and accepts a <code>fill</code> action, and runs the action after allocating the pointer. After running the action, the function tucks the pointer into and returns a <code>ByteString</code> of size <code>n</code>.</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -611,14 +614,17 @@ create n fill = unsafePerformIO $ do
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">bsGHC = create 3 $ \p -> do
-  poke (p `plusPtr` 0) (c2w 'G') 
-  poke (p `plusPtr` 1) (c2w 'H')
-  poke (p `plusPtr` 2) (c2w 'C')</div>
+  <div id="program-14" class="programbox">{-@ create :: n:Nat -> (Ptr Word8 -> IO ()) -> ByteStringN n @-}
+create n fill = unsafePerformIO $ do
+  fp  <- mallocForeignPtrBytes n
+  withForeignPtr fp fill
+  return (BS fp 0 n)</div>
 </div>
 
-<p><strong>Hint: </strong>The function writes into 3 slots starting at <code>p</code>. How big should <code>plen p</code> be to allow this? What type does LiquidHaskell infer for <code>p</code> above? Does it meet the requirement? Which part of the <em>specification</em> or <em>implementation</em> needs to be modified so that the relevant information about <code>p</code> becomes available within the <code>do</code>-block above? Make sure you figure out the above before proceeding.</p>
-<p><br /><strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
+<div id="Create" class="hwex">
+<br /><strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?
+<br /><br />
+</div>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -627,7 +633,23 @@ create n fill = unsafePerformIO $ do
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-15" class="programbox">pack str      = create' n $ \p -> go p xs
+  <div id="program-15" class="programbox">bsGHC = create 3 $ \p -> do
+  poke (p `plusPtr` 0) (c2w 'G')
+  poke (p `plusPtr` 1) (c2w 'H')
+  poke (p `plusPtr` 2) (c2w 'C')</div>
+</div>
+
+<p><strong>Hint: </strong>The function writes into 3 slots starting at <code>p</code>. How big should <code>plen p</code> be to allow this? What type does LiquidHaskell infer for <code>p</code> above? Does it meet the requirement? Which part of the <em>specification</em> or <em>implementation</em> needs to be modified so that the relevant information about <code>p</code> becomes available within the <code>do</code>-block above? Make sure you figure out the above before proceeding.</p>
+<p><br /><strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">pack str      = create' n $ \p -> go p xs
   where
   n           = length str
   xs          = map c2w str
@@ -639,7 +661,7 @@ create n fill = unsafePerformIO $ do
 <br /><strong>Exercise: (Pack): </strong>We can compute the size of a <code>ByteString</code> by using the function: Fix the specification for <code>pack</code> so that (it still typechecks!) and furthermore, the following <a href="#quickcheck">QuickCheck style property</a> is proved.
 <br /><br />
 </div>
-<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -647,7 +669,7 @@ create n fill = unsafePerformIO $ do
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">{-@ prop_pack_length  :: String -> True @-}
+  <div id="program-17" class="programbox">{-@ prop_pack_length  :: String -> TRUE @-}
 prop_pack_length xs   = bLen (pack xs) == length xs</div>
 </div>
 
@@ -657,7 +679,7 @@ prop_pack_length xs   = bLen (pack xs) == length xs</div>
 <br /><strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)
 <br /><br />
 </div>
-<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -665,7 +687,7 @@ prop_pack_length xs   = bLen (pack xs) == length xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">packEx str     = create' n $ \p -> pLoop p xs
+  <div id="program-18" class="programbox">packEx str     = create' n $ \p -> pLoop p xs
   where
   n            = length str
   xs           = map c2w str
@@ -680,23 +702,6 @@ pLoop _ []     = return ()</div>
 <br /><strong>Exercise: (Unsafe Take and Drop): </strong>The functions <code>unsafeTake</code> and <code>unsafeDrop</code> respectively extract the prefix and suffix of a <code>ByteString</code> from a given position. They are really fast since we only have to change the offsets. But why does LiquidHaskell reject them? Can you fix the specifications so that they are accepted?
 <br /><br />
 </div>
-<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-18" class="programbox">{-@ unsafeTake :: n:Nat -> b:_ -> ByteStringN n @-}
-unsafeTake n (BS x s _) = BS x s n
-
-{-@ unsafeDrop :: n:Nat -> b:_ -> ByteStringN {bLen b - n} @-}
-unsafeDrop n (BS x s l) = BS x (s + n) (l - n)</div>
-</div>
-
-<p><strong>Hint: </strong>Under what conditions are the returned <code>ByteString</code>s legal?</p>
-<p><br /><strong>To Unpack</strong> a <code>ByteString</code> into a plain old <code>String</code>, we essentially run <code>pack</code> in reverse, by walking over the pointer, and reading out the characters one by one till we reach the end:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -705,7 +710,24 @@ unsafeDrop n (BS x s l) = BS x (s + n) (l - n)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">unpack              :: ByteString -> String 
+  <div id="program-19" class="programbox">{-@ unsafeTake :: n:Nat -> b:_ -> ByteStringN n @-}
+unsafeTake n (BS x s _) = BS x s n
+
+{-@ unsafeDrop :: n:Nat -> b:_ -> ByteStringN {bLen b - n} @-}
+unsafeDrop n (BS x s l) = BS x (s + n) (l - n)</div>
+</div>
+
+<p><strong>Hint: </strong>Under what conditions are the returned <code>ByteString</code>s legal?</p>
+<p><br /><strong>To Unpack</strong> a <code>ByteString</code> into a plain old <code>String</code>, we essentially run <code>pack</code> in reverse, by walking over the pointer, and reading out the characters one by one till we reach the end:</p>
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-20" class="programbox">unpack              :: ByteString -> String
 unpack (BS _  _ 0)  = []
 unpack (BS ps s l)  = unsafePerformIO
                         $ withForeignPtr ps
@@ -721,24 +743,6 @@ unpack (BS ps s l)  = unsafePerformIO
 <br /><strong>Exercise: (Unpack): </strong>Fix the specification for <code>unpack</code> so that the below QuickCheck style property is proved by LiquidHaskell.
 <br /><br />
 </div>
-<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-20" class="programbox">{-@ prop_unpack_length :: ByteString -> True  @-}
-prop_unpack_length b   = bLen b == length (unpack b)</div>
-</div>
-
-<p><strong>Hint: </strong>You will also have to fix the specification of the helper <code>go</code>. Can you determine the output refinement should be (instead of just <code>true</code>?) How <em>big</em> is the output list in terms of <code>p</code>, <code>n</code> and <code>acc</code>.</p>
-</section>
-<section id="application-api" class="level2">
-<h2>Application API</h2>
-
-<p>Finally, lets revisit our potentially &quot;bleeding&quot; <code>chop</code> function to see how the refined <code>ByteString</code> API can prevent errors. We require that the prefix size <code>n</code> be less than the size of the input string <code>s</code>:</p>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -747,15 +751,15 @@ prop_unpack_length b   = bLen b == length (unpack b)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-21" class="programbox">{-@ chop :: s:String -> n:BNat (len s) -> String @-} 
-chop s n = s'
-  where 
-    b    = pack s          -- down to low-level
-    b'   = unsafeTake n b  -- grab n chars
-    s'   = unpack b'       -- up to high-level</div>
+  <div id="program-21" class="programbox">{-@ prop_unpack_length :: ByteString -> TRUE @-}
+prop_unpack_length b   = bLen b == length (unpack b)</div>
 </div>
 
-<p><br /><strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
+<p><strong>Hint: </strong>You will also have to fix the specification of the helper <code>go</code>. Can you determine the output refinement should be (instead of just <code>true</code>?) How <em>big</em> is the output list in terms of <code>p</code>, <code>n</code> and <code>acc</code>.</p>
+</section>
+<section id="application-api" class="level2">
+<h2>Application API</h2>
+<p>Finally, lets revisit our potentially &quot;bleeding&quot; <code>chop</code> function to see how the refined <code>ByteString</code> API can prevent errors. We require that the prefix size <code>n</code> be less than the size of the input string <code>s</code>:</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -764,15 +768,15 @@ chop s n = s'
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-22" class="programbox">demo     = [ex6, ex30]
+  <div id="program-22" class="programbox">{-@ chop :: s:String -> n:BNat (len s) -> String @-}
+chop s n = s'
   where
-    ex   = ['L','I','Q','U','I','D']
-    ex6  = chop ex 6   -- accepted by LH 
-    ex30 = chop ex 30  -- rejected by LH </div>
+    b    = pack s          -- down to low-level
+    b'   = unsafeTake n b  -- grab n chars
+    s'   = unpack b'       -- up to high-level</div>
 </div>
 
-<div class="hwex" id="Chop">
-<p>Fix the specification for <code>chop</code> so that the following property is proved:</p>
+<p><br /><strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -781,7 +785,24 @@ chop s n = s'
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-23" class="programbox">{-@ prop_chop_length  :: String -> Nat -> True @-}
+  <div id="program-23" class="programbox">demo     = [ex6, ex30]
+  where
+    ex   = ['L','I','Q','U','I','D']
+    ex6  = chop ex 6   -- accepted by LH
+    ex30 = chop ex 30  -- rejected by LH</div>
+</div>
+
+<div class="hwex" id="Chop">
+<p>Fix the specification for <code>chop</code> so that the following property is proved:</p>
+<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-24" class="programbox">{-@ prop_chop_length  :: String -> Nat -> TRUE @-}
 prop_chop_length s n
   | n <= length s     = length (chop s n) == n
   | otherwise         = True</div>
@@ -791,7 +812,7 @@ prop_chop_length s n
 <br /><strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:
 <br /><br />
 </div>
-<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -799,16 +820,16 @@ prop_chop_length s n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-24" class="programbox">safeChop      :: String -> Int -> String
+  <div id="program-25" class="programbox">safeChop      :: String -> Int -> String
 safeChop str n
   | ok        = chop str n
   | otherwise = ""
   where
-    ok        = True 
-    
+    ok        = True
+
 queryAndChop  :: IO String
 queryAndChop  = do putStrLn "Give me a string:"
-                   str  <-  getLine   
+                   str  <-  getLine
                    putStrLn "Give me a number:"
                    ns   <-  getLine
                    let n =  read ns :: Int
@@ -824,19 +845,6 @@ queryAndChop  = do putStrLn "Give me a string:"
 <li>the <em>sum of</em> whose lengths equals that of the input string.</li>
 </ol>
 <p><br /><strong>Non-empty ByteStrings</strong> are those whose length is non-zero:</p>
-<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-25" class="programbox">{-@ predicate Null B  = bLen B == 0                   @-}
-{-@ type ByteStringNE = {v:ByteString | not (Null v)} @-}</div>
-</div>
-
-<p>We can use these to enrich the API with a <code>null</code> check</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -845,11 +853,11 @@ queryAndChop  = do putStrLn "Give me a string:"
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-26" class="programbox">{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
-null (BS _ _ l) = l == 0</div>
+  <div id="program-26" class="programbox">{-@ predicate Null B  = bLen B == 0                   @-}
+{-@ type ByteStringNE = {v:ByteString | not (Null v)} @-}</div>
 </div>
 
-<p>This check is used to determine if it is safe to extract the head and tail of the <code>ByteString</code>. we can use refinements to ensure the safety of the operations and also track the sizes. <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
+<p>We can use these to enrich the API with a <code>null</code> check</p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -858,7 +866,20 @@ null (BS _ _ l) = l == 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-27" class="programbox">{-@ unsafeHead :: ByteStringNE -> Word8 @-}
+  <div id="program-27" class="programbox">{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
+null (BS _ _ l) = l == 0</div>
+</div>
+
+<p>This check is used to determine if it is safe to extract the head and tail of the <code>ByteString</code>. we can use refinements to ensure the safety of the operations and also track the sizes. <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
+<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-28" class="programbox">{-@ unsafeHead :: ByteStringNE -> Word8 @-}
 unsafeHead (BS x s _) = unsafePerformIO $
                           withForeignPtr x $ \p ->
                             peekByteOff p s
@@ -868,23 +889,6 @@ unsafeTail (BS ps s l) = BS ps (s + 1) (l - 1)</div>
 </div>
 
 <p><br /><strong>The Group`</strong> function recursively calls <code>spanByte</code> to carve off the next group, and then returns the accumulated results:</p>
-<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-28" class="programbox">{-@ group :: b:_ -> {v: [ByteStringNE] | bsLen v = bLen b} @-}
-group xs
-    | null xs   = []
-    | otherwise = let  y        = unsafeHead xs
-                       (ys, zs) = spanByte y (unsafeTail xs)
-                  in (y `cons` ys) : group zs</div>
-</div>
-
-<p>The first requirement, that the groups be non-empty is captured by the fact that the output is a <code>[ByteStringNE]</code>. The second requirement, that the sum of the lengths is preserved, is expressed by a writing a <a href="#numericmeasure">numeric measure</a>:</p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -893,13 +897,15 @@ group xs
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-29" class="programbox">{-@ measure bsLen @-}
-bsLen        :: [ByteString] -> Int
-bsLen []     = 0
-bsLen (b:bs) = bLen b + bsLen bs</div>
+  <div id="program-29" class="programbox">{-@ group :: b:_ -> {v: [ByteStringNE] | bsLen v = bLen b} @-}
+group xs
+    | null xs   = []
+    | otherwise = let  y        = unsafeHead xs
+                       (ys, zs) = spanByte y (unsafeTail xs)
+                  in (y `cons` ys) : group zs</div>
 </div>
 
-<p><br /><strong>SpanByte</strong> does a lot of the heavy lifting. It uses low-level pointer arithmetic to find the <em>first</em> position in the <code>ByteString</code> that is different from the input character <code>c</code> and then splits the <code>ByteString</code> into a pair comprising the prefix and suffix at that point.</p>
+<p>The first requirement, that the groups be non-empty is captured by the fact that the output is a <code>[ByteStringNE]</code>. The second requirement, that the sum of the lengths is preserved, is expressed by a writing a <a href="#numericmeasure">numeric measure</a>:</p>
 <div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -908,7 +914,22 @@ bsLen (b:bs) = bLen b + bsLen bs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-30" class="programbox">{-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
+  <div id="program-30" class="programbox">{-@ measure bsLen @-}
+bsLen        :: [ByteString] -> Int
+bsLen []     = 0
+bsLen (b:bs) = bLen b + bsLen bs</div>
+</div>
+
+<p><br /><strong>SpanByte</strong> does a lot of the heavy lifting. It uses low-level pointer arithmetic to find the <em>first</em> position in the <code>ByteString</code> that is different from the input character <code>c</code> and then splits the <code>ByteString</code> into a pair comprising the prefix and suffix at that point.</p>
+<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-31" class="programbox">{-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
 spanByte c ps@(BS x s l)
   = unsafePerformIO
       $ withForeignPtr x $ \p ->
@@ -918,13 +939,13 @@ spanByte c ps@(BS x s l)
       | i >= l    = return (ps, empty)
       | otherwise = do c' <- peekByteOff p i
                        if c /= c'
-                         then return $ splitAt i 
+                         then return $ splitAt i
                          else go p (i+1)
     splitAt i     = (unsafeTake i ps, unsafeDrop i ps)</div>
 </div>
 
 <p>LiquidHaskell infers that <code>0 &lt;= i &lt;= l</code> and therefore that all of the memory accesses are safe. Furthermore, due to the precise specifications given to <code>unsafeTake</code> and <code>unsafeDrop</code>, it is able to prove that the output pair's lengths add up to the size of the input <code>ByteString</code>.</p>
-<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -932,7 +953,7 @@ spanByte c ps@(BS x s l)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-31" class="programbox">{-@ type ByteString2 B
+  <div id="program-32" class="programbox">{-@ type ByteString2 B
       = {v:_ | bLen (fst v) + bLen (snd v) = bLen B} @-}</div>
 </div>
 
@@ -947,6 +968,74 @@ spanByte c ps@(BS x s l)
 </ol>
 <p>We saw this recipe in action by developing a low-level <code>Pointer</code> API, using it to implement fast <code>ByteString</code>s API, and then building some higher-level functions on top of the <code>ByteStrings</code>.</p>
 <p><br /><strong>The Trusted Computing Base</strong> in this approach includes exactly those layers for which the code is <em>not</em> available, for example, because they are implemented outside the language and accessed via the FFI as with <code>mallocForeignPtrBytes</code> and <code>peek</code> and <code>poke</code>. In this case, we can make progress by <em>assuming</em> the APIs hold for those layers and verify the rest of the system with respect to that API. It is important to note that in the entire case study, it is only the above FFI signatures that are <em>trusted</em>; the rest are all verified by LiquidHaskell.</p>
+<div class="hidden">
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-33" class="programbox">-----------------------------------------------------------------------
+-- Helper Code
+-----------------------------------------------------------------------
+
+{-@ unsafeCreate :: l:Nat -> (PtrN Word8 l -> IO ()) -> ByteStringN l @-}
+unsafeCreate n f = create' n f -- unsafePerformIO $ create n f
+
+{-@ qualif PLLen(v:a, p:b) : len v <= plen p @-}
+{-@ qualif ForeignPtrN(v:ForeignPtr a, n:int): fplen v = n @-}
+{-@ qualif FPLenPLen(v:Ptr a, fp:ForeignPtr a): fplen fp = plen v @-}
+{-@ qualif PtrLen(v:Ptr a, xs:List b): plen v = len xs @-}
+{-@ qualif PlenEq(v: Ptr a, x: int): x <= plen v @-}
+
+{-@ cons :: Word8 -> b:ByteString -> {v:ByteStringNE | bLen v = bLen b + 1} @-}
+cons :: Word8 -> ByteString -> ByteString
+cons c (BS x s l) = unsafeCreate (l+1) $ \p -> withForeignPtr x $ \f -> do
+        poke p c
+        memcpy (p `plusPtr` 1) (f `plusPtr` s) (fromIntegral l)
+
+{-@ empty :: {v:ByteString | bLen v = 0} @-}
+empty :: ByteString
+empty = BS nullForeignPtr 0 0
+
+{-@ assume mallocForeignPtrBytes :: n:Nat -> IO (ForeignPtrN a n) @-}
+{-@ type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N} @-}
+{-@ malloc :: n:Nat -> IO (ForeignPtrN a n) @-}
+malloc = mallocForeignPtrBytes
+
+{-@ assume
+    c_memcpy :: dst:PtrV Word8
+             -> src:PtrV Word8
+             -> size:{CSize | size <= plen src && size <= plen dst}
+             -> IO (Ptr Word8)
+  @-}
+foreign import ccall unsafe "string.h memcpy" c_memcpy
+    :: Ptr Word8 -> Ptr Word8 -> CSize -> IO (Ptr Word8)
+
+{-@ memcpy :: dst:PtrV Word8
+           -> src:PtrV Word8
+           -> size:{CSize | size <= plen src && size <= plen dst}
+           -> IO ()
+  @-}
+memcpy :: Ptr Word8 -> Ptr Word8 -> CSize -> IO ()
+memcpy p q s = c_memcpy p q s >> return ()
+
+{-@ assume nullForeignPtr :: {v: ForeignPtr Word8 | fplen v = 0} @-}
+nullForeignPtr :: ForeignPtr Word8
+nullForeignPtr = unsafePerformIO $ newForeignPtr_ nullPtr
+{-# NOINLINE nullForeignPtr #-}
+
+{-@ create' :: n:Nat -> (PtrN Word8 n -> IO ()) -> ByteStringN n @-}
+create' n fill = unsafePerformIO $ do
+  fp  <- mallocForeignPtrBytes n
+  withForeignPtr fp fill
+  return (BS fp 0 n)
+</div>
+</div>
+
+</div>
 
 </section>
 </section>

@@ -124,14 +124,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#plan'><b>7.1.</b> Plan</a></li>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.2.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.3.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.4.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.5.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.6.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.7.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.8.</b> Recap</a></li>
+<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
 </ul>
 <li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
 <ul class='section'>
@@ -182,7 +181,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -190,54 +188,70 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
 
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         
+        
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
            <span class="glyphicon glyphicon-ok"></span>
          </button>
 
-         <!-- Unsafe -->
-
-         <div class="dropdown" ng-show="isUnsafe">
+         <div class="dropdown" ng-show="isBad">
              <button class="btn btn-xs btn-link dropdown-toggle"
                      type="button"
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
-                    -->
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
-
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 <section id="logic-smt" class="level1">
 <h1>Logic &amp; SMT</h1>
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">module Logic where
+main :: IO ()
+main = return ()
+
+{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p =>  Prop q)} @-}
+{-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
+{-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
+
+ax1 :: Int -> Bool
+ax2 :: Int -> Bool
+ax3 :: Int -> Int -> Bool
+ax4 :: Int -> Int -> Bool
+ax5 :: Int -> Int -> Int -> Bool
+ax6 :: Int -> Int -> Bool
+
+infixr 9 ==>
+
+{-@ invariant {v:[a] | size v >= 0} @-}
+{-@ f :: x:Int -> {v:Int | v = f x} @-}
+f :: Int -> Int
+f = undefined
+</div>
+</div>
+
+</div>
 
 <p>As we shall see shortly, a refinement type is:</p>
 <blockquote>
@@ -293,22 +307,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h2>Semantics</h2>
 <p>The syntax of predicates tells us what they <em>look</em> like, that is, what we can <em>write down</em> as valid predicates. Next, let us turn our attention to what a predicate <em>means</em>. Intuitively, a predicate is just a Boolean valued Haskell function -- <code>&amp;&amp;</code>, <code>||</code>, <code>not</code> are the usual operators and <code>==&gt;</code> and <code>&lt;=&gt;</code> are two special operators.</p>
 <p><br /><strong>The Implication</strong> operator <code>==&gt;</code> is equivalent to the Haskell function:</p>
-<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-0" class="programbox">(==>) :: Bool -> Bool -> Bool
-False ==> False = True
-False ==> True  = True
-True  ==> True  = True
-True  ==> False = False</div>
-</div>
-
-<p><br /><strong>The If-and-only-if</strong> operator <code>&lt;=&gt;</code> is equivalent to the Haskell function:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -317,7 +315,23 @@ True  ==> False = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">(<=>)  :: Bool -> Bool -> Bool
+  <div id="program-1" class="programbox">(==>) :: Bool -> Bool -> Bool
+False ==> False = True
+False ==> True  = True
+True  ==> True  = True
+True  ==> False = False</div>
+</div>
+
+<p><br /><strong>The If-and-only-if</strong> operator <code>&lt;=&gt;</code> is equivalent to the Haskell function:</p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">(<=>)  :: Bool -> Bool -> Bool
 False <=> False = True
 False <=> True  = False
 True  <=> True  = True
@@ -359,20 +373,7 @@ True  <=> False = False</div>
 <section id="examples-propositions" class="level2">
 <h2>Examples: Propositions</h2>
 <p>Finally, lets conclude this quick overview with some examples of predicates, in order to build up our own intuition about logic and validity. Each of the below is a predicate from our refinement logic. However, we write them as raw Haskell expressions that you may be more familiar with right now, and so that we can start to use LiquidHaskell to determine whether a predicate is indeed valid or not.</p>
-<p><br /><strong>Let `TRUE` be a type</strong> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>True</code> <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> Thus, a <em>valid predicate</em> is one that has the type <code>TRUE</code>. The simplest example of a valid predicate is just <code>True</code>:</p>
-<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-2" class="programbox">{-@ ex0 :: TRUE @-}
-ex0 = True</div>
-</div>
-
-<p>of course, <code>False</code> is <em>not valid</em></p>
+<p><br /><strong>Let `TRUE` be a refined type</strong> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>True</code>. Similarly, we can define <code>FALSE</code> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>False</code>:</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -381,11 +382,11 @@ ex0 = True</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">{-@ ex0' :: TRUE @-}
-ex0' = False</div>
+  <div id="program-3" class="programbox">{-@ type TRUE  = {v:Bool | Prop v}       @-}
+{-@ type FALSE = {v:Bool | not (Prop v)} @-}</div>
 </div>
 
-<p>We can get more interesting predicates if we use variables. For example, the following is valid predicate says that a <code>Bool</code> variable is either <code>True</code> or <code>False</code>.</p>
+<p>Thus, a <em>valid predicate</em> is one that has the type <code>TRUE</code>. The simplest example of a valid predicate is just <code>True</code>:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -394,11 +395,11 @@ ex0' = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ ex1 :: Bool -> TRUE @-}
-ex1 b = b || not b</div>
+  <div id="program-4" class="programbox">{-@ ex0 :: TRUE @-}
+ex0 = True</div>
 </div>
 
-<p>Of course, a variable cannot be both <code>True</code> and <code>False</code>, and so the below predicate is invalid:</p>
+<p>of course, <code>False</code> is <em>not valid</em></p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -407,11 +408,11 @@ ex1 b = b || not b</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-5" class="programbox">{-@ ex2 :: Bool -> FALSE @-}
-ex2 b = b && not b</div>
+  <div id="program-5" class="programbox">{-@ ex0' :: TRUE @-}
+ex0' = False</div>
 </div>
 
-<p>The next few examples illustrate the <code>==&gt;</code> operator. You should read <code>p ==&gt; q</code> as <em>if</em> <code>p</code> is true <em>then</em> <code>q</code> must also be true. Thus, the below predicates are valid as if both <code>a</code> and <code>b</code> are true, then well, <code>a</code> is true, and <code>b</code> is true.</p>
+<p>We can get more interesting predicates if we use variables. For example, the following is valid predicate says that a <code>Bool</code> variable is either <code>True</code> or <code>False</code>.</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -420,14 +421,11 @@ ex2 b = b && not b</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-6" class="programbox">{-@ ex3 :: Bool -> Bool -> TRUE @-}
-ex3 a b = (a && b) ==> a
-
-{-@ ex4 :: Bool -> Bool -> TRUE @-}
-ex4 a b = (a && b) ==> b</div>
+  <div id="program-6" class="programbox">{-@ ex1 :: Bool -> TRUE @-}
+ex1 b = b || not b</div>
 </div>
 
-<p>Of course, if we replace the <code>&amp;&amp;</code> with <code>||</code> the result is <em>not valid</em>:</p>
+<p>Of course, a variable cannot be both <code>True</code> and <code>False</code>, and so the below predicate is invalid:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -436,11 +434,11 @@ ex4 a b = (a && b) ==> b</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">{-@ ex3' :: Bool -> Bool -> TRUE @-}
-ex3' a b = (a || b) ==> a</div>
+  <div id="program-7" class="programbox">{-@ ex2 :: Bool -> FALSE @-}
+ex2 b = b && not b</div>
 </div>
 
-<p>The following predicates are valid because they encode <a href="http://en.wikipedia.org/wiki/Modus_ponens">modus ponens</a>: if you know that <code>a</code> implies <code>b</code> and you know that <code>a</code> is true, then it must be that <code>b</code> is also true:</p>
+<p>The next few examples illustrate the <code>==&gt;</code> operator. You should read <code>p ==&gt; q</code> as <em>if</em> <code>p</code> is true <em>then</em> <code>q</code> must also be true. Thus, the below predicates are valid as if both <code>a</code> and <code>b</code> are true, then well, <code>a</code> is true, and <code>b</code> is true.</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -449,14 +447,17 @@ ex3' a b = (a || b) ==> a</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">{-@ ex6 :: Bool -> Bool -> TRUE @-}
-ex6 a b = (a && (a ==> b)) ==> b
+  <div id="program-8" class="programbox">{-@ ex3 :: Bool -> Bool -> TRUE @-}
+ex3 a b = (a && b) ==> a
 
-{-@ ex7 :: Bool -> Bool -> TRUE @-}
-ex7 a b = a ==> (a ==> b) ==> b</div>
+{-@ ex4 :: Bool -> Bool -> TRUE @-}
+ex4 a b = (a && b) ==> b</div>
 </div>
 
-<p>Recall that <code>p &lt;=&gt; q</code> (read <code>p</code> if and only iff <code>q</code>) evaluates to <code>True</code> exactly when <code>p</code> and <code>q</code> evaluate to the <em>same</em> values (<code>True</code> or <code>False</code>). It is used to encode <em>equalities</em> between predicates. For example, we can write down <a href="http://en.wikipedia.org/wiki/De_Morgan&#39;s_laws">De Morgan's laws</a> as the valid predicates:</p>
+<div id="Implications and Or" class="hwex">
+<br /><strong>Exercise: (Implications and Or): </strong>Of course, if we replace the <code>&amp;&amp;</code> with <code>||</code> the result is <em>not valid</em>. Can you shuffle the variables around -- <em>without changing the operators</em> -- to make the formula valid?
+<br /><br />
+</div>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -465,17 +466,11 @@ ex7 a b = a ==> (a ==> b) ==> b</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">{-@ exDeMorgan1 :: Bool -> Bool -> TRUE @-}
-exDeMorgan1 a b = not (a || b) <=> (not a && not b)
-
-{-@ exDeMorgan2 :: Bool -> Bool -> TRUE @-}
-exDeMorgan2 a b = not (a && b) <=> (not a || not b)</div>
+  <div id="program-9" class="programbox">{-@ ex3' :: Bool -> Bool -> TRUE @-}
+ex3' a b = (a || b) ==> a</div>
 </div>
 
-</section>
-<section id="examples-arithmetic" class="level2">
-<h2>Examples: Arithmetic</h2>
-<p>Next, lets look at some predicates involving arithmetic. The simplest ones don't have any variables, for example:</p>
+<p>The following predicates are valid because they encode <a href="http://en.wikipedia.org/wiki/Modus_ponens">modus ponens</a>: if you know that <code>a</code> implies <code>b</code> and you know that <code>a</code> is true, then it must be that <code>b</code> is also true:</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -484,11 +479,14 @@ exDeMorgan2 a b = not (a && b) <=> (not a || not b)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-10" class="programbox">{-@ ax0 :: TRUE @-}
-ax0 = 1 + 1 == 2</div>
+  <div id="program-10" class="programbox">{-@ ex6 :: Bool -> Bool -> TRUE @-}
+ex6 a b = (a && (a ==> b)) ==> b
+
+{-@ ex7 :: Bool -> Bool -> TRUE @-}
+ex7 a b = a ==> (a ==> b) ==> b</div>
 </div>
 
-<p>Again, a predicate that evaluates to <code>False</code> is not valid:</p>
+<p>Recall that <code>p &lt;=&gt; q</code> (read <code>p</code> if and only iff <code>q</code>) evaluates to <code>True</code> exactly when <code>p</code> and <code>q</code> evaluate to the <em>same</em> values (<code>True</code> or <code>False</code>). It is used to encode <em>equalities</em> between predicates. For example, we can write down <a href="http://en.wikipedia.org/wiki/De_Morgan&#39;s_laws">De Morgan's laws</a> as the valid predicates:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -497,11 +495,14 @@ ax0 = 1 + 1 == 2</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-11" class="programbox">{-@ ax0 :: TRUE @-}
-ax0' = 1 + 1 == 3</div>
+  <div id="program-11" class="programbox">{-@ exDeMorgan1 :: Bool -> Bool -> TRUE @-}
+exDeMorgan1 a b = not (a || b) <=> (not a && not b)</div>
 </div>
 
-<p><br /><strong>SMT Solvers determine Validity</strong> <em>without</em> enumerating assignments. For example, consider the predicate:</p>
+<div id="DeMorgan&#39;s Law" class="hwex">
+<br /><strong>Exercise: (DeMorgan's Law): </strong>The following version of DeMorgan's law is wrong. Can you fix it to get a valid formula?
+<br /><br />
+</div>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -510,12 +511,14 @@ ax0' = 1 + 1 == 3</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">{-@ ax1 :: Int -> TRUE @-}
-ax1 x = x < x + 1</div>
+  <div id="program-12" class="programbox">{-@ exDeMorgan2 :: Bool -> Bool -> TRUE @-}
+exDeMorgan2 a b = not (a && b) <=> (not a && not b)</div>
 </div>
 
-<p>It is trivially valid; as via the usual laws of arithmetic, it is equivalent to <code>0 &lt; 1</code> which is <code>True</code> independent of the value of <code>x</code>. The SMT solver is able to determine this validity without enumerating the infinitely many possible values for <code>x</code>. This kind of validity checking lies at the heart of LiquidHaskell.</p>
-<p><br /><strong>We can combine arithmetic and propositional</strong> operators, as shown in the following examples:</p>
+</section>
+<section id="examples-arithmetic" class="level2">
+<h2>Examples: Arithmetic</h2>
+<p>Next, lets look at some predicates involving arithmetic. The simplest ones don't have any variables, for example:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -524,7 +527,47 @@ ax1 x = x < x + 1</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">{-@ ax2 :: Int -> TRUE @-}
+  <div id="program-13" class="programbox">{-@ ax0 :: TRUE @-}
+ax0 = 1 + 1 == 2</div>
+</div>
+
+<p>Again, a predicate that evaluates to <code>False</code> is not valid:</p>
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-14" class="programbox">{-@ ax0 :: TRUE @-}
+ax0' = 1 + 1 == 3</div>
+</div>
+
+<p><br /><strong>SMT Solvers determine Validity</strong> <em>without</em> enumerating assignments. For example, consider the predicate:</p>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">{-@ ax1 :: Int -> TRUE @-}
+ax1 x = x < x + 1</div>
+</div>
+
+<p>It is trivially valid; as via the usual laws of arithmetic, it is equivalent to <code>0 &lt; 1</code> which is <code>True</code> independent of the value of <code>x</code>. The SMT solver is able to determine this validity without enumerating the infinitely many possible values for <code>x</code>. This kind of validity checking lies at the heart of LiquidHaskell.</p>
+<p><br /><strong>We can combine arithmetic and propositional</strong> operators, as shown in the following examples:</p>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">{-@ ax2 :: Int -> TRUE @-}
 ax2 x = (x < 0) ==> (0 <= 0 - x)
 
 {-@ ax3 :: Int -> Int -> TRUE @-}
@@ -539,52 +582,10 @@ ax5 x y z =   (x <= 0 && x >= 0)
           ==> (y == z)</div>
 </div>
 
-</section>
-<section id="examples-uninterpreted-function" class="level2">
-<h2>Examples: Uninterpreted Function</h2>
-<p>We say that function symbols are <em>uninterpreted</em> in the refinement logic, because the SMT solver does not &quot;know&quot; how functions are defined. Instead, the only thing that the solver knows is the <em>axiom of congruence</em> which states that any function <code>f</code>, returns equal outputs when invoked on equal inputs.</p>
-<p>Let us define an uninterpreted function from <code>Int</code> to <code>Int</code>:</p>
-<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-14" class="programbox">{-@ measure f :: Int -> Int @-}</div>
+<div id="Addition and Order" class="hwex">
+<br /><strong>Exercise: (Addition and Order): </strong>The formula below is <em>not</em> valid. Do you know why? Change the <em>hypothesis</em> i.e. the thing to the left of the <code>==&gt;</code> to make it a valid formula.
+<br /><br />
 </div>
-
-<p><br /><strong>We Test the Axiom of Congruence</strong> by checking that the following predicate is valid:</p>
-<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-15" class="programbox">{-@ congruence :: Int -> Int -> TRUE @-}
-congruence x y = (x == y) ==> (f x == f y)</div>
-</div>
-
-<p>Again, remember we are <em>not evaluating</em> the code above; indeed we <em>cannot</em> evaluate the code above because we have no definition of <code>f</code>. Still, the predicate is valid as the congruence axiom holds for any possible interpretation of <code>f</code>.</p>
-<p>Here is a fun example; can you figure out why this predicate is indeed valid? (The SMT solver can...)</p>
-<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-16" class="programbox">{-@ fx1 :: Int -> TRUE @-}
-fx1 x =   (x == f (f (f x)))
-      ==> (x == f (f (f (f (f x)))))
-      ==> (x == f x)</div>
-</div>
-
-<p>To get a taste of why uninterpreted functions will prove useful lets write a function to compute the <code>size</code> of a list:</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -593,13 +594,15 @@ fx1 x =   (x == f (f (f x)))
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">{-@ measure size @-}
-size        :: [a] -> Int
-size []     = 0
-size (x:xs) = 1 + size xs</div>
+  <div id="program-17" class="programbox">{-@ ax6 :: Int -> Int -> TRUE @-}
+ax6 x y = True ==> (x <= x + y)</div>
 </div>
 
-<p>We can now verify that the following predicates are <em>valid</em>:</p>
+</section>
+<section id="examples-uninterpreted-function" class="level2">
+<h2>Examples: Uninterpreted Function</h2>
+<p>We say that function symbols are <em>uninterpreted</em> in the refinement logic, because the SMT solver does not &quot;know&quot; how functions are defined. Instead, the only thing that the solver knows is the <em>axiom of congruence</em> which states that any function <code>f</code>, returns equal outputs when invoked on equal inputs.</p>
+<p>Let us define an uninterpreted function from <code>Int</code> to <code>Int</code>:</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -608,11 +611,10 @@ size (x:xs) = 1 + size xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">{-@ fx0 :: [a] -> [a] -> TRUE @-}
-fx0 xs ys = (xs == ys) ==> (size xs == size ys)</div>
+  <div id="program-18" class="programbox">{-@ measure f :: Int -> Int @-}</div>
 </div>
 
-<p>Note that to determine that the above is valid, the SMT solver does not need to know the <em>meaning</em> or <em>interpretation</em> of <code>size</code> -- merely that it is a function. When we need some information about the definition, of <code>size</code> we will put it inside the predicate. For example, in order to prove that the following is valid:</p>
+<p><br /><strong>We Test the Axiom of Congruence</strong> by checking that the following predicate is valid:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -621,13 +623,12 @@ fx0 xs ys = (xs == ys) ==> (size xs == size ys)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">{-@ fx2 :: a -> [a] -> TRUE @-}
-fx2 x xs = 0 < size ys
-  where
-    ys   = x : xs</div>
+  <div id="program-19" class="programbox">{-@ congruence :: Int -> Int -> TRUE @-}
+congruence x y = (x == y) ==> (f x == f y)</div>
 </div>
 
-<p>LiquidHaskell actually asks the SMT solver to prove the validity of a VC predicate which states that sizes are non-negative and that since <code>ys</code> equals <code>x:xs</code>, the size of <code>ys</code> is one more than <code>xs</code>. <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<p>Again, remember we are <em>not evaluating</em> the code above; indeed we <em>cannot</em> evaluate the code above because we have no definition of <code>f</code>. Still, the predicate is valid as the congruence axiom holds for any possible interpretation of <code>f</code>.</p>
+<p>Here is a fun example; can you figure out why this predicate is indeed valid? (The SMT solver can...)</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -636,7 +637,65 @@ fx2 x xs = 0 < size ys
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">fx2VC x xs ys =   (0 <= size xs)
+  <div id="program-20" class="programbox">{-@ fx1 :: Int -> TRUE @-}
+fx1 x =   (x == f (f (f x)))
+      ==> (x == f (f (f (f (f x)))))
+      ==> (x == f x)</div>
+</div>
+
+<p>To get a taste of why uninterpreted functions will prove useful lets write a function to compute the <code>size</code> of a list:</p>
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-21" class="programbox">{-@ measure size @-}
+size        :: [a] -> Int
+size []     = 0
+size (x:xs) = 1 + size xs</div>
+</div>
+
+<p>We can now verify that the following predicates are <em>valid</em>:</p>
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-22" class="programbox">{-@ fx0 :: [a] -> [a] -> TRUE @-}
+fx0 xs ys = (xs == ys) ==> (size xs == size ys)</div>
+</div>
+
+<p>Note that to determine that the above is valid, the SMT solver does not need to know the <em>meaning</em> or <em>interpretation</em> of <code>size</code> -- merely that it is a function. When we need some information about the definition, of <code>size</code> we will put it inside the predicate. For example, in order to prove that the following is valid:</p>
+<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-23" class="programbox">{-@ fx2 :: a -> [a] -> TRUE @-}
+fx2 x xs = 0 < size ys
+  where
+    ys   = x : xs</div>
+</div>
+
+<p>LiquidHaskell actually asks the SMT solver to prove the validity of a VC predicate which states that sizes are non-negative and that since <code>ys</code> equals <code>x:xs</code>, the size of <code>ys</code> is one more than <code>xs</code>. <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-24" class="programbox">fx2VC x xs ys =   (0 <= size xs)
               ==> (size ys == 1 + size xs)
               ==> (0 < size ys)</div>
 </div>
@@ -661,8 +720,7 @@ fx2 x xs = 0 < size ys
 <li id="fn3"><p>Read <code>p &lt;=&gt; q</code> as &quot;if <code>p</code> then <code>q</code> <strong>and</strong> if <code>q</code> then <code>p</code>&quot;<a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p>The process is described at length in <a href="http://goto.ucsd.edu/~rjhala/liquid/liquid_types.pdf">this paper</a><a href="#fnref4">↩</a></p></li>
 <li id="fn5"><p>In particular, we will use the uninterpreted functions to create many sophisticated abstractions.<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>We will explain how to define such types shortly.<a href="#fnref6">↩</a></p></li>
-<li id="fn7"><p>Fear not! We will describe how this works <a href="#autosmart">soon</a><a href="#fnref7">↩</a></p></li>
+<li id="fn6"><p>Fear not! We will describe how this works <a href="#autosmart">soon</a><a href="#fnref6">↩</a></p></li>
 </ol>
 </section>
 

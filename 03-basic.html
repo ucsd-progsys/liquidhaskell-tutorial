@@ -124,14 +124,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 <li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#plan'><b>7.1.</b> Plan</a></li>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.2.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.3.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.4.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.5.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.6.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.7.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.8.</b> Recap</a></li>
+<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
 </ul>
 <li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
 <ul class='section'>
@@ -182,7 +181,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 </div>
       
-<!-- BEGIN localstatus --> 
        <div id="checker-status">
          <!-- Verifying ... -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
@@ -190,54 +188,57 @@ code > span.er { color: #ff0000; font-weight: bold; }
           <span class="glyphicon glyphicon-hourglass"></span>
          </button>
 
-         <!-- Crash -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="color:orange; z-index:1"
-                 ng-show="isCrash">
-           <span class="glyphicon glyphicon-exclamation-sign"></span>
-         </button>
-         
+        
          <!-- Safe -->
          <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
                  ng-show="isSafe">
            <span class="glyphicon glyphicon-ok"></span>
          </button>
 
-         <!-- Unsafe -->
-
-         <div class="dropdown" ng-show="isUnsafe">
+         <div class="dropdown" ng-show="isBad">
              <button class="btn btn-xs btn-link dropdown-toggle"
                      type="button"
                      id="errorblockdropdown"
                      data-toggle="dropdown"
                      style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove"></span>
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
              </button>
              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <!-- <li role="presentation"><a role="menuitem" tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a></li>
-                    -->
-               <li ng-repeat="blockid in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{blockid}}">{{blockid}}</a>
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
                </li>
              </ul>
          </div>
-
-          
-         <!-- Error
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:orange; z-index:1"
-                 ng-show="isError">
-           <span class="glyphicon glyphicon-fire"></span>
-         </button>
-         -->
-         
        </div>
        
-  <!-- END localstatus --> 
 
 <div id='page-wrapper'>
 <div id='page'>
-   
+
 <section id="refinement-types" class="level1">
 <h1>Refinement Types</h1>
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--short-names" @-}
+{-@ LIQUID "--no-termination" @-}
+module Intro where
+
+import Prelude hiding (abs)
+divide     :: Int -> Int -> Int
+zero'''' :: Int
+die     :: String -> a
+</div>
+</div>
+
+</div>
 
 <p><br /><strong>What is a Refinement Type?</strong> In a nutshell,</p>
 <blockquote>
@@ -247,20 +248,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <section id="definetype" class="level2">
 <h2>Defining Types</h2>
 <p>Let us define some refinement types:</p>
-<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-0" class="programbox">{-@ type Zero    = {v:Int | v == 0} @-}
-{-@ type NonZero = {v:Int | v /= 0} @-}</div>
-</div>
-
-<p><br /><strong>The Value Variable</strong> <code>v</code> denotes the set of valid inhabitants of each refinement type. Hence, <code>Zero</code> describes the <em>set of</em> <code>Int</code> values that are equal to <code>0</code>, that is, the singleton set containing just <code>0</code>, and <code>NonZero</code> describes the set of <code>Int</code> values that are <em>not</em> equal to <code>0</code>, that is, the set <code>{1, -1, 2, -2, ...}</code> and so on. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>To use</strong> these types we can write:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -269,7 +256,21 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">{-@ zero :: Zero @-}
+  <div id="program-1" class="programbox">{-@ type Zero    = {v:Int | v == 0} @-}
+{-@ type NonZero = {v:Int | v /= 0} @-}</div>
+</div>
+
+<p><br /><strong>The Value Variable</strong> <code>v</code> denotes the set of valid inhabitants of each refinement type. Hence, <code>Zero</code> describes the <em>set of</em> <code>Int</code> values that are equal to <code>0</code>, that is, the singleton set containing just <code>0</code>, and <code>NonZero</code> describes the set of <code>Int</code> values that are <em>not</em> equal to <code>0</code>, that is, the set <code>{1, -1, 2, -2, ...}</code> and so on. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><br /><strong>To use</strong> these types we can write:</p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">{-@ zero :: Zero @-}
 zero  = 0 :: Int
 
 {-@ one, two, three :: NonZero @-}
@@ -282,7 +283,7 @@ three = 3 :: Int</div>
 <section id="errors" class="level2">
 <h2>Errors</h2>
 <p>If we try to say nonsensical things like:</p>
-<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -290,7 +291,7 @@ three = 3 :: Int</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">{-@ one' :: Zero @-}
+  <div id="program-3" class="programbox">{-@ one' :: Zero @-}
 one' = 1 :: Int</div>
 </div>
 
@@ -310,20 +311,6 @@ one' = 1 :: Int</div>
 <section id="subtyping" class="level2">
 <h2>Subtyping</h2>
 <p>What is this business of <em>subtyping</em>? Suppose we have some more refinements of <code>Int</code></p>
-<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-3" class="programbox">{-@ type Nat   = {v:Int | 0 <= v}        @-}
-{-@ type Even  = {v:Int | v mod 2 == 0 } @-}
-{-@ type Lt100 = {v:Int | v < 100}       @-}</div>
-</div>
-
-<p><br /><strong>What is the type of</strong> <code>zero</code>? <code>Zero</code> of course, but also <code>Nat</code>:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -332,11 +319,12 @@ one' = 1 :: Int</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ zero' :: Nat @-}
-zero'     = zero </div>
+  <div id="program-4" class="programbox">{-@ type Nat   = {v:Int | 0 <= v}        @-}
+{-@ type Even  = {v:Int | v mod 2 == 0 } @-}
+{-@ type Lt100 = {v:Int | v < 100}       @-}</div>
 </div>
 
-<p>and also <code>Even</code>:</p>
+<p><br /><strong>What is the type of</strong> <code>zero</code>? <code>Zero</code> of course, but also <code>Nat</code>:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -345,11 +333,11 @@ zero'     = zero </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-5" class="programbox">{-@ zero'' :: Even @-}
-zero''     = zero </div>
+  <div id="program-5" class="programbox">{-@ zero' :: Nat @-}
+zero'     = zero </div>
 </div>
 
-<p>and also any other satisfactory refinement, such as <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>and also <code>Even</code>:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -358,7 +346,20 @@ zero''     = zero </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-6" class="programbox">{-@ zero''' :: Lt100  @-}
+  <div id="program-6" class="programbox">{-@ zero'' :: Even @-}
+zero''     = zero </div>
+</div>
+
+<p>and also any other satisfactory refinement, such as <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">{-@ zero''' :: Lt100  @-}
 zero'''     = zero </div>
 </div>
 
@@ -370,7 +371,7 @@ zero'''     = zero </div>
 </ul>
 <p><br /><strong>Composing Refinements</strong> If <span class="math">\(P \Rightarrow Q\)</span> and <span class="math">\(P \Rightarrow R\)</span> then <span class="math">\(P \Rightarrow Q \wedge R\)</span>. Thus, when a term satisfies multiple refinements, we can compose those refinements with <code>&amp;&amp;</code>:</p>
 
-<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -378,7 +379,7 @@ zero'''     = zero </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">{-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
+  <div id="program-8" class="programbox">{-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
 zero''''     = 0</div>
 </div>
 
@@ -393,19 +394,6 @@ zero''''     = 0</div>
 <h2>Writing Specifications</h2>
 <p>Let's write some more interesting specifications.</p>
 <p><br /><strong>Typing Dead Code</strong> We can wrap the usual <code>error</code> function in a function <code>die</code> with the type:</p>
-<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-8" class="programbox">{-@ die :: {v:String | false} -> a  @-}
-die msg = error msg</div>
-</div>
-
-<p>The interesting thing about <code>die</code> is that the input type has the refinement <code>false</code>, meaning the function must only be called with <code>String</code>s that satisfy the predicate <code>false</code>. This seems bizarre; isn't it <em>impossible</em> to satisfy <code>false</code>? Indeed! Thus, a program containing <code>die</code> typechecks <em>only</em> when LiquidHaskell can prove that <code>die</code> is <em>never called</em>. For example, LiquidHaskell will <em>accept</em></p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -414,12 +402,11 @@ die msg = error msg</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">cantDie = if 1 + 1 == 3
-            then die "horrible death"
-            else ()</div>
+  <div id="program-9" class="programbox">{-@ die :: {v:String | false} -> a  @-}
+die msg = error msg</div>
 </div>
 
-<p>by inferring that the branch condition is always <code>False</code> and so <code>die</code> cannot be called. However, LiquidHaskell will <em>reject</em></p>
+<p>The interesting thing about <code>die</code> is that the input type has the refinement <code>false</code>, meaning the function must only be called with <code>String</code>s that satisfy the predicate <code>false</code>. This seems bizarre; isn't it <em>impossible</em> to satisfy <code>false</code>? Indeed! Thus, a program containing <code>die</code> typechecks <em>only</em> when LiquidHaskell can prove that <code>die</code> is <em>never called</em>. For example, LiquidHaskell will <em>accept</em></p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -428,7 +415,21 @@ die msg = error msg</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-10" class="programbox">canDie = if 1 + 1 == 2
+  <div id="program-10" class="programbox">cantDie = if 1 + 1 == 3
+            then die "horrible death"
+            else ()</div>
+</div>
+
+<p>by inferring that the branch condition is always <code>False</code> and so <code>die</code> cannot be called. However, LiquidHaskell will <em>reject</em></p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">canDie = if 1 + 1 == 2
            then die "horrible death"
            else ()</div>
 </div>
@@ -438,21 +439,6 @@ die msg = error msg</div>
 <section id="refining-function-types-pre-conditions" class="level2">
 <h2>Refining Function Types: Pre-conditions</h2>
 <p>Let's use <code>die</code> to write a <em>safe division</em> function that <em>only accepts</em> non-zero denominators.</p>
-<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-11" class="programbox">divide'     :: Int -> Int -> Int
-divide' n 0 = die "divide by zero"
-divide' n d = n `div` d</div>
-</div>
-
-<p>From the above, it is clear to <em>us</em> that <code>div</code> is only called with non-zero divisors. However, LiquidHaskell reports an error at the call to <code>&quot;die&quot;</code> because, what if <code>divide'</code> is actually invoked with a <code>0</code> divisor?</p>
-<p>We can specify that will not happen, with a <em>pre-condition</em> that says that the second argument is non-zero:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -461,15 +447,13 @@ divide' n d = n `div` d</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
-divide _ 0 = die "divide by zero"
-divide n d = n `div` d</div>
+  <div id="program-12" class="programbox">divide'     :: Int -> Int -> Int
+divide' n 0 = die "divide by zero"
+divide' n d = n `div` d</div>
 </div>
 
-<p><br /><strong>To Verify</strong> that <code>divide</code> never calls <code>die</code>, LiquidHaskell infers that <code>&quot;divide by zero&quot;</code> is not merely of type <code>String</code>, but in fact has the the refined type <code>{v:String | false}</code> <em>in the context</em> in which the call to <code>die</code> occurs. LiquidHaskell arrives at this conclusion by using the fact that in the first equation for <code>divide</code> the <em>denominator</em> is in fact</p>
-<pre class="sh"><code>    0 :: {v: Int | v == 0}</code></pre>
-<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradition, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
-<p><br /><strong>Establishing Pre-conditions</strong> The above signature forces us to ensure that that when we <em>use</em> <code>divide</code>, we only supply provably <code>NonZero</code> arguments. Hence, these two uses of <code>divide</code> are fine:</p>
+<p>From the above, it is clear to <em>us</em> that <code>div</code> is only called with non-zero divisors. However, LiquidHaskell reports an error at the call to <code>&quot;die&quot;</code> because, what if <code>divide'</code> is actually invoked with a <code>0</code> divisor?</p>
+<p>We can specify that will not happen, with a <em>pre-condition</em> that says that the second argument is non-zero:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -478,7 +462,24 @@ divide n d = n `div` d</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">avg2 x y   = divide (x + y) 2
+  <div id="program-13" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
+divide _ 0 = die "divide by zero"
+divide n d = n `div` d</div>
+</div>
+
+<p><br /><strong>To Verify</strong> that <code>divide</code> never calls <code>die</code>, LiquidHaskell infers that <code>&quot;divide by zero&quot;</code> is not merely of type <code>String</code>, but in fact has the the refined type <code>{v:String | false}</code> <em>in the context</em> in which the call to <code>die</code> occurs. LiquidHaskell arrives at this conclusion by using the fact that in the first equation for <code>divide</code> the <em>denominator</em> is in fact</p>
+<pre class="sh"><code>    0 :: {v: Int | v == 0}</code></pre>
+<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradition, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
+<p><br /><strong>Establishing Pre-conditions</strong> The above signature forces us to ensure that that when we <em>use</em> <code>divide</code>, we only supply provably <code>NonZero</code> arguments. Hence, these two uses of <code>divide</code> are fine:</p>
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-14" class="programbox">avg2 x y   = divide (x + y) 2
 avg3 x y z = divide (x + y + z) 3</div>
 </div>
 
@@ -490,7 +491,7 @@ avg3 x y z = divide (x + y + z) 3</div>
 </ol>
 <br /><br />
 </div>
-<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -498,7 +499,7 @@ avg3 x y z = divide (x + y + z) 3</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">avg       :: [Int] -> Int
+  <div id="program-15" class="programbox">avg       :: [Int] -> Int
 avg xs    = divide total n
   where
     total = sum xs
@@ -509,21 +510,6 @@ avg xs    = divide total n
 <section id="refining-function-types-post-conditions" class="level2">
 <h2>Refining Function Types: Post-conditions</h2>
 <p>Next, let's see how we can use refinements to describe the <em>outputs</em> of a function. Consider the following simple <em>absolute value</em> function</p>
-<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-15" class="programbox">abs           :: Int -> Int
-abs n
-  | 0 < n     = n
-  | otherwise = 0 - n</div>
-</div>
-
-<p>We can use a refinement on the output type to specify that the function returns non-negative values</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -532,14 +518,13 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">{-@ abs :: Int -> Nat @-}</div>
+  <div id="program-16" class="programbox">abs           :: Int -> Int
+abs n
+  | 0 < n     = n
+  | otherwise = 0 - n</div>
 </div>
 
-<p>LiquidHaskell <em>verifies</em> that <code>abs</code> indeed enjoys the above type by deducing that <code>n</code> is trivially non-negative when <code>0 &lt; n</code> and that in the <code>otherwise</code> case, the value <code>0 - n</code> is indeed non-negative. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-</section>
-<section id="testing-values-booleans-and-propositions" class="level2">
-<h2>Testing Values: Booleans and Propositions</h2>
-<p>In the above example, we <em>compute</em> a value that is guaranteed to be a <code>Nat</code>. Sometimes, we need to <em>test</em> if a value satisfies some property, e.g., is <code>NonZero</code>. For example, let's write a command-line <em>calculator</em>:</p>
+<p>We can use a refinement on the output type to specify that the function returns non-negative values</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -548,15 +533,14 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">calc = do putStrLn "Enter numerator"
-          n <- readLn
-          putStrLn "Enter denominator"
-          d <- readLn 
-          putStrLn (result n d)
-          calc </div>
+  <div id="program-17" class="programbox">{-@ abs :: Int -> Nat @-}</div>
 </div>
 
-<p>which takes two numbers and divides them. The function <code>result</code> checks if <code>d</code> is strictly positive (and hence, non-zero), and does the division, or otherwise complains to the user:</p>
+<p>LiquidHaskell <em>verifies</em> that <code>abs</code> indeed enjoys the above type by deducing that <code>n</code> is trivially non-negative when <code>0 &lt; n</code> and that in the <code>otherwise</code> case, the value <code>0 - n</code> is indeed non-negative. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+</section>
+<section id="testing-values-booleans-and-propositions" class="level2">
+<h2>Testing Values: Booleans and Propositions</h2>
+<p>In the above example, we <em>compute</em> a value that is guaranteed to be a <code>Nat</code>. Sometimes, we need to <em>test</em> if a value satisfies some property, e.g., is <code>NonZero</code>. For example, let's write a command-line <em>calculator</em>:</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -565,12 +549,15 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">result n d
-  | isPositive d = "Result = " ++ show (n `divide` d) 
-  | otherwise    = "Humph, please enter positive denominator!"</div>
+  <div id="program-18" class="programbox">calc = do putStrLn "Enter numerator"
+          n <- readLn
+          putStrLn "Enter denominator"
+          d <- readLn 
+          putStrLn (result n d)
+          calc </div>
 </div>
 
-<p>Finally, <code>isPositive</code> is a test that returns a <code>True</code> if its input is strictly greater than <code>0</code> or <code>False</code> otherwise:</p>
+<p>which takes two numbers and divides them. The function <code>result</code> checks if <code>d</code> is strictly positive (and hence, non-zero), and does the division, or otherwise complains to the user:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -579,11 +566,12 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">isPositive :: Int -> Bool
-isPositive x = x > 0</div>
+  <div id="program-19" class="programbox">result n d
+  | isPositive d = "Result = " ++ show (n `divide` d) 
+  | otherwise    = "Humph, please enter positive denominator!"</div>
 </div>
 
-<p><br /><strong>To verify</strong> the call to <code>divide</code> inside <code>result</code> we need to tell LiquidHaskell that the division only happens with a <code>NonZero</code> value <code>d</code>. However, the non-zero-ness is established via the <em>test</em> that occurs inside the guard <code>isPositive d</code>. Hence, we require a <em>post-condition</em> that states that <code>isPositive</code> only returns <code>True</code> when the argument is positive:</p>
+<p>Finally, <code>isPositive</code> is a test that returns a <code>True</code> if its input is strictly greater than <code>0</code> or <code>False</code> otherwise:</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -592,7 +580,20 @@ isPositive x = x > 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}</div>
+  <div id="program-20" class="programbox">isPositive :: Int -> Bool
+isPositive x = x > 0</div>
+</div>
+
+<p><br /><strong>To verify</strong> the call to <code>divide</code> inside <code>result</code> we need to tell LiquidHaskell that the division only happens with a <code>NonZero</code> value <code>d</code>. However, the non-zero-ness is established via the <em>test</em> that occurs inside the guard <code>isPositive d</code>. Hence, we require a <em>post-condition</em> that states that <code>isPositive</code> only returns <code>True</code> when the argument is positive:</p>
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-21" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}</div>
 </div>
 
 <p>In the above signature, read <code>Prop v</code> as &quot;<code>v</code> is <code>True</code>&quot;; dually, read <code>not (Prop v)</code> as &quot;<code>v</code> is <code>False</code>&quot;. Hence, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
@@ -604,7 +605,7 @@ isPositive x = x > 0</div>
 <br /><strong>Exercise: (Assertions): </strong>Consider the following <a href="https://www.haskell.org/hoogle/?hoogle=assert">assert</a> function, and two use sites. Write a suitable refinement type signature for <code>lAssert</code> so that <code>lAssert</code> and <code>yes</code> are accepted but <code>no</code> is rejected.
 <br /><br />
 </div>
-<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -612,7 +613,7 @@ isPositive x = x > 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-21" class="programbox">{-@ lAssert  :: Bool -> a -> a @-}
+  <div id="program-22" class="programbox">{-@ lAssert  :: Bool -> a -> a @-}
 lAssert True  x = x
 lAssert False _ = die "yikes, assertion fails!"
 
@@ -625,7 +626,7 @@ no  = lAssert (1 + 1 == 3) ()</div>
 <section id="putting-it-all-together" class="level2">
 <h2>Putting It All Together</h2>
 <p>Let's wrap up this introduction with a simple <code>truncate</code> function that connects all the dots.</p>
-<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -633,7 +634,7 @@ no  = lAssert (1 + 1 == 3) ()</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-22" class="programbox">truncate :: Int -> Int -> Int
+  <div id="program-23" class="programbox">truncate :: Int -> Int -> Int
 truncate i max  
   | i' <= max' = i
   | otherwise  = max' * (i `divide` i')
