@@ -36,7 +36,7 @@ PANDOCHTML=pandoc \
 	 --standalone \
      --parse-raw \
 	 --mathjax \
-   --toc \
+	 --toc \
 	 --section-divs \
 	 --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
 	 --filter filters/Figures.hs \

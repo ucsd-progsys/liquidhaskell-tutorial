@@ -1,17 +1,16 @@
-{-# LANGUAGE ViewPatterns #-}
 {-@ LIQUID "--no-termination" @-}
 
 module InTex where
 
 import Data.Maybe
 import Text.Pandoc.JSON
-import Text.Pandoc
-import Data.Char (isSpace)
+-- import Text.Pandoc
+-- import Data.Char (isSpace)
 import Data.List
-import Data.Monoid (mempty)
+-- import Data.Monoid (mempty)
 import Debug.Trace
-import Text.Printf (printf)
-import Text.Pandoc.Walk (walk)
+-- import Text.Printf (printf)
+-- import Text.Pandoc.Walk (walk)
 
 main :: IO ()
 main = toJSONFilter tx
@@ -25,14 +24,14 @@ tx (Div (id, [cls], kvs) bs)
   = toHTML cls id kvs bs
 tx z
   = z -- trace ("BLOCK:" ++ show z) z
-    
+
 txInline (RawInline (Format "tex") z)
   | isNoindent z
   = []
-    
+
   | isHint z
   = [Strong [Str "Hint: "]]
-    
+
   | isNewthought z
   = [LineBreak, Strong [Str z']]
   where z' = stripLatexCmd z
@@ -41,7 +40,7 @@ txInline (RawInline (Format "tex") z)
 --   = error $ "BAD LATEX: " ++ show z
 
 txInline i
-  = [i'] 
+  = [i']
   where i' = {- trace ("INLINE:" ++ show i) -} i
 
 toHTML "hwex" id kvs (b : bs)
@@ -49,7 +48,7 @@ toHTML "hwex" id kvs (b : bs)
     where
       bs' = (addHdr hdr b) : bs ++ [Plain [LineBreak, LineBreak]]
       hdr = Strong [Str $ "Exercise: (" ++ id ++ "): "]
-      
+
 toHTML cls id kvs bs
   = Div (id, [cls], kvs)
     $ trace ("TODO toHTML: " ++ show (id, cls))
@@ -59,14 +58,14 @@ addHdr i (Plain is) = Plain (LineBreak : i : is)
 addHdr i (Para is)  = Para  (LineBreak : i : is)
 
 stripLatexCmd :: String -> String
-stripLatexCmd = snipMaybe . dropWhile (/= '{') 
+stripLatexCmd = snipMaybe . dropWhile (/= '{')
 
 snipMaybe z = fromMaybe z $ snip z
 
 dropBrace ('{':s) = dropLast s
 dropBrace s       = s
-  
-dropLast  = reverse . dropFirst . reverse 
+
+dropLast  = reverse . dropFirst . reverse
 dropFirst = tail
 
 isNoindent   = isPrefixOf "\\noindent"
