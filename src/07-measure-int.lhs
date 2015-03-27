@@ -3,25 +3,12 @@ Numeric Measures {#numericmeasure}
 
 \begin{comment}
 \begin{code}
-
 {-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--real"           @-}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}
 
 module NumericMeasures where
--- (
---   -- * Types
---     Vector (..), Matrix (..), List 
---   , dotProd, matProd
---   , dotProduct, matProduct, transpose
---   , vecFromList, matFromList
---   , map, take, take', drop, for, zip, zipOrNull, partition, reverse
---   , first, second, size, notEmpty
---   , test1, test2, test3, test4, test5, test6, ok23, ok32, bad1, bad2 
---   , vCons, vHd, vTl
---   ) where
-
 import Prelude  hiding  (map, zipWith, zip, take, drop, reverse)
 
 {-@ die :: {v:_ | false} -> a @-}
@@ -32,15 +19,6 @@ quickSort         :: (Ord a) => [a] -> [a]
 size              :: [a] -> Int
 flatten :: Int -> Int -> Vector (Vector a) -> Vector a
 \end{code}
-
-Plan
-----
-
-1. Wholemeal Programming
-2. Specifying Dimensions
-3. Dimension-aware List API 
-4. Dimension-safe Vectors and Matrices
-5. Case Study: K-Means Clustering
 \end{comment}
 
 Many of the programs we have seen so far, for example those in
@@ -149,14 +127,12 @@ measure to describe the length of a list: ^[[Recall](#usingmeasures)
 that these must be inductively defined functions, with a single
 equation per data-constructor]
 
-\begin{comment}
 ~~~~~{.spec}
 {-@ measure len @-}
 len        :: [a] -> Int
 len []     = 0
 len (_:xs) = 1 + len xs
 ~~~~~
-\end{comment}
 
 \begin{code}
 {-@ measure size @-}
