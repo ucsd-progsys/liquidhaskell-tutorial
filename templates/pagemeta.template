@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="$$root$$/js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="$$root$$/js/angular/angular.js"></script>
 <script type="text/javascript" src="$$root$$/js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -118,7 +118,7 @@ $$body$$
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">
