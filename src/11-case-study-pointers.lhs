@@ -1,5 +1,6 @@
+
 Case Study: Pointers & Bytes {#case-study-pointers}
-============================
+===================================================
 
 \begin{comment}
 \begin{code}

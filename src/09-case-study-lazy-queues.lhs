@@ -1,3 +1,4 @@
+
 Case Study: Okasaki's Lazy Queues {#lazyqueue}
 =================================
 
