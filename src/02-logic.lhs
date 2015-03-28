@@ -384,7 +384,7 @@ ax0 = 1 + 1 == 2
 is not valid:
 
 \begin{code}
-{-@ ax0 :: TRUE @-}
+{-@ ax0' :: TRUE @-}
 ax0' = 1 + 1 == 3
 \end{code}
 
