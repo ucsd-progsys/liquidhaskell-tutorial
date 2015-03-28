@@ -6,57 +6,48 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 ### Part I: Refinement Types
 
-1. Install
+1. [Introduction](src/01-intro.lhs)
 
-2. Refinement Types
+2. [Logic](src/02-logic.lhs) 
 
-3. Polymorphism & Higher Order Functions
+3. [Refinement Types](src/03-basic.lhs)
 
-4. Refining Data Types
+4. [Polymorphism & Higher Order Functions](src/04-poly.lhs)
+
+5. [Refining Data Types](src/05-datatypes.lhs)
 
 ### Part II: Measures
 
-5. Propositions
+6. [Propositions](src/06-measure-bool.lhs)
 
-6. Numbers
+7. [Numbers](src/07-measure-int.lhs)
 
-7. Sets
+8. [Sets](src/08-measure-sets.lhs)
+
 
 ### Part III : Case Studies
 
-8. Case Study: Lazy Queue
+9. [Case Study: Lazy Queue](src/09-case-study-lazy-queues.lhs)
 
-9. Case Study: Associative Maps
+10. [Case Study: Associative Maps](src/10-case-study-associative-maps.lhs)
 
-10. Case Study: Pointers without Overflows
+11. [Case Study: Pointers without Overflows](src/11-case-study-pointers.lhs)
 
-11. Case Study: AVL Trees
-
-
-
-## TODO
-
-### Website
-
-+ Package
-  - inter-file links
-  - Generate table of exercises
-  - Add --diff-check on local machine
-  - GLOBAL error status? (single tick/cross at top-right)
+12. [Case Study: AVL Trees](src/12-case-study-AVL.lhs)
 
 ## TODO
 
 ### Part IV : Abstract Refinements (TODO) 
 
 10. Abstract Refinements I (code)
-  + Copy from FLOPS/IHP talk sequence
+  + FLOPS/IHP talk sequence
   + Vanilla/Code [compose, foldr, ...]
 
 11. Abstract Refinements II (data)
   + RecRef [List, BST]
   + Arrays
 
-12. Abstract Refinements III (constraints)
+12. Abstract Refinements III (bounds)
   + compose
   + filter
   + state 
@@ -80,15 +71,6 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 + Case Study 2: Kmeans
 
 
-## TODO 
-
-- Appendix / Concrete Syntax of LH
-  - Measures
-  - Predicate
-  - Type aliases
-  - Concrete GRAMMAR
-  - Logical connectives &&, ||, <=>, =>, not
-
 - grep FIXME/TODO (!)
 
 - move HINT to ABOVE code block
@@ -111,11 +93,6 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 ? Intelligible parse errors
 
 + Web demo 
-
-Chapter 4
-----------
-
-+ too early to do BOTH spec and implementation (one at a time)
 
 Gotchas
 ------- 
@@ -195,3 +172,17 @@ is the correct answer.
        implement additional refinements. It "looks like Haskell" and
        allows the programmer more freedom in how they define their
        refinements
+
+## Deploy on Github
+
+~~~~~
+git checkout master
+make html
+cp -r _site ~/tmp/
+git checkout gh-pages
+cp -r ~/tmp/* .
+git commit
+git push gh-pages
+~~~~~
+
+
