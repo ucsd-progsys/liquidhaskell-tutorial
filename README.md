@@ -175,6 +175,14 @@ is the correct answer.
 
 ## Deploy on Github
 
+### Prerequisites
+
+~~~~~
+cabal install template
+cd .. && git clone git://github.com/ucsd-progsys/liquid-client.git
+~~~~~
+
+### Actual deployment
 ~~~~~
 git checkout master
 make html

@@ -7,7 +7,7 @@ LIQUIDCLIENT=../liquid-client
 INDEXER=filters/Toc.hs
 
 METATEMPLATE=templates/pagemeta.template
-INDEXTEMPLATE=templates/index.TEMPLATE
+INDEXTEMPLATE=templates/index.template
 PREAMBLE=templates/preamble.lhs
 BIB=templates/bib.lhs
 
