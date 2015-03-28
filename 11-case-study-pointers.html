@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -588,11 +588,11 @@ good2 = do fp <- mallocForeignPtrBytes 5
 </div>
 
 <div id="Legal ByteStrings" class="hwex">
-<br /><strong>Exercise: (Legal ByteStrings): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so they are <em>accepted</em> by LiquidHaskell.
+<p><br /><strong>Exercise: (Legal ByteStrings): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so they are <em>accepted</em> by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div class="toolinfo">
-<br /><strong>Measures are generated from Fields</strong> in the datatype definition. As GHC lets us use the fields as accessor functions, we can <em>refine</em> the types of those functions to specify their behavior to LiquidHaskell. For example, we can type the (automatically generated) field-accessor function <code>bLen</code> so that it actually returns the exact size of the <code>ByteString</code> argument.
+<p><br /><strong>Measures are generated from Fields</strong> in the datatype definition. As GHC lets us use the fields as accessor functions, we can <em>refine</em> the types of those functions to specify their behavior to LiquidHaskell. For example, we can type the (automatically generated) field-accessor function <code>bLen</code> so that it actually returns the exact size of the <code>ByteString</code> argument.</p>
 </div>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
@@ -622,7 +622,7 @@ create n fill = unsafePerformIO $ do
 </div>
 
 <div id="Create" class="hwex">
-<br /><strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?
+<p><br /><strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?</p>
 <br /><br />
 </div>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
@@ -658,7 +658,7 @@ create n fill = unsafePerformIO $ do
 </div>
 
 <div id="Pack" class="hwex">
-<br /><strong>Exercise: (Pack): </strong>We can compute the size of a <code>ByteString</code> by using the function: Fix the specification for <code>pack</code> so that (it still typechecks!) and furthermore, the following <a href="#quickcheck">QuickCheck style property</a> is proved.
+<p><br /><strong>Exercise: (Pack): </strong>We can compute the size of a <code>ByteString</code> by using the function: Fix the specification for <code>pack</code> so that (it still typechecks!) and furthermore, the following <a href="#quickcheck">QuickCheck style property</a> is proved.</p>
 <br /><br />
 </div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
@@ -676,7 +676,7 @@ prop_pack_length xs   = bLen (pack xs) == length xs</div>
 <p><strong>Hint: </strong>Look at the type of <code>length</code>, and recall that <code>len</code> is a <a href="#numericmeasure">numeric measure</a> denoting the size of a list.</p>
 <p><br /><strong>The magic of inference</strong> ensures that <code>pack</code> just works. Notice there is a tricky little recursive loop <code>go</code> that is used to recursively fill in the <code>ByteString</code> and actually, it has a rather subtle type signature that LiquidHaskell is able to automatically infer.</p>
 <div id="Pack Invariant" class="hwex">
-<br /><strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)
+<p><br /><strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)</p>
 <br /><br />
 </div>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
@@ -699,7 +699,7 @@ pLoop _ []     = return ()</div>
 
 <p><strong>Hint: </strong>Remember that <code>len xs</code> denotes the size of the list <code>xs</code>.</p>
 <div id="Unsafe Take and Drop" class="hwex">
-<br /><strong>Exercise: (Unsafe Take and Drop): </strong>The functions <code>unsafeTake</code> and <code>unsafeDrop</code> respectively extract the prefix and suffix of a <code>ByteString</code> from a given position. They are really fast since we only have to change the offsets. But why does LiquidHaskell reject them? Can you fix the specifications so that they are accepted?
+<p><br /><strong>Exercise: (Unsafe Take and Drop): </strong>The functions <code>unsafeTake</code> and <code>unsafeDrop</code> respectively extract the prefix and suffix of a <code>ByteString</code> from a given position. They are really fast since we only have to change the offsets. But why does LiquidHaskell reject them? Can you fix the specifications so that they are accepted?</p>
 <br /><br />
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
@@ -740,7 +740,7 @@ unpack (BS ps s l)  = unsafePerformIO
 </div>
 
 <div id="Unpack" class="hwex">
-<br /><strong>Exercise: (Unpack): </strong>Fix the specification for <code>unpack</code> so that the below QuickCheck style property is proved by LiquidHaskell.
+<p><br /><strong>Exercise: (Unpack): </strong>Fix the specification for <code>unpack</code> so that the below QuickCheck style property is proved by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
@@ -809,7 +809,7 @@ prop_chop_length s n
 </div>
 
 <div id="Checked Chop" class="hwex">
-<br /><strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:
+<p><br /><strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:</p>
 <br /><br />
 </div>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
@@ -1059,7 +1059,7 @@ create' n fill = unsafePerformIO $ do
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

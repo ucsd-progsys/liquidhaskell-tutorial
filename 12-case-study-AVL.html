@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -243,7 +243,7 @@ import Prelude hiding (max)
 main = do
     mapM_ print [a, b, c, d]
   where
-    a = singleton 5 
+    a = singleton 5
     b = insert 2 a
     c = insert 3 b
     d = insert 7 c
@@ -253,7 +253,7 @@ main = do
 {-@ invariant {v:AVL a | 0 <= realHeight v && realHeight v = getHeight v} @-}
 
 {-@ inv_proof  :: t:AVL a -> {v:_ | 0 <= realHeight t && realHeight t = getHeight t } @-}
-inv_proof Leaf           = True 
+inv_proof Leaf           = True
 inv_proof (Node k l r n) = inv_proof l && inv_proof r
 
 {-@ node :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1} -> {v:AVL a | realHeight v = nodeHeight l r} @-}
@@ -264,7 +264,6 @@ insR :: a -> AVL a -> AVL a
 merge :: a -> AVL a -> AVL a -> AVL a
 member :: (Ord a) => a -> AVL a -> Bool
 -- FIXME bigHt l r t  = if (realHeight l >= realHeight r) then (eqOrUp l t) else (eqOrUp r t)
-\end{code}
 </div>
 </div>
 
@@ -343,7 +342,7 @@ realHeight (Node _ l r _) = nodeHeight l r
 nodeHeight l r = 1 + max hl hr
   where
     hl         = realHeight l
-    hr         = realHeight r                            
+    hr         = realHeight r
 
 {-@ inline max @-}
 max :: Int -> Int -> Int
@@ -375,7 +374,7 @@ isReal v l r = v == nodeHeight l r</div>
   <div id="program-5" class="programbox">{-@ inline isBal @-}
 isBal l r n = 0 - n <= d && d <= n
   where
-    d       = realHeight l - realHeight r </div>
+    d       = realHeight l - realHeight r</div>
 </div>
 
 <p><br /><strong>A Legal AVL Tree</strong> can now be defined via the following <a href="#refineddatatypes">refined data type</a>, which states that each <code>Node</code> is <span class="math">\(1\)</span>-balanced, and that the saved height field is indeed the <em>real</em> height:</p>
@@ -390,7 +389,7 @@ isBal l r n = 0 - n <= d && d <= n
   <div id="program-6" class="programbox">{-@ data AVL a = Leaf
                | Node { key :: a
                       , l   :: AVLL a key
-                      , r   :: {v:AVLR a key | isBal l v 1} 
+                      , r   :: {v:AVLR a key | isBal l v 1}
                       , ah  :: {v:Nat        | isReal v l r}
                       }                                  @-}</div>
 </div>
@@ -428,7 +427,7 @@ empty = Leaf</div>
 </div>
 
 <div id="Singleton" class="hwex">
-<br /><strong>Exercise: (Singleton): </strong>Consider the function <code>singleton</code> that builds an <code>AVL</code> tree from a single element. Fix the code below so that it is accepted by LiquidHaskell.
+<p><br /><strong>Exercise: (Singleton): </strong>Consider the function <code>singleton</code> that builds an <code>AVL</code> tree from a single element. Fix the code below so that it is accepted by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
@@ -440,7 +439,7 @@ empty = Leaf</div>
   </button>
  
   <div id="program-9" class="programbox">{-@ singleton :: a -> AVLN a 1 @-}
-singleton x =  Node x empty empty 0 </div>
+singleton x =  Node x empty empty 0</div>
 </div>
 
 <p>As you can imagine, it can be quite tedious to keep the saved height field <code>ah</code> <em>in sync</em> with the <em>real</em> height. In general in such situations, which arose also with <a href="#lazyqueue">lazy queues</a>, the right move is to eschew the data constructor and instead use a <em>smart constructor</em> that will fill in the appropriate values correctly. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
@@ -464,7 +463,7 @@ mkNode v l r = Node v l r h
 </div>
 
 <div id="Constructor" class="hwex">
-<br /><strong>Exercise: (Constructor): </strong>Unfortunately, LiquidHaskell rejects the above smart constructor <code>node</code>. Can you explain why? Can you fix the code (implementation or specification) so that the function is accepted?
+<p><br /><strong>Exercise: (Constructor): </strong>Unfortunately, LiquidHaskell rejects the above smart constructor <code>node</code>. Can you explain why? Can you fix the code (implementation or specification) so that the function is accepted?</p>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>Think about the (refined) type of the actual constructor <code>Node</code>, and the properties it requires and ensures.</p>
@@ -486,10 +485,10 @@ mkNode v l r = Node v l r h
   </button>
  
   <div id="program-11" class="programbox">{-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
-insert0 y t@(Node x l r _) 
-  | y < x      = insL0 y t 
+insert0 y t@(Node x l r _)
+  | y < x      = insL0 y t
   | x < y      = insR0 y t
-  | otherwise  = t 
+  | otherwise  = t
 insert0 y Leaf = singleton y
 
 insL0 y (Node x l r _) = node x (insert0 y l) r
@@ -507,7 +506,7 @@ insR0 y (Node x l r _) = node x l (insert0 y r)</div>
                     , ah = 2}</code></pre>
 <p>If we use <code>insert0</code> to add the key <code>'e'</code> (which goes after <code>'d'</code>) then we end up with the result:</p>
 <p></p>
-<pre class="ghci"><code>ghci&gt; insert0 &#39;e&#39; t0 
+<pre class="ghci"><code>ghci&gt; insert0 &#39;e&#39; t0
   Node { key = &#39;a&#39;
        , l   = Leaf
        , r   = Node { key = &#39;d&#39;
@@ -589,7 +588,7 @@ getHeight (Node _ _ _ n) = n</div>
  
   <div id="program-14" class="programbox">{-@ measure balFac @-}
 balFac Leaf           = 0
-balFac (Node _ l r _) = getHeight l - getHeight r </div>
+balFac (Node _ l r _) = getHeight l - getHeight r</div>
 </div>
 
 <p><br /><strong>Heaviness</strong> can be encoded by testing the balance factor:</p>
@@ -678,7 +677,7 @@ balLL v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
  
   <div id="program-18" class="programbox">{-@ balLR :: x:a
           -> l:{AVLL a x | rightHeavy l}
-          -> r:{AVLR a x | leftBig l r} 
+          -> r:{AVLR a x | leftBig l r}
           -> AVLT a l
   @-}
 balLR v (Node lv ll (Node lrv lrl lrr _) _) r
@@ -687,7 +686,7 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
 
 <p>The <em>RightBig</em> cases are symmetric to the above cases where the left subtree is the larger one.</p>
 <div id="RightBig, NoHeavy" class="hwex">
-<br /><strong>Exercise: (RightBig, NoHeavy): </strong>Fix the implementation of <code>balR0</code> so that it implements the given type.
+<p><br /><strong>Exercise: (RightBig, NoHeavy): </strong>Fix the implementation of <code>balR0</code> so that it implements the given type.</p>
 <br /><br />
 </div>
 
@@ -708,7 +707,7 @@ balR0 v l r = undefined</div>
 </div>
 
 <div id="RightBig, RightHeavy" class="hwex">
-<br /><strong>Exercise: (RightBig, RightHeavy): </strong>Fix the implementation of <code>balRR</code> so that it implements the given type.
+<p><br /><strong>Exercise: (RightBig, RightHeavy): </strong>Fix the implementation of <code>balRR</code> so that it implements the given type.</p>
 <br /><br />
 </div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
@@ -728,7 +727,7 @@ balRR v l r = undefined</div>
 </div>
 
 <div id="RightBig, LeftHeavy" class="hwex">
-<br /><strong>Exercise: (RightBig, LeftHeavy): </strong>Fix the implementation of <code>balRL</code> so that it implements the given type.
+<p><br /><strong>Exercise: (RightBig, LeftHeavy): </strong>Fix the implementation of <code>balRL</code> so that it implements the given type.</p>
 <br /><br />
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
@@ -740,11 +739,11 @@ balRR v l r = undefined</div>
   </button>
  
   <div id="program-21" class="programbox">{-@ balRL :: x:a
-          -> l: AVLL a x      
+          -> l: AVLL a x
           -> r:{AVLR a x | rightBig l r && leftHeavy r}
           -> AVLT a r
   @-}
-balRL v l r = undefined </div>
+balRL v l r = undefined</div>
 </div>
 
 <p><br /><strong>To Correctly Insert</strong> an element, we recursively add it to the left or right subtree as appropriate and then determine which of the above cases hold in order to call the corresponding <em>rebalance</em> function which restores the invariants.</p>
@@ -758,8 +757,8 @@ balRL v l r = undefined </div>
  
   <div id="program-22" class="programbox">{-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert y Leaf = singleton y
-insert y t@(Node x _ _ _) 
-  | y < x     = insL y t 
+insert y t@(Node x _ _ _)
+  | y < x     = insL y t
   | y > x     = insR y t
   | otherwise = t</div>
 </div>
@@ -776,7 +775,7 @@ insert y t@(Node x _ _ _)
   <div id="program-23" class="programbox">{-@ inline eqOrUp @-}
 eqOrUp s t = d == 0 || d == 1
   where
-    d      = diff t s </div>
+    d      = diff t s</div>
 </div>
 
 <p><br /><strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here's the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
@@ -798,12 +797,12 @@ insL a (Node v l r _)
   | isLeftBig                  = balL0 v l' r
   | otherwise                  = node  v l' r
   where
-    isLeftBig                  = leftBig l' r 
+    isLeftBig                  = leftBig l' r
     l'                         = insert a l</div>
 </div>
 
 <div id="InsertRight" class="hwex">
-<br /><strong>Exercise: (InsertRight): </strong>The code for <code>insR</code> is symmetric. To make sure you're following along, why don't you fill it in?
+<p><br /><strong>Exercise: (InsertRight): </strong>The code for <code>insR</code> is symmetric. To make sure you're following along, why don't you fill it in?</p>
 <br /><br />
 </div>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
@@ -815,8 +814,8 @@ insL a (Node v l r _)
   </button>
  
   <div id="program-25" class="programbox">{-@ insR :: x:a
-         -> t:{AVL a | key t < x && 0 < realHeight t}
-         -> {v: AVL a | eqOrUp s v}
+         -> t:{AVL a  | key t < x && 0 < realHeight t }
+         -> {v: AVL a | eqOrUp t v}
   @-}
 insR = undefined</div>
 </div>
@@ -854,8 +853,8 @@ bal v l r
   | isRightBig                 = balR0 v l r
   | otherwise                  = node  v l r
   where
-    isLeftBig                  = leftBig l r  
-    isRightBig                 = rightBig l r </div>
+    isLeftBig                  = leftBig l r
+    isRightBig                 = rightBig l r</div>
 </div>
 
 <p>The <code>bal</code> function is a combination of the case-splits and rotation calls made by <code>insL</code> (and ahem, <code>insR</code>); it takes as input a value <code>x</code> and valid left and right subtrees for <code>x</code> whose heights are off by at most <code>2</code> because as we will have created them by inserting or deleting a value from a sibling whose height was at most <code>1</code> away. The <code>bal</code> function returns a valid <code>AVL</code> tree, whose height is constrained to satisfy the predicate <code>reBal l r t</code>, which says:</p>
@@ -897,10 +896,10 @@ bigHt l r t = lBig && rBig
  
   <div id="program-28" class="programbox">{-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert' a t@(Node v l r n)
-  | a < v      = bal v (insert' a l) r 
+  | a < v      = bal v (insert' a l) r
   | a > v      = bal v l (insert' a r)
   | otherwise  = t
-insert' a Leaf = singleton a </div>
+insert' a Leaf = singleton a</div>
 </div>
 
 </section>
@@ -917,7 +916,7 @@ insert' a Leaf = singleton a </div>
  
   <div id="program-29" class="programbox">{-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
 delete y (Node x l r _)
-  | y < x     = bal x (delete y l) r 
+  | y < x     = bal x (delete y l) r
   | x < y     = bal x l (delete y r)
   | otherwise = merge x l r
 delete _ Leaf = Leaf
@@ -989,7 +988,7 @@ elems Leaf           = S.empty</div>
 
 <p>Let us use the above <code>measure</code> to specify and verify that our <code>AVL</code> library actually implements a <code>Set</code> or collection API.</p>
 <div id="Membership" class="hwex">
-<br /><strong>Exercise: (Membership): </strong>Complete the implementation of the implementation of <code>member</code> that checks if an element is in an <code>AVL</code> tree:
+<p><br /><strong>Exercise: (Membership): </strong>Complete the implementation of the implementation of <code>member</code> that checks if an element is in an <code>AVL</code> tree:</p>
 <br /><br />
 </div>
 <div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
@@ -1012,7 +1011,7 @@ hasElem x t = True
 </div>
 
 <div id="Insertion" class="hwex">
-<br /><strong>Exercise: (Insertion): </strong>Modify <code>insert'</code> to obtain a function <code>insertAPI</code> that states that the output tree contains the newly inserted element (in addition to the old elements):
+<p><br /><strong>Exercise: (Insertion): </strong>Modify <code>insert'</code> to obtain a function <code>insertAPI</code> that states that the output tree contains the newly inserted element (in addition to the old elements):</p>
 <br /><br />
 </div>
 <div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
@@ -1024,16 +1023,16 @@ hasElem x t = True
   </button>
  
   <div id="program-34" class="programbox">{-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
-insertAPI x s = insert' x s 
+insertAPI x s = insert' x s
 
 {-@ inline addElem @-}
 addElem       :: Ord a => a -> AVL a -> AVL a -> Bool
 addElem x s t = True
--- FIXME addElem x s t = (elems t) == (elems s) `S.union` (S.singleton x) </div>
+-- FIXME addElem x s t = (elems t) == (elems s) `S.union` (S.singleton x)</div>
 </div>
 
 <div id="Insertion" class="hwex">
-<br /><strong>Exercise: (Insertion): </strong>Modify <code>delete</code> to obtain a function <code>deleteAPI</code> that states that the output tree contains the old elements minus the removed element:
+<p><br /><strong>Exercise: (Insertion): </strong>Modify <code>delete</code> to obtain a function <code>deleteAPI</code> that states that the output tree contains the old elements minus the removed element:</p>
 <br /><br />
 </div>
 <div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
@@ -1045,12 +1044,12 @@ addElem x s t = True
   </button>
  
   <div id="program-35" class="programbox">{-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
-deleteAPI x s = delete x s 
+deleteAPI x s = delete x s
 
 {-@ inline delElem @-}
 delElem       :: Ord a => a -> AVL a -> AVL a -> Bool
 delElem x s t = True
--- FIXME delElem x s t = (elems t) == (elems s) `S.difference` (S.singleton x)    </div>
+-- FIXME delElem x s t = (elems t) == (elems s) `S.difference` (S.singleton x)</div>
 </div>
 
 </section>
@@ -1071,7 +1070,7 @@ delElem x s t = True
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

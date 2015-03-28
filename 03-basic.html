@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -598,11 +598,11 @@ isPositive x = x > 0</div>
 
 <p>In the above signature, read <code>Prop v</code> as &quot;<code>v</code> is <code>True</code>&quot;; dually, read <code>not (Prop v)</code> as &quot;<code>v</code> is <code>False</code>&quot;. Hence, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
 <div id="Propositions" class="hwex">
-<br /><strong>Exercise: (Propositions): </strong>What happens if you <em>delete</em> the type for <code>isPositive</code> ? Can you <em>change</em> the type for <code>isPositive</code> (i.e. write some other type) while preserving safety?
+<p><br /><strong>Exercise: (Propositions): </strong>What happens if you <em>delete</em> the type for <code>isPositive</code> ? Can you <em>change</em> the type for <code>isPositive</code> (i.e. write some other type) while preserving safety?</p>
 <br /><br />
 </div>
 <div id="Assertions" class="hwex">
-<br /><strong>Exercise: (Assertions): </strong>Consider the following <a href="https://www.haskell.org/hoogle/?hoogle=assert">assert</a> function, and two use sites. Write a suitable refinement type signature for <code>lAssert</code> so that <code>lAssert</code> and <code>yes</code> are accepted but <code>no</code> is rejected.
+<p><br /><strong>Exercise: (Assertions): </strong>Consider the following <a href="https://www.haskell.org/hoogle/?hoogle=assert">assert</a> function, and two use sites. Write a suitable refinement type signature for <code>lAssert</code> so that <code>lAssert</code> and <code>yes</code> are accepted but <code>no</code> is rejected.</p>
 <br /><br />
 </div>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
@@ -676,7 +676,7 @@ truncate i max
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -402,7 +402,7 @@ average xs = divide total elems
 </div>
 
 <div id="Average, Maybe" class="hwex">
-<br /><strong>Exercise: (Average, Maybe): </strong>Fix the code below to obtain an alternate variant <code>average'</code> that returns <code>Nothing</code> for empty lists:
+<p><br /><strong>Exercise: (Average, Maybe): </strong>Fix the code below to obtain an alternate variant <code>average'</code> that returns <code>Nothing</code> for empty lists:</p>
 <br /><br />
 </div>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
@@ -423,7 +423,7 @@ average' xs
 </div>
 
 <div id="Debugging Specifications" class="hwex">
-<br /><strong>Exercise: (Debugging Specifications): </strong>An important aspect of formal verifiers like LiquidHaskell is that they help establish properties not just of your <em>implementations</em> but equally, or more importantly, of your <em>specifications</em>. In that spirit, can you explain why the following two variants of <code>size</code> are <em>rejected</em> by LiquidHaskell?
+<p><br /><strong>Exercise: (Debugging Specifications): </strong>An important aspect of formal verifiers like LiquidHaskell is that they help establish properties not just of your <em>implementations</em> but equally, or more importantly, of your <em>specifications</em>. In that spirit, can you explain why the following two variants of <code>size</code> are <em>rejected</em> by LiquidHaskell?</p>
 <br /><br />
 </div>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
@@ -467,7 +467,7 @@ tail []     = die "Relaxeth! this too shall ne'er be"</div>
 
 <p>LiquidHaskell uses the precondition to deduce that the second equations are <em>dead code</em>. Of course, this requires us to establish that <em>callers</em> of <code>head</code> and <code>tail</code> only invoke the respective functions with non-empty lists.</p>
 <div id="Safe Head" class="hwex">
-<br /><strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified. Do <em>not</em> force <code>null</code> to only take non-empty inputs, that defeats the purpose. Instead, it's type should say that it works on <em>all</em> lists and returns <code>True</code> <em>if and only if</em> the input is non-empty.
+<p><br /><strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified. Do <em>not</em> force <code>null</code> to only take non-empty inputs, that defeats the purpose. Instead, it's type should say that it works on <em>all</em> lists and returns <code>True</code> <em>if and only if</em> the input is non-empty.</p>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>You may want to refresh your memory about implies <code>==&gt;</code> and <code>&lt;=&gt;</code> from the <a href="#semantics">chapter on logic</a>.</p>
@@ -568,7 +568,7 @@ sumBad = sum []             -- is rejected by LH</div>
 </div>
 
 <div id="Weighted Average" class="hwex">
-<br /><strong>Exercise: (Weighted Average): </strong>The function below computes a weighted average of its input. Unfortunately, LiquidHaskell is not very happy about it. Can you figure out why, and fix the code or specification appropriately?
+<p><br /><strong>Exercise: (Weighted Average): </strong>The function below computes a weighted average of its input. Unfortunately, LiquidHaskell is not very happy about it. Can you figure out why, and fix the code or specification appropriately?</p>
 <br /><br />
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
@@ -595,7 +595,7 @@ map f (x:xs)  =  f x : map f xs</div>
 
 <p><strong>Hint: </strong>On what variables are the errors? How are those variables' values computed? Can you think of a better specification for the function(s) doing those computations?</p>
 <div id="Mitchell&#39;s Risers" class="hwex">
-<br /><strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up in many places, and it is rather convenient to have the type system track non-emptiness without having to make up special types. Consider the <code>risers</code> function, popularized by <a href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil Mitchell</a>. <code>safeSplit</code> requires its input be non-empty; but LiquidHaskell believes that the call inside <code>risers</code> fails this requirement. Fix the specification for <code>risers</code> so that it is verified.
+<p><br /><strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up in many places, and it is rather convenient to have the type system track non-emptiness without having to make up special types. Consider the <code>risers</code> function, popularized by <a href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil Mitchell</a>. <code>safeSplit</code> requires its input be non-empty; but LiquidHaskell believes that the call inside <code>risers</code> fails this requirement. Fix the specification for <code>risers</code> so that it is verified.</p>
 <br /><br />
 </div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
@@ -639,7 +639,7 @@ safeSplit _      = die "don't worry, be happy"</div>
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">
