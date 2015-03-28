@@ -189,8 +189,8 @@ make html
 cp -r _site ~/tmp/
 git checkout gh-pages
 cp -r ~/tmp/* .
-git commit
-git push gh-pages
+git commit -a
+git push origin gh-pages
 ~~~~~
 
 
