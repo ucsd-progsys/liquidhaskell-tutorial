@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -396,7 +396,7 @@ cons x (SL n xs) = SL (n+1) (x:xs)</div>
 </div>
 
 <div id="Destructing Lists" class="hwex">
-<br /><strong>Exercise: (Destructing Lists): </strong>We can destruct lists by writing a <code>hd</code> and <code>tl</code> function as shown below. Fix the specification or implementation such that the definitions typecheck.
+<p><br /><strong>Exercise: (Destructing Lists): </strong>We can destruct lists by writing a <code>hd</code> and <code>tl</code> function as shown below. Fix the specification or implementation such that the definitions typecheck.</p>
 <br /><br />
 </div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
@@ -503,7 +503,7 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 </div>
 
 <div id="Whither pattern matching?" class="hwex">
-<br /><strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn't use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?
+<p><br /><strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn't use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?</p>
 <br /><br />
 </div>
 <div id="Queue Sizes" class="hwex">
@@ -552,7 +552,7 @@ example0Q = Q nil nil</div>
 </div>
 
 <div id="Insert" class="hwex">
-<br /><strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.
+<p><br /><strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.</p>
 <br /><br />
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
@@ -590,7 +590,7 @@ makeq f b
 </div>
 
 <div id="Rotate" class="hwex">
-<br /><strong>Exercise: (Rotate): </strong>The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.
+<p><br /><strong>Exercise: (Rotate): </strong>The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.</p>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>You may have to modify a precondition in <code>makeq</code> to capture the relationship between <code>f</code> and <code>b</code>.</p>
@@ -608,7 +608,7 @@ makeq f b
 </div>
 
 <div id="Transfer" class="hwex">
-<br /><strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.
+<p><br /><strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.</p>
 <br /><br />
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
@@ -651,7 +651,7 @@ exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp</div>
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -352,7 +352,7 @@ implies _    _     = False</div>
 </div>
 
 <div id="Bounded Addition" class="hwex">
-<br /><strong>Exercise: (Bounded Addition): </strong>Write and prove a QuickCheck style theorem that: <span class="math">\(\forall x, y. x &lt; 100 \wedge y &lt; 100 \Rightarrow x + y &lt; 200\)</span>.
+<p><br /><strong>Exercise: (Bounded Addition): </strong>Write and prove a QuickCheck style theorem that: <span class="math">\(\forall x, y. x &lt; 100 \wedge y &lt; 100 \Rightarrow x + y &lt; 200\)</span>.</p>
 <br /><br />
 </div>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
@@ -585,7 +585,7 @@ append' (x:xs) ys = x : append' xs ys</div>
 </div>
 
 <div id="Reverse" class="hwex">
-<br /><strong>Exercise: (Reverse): </strong>Write down a type for <code>revHelper</code> so that <code>reverse'</code> is verified by LiquidHaskell.
+<p><br /><strong>Exercise: (Reverse): </strong>Write down a type for <code>revHelper</code> so that <code>reverse'</code> is verified by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
@@ -604,7 +604,7 @@ revHelper acc (x:xs) = revHelper (x:acc) xs</div>
 </div>
 
 <div id="Halve" class="hwex">
-<br /><strong>Exercise: (Halve): </strong>Write down a specification for <code>halve</code> such that the subsequent &quot;theorem&quot; <code>prop_halve_append</code> is proved by LiquidHaskell.
+<p><br /><strong>Exercise: (Halve): </strong>Write down a specification for <code>halve</code> such that the subsequent &quot;theorem&quot; <code>prop_halve_append</code> is proved by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
@@ -629,7 +629,7 @@ prop_halve_append n xs = elts xs == elts xs'
 
 <p><strong>Hint: </strong>You may want to remind yourself about the <em>dimension-aware</em> signature for <code>partition</code> from <a href="#listreducing">the earlier chapter</a>.</p>
 <div id="Membership" class="hwex">
-<br /><strong>Exercise: (Membership): </strong>Write down a signature for <code>elem</code> that suffices to verify <code>test1</code> and <code>test2</code>.
+<p><br /><strong>Exercise: (Membership): </strong>Write down a signature for <code>elem</code> that suffices to verify <code>test1</code> and <code>test2</code>.</p>
 <br /><br />
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
@@ -697,7 +697,7 @@ insertSort (x:xs) = insert x (insertSort xs)</div>
 </div>
 
 <div id="Merge" class="hwex">
-<br /><strong>Exercise: (Merge): </strong>Fix the specification of <code>merge</code> so that the subsequent property <code>prop_merge_app</code> is verified by LiquidHaskell.
+<p><br /><strong>Exercise: (Merge): </strong>Fix the specification of <code>merge</code> so that the subsequent property <code>prop_merge_app</code> is verified by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
@@ -815,7 +815,7 @@ filter f (x:xs)
 </div>
 
 <div id="Filter" class="hwex">
-<br /><strong>Exercise: (Filter): </strong>It seems a bit draconian to require that <code>filter</code> only be called with unique lists. Write down a more permissive type for <code>filter'</code> below such that the subsequent uses are verified by LiquidHaskell.
+<p><br /><strong>Exercise: (Filter): </strong>It seems a bit draconian to require that <code>filter</code> only be called with unique lists. Write down a more permissive type for <code>filter'</code> below such that the subsequent uses are verified by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
@@ -841,7 +841,7 @@ test4     = filter' (> 3) [3,1,2,3]</div>
 </div>
 
 <div id="Reverse" class="hwex">
-<br /><strong>Exercise: (Reverse): </strong>When we <code>reverse</code> their order, the set of elements is unchanged, and hence unique (if the input was unique). Why does LiquidHaskell reject the below? Can you fix things so that we can prove that the output is a <code>UList a</code>?
+<p><br /><strong>Exercise: (Reverse): </strong>When we <code>reverse</code> their order, the set of elements is unchanged, and hence unique (if the input was unique). Why does LiquidHaskell reject the below? Can you fix things so that we can prove that the output is a <code>UList a</code>?</p>
 <br /><br />
 </div>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
@@ -898,7 +898,7 @@ isin _ []     = False</div>
 </div>
 
 <div id="Append" class="hwex">
-<br /><strong>Exercise: (Append): </strong>Why does <code>append</code>ing two <code>UList</code>s not return a <code>UList</code>? Fix the type signature below so that you can prove that the output is indeed <code>unique</code>.
+<p><br /><strong>Exercise: (Append): </strong>Why does <code>append</code>ing two <code>UList</code>s not return a <code>UList</code>? Fix the type signature below so that you can prove that the output is indeed <code>unique</code>.</p>
 <br /><br />
 </div>
 <div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
@@ -915,7 +915,7 @@ append (x:xs) ys = x : append xs ys</div>
 </div>
 
 <div id="Range" class="hwex">
-<br /><strong>Exercise: (Range): </strong><code>range i j</code> returns the list of <code>Int</code> between <code>i</code> and <code>j</code>. LiquidHaskell refuses to acknowledge that the output is indeed a <code>UList</code>. Fix the code so that LiquidHaskell verifies that it implements the given signature (and of course, computes the same result.)
+<p><br /><strong>Exercise: (Range): </strong><code>range i j</code> returns the list of <code>Int</code> between <code>i</code> and <code>j</code>. LiquidHaskell refuses to acknowledge that the output is indeed a <code>UList</code>. Fix the code so that LiquidHaskell verifies that it implements the given signature (and of course, computes the same result.)</p>
 <br /><br />
 </div>
 <div id="program-pane-36" class="welleditor" style="background:#fff; position:relative">
@@ -988,7 +988,7 @@ differentiate (x:xs) = Just $ Zipper x [] xs</div>
 </div>
 
 <div id="Deconstructing Zippers" class="hwex">
-<br /><strong>Exercise: (Deconstructing Zippers): </strong>Dually, the elements of a unique zipper tumble out into a unique list. Strengthen the types of <code>reverse</code> and <code>append</code> above so that LiquidHaskell accepts the below signatures for <code>integrate</code>:
+<p><br /><strong>Exercise: (Deconstructing Zippers): </strong>Dually, the elements of a unique zipper tumble out into a unique list. Strengthen the types of <code>reverse</code> and <code>append</code> above so that LiquidHaskell accepts the below signatures for <code>integrate</code>:</p>
 <br /><br />
 </div>
 <div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
@@ -1082,7 +1082,7 @@ filterZipper p (Zipper f ls rs)
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -403,7 +403,7 @@ dotProd' x (SP _ y) = foldl' body 0 y
 
 <p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
 <div id="Sanitization" class="hwex">
-<br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:
+<p><br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:</p>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>You need to check that <em>all</em> the indices in <code>elts</code> are less than <code>dim</code>; the easiest way is to compute a new <code>Maybe [(Int, a)]</code> which is <code>Just</code> the original pairs if they are valid, and <code>Nothing</code> otherwise.</p>
@@ -423,7 +423,7 @@ test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
 </div>
 
 <div id="Addition" class="hwex">
-<br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:
+<p><br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:</p>
 <br /><br />
 </div>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
@@ -528,7 +528,7 @@ insert y (x :< xs)
 </div>
 
 <div id="Insertion Sort" class="hwex">
-<br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.
+<p><br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.</p>
 <br /><br />
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
@@ -597,7 +597,7 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
 </div>
 
 <div id="QuickSort" class="hwex">
-<br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.
+<p><br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.</p>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>Think about how <code>append</code> should behave so that the <code>quickSort</code> has the desired property. That is, suppose that <code>ys</code> and <code>zs</code> are already in <em>increasing order</em>. Does that mean that <code>append x ys zs</code> are <em>also</em> in increasing order? No! What other requirement do you need? bottle that intuition into a suitable <em>specification</em> for <code>append</code> and then ensure that the code satisfies that specification.</p>
@@ -714,7 +714,7 @@ okBST =  Node 6
 </div>
 
 <div id="Duplicates" class="hwex">
-<br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?
+<p><br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?</p>
 <br /><br />
 </div>
 <p><br /><strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
@@ -806,7 +806,7 @@ delMin Leaf            = die "Don't say I didn't warn ya!"</div>
 </div>
 
 <div id="Delete" class="hwex">
-<br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.
+<p><br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.</p>
 <br /><br />
 </div>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
@@ -824,12 +824,12 @@ del _  Leaf           = Leaf</div>
 
 
 <div id="Safely Deleting Minimum" class="hwex">
-<br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.
+<p><br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.</p>
 <br /><br />
 </div>
 
 <div id="BST Sort" class="hwex">
-<br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.
+<p><br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.</p>
 <br /><br />
 </div>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
@@ -876,7 +876,7 @@ toIncList Leaf         = undefined</div>
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -393,7 +393,7 @@ head' vec = vec ! 0</div>
 </div>
 
 <div id="Vector Head" class="hwex">
-<br /><strong>Exercise: (Vector Head): </strong>Replace the <code>undefined</code> with an <em>implementation</em> of <code>head''</code> which accepts <em>all</em> <code>Vector</code>s but returns a value only when the input <code>vec</code> is not empty.
+<p><br /><strong>Exercise: (Vector Head): </strong>Replace the <code>undefined</code> with an <em>implementation</em> of <code>head''</code> which accepts <em>all</em> <code>Vector</code>s but returns a value only when the input <code>vec</code> is not empty.</p>
 <br /><br />
 </div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
@@ -409,7 +409,7 @@ head'' vec = undefined</div>
 </div>
 
 <div id="Unsafe Lookup" class="hwex">
-<br /><strong>Exercise: (Unsafe Lookup): </strong>The function <code>unsafeLookup</code> is a wrapper around the <code>(!)</code> with the arguments flipped. Modify the specification for <code>unsafeLookup</code> so that the <em>implementation</em> is accepted by LiquidHaskell.
+<p><br /><strong>Exercise: (Unsafe Lookup): </strong>The function <code>unsafeLookup</code> is a wrapper around the <code>(!)</code> with the arguments flipped. Modify the specification for <code>unsafeLookup</code> so that the <em>implementation</em> is accepted by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
@@ -425,7 +425,7 @@ unsafeLookup index vec = vec ! index</div>
 </div>
 
 <div id="Safe Lookup" class="hwex">
-<br /><strong>Exercise: (Safe Lookup): </strong>Complete the implementation of <code>safeLookup</code> by filling in the implementation of <code>ok</code> so that it performs a bounds check before the access.
+<p><br /><strong>Exercise: (Safe Lookup): </strong>Complete the implementation of <code>safeLookup</code> by filling in the implementation of <code>ok</code> so that it performs a bounds check before the access.</p>
 <br /><br />
 </div>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
@@ -468,11 +468,11 @@ vectorSum vec     = go 0 0
 </div>
 
 <div id="Guards" class="hwex">
-<br /><strong>Exercise: (Guards): </strong>What happens if you <em>replace</em> the guard with <code>i &lt;= sz</code>?
+<p><br /><strong>Exercise: (Guards): </strong>What happens if you <em>replace</em> the guard with <code>i &lt;= sz</code>?</p>
 <br /><br />
 </div>
 <div id="Absolute Sum" class="hwex">
-<br /><strong>Exercise: (Absolute Sum): </strong>Write a variant of the above function that computes the <code>absoluteSum</code> of the elements of the vector.
+<p><br /><strong>Exercise: (Absolute Sum): </strong>Write a variant of the above function that computes the <code>absoluteSum</code> of the elements of the vector.</p>
 <br /><br />
 </div>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
@@ -493,7 +493,7 @@ absoluteSum     = undefined</div>
 <pre class="spec"><code>go :: Int -&gt; {v:Int | 0 &lt;= v &amp;&amp; v &lt;= sz} -&gt; Int</code></pre>
 <p>which states that the second parameter <code>i</code> is between <code>0</code> and the length of <code>vec</code> (inclusive). LiquidHaskell uses this and the test that <code>i &lt; sz</code> to establish that <code>i</code> is between <code>0</code> and <code>(vlen vec)</code> to prove safety.</p>
 <div id="Off by one?" class="hwex">
-<br /><strong>Exercise: (Off by one?): </strong>Why does the type of <code>go</code> have <code>v &lt;= sz</code> and not <code>v &lt; sz</code> ?
+<p><br /><strong>Exercise: (Off by one?): </strong>Why does the type of <code>go</code> have <code>v &lt;= sz</code> and not <code>v &lt; sz</code> ?</p>
 <br /><br />
 </div>
 </section>
@@ -543,7 +543,7 @@ vectorSum' vec  = loop 0 n 0 body
 <p>It can be tedious to have to keep typing things like the above. If we wanted to make <code>loop</code> a public or exported function, we could use the inferred type to generate an explicit signature.</p>
 <p>At the call <code>loop 0 n 0 body</code> the parameters <code>lo</code> and <code>hi</code> are instantiated with <code>0</code> and <code>n</code> respectively, which, by the way is where the inference engine deduces non-negativity. Thus LiquidHaskell concludes that <code>body</code> is only called with values of <code>i</code> that are <em>between</em> <code>0</code> and <code>(vlen vec)</code>, which verifies the safety of the call <code>vec ! i</code>.</p>
 <div id="Using Higher-Order Loops" class="hwex">
-<br /><strong>Exercise: (Using Higher-Order Loops): </strong>Complete the implementation of <code>absoluteSum'</code> below. When you are done, what is the type that is inferred for <code>body</code>?
+<p><br /><strong>Exercise: (Using Higher-Order Loops): </strong>Complete the implementation of <code>absoluteSum'</code> below. When you are done, what is the type that is inferred for <code>body</code>?</p>
 <br /><br />
 </div>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
@@ -660,7 +660,7 @@ sparseProduct' x y  = foldl' body 0 y
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

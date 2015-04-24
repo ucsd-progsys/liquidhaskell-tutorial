@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -378,7 +378,7 @@ notEmpty (_:_) = True</div>
 </div>
 
 <div class="toolinfo">
-<br /><strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.
+<p><br /><strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.</p>
 </div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
@@ -397,7 +397,7 @@ notEmpty (_:_) = True</div>
 <h2>Lists: Size Preserving API</h2>
 <p>With the types and aliases firmly in our pockets, let us write dimension-aware variants of the usual list functions. The implementations are the same as in the standard library i.e. <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html"><code>Data.List</code></a>, but the specifications are enriched with dimension information.</p>
 <div id="Map" class="hwex">
-<br /><strong>Exercise: (Map): </strong><br /><strong>map</strong> yields a list with the same size as the input. Fix the specification of <code>map</code> so that the <code>prop_map</code> is verified.
+<p><br /><strong>Exercise: (Map): </strong><br /><strong>map</strong> yields a list with the same size as the input. Fix the specification of <code>map</code> so that the <code>prop_map</code> is verified.</p>
 <br /><br />
 </div>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
@@ -419,7 +419,7 @@ prop_map xs = size ys == size xs
 </div>
 
 <div id="Reverse" class="hwex">
-<br /><strong>Exercise: (Reverse): </strong>We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.
+<p><br /><strong>Exercise: (Reverse): </strong>We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.</p>
 <br /><br />
 </div>
 <p><strong>Hint: </strong>How big is the list returned by <code>go</code>?</p>
@@ -485,7 +485,7 @@ zip _  []         = []</div>
 </div>
 
 <div id="Zip Unless Empty" class="hwex">
-<br /><strong>Exercise: (Zip Unless Empty): </strong>In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.
+<p><br /><strong>Exercise: (Zip Unless Empty): </strong>In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
@@ -544,7 +544,7 @@ take' _ _      = die "won't  happen"</div>
 </div>
 
 <div id="Drop" class="hwex">
-<br /><strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>'s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.
+<p><br /><strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>'s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.</p>
 <br /><br />
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
@@ -564,7 +564,7 @@ test4 = drop 1 ["cat", "dog", "mouse"]</div>
 </div>
 
 <div id="Take it easy" class="hwex">
-<br /><strong>Exercise: (Take it easy): </strong>The version <code>take'</code> above is too restrictive; it insists that the list actually have at least <code>n</code> elements. Modify the signature for the <em>real</em> <code>take</code> function so that the code below is accepted by LiquidHaskell.
+<p><br /><strong>Exercise: (Take it easy): </strong>The version <code>take'</code> above is too restrictive; it insists that the list actually have at least <code>n</code> elements. Modify the signature for the <em>real</em> <code>take</code> function so that the code below is accepted by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
@@ -633,7 +633,7 @@ snd (_, y) = y</code></pre>
 </div>
 
 <div id="QuickSort" class="hwex">
-<br /><strong>Exercise: (QuickSort): </strong>Use <code>partition</code> to implement <code>quickSort</code>.
+<p><br /><strong>Exercise: (QuickSort): </strong>Use <code>partition</code> to implement <code>quickSort</code>.</p>
 <br /><br />
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
@@ -794,7 +794,7 @@ dotProduct x y = sum $ vElts $ vBin (*) x y</div>
 </div>
 
 <div id="Vector Constructor" class="hwex">
-<br /><strong>Exercise: (Vector Constructor): </strong>Complete the <em>specification</em> and <em>implementation</em> of <code>vecFromList</code> which <em>creates</em> a <code>Vector</code> from a plain list.
+<p><br /><strong>Exercise: (Vector Constructor): </strong>Complete the <em>specification</em> and <em>implementation</em> of <code>vecFromList</code> which <em>creates</em> a <code>Vector</code> from a plain list.</p>
 <br /><br />
 </div>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
@@ -815,7 +815,7 @@ test6  = dotProduct vx vy    -- should be accepted by LH
 </div>
 
 <div id="Flatten" class="hwex">
-<br /><strong>Exercise: (Flatten): </strong>Write a function to <code>flatten</code> a nested <code>Vector</code>.
+<p><br /><strong>Exercise: (Flatten): </strong>Write a function to <code>flatten</code> a nested <code>Vector</code>.</p>
 <br /><br />
 </div>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
@@ -915,7 +915,7 @@ ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
 </div>
 
 <div id="Legal Matrix" class="hwex">
-<br /><strong>Exercise: (Legal Matrix): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so that they are legal matrices accepted by LiquidHaskell.
+<p><br /><strong>Exercise: (Legal Matrix): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so that they are legal matrices accepted by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
@@ -936,7 +936,7 @@ bad2 = M 2 3 (V 2 [ V 2 [1, 2]
 </div>
 
 <div id="Matrix Constructor" class="hwex">
-<br /><strong>Exercise: (Matrix Constructor): </strong>Write a function to construct a <code>Matrix</code> from a nested list.
+<p><br /><strong>Exercise: (Matrix Constructor): </strong>Write a function to construct a <code>Matrix</code> from a nested list.</p>
 <br /><br />
 </div>
 <div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
@@ -960,7 +960,7 @@ matFromList xss@(xs:_)
 </div>
 
 <div id="Refined Matrix Constructor" class="hwex">
-<br /><strong>Exercise: (Refined Matrix Constructor): </strong>Refine the specification for <code>matFromList</code> so that the following is accepted by LiquidHaskell.
+<p><br /><strong>Exercise: (Refined Matrix Constructor): </strong>Refine the specification for <code>matFromList</code> so that the following is accepted by LiquidHaskell.</p>
 <br /><br />
 </div>
 <div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
@@ -1016,7 +1016,7 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
 </div>
 
 <div id="Matrix Transpose" class="hwex">
-<br /><strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don't.
+<p><br /><strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don't.</p>
 <br /><br />
 </div>
 <div id="program-pane-43" class="welleditor" style="background:#fff; position:relative">
@@ -1067,7 +1067,7 @@ txgo c r rows = undefined</div>
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

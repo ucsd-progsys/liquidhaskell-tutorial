@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -483,7 +483,7 @@ topEval     = eval emp</div>
 </div>
 
 <div id="Wellformedness Check" class="hwex">
-<br /><strong>Exercise: (Wellformedness Check): </strong>Complete the definition of the below function which <em>checks</em> if an <code>Expr</code> is well formed before <code>eval</code>uating it:
+<p><br /><strong>Exercise: (Wellformedness Check): </strong>Complete the definition of the below function which <em>checks</em> if an <code>Expr</code> is well formed before <code>eval</code>uating it:</p>
 <br /><br />
 </div>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
@@ -523,7 +523,7 @@ evalAny g e
 </div>
 
 <div id="Closures" class="hwex">
-<br /><strong>Exercise: (Closures): </strong>Extend the language above to include functions. That is, extend <code>Expr</code> as below, (and <code>eval</code> and <code>free</code> respectively.)
+<p><br /><strong>Exercise: (Closures): </strong>Extend the language above to include functions. That is, extend <code>Expr</code> as below, (and <code>eval</code> and <code>free</code> respectively.)</p>
 <br /><br />
 </div>
 <pre class="spec"><code>data Expr = ... | Fun Var Expr | App Expr Expr</code></pre>
@@ -571,7 +571,7 @@ keys (Node k _ l r) = ks `union` kl `union` kr
 
 <p>Armed with the basic type and measure definition, we can start to fill in the operations for <code>Maps</code>.</p>
 <div id="Empty Maps" class="hwex">
-<br /><strong>Exercise: (Empty Maps): </strong>To make sure you are following, fill in the definition for an <code>emp</code>ty Map:
+<p><br /><strong>Exercise: (Empty Maps): </strong>To make sure you are following, fill in the definition for an <code>emp</code>ty Map:</p>
 <br /><br />
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
@@ -587,7 +587,7 @@ emp     = undefined</div>
 </div>
 
 <div id="Insert" class="hwex">
-<br /><strong>Exercise: (Insert): </strong>To add a key <code>k'</code> to a <code>Map</code> we recursively traverse the <code>Map</code> zigging <code>left</code> or <code>right</code> depending on the result of comparisons with the keys along the path. Unfortunately, the version below has an (all too common!) bug, and hence, is <em>rejected</em> by LiquidHaskell. Find and fix the bug so that the function is verified.
+<p><br /><strong>Exercise: (Insert): </strong>To add a key <code>k'</code> to a <code>Map</code> we recursively traverse the <code>Map</code> zigging <code>left</code> or <code>right</code> depending on the result of comparisons with the keys along the path. Unfortunately, the version below has an (all too common!) bug, and hence, is <em>rejected</em> by LiquidHaskell. Find and fix the bug so that the function is verified.</p>
 <br /><br />
 </div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
@@ -698,7 +698,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
 <p><br /><strong>Ghost Values</strong> This technique of materializing auxiliary facts via <em>ghost values</em> is a well known idea in program verification. Usually, one has to take care to ensure that ghost computations do not interfere with the regular computations. If we had to actually <em>execute</em> <code>lemma_notMem</code> it would wreck the efficient logarithmic lookup time, assuming we kept the trees <a href="#avltrees">balanced</a>, as we would traverse the <em>entire</em> tree instead of just the short path to a node. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <p><br /><strong>Laziness</strong> comes to our rescue: as the ghost value is (trivially) not needed, it is never computed. In fact, it is straightforward to entirely <em>erase</em> the call in the compiled code, which lets us freely <code>assert</code> such <code>lemma</code>s to carry out proofs, without paying any runtime penalty. In an eager language we would have to do a bit of work to specifically mark the computation as a ghost or <a href="proof-irrelevance">irrelevant</a> but in the lazy setting we get this for free.</p>
 <div id="Membership Test" class="hwex">
-<br /><strong>Exercise: (Membership Test): </strong>Capisce? Fix the definition of <code>mem</code> so that it verifiably implements the given signature.
+<p><br /><strong>Exercise: (Membership Test): </strong>Capisce? Fix the definition of <code>mem</code> so that it verifiably implements the given signature.</p>
 <br /><br />
 </div>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
@@ -719,7 +719,7 @@ mem _ Tip     = False</div>
 </div>
 
 <div id="Fresh" class="hwex">
-<br /><strong>Exercise: (Fresh): </strong>To make sure you really understand this business of ghosts values and proofs, complete the implementation of the following function which returns a <code>fresh</code> integer that is <em>distinct</em> from all the values in its input list:
+<p><br /><strong>Exercise: (Fresh): </strong>To make sure you really understand this business of ghosts values and proofs, complete the implementation of the following function which returns a <code>fresh</code> integer that is <em>distinct</em> from all the values in its input list:</p>
 <br /><br />
 </div>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
@@ -775,7 +775,7 @@ elems (x:xs) = (singleton x) `union` (elems xs)</div>
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">
