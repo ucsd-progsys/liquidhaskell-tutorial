@@ -3,11 +3,13 @@ Logic & SMT
 
 \begin{comment}
 \begin{code}
+{-@ LIQUID "--diff" @-}
+
 module Logic where
 main :: IO ()
 main = return ()
 
-{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p =>  Prop q)} @-}
+{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p ==> Prop q)} @-}
 {-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
 {-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
 
@@ -17,6 +19,9 @@ ax3 :: Int -> Int -> Bool
 ax4 :: Int -> Int -> Bool
 ax5 :: Int -> Int -> Int -> Bool
 ax6 :: Int -> Int -> Bool
+
+ex1, ex2 :: Bool -> Bool
+ex3, ex3', ex4, ex6, ex7, exDeMorgan1, exDeMorgan2 :: Bool -> Bool -> Bool
 
 infixr 9 ==>
 
