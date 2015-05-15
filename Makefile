@@ -44,7 +44,6 @@ PANDOCHTML=pandoc \
 	 --variable=notitle \
 	 --highlight-style=tango
 
-PANDOCT=pandoc --from=markdown --to=html --standalone
 
 ####################################################################
 
