@@ -203,6 +203,7 @@ Hence we **strongly recommend** these over the command line option.
 
 + Emacs' `flycheck` plugin is described  [here][liquid-emacs]
 + Vim's `syntastic` checker is described [here][liquid-vim]
++ Spacemacs' `flycheck`  layer described [here][liquid-spacemacs]
 
 Sample Code
 -----------
