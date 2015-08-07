@@ -2,7 +2,7 @@
 
 ## Contents
 
-### Part I: Refinement Types
+#### Part I: Refinement Types
 
 1. [Introduction](src/01-intro.lhs)
 
@@ -14,7 +14,7 @@
 
 5. [Refining Data Types](src/05-datatypes.lhs)
 
-### Part II: Measures
+#### Part II: Measures
 
 6. [Propositions](src/06-measure-bool.lhs)
 
@@ -23,7 +23,7 @@
 8. [Sets](src/08-measure-sets.lhs)
 
 
-### Part III : Case Studies
+#### Part III : Case Studies
 
 9. [Case Study: Lazy Queue](src/09-case-study-lazy-queues.lhs)
 
@@ -37,14 +37,14 @@
 
 ## Deploy on Github
 
-### Prerequisites
+#### Prerequisites
 
 ~~~~~
 cabal install template
 cd .. && git clone git://github.com/ucsd-progsys/liquid-client.git
 ~~~~~
 
-### Actual deployment
+#### Actual deployment
 ~~~~~
 git checkout master
 make html
@@ -57,7 +57,7 @@ git push origin gh-pages
 
 ## Compiling .pdf
 
-### Prerequisites
+#### Prerequisites
 
 1. Install Haskell dependencies
 
@@ -70,7 +70,7 @@ cabal install pandoc template
    * texlive-latex-extra
    * texlive-fonts-extra
 
-### Producing .pdf Book
+#### Producing .pdf Book
 
 ~~~~~
 make pdf
@@ -82,7 +82,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 # TODO
 
-## Part IV : Abstract Refinements (TODO)
+#### Part IV : Abstract Refinements (TODO)
 
 10. Abstract Refinements I (code)
   + FLOPS/IHP talk sequence
@@ -97,7 +97,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
   + filter
   + state
 
-## Part V: Tips and Tricks (TODO)
+#### Part V: Tips and Tricks (TODO)
 
 13. Tips:
      + Inductive strengthening
@@ -110,7 +110,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
   + Copy from BLOG/PAPER sequence
   + HW Exercises
 
-## Extra Case Studies
+#### Extra Case Studies
 
 + Case Study 1: AlphaConvert (tests/pos/alphaconvert-List.hs)
 + Case Study 2: Kmeans
