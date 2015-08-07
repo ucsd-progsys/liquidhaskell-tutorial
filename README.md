@@ -59,13 +59,13 @@ git push origin gh-pages
 
 #### Prerequisites
 
-1. Install Haskell dependencies
+* Install Haskell dependencies
 
 ~~~~~
 cabal install pandoc template
 ~~~~~
 
-2. Install LaTeX dependencies:
+* Install LaTeX dependencies:
    * [Texlive](https://www.tug.org/texlive/)
    * texlive-latex-extra
    * texlive-fonts-extra
@@ -79,6 +79,10 @@ make pdf
 # Solutions to Exercises
 
 Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
+
+
+-----
+
 
 # TODO
 
