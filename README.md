@@ -33,19 +33,18 @@
 
 12. [Case Study: AVL Trees](src/12-case-study-AVL.lhs)
 
-## Building
+# Building
 
-### Deploy on Github
--------
+## Deploy on Github
 
-#### Prerequisites
+### Prerequisites
 
 ~~~~~
 cabal install template
 cd .. && git clone git://github.com/ucsd-progsys/liquid-client.git
 ~~~~~
 
-#### Actual deployment
+### Actual deployment
 ~~~~~
 git checkout master
 make html
@@ -56,10 +55,9 @@ git commit -a
 git push origin gh-pages
 ~~~~~
 
-### Compiling .pdf
--------
+## Compiling .pdf
 
-#### Prerequisites
+### Prerequisites
 
 1. Install Haskell dependencies
 
@@ -72,19 +70,19 @@ cabal install pandoc template
    * texlive-latex-extra
    * texlive-fonts-extra
 
-#### Producing .pdf Book
+### Producing .pdf Book
 
 ~~~~~
 make pdf
 ~~~~~
 
-## Solutions to Exercises
+# Solutions to Exercises
 
 Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
 
-## TODO
+# TODO
 
-### Part IV : Abstract Refinements (TODO)
+## Part IV : Abstract Refinements (TODO)
 
 10. Abstract Refinements I (code)
   + FLOPS/IHP talk sequence
@@ -99,7 +97,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
   + filter
   + state
 
-### Part V: Tips and Tricks (TODO)
+## Part V: Tips and Tricks (TODO)
 
 13. Tips:
      + Inductive strengthening
@@ -112,7 +110,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
   + Copy from BLOG/PAPER sequence
   + HW Exercises
 
-### Extra Case Studies
+## Extra Case Studies
 
 + Case Study 1: AlphaConvert (tests/pos/alphaconvert-List.hs)
 + Case Study 2: Kmeans
@@ -141,7 +139,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 + Web demo
 
-## Feedback and Gotchas
+# Feedback and Gotchas
 
 - hs sig vs. lh sig
 - module and import story
