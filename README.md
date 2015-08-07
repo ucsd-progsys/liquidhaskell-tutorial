@@ -1,14 +1,12 @@
 # LiquidHaskell Tutorial
 
-Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
-
 ## Contents
 
 ### Part I: Refinement Types
 
 1. [Introduction](src/01-intro.lhs)
 
-2. [Logic](src/02-logic.lhs) 
+2. [Logic](src/02-logic.lhs)
 
 3. [Refinement Types](src/03-basic.lhs)
 
@@ -35,9 +33,56 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 12. [Case Study: AVL Trees](src/12-case-study-AVL.lhs)
 
+## Building
+
+### Deploy on Github
+
+#### Prerequisites
+
+~~~~~
+cabal install template
+cd .. && git clone git://github.com/ucsd-progsys/liquid-client.git
+~~~~~
+
+#### Actual deployment
+~~~~~
+git checkout master
+make html
+cp -r _site ~/tmp/
+git checkout gh-pages
+cp -r ~/tmp/* .
+git commit -a
+git push origin gh-pages
+~~~~~
+
+### Compiling .pdf
+
+#### Prerequisites
+
+1. Install Haskell dependencies
+
+~~~~~
+cabal install pandoc template
+~~~~~
+
+2. Install LaTeX dependencies:
+   * [Texlive](https://www.tug.org/texlive/)
+   * texlive-latex-extra
+   * texlive-fonts-extra
+
+#### Producing .pdf Book
+
+~~~~~
+make pdf
+~~~~~
+
+## Solutions to Exercises
+
+Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
+
 ## TODO
 
-### Part IV : Abstract Refinements (TODO) 
+### Part IV : Abstract Refinements (TODO)
 
 10. Abstract Refinements I (code)
   + FLOPS/IHP talk sequence
@@ -50,12 +95,12 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 12. Abstract Refinements III (bounds)
   + compose
   + filter
-  + state 
+  + state
 
 ### Part V: Tips and Tricks (TODO)
 
 13. Tips:
-     + Inductive strengthening 
+     + Inductive strengthening
      + Materializing Proofs
      + Assumes/Dynamic Checking
 
@@ -67,7 +112,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 ### Extra Case Studies
 
-+ Case Study 1: AlphaConvert (tests/pos/alphaconvert-List.hs) 
++ Case Study 1: AlphaConvert (tests/pos/alphaconvert-List.hs)
 + Case Study 2: Kmeans
 
 
@@ -83,7 +128,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 - LH fix
   - allow using CoreToLogic definitions (e.g. member) in
     predicates/aliases not just other measures #332
-  
+
 - convert measure refinements into invariants, e.g.
 
   measure size :: [Int] -> Nat
@@ -92,10 +137,10 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 ? Intelligible parse errors
 
-+ Web demo 
++ Web demo
 
 Gotchas
-------- 
+-------
 
 - hs sig vs. lh sig
 - module and import story
@@ -172,25 +217,3 @@ is the correct answer.
        implement additional refinements. It "looks like Haskell" and
        allows the programmer more freedom in how they define their
        refinements
-
-## Deploy on Github
-
-### Prerequisites
-
-~~~~~
-cabal install template
-cd .. && git clone git://github.com/ucsd-progsys/liquid-client.git
-~~~~~
-
-### Actual deployment
-~~~~~
-git checkout master
-make html
-cp -r _site ~/tmp/
-git checkout gh-pages
-cp -r ~/tmp/* .
-git commit -a
-git push origin gh-pages
-~~~~~
-
-
