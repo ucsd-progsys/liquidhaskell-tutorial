@@ -8,8 +8,8 @@
 \usepackage{amssymb,amsmath}
 
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} 
-\usepackage{xspace} 
+\usepackage{fixltx2e}
+\usepackage{xspace}
 
 %% EXERCISE: NEW
 \usepackage{amsthm}
@@ -49,27 +49,27 @@
 
 
 
-%% % spec 
+%% % spec
 %% \DefineVerbatimEnvironment%
 %%   {spec}{Verbatim}
 %%   {}
 
-% error 
+% error
 \DefineVerbatimEnvironment%
   {liquiderror}{Verbatim}
   {}
 
-% shell 
+% shell
 \DefineVerbatimEnvironment%
   {shell}{Verbatim}
   {}
 
-% orig 
+% orig
 \DefineVerbatimEnvironment%
   {redverbatim}{Verbatim}
   {formatcom=\color{red}}
 
-% ghci 
+% ghci
 \DefineVerbatimEnvironment%
   {ghci}{Verbatim}
   {}
@@ -100,7 +100,7 @@
 \newcommand{\kvar}[1]{\color{kvcol}{\mathbf{\kappa_{#1}}}}
 \newcommand{\llen}[1]{\mathtt{llen}(#1)}
 
-  
+
 %% \newcounter{exccounter}
 %% \newenvironment{Exercise}{
 %% \bigskip\noindent
@@ -129,7 +129,7 @@
   \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \renewcommand\allcapsspacing[1]{{\addfontfeature{LetterSpace=15}#1}}
   \renewcommand\smallcapsspacing[1]{{\addfontfeature{LetterSpace=10}#1}}
-  
+
 \fi
 
 \usepackage{natbib}
@@ -164,6 +164,10 @@ $endif$
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
+
+% Fix tightlist pandoc error. See issue #16
+\def\tightlist{}
+
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
@@ -234,8 +238,8 @@ $endfor$
 
 \usepackage{inconsolata}
 
-% \newcommand\footnotetext[1]{#1} 
-% \newcommand\myfootnote[1]{\footnotetext{#1}} 
+% \newcommand\footnotetext[1]{#1}
+% \newcommand\myfootnote[1]{\footnotetext{#1}}
 
 
 \input{templates/haskellListings}
