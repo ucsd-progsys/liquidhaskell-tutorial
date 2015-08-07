@@ -36,6 +36,7 @@
 ## Building
 
 ### Deploy on Github
+-------
 
 #### Prerequisites
 
@@ -56,6 +57,7 @@ git push origin gh-pages
 ~~~~~
 
 ### Compiling .pdf
+-------
 
 #### Prerequisites
 
@@ -139,8 +141,7 @@ Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liqui
 
 + Web demo
 
-Gotchas
--------
+## Feedback and Gotchas
 
 - hs sig vs. lh sig
 - module and import story
