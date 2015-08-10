@@ -45,28 +45,34 @@ right tree to verify this to please LH like I
 did with `quickSort`, but I can't imagine that
 is the correct answer.
 
+- in addition to the usual syntax:
 
- - in addition to the usual syntax:
 ```
      {-@ unsafeLookup :: n:Nat ->  {v:Vector a | n < (vlen v)} -> a @-}
 ```
-     - could we get a "function" syntax:
+
+- could we get a "function" syntax:
+
 ```
      {-@ unsafeLookup :: n:Nat ->  v:Vector a -> a
          unsafeLookup n v = n < vlen v @-}
 ```
-         ...or...
+
+...or...
+
 ```
      {-@ unsafeLookup :: n:Int -> v:Vector a ->
          unsafeLookup n v = n >= 0 && n < vlen v @-}
 ```
-         ...or...
+
+...or...
+
 ```
      {-@ unsafeLookup :: n:Int -> {v:Vector a | n < (vlen v)} -> a
          unsafeLookup n v = n >= 0 @-}
 ```
-     - the "function" could take as arguments symbols that were bound
-       in the "signature." It could take a partial specification and
-       implement additional refinements. It "looks like Haskell" and
-       allows the programmer more freedom in how they define their
-       refinements
+- the "function" could take as arguments symbols that were bound
+  in the "signature." It could take a partial specification and
+  implement additional refinements. It "looks like Haskell" and
+  allows the programmer more freedom in how they define their
+  refinements
