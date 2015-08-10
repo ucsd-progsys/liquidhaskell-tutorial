@@ -76,14 +76,14 @@ cabal install pandoc template
 make pdf
 ~~~~~
 
-# Solutions to Exercises
+## Solutions to Exercises
 
 Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
 
-# TODO
+## TODO
 
-A work list of TODO items can be found in the [bug tracker](https://github.com/ucsd-progsys/liquidhaskell-tutorial/issues/19
+A work list of TODO items can be found in the [bug tracker](https://github.com/ucsd-progsys/liquidhaskell-tutorial/issues/19)
 
-# Feedback and Gotchas
+## Feedback and Gotchas
 
 Editing feedback and various gotchas can be found in [feedback.md](feedback.md)
