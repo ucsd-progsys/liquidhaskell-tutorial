@@ -61,7 +61,7 @@ is the correct answer.
 ...or...
 
 ```
-     {-@ unsafeLookup :: n:Int -> v:Vector a ->
+     {-@ unsafeLookup :: n:Int -> v:Vector a -> a
          unsafeLookup n v = n >= 0 && n < vlen v @-}
 ```
 
