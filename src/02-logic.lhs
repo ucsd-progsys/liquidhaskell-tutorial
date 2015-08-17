@@ -1,3 +1,4 @@
+
 Logic & SMT
 ===========
 
@@ -189,7 +190,7 @@ assignment. For example, the predicate
 
 \noindent
 evaluates to `False` given the above assignment but evaluates to `True`
-under the assignment 
+under the assignment
 
 ~~~~~{.spec}
     x := 10
