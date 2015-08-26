@@ -386,10 +386,10 @@ ax0 = 1 + 1 == 2
 \end{code}
 
 \noindent Again, a predicate that evaluates to `False`
-is not valid:
+is *not* valid:
 
 \begin{code}
-{-@ ax0 :: TRUE @-}
+{-@ ax0' :: TRUE @-}
 ax0' = 1 + 1 == 3
 \end{code}
 
