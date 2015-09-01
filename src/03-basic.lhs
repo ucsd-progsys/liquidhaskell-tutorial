@@ -30,7 +30,9 @@ the underlying values.
 Defining Types {#definetype}
 --------------
 
-Let us define some refinement types:
+Let us define some refinement types:^[You can read the type of `Zero` as:
+"`v` is an `Int` *such that* `v` equals `0`" and `NonZero` as : "`v` is
+an `Int` *such that* `v` does not equal `0`"]
 
 \begin{code}
 {-@ type Zero    = {v:Int | v == 0} @-}
@@ -43,7 +45,7 @@ that are equal to `0`, that is, the singleton set containing just `0`, and
 `NonZero` describes the set of `Int` values that are *not* equal to `0`,
 that is, the set `{1, -1, 2, -2, ...}` and so on.
 ^[We will use `@`-marked comments to write refinement
-type annotations the Haskell source file, making these
+type annotations in the Haskell source file, making these
 types, quite literally, machine-checked comments!]
 
 \newthought{To use} these types we can write:
@@ -137,7 +139,7 @@ zero'''     = zero
 \end{code}
 
 \newthought{Subtyping and Implication}
-`Zero` is the most precise type for `0::Int`, as it is *subtype* of `Nat`,
+`Zero` is the most precise type for `0::Int`, as it is a *subtype* of `Nat`,
 `Even` and `Lt100`. This is because the set of values defined by `Zero`
 is a *subset* of the values defined by `Nat`, `Even` and `Lt100`, as
 the following *logical implications* are valid:
@@ -146,25 +148,36 @@ the following *logical implications* are valid:
 + $v = 0 \Rightarrow v \ \mbox{mod}\ 2 = 0$
 + $v = 0 \Rightarrow v < 100$
 
+\begin{comment}
+Chris Tetreault: I believe that this whole section (within this comment block)
+can be eliminated. It should be clear to anybody who's still following at this
+point that if I can make a small boolean expression (Nat, Even, Lt100), that
+I can make a massive boolean expression (Nat && Even && Lt100). I fell that this
+section just uses a bunch of math runes to confuse us mere mortals, but doesn't
+really add much.
+
 \newthought{Composing Refinements}
 If $P \Rightarrow Q$ and $P \Rightarrow R$ then $P \Rightarrow Q \wedge R$.
 Thus, when a term satisfies multiple refinements, we can compose those
 refinements with `&&`:
 
-\begin{comment}
-ES: this is confusingly worded
-\end{comment}
-
 \begin{code}
 {-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
 zero''''     = 0
 \end{code}
+\end{comment}
+
+\begin{comment}
+ES: this is confusingly worded
+\end{comment}
 
 \newthought{In Summary} the key points about refinement types are:
 
 1. A refinement type is just a type *decorated* with logical predicates.
 2. A term can have *different* refinements for different properties.
-3. When we *erase* the predicates we get the standard Haskell types.^[Dually, a standard Haskell type, has the trivial refinement `true`. For example, `Int` is equivalent to `{v:Int|true}`.]
+3. When we *erase* the predicates we get the standard Haskell types.^[Dually, a
+standard Haskell type has the trivial refinement `true`. For example, `Int` is
+equivalent to `{v:Int|true}`.]
 
 Writing Specifications
 ----------------------
