@@ -470,7 +470,7 @@ data BST a where
 badBST =  Node 66
              (Node 4
                  (Node 1 Leaf Leaf)
-                 (Node 29 Leaf Leaf))  -- Out of order, rejected
+                 (Node 69 Leaf Leaf))  -- Out of order, rejected
              (Node 99
                  (Node 77 Leaf Leaf)
                  Leaf)
