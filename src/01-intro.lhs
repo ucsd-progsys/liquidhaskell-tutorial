@@ -1,3 +1,4 @@
+
 Introduction {#intro}
 ============
 
@@ -50,7 +51,7 @@ with modern languages like Go, Python, JavaScript and Lua; and of
 course, they're widely used in Haskell too.
 
 ~~~~~{.ghci}
-ghci> :m +Data.Map 
+ghci> :m +Data.Map
 ghci> let m = fromList [ ("haskell", "lazy")
                        , ("ocaml"  , "eager")]
 
@@ -75,7 +76,7 @@ built on a foundation of machine code, or at the very least, `C`.
 Consider the ubiquitous `vector` library:
 
 ~~~~~{.ghci}
-ghci> :m +Data.Vector 
+ghci> :m +Data.Vector
 ghci> let v = fromList ["haskell", "ocaml"]
 ghci> unsafeIndex v 0
 "haskell"
@@ -105,7 +106,7 @@ Finally, for certain kinds of programs, there is a fate worse than death.
 is used, for example, to build web services.
 
 ~~~~~{.ghci}
-ghci> :m + Data.Text Data.Text.Unsafe 
+ghci> :m + Data.Text Data.Text.Unsafe
 ghci> let t = pack "Voltage"
 ghci> takeWord16 5 t
 "Volta"
@@ -139,7 +140,7 @@ there are fast *decision procedures* called SMT solvers.
 \newthought{By combining types with predicates} you can specify *contracts*
 which describe valid inputs and outputs of functions. The refinement
 type system *guarantees at compile-time* that functions adhere to
-their contracts. That is, you can rest assured that 
+their contracts. That is, you can rest assured that
 the above calamities *cannot occur at run-time*.
 
 \newthought{LiquidHaskell} is a Refinement Type Checker for Haskell, and in
@@ -180,7 +181,7 @@ solver, e.g. one of
 + [Z3][z3]
 + [CVC4][cvc4]
 + [MathSat][mathsat]
-   
+
 \newthought{To Install} LiquidHaskell, just do:
 
 ~~~~~{.sh}
@@ -223,5 +224,3 @@ grateful for feedback and suggestions, ideally via pull-requests on github.
 
 
 \noindent Lets begin!
-
-

@@ -56,8 +56,8 @@ eeks      = [ok, yup, nono]
 \end{code}
 
 If we try to *run* the above, we get a nasty shock: an
-exception that says we're trying to look up `twoLangs`
-at index `3` whereas the size of `twoLangs` is just `2`.
+exception that says we're trying to look up `unsafeTwoLangs`
+at index `3` whereas the size of `unsafeTwoLangs` is just `2`.
 
 ~~~~~{.sh}
 Prelude> :l 03-poly.lhs
@@ -252,8 +252,7 @@ function that adds up the values of the elements of an
 `Int` vector.
 
 \begin{code}
--- >>> vectorSum (fromList [1, -2, 3])
--- 2
+-- For example: vectorSum (fromList [1, -2, 3]) = 2
 vectorSum         :: Vector Int -> Int
 vectorSum vec     = go 0 0
   where
@@ -273,8 +272,7 @@ Write a variant of the above function that computes the
 </div>
 
 \begin{code}
--- >>> absoluteSum (fromList [1, -2, 3])
--- 6
+-- For example: absoluteSum (fromList [1, -2, 3]) = 6
 {-@ absoluteSum :: Vector Int -> Nat @-}
 absoluteSum     = undefined
 \end{code}
@@ -284,7 +282,7 @@ absoluteSum     = undefined
 LiquidHaskell verifies `vectorSum` -- or, to be precise,
 the safety of the vector accesses `vec ! i`. The verification
 works out because LiquidHaskell is able to
-*automatically infer* ^[In your editor, click on `go` to see the inferred type.]
+*automatically infer* the type of `go`:
 
 ~~~~~{.spec}
 go :: Int -> {v:Int | 0 <= v && v <= sz} -> Int
@@ -354,8 +352,7 @@ When you are done, what is the type that is inferred for `body`?
 </div>
 
 \begin{code}
--- >>> absoluteSum' (fromList [1, -2, 3])
--- 6
+-- For example: absoluteSum' (fromList [1, -2, 3]) = 6
 {-@ absoluteSum' :: Vector Int -> Nat @-}
 absoluteSum' vec = loop 0 n 0 body
   where
@@ -372,8 +369,8 @@ accepts it. </div>
 \vspace{1.0in}
 
 \begin{code}
--- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
--- 32
+-- For example:
+-- dotProduct (fromList [1,2,3]) (fromList [4,5,6]) = 32
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
 dotProduct x y = loop 0 sz 0 body
   where
@@ -407,7 +404,7 @@ is *not* indexed.
 Let's write a function to compute a sparse product
 
 \begin{code}
-{-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+{-@ sparseProduct :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct x y   = go 0 y
   where
     go n ((i,v):y') = go (n + (x!i) * v) y'
@@ -431,7 +428,7 @@ foldl' :: (a -> b -> a) -> a -> [b] -> a
 as we go along
 
 \begin{code}
-{-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+{-@ sparseProduct' :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct' x y  = foldl' body 0 y
   where
     body sum (i, v) = sum + (x ! i)  * v
