@@ -140,7 +140,7 @@ For example, we can define `Vector`s of a given size `N` as:
 {-@ type VectorN a N = {v:Vector a | vlen v == N} @-}
 \end{code}
 
-\noindent and now use this to make `twoLangs`, as defined above, safe:
+\noindent and now use this to make `unsafeTwoLangs`, as defined above, safe:
 
 \begin{code}
 {-@ twoLangs :: VectorN String 2 @-}
