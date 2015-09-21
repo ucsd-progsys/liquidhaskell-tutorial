@@ -252,7 +252,8 @@ function that adds up the values of the elements of an
 `Int` vector.
 
 \begin{code}
--- For example: vectorSum (fromList [1, -2, 3]) = 2
+-- >>> vectorSum (fromList [1, -2, 3])
+-- 2
 vectorSum         :: Vector Int -> Int
 vectorSum vec     = go 0 0
   where
@@ -272,7 +273,8 @@ Write a variant of the above function that computes the
 </div>
 
 \begin{code}
--- For example: absoluteSum (fromList [1, -2, 3]) = 6
+-- >>> absoluteSum (fromList [1, -2, 3])
+-- 6
 {-@ absoluteSum :: Vector Int -> Nat @-}
 absoluteSum     = undefined
 \end{code}
@@ -352,7 +354,8 @@ When you are done, what is the type that is inferred for `body`?
 </div>
 
 \begin{code}
--- For example: absoluteSum' (fromList [1, -2, 3]) = 6
+-- >>> absoluteSum' (fromList [1, -2, 3])
+-- 6
 {-@ absoluteSum' :: Vector Int -> Nat @-}
 absoluteSum' vec = loop 0 n 0 body
   where
@@ -369,8 +372,8 @@ accepts it. </div>
 \vspace{1.0in}
 
 \begin{code}
--- For example:
--- dotProduct (fromList [1,2,3]) (fromList [4,5,6]) = 32
+-- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
+-- 32
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
 dotProduct x y = loop 0 sz 0 body
   where
