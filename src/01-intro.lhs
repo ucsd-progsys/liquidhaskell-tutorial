@@ -34,42 +34,13 @@ ghci> average [10, 20, 30, 40]
 ~~~~~
 
 However, if we call it with an empty list, we get a rather unpleasant crash:
-^[We could write `average` more *defensively*, returning
-a `Maybe` or `Either` value. However, this merely kicks
-the can down the road. Ultimately, we will want to extract
-the `Int` from the `Maybe` and if the inputs were invalid
-to start with, then at that point we'd be stuck.]
-
-\begin{comment}
-CHRIS: I don't believe that this argument holds water. If we were to code
-more defensively using a Maybe, then we'd completely avoid this crash;
-assuming you didn't do something silly like:
-
-\begin{code}
-maybeAverage :: [Int] -> Maybe Int
-maybeAverage l = Just $ average l
-\end{code}
-
-... which would just kick the can down the road. However, if we did something
-like this:
-
-\begin{code}
-maybeAverage' :: [Int] -> Maybe Int
-maybeAverage' [] = Nothing
-maybeAverage' l = Just $ average l
-\end{code}
-
-... then we'd be good. I believe a better argument would be against the code
-bloat associated with this, and the cost of unwraping the Maybe:
-
-We could write `average` more *defensively*, returning a `Maybe` or `Either`
+^[We could write `average` more *defensively*, returning a `Maybe` or `Either`
 value. However, this added safety comes with a price. The caller of this new
 `average` function must write additional code to unwrap the optional type,
 adding considerable amounts of code that may be unnecessary if it is easy to
 guarantee that the empty list will never be passed into `average`. Additionally,
 the overhead of always performing this check may be unacceptable in high
-performance code.
-\end{comment}
+performance code.]
 
 ~~~~~{.ghci}
 ghci> average []
@@ -91,14 +62,8 @@ ghci> m ! "haskell"
 ~~~~~
 
 Alas, maps are another source of vexing errors that are tickled
-when we try to find the value of an absent key: ^[Again, one could
-use a `Maybe` but its just deferring the inevitable.]
-
-\begin{comment}
-CHRIS: Same as before. Proposed change:
-
-Again, one could use a `Maybe`, but as before they would just be trading
-one problem for another.
+when we try to find the value of an absent key: ^[Again, one could use a
+`Maybe`, but as before they would just be trading one problem for another.]
 
 ~~~~~{.ghci}
 ghci> m ! "javascript"
