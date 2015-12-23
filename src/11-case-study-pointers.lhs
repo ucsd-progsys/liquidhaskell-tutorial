@@ -91,7 +91,7 @@ machine silently reveals (or more colorfully, *bleeds*) the contents
 of adjacent memory or if we use an *invalid* prefix:
 
 ~~~~~{.spec}
-ghci> heartBleed ex 30
+ghci> chop' ex 30
 "Ranjit Loves Burritos\NUL\201\&1j\DC3\SOH\NUL"
 ~~~~~
 
