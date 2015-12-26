@@ -1,3 +1,4 @@
+
 Case Study: AVL Trees {#case-study-avltree}
 ================================
 
