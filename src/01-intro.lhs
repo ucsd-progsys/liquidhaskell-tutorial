@@ -1,3 +1,4 @@
+
 Introduction {#intro}
 ============
 
@@ -33,11 +34,13 @@ ghci> average [10, 20, 30, 40]
 ~~~~~
 
 However, if we call it with an empty list, we get a rather unpleasant crash:
-^[We could write `average` more *defensively*, returning
-a `Maybe` or `Either` value. However, this merely kicks
-the can down the road. Ultimately, we will want to extract
-the `Int` from the `Maybe` and if the inputs were invalid
-to start with, then at that point we'd be stuck.]
+^[We could write `average` more *defensively*, returning a `Maybe` or `Either`
+value. However, this added safety comes with a price. The caller of this new
+`average` function must write additional code to unwrap the optional type,
+adding considerable amounts of code that may be unnecessary if it is easy to
+guarantee that the empty list will never be passed into `average`. Additionally,
+the overhead of always performing this check may be unacceptable in high
+performance code.]
 
 ~~~~~{.ghci}
 ghci> average []
@@ -50,7 +53,7 @@ with modern languages like Go, Python, JavaScript and Lua; and of
 course, they're widely used in Haskell too.
 
 ~~~~~{.ghci}
-ghci> :m +Data.Map 
+ghci> :m +Data.Map
 ghci> let m = fromList [ ("haskell", "lazy")
                        , ("ocaml"  , "eager")]
 
@@ -59,8 +62,8 @@ ghci> m ! "haskell"
 ~~~~~
 
 Alas, maps are another source of vexing errors that are tickled
-when we try to find the value of an absent key: ^[Again, one could
-use a `Maybe` but its just deferring the inevitable.]
+when we try to find the value of an absent key: ^[Again, one could use a
+`Maybe`, but as before they would just be trading one problem for another.]
 
 ~~~~~{.ghci}
 ghci> m ! "javascript"
@@ -75,7 +78,7 @@ built on a foundation of machine code, or at the very least, `C`.
 Consider the ubiquitous `vector` library:
 
 ~~~~~{.ghci}
-ghci> :m +Data.Vector 
+ghci> :m +Data.Vector
 ghci> let v = fromList ["haskell", "ocaml"]
 ghci> unsafeIndex v 0
 "haskell"
@@ -105,7 +108,7 @@ Finally, for certain kinds of programs, there is a fate worse than death.
 is used, for example, to build web services.
 
 ~~~~~{.ghci}
-ghci> :m + Data.Text Data.Text.Unsafe 
+ghci> :m + Data.Text Data.Text.Unsafe
 ghci> let t = pack "Voltage"
 ghci> takeWord16 5 t
 "Volta"
@@ -136,10 +139,10 @@ and outputs of functions, values held inside containers, and
 so on. These predicates are drawn from special *logics* for which
 there are fast *decision procedures* called SMT solvers.
 
-\newthought{By combining types with predicates} you can specify *contracts*
+By combining types with *predicates* you can specify *contracts*
 which describe valid inputs and outputs of functions. The refinement
 type system *guarantees at compile-time* that functions adhere to
-their contracts. That is, you can rest assured that 
+their contracts. That is, you can rest assured that
 the above calamities *cannot occur at run-time*.
 
 \newthought{LiquidHaskell} is a Refinement Type Checker for Haskell, and in
@@ -159,7 +162,7 @@ Do you
 
 * know a bit of basic arithmetic and logic?
 * know the difference between a `nand` and an `xor`?
-* know any typed languages e.g. ML, Haskell, Scala, F# or (Typed) Racket?
+* know any typed languages e.g. ML, Haskell, Scala, F#, (Typed) Racket, or even Java?
 * know what `forall a. a -> a` means?
 * like it when your code editor politely points out infinite loops?
 * like your programs to not have bugs?
@@ -180,14 +183,17 @@ solver, e.g. one of
 + [Z3][z3]
 + [CVC4][cvc4]
 + [MathSat][mathsat]
-   
+
 \newthought{To Install} LiquidHaskell, just do:
 
 ~~~~~{.sh}
 $ cabal install liquidhaskell
 ~~~~~
 
-\newthought{Command Line} execution simply requires you type:
+\newthought{Command Line} execution simply requires you type:^[By default,
+Liquid Haskell expects `z3` to be on the `PATH`. If it is not, or if you
+would like to use a different solver, you should use the `--smtsolver=[SOLVER]`
+command line argument]
 
 ~~~~~{.sh}
 $ liquid /path/to/file.hs
@@ -223,5 +229,3 @@ grateful for feedback and suggestions, ideally via pull-requests on github.
 
 
 \noindent Lets begin!
-
-
