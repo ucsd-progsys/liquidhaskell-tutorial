@@ -21,7 +21,7 @@ module VectorBounds
 
 import Prelude      hiding (head, abs, length)
 import Data.List    (foldl')
-import Data.Vector  hiding (head, foldl') 
+import Data.Vector  hiding (head, foldl')
 
 absoluteSum'     :: Vector Int -> Int
 dotProduct     :: Vector Int -> Vector Int -> Int
@@ -80,7 +80,7 @@ the way, learn how it reasons about *recursion*,
 Specification: Vector Bounds {#vectorbounds}
 --------------------------------------------
 
-First, let's see how to *specify* array bounds safety by *refining* 
+First, let's see how to *specify* array bounds safety by *refining*
 the types for the [key functions][vecspec] exported by `Data.Vector`,
 i.e. how to
 
@@ -94,7 +94,11 @@ i.e. how to
 We can write specifications for imported modules -- for which we
 *lack* the code -- either directly in the client's source file or
 better, in `.spec` files which can be reused across multiple client
-modules. For example, we can write specifications for `Data.Vector`
+modules.
+
+\newthought{Include} directories can be specified when checking a file.
+Suppose we want to check some file `target.hs` that imports an external
+dependency `Data.Vector`. We can write specifications for `Data.Vector`
 inside `include/Data/Vector.spec` which contains:
 
 ~~~~~{.spec}
@@ -108,6 +112,16 @@ assume length :: x:Vector a -> {v:Int | v = vlen x}
 assume (!) :: x:Vector a -> {v:Nat | v < vlen x} -> a
 ~~~~~
 </div>
+
+Using this new specification is now a simple matter of telling LiquidHaskell
+to include this file:
+
+~~~~~{.sh}
+$ liquid -i include/ target.hs
+~~~~~
+
+LiquidHaskell ships with specifications for `Prelude`, `Data.List`,
+and `Data.Vector` which it includes by default.
 
 \newthought{Measures} are used to define *properties* of
 Haskell data values that are useful for specification and
@@ -126,7 +140,7 @@ size of the input vector `x`.
 signature for `length` names the input with the binder `x` that then
 appears in the output type to constrain the output `Int`. Similarly,
 the signature for `(!)` names the input vector `x` so that the index
-can be constrained to be valid for `x`.  Thus, dependency lets us 
+can be constrained to be valid for `x`.  Thus, dependency lets us
 write properties that connect *multiple* program values.
 
 \newthought{Aliases} are extremely useful for defining
@@ -164,7 +178,7 @@ Verification: Vector Lookup
 ---------------------------
 
 Let's try write some functions to sanity check the specifications.
-First, find the starting element -- or `head` of a `Vector` 
+First, find the starting element -- or `head` of a `Vector`
 
 \begin{code}
 head     :: Vector a -> a
@@ -177,12 +191,12 @@ When we check the above, we get an error:
      src/03-poly.lhs:127:23: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == ?a && VV == 0
-      
+
        not a subtype of Required type
          VV : Int | VV >= 0 && VV < vlen vec
-      
+
        In Context
-         VV  : Int | VV == ?a && VV == 0 
+         VV  : Int | VV == ?a && VV == 0
          vec : Vector a | 0 <= vlen vec
          ?a  : Int | ?a == (0  :  int)
 ~~~~~
@@ -192,7 +206,7 @@ as it is not between `0` and `vlen vec`. Say what? Well, what if
 `vec` had *no* elements! A formal verifier doesn't
 make *off by one* errors.
 
-\newthought{To Fix} the problem we can do one of two things. 
+\newthought{To Fix} the problem we can do one of two things.
 
 1. *Require* that the input `vec` be non-empty, or
 2. *Return* an output if `vec` is non-empty, or
@@ -214,7 +228,7 @@ the input `vec` is not empty.
 </div>
 
 \begin{code}
-head''     :: Vector a -> Maybe a 
+head''     :: Vector a -> Maybe a
 head'' vec = undefined
 \end{code}
 
@@ -237,9 +251,9 @@ check before the access.
 
 \begin{code}
 {-@ safeLookup :: Vector a -> Int -> Maybe a @-}
-safeLookup x i 
+safeLookup x i
   | ok        = Just (x ! i)
-  | otherwise = Nothing 
+  | otherwise = Nothing
   where
     ok        = undefined
 \end{code}
@@ -253,13 +267,13 @@ function that adds up the values of the elements of an
 
 \begin{code}
 -- >>> vectorSum (fromList [1, -2, 3])
--- 2 
-vectorSum         :: Vector Int -> Int 
+-- 2
+vectorSum         :: Vector Int -> Int
 vectorSum vec     = go 0 0
   where
-    go acc i 
+    go acc i
       | i < sz    = go (acc + (vec ! i)) (i + 1)
-      | otherwise = acc 
+      | otherwise = acc
     sz            = length vec
 \end{code}
 
@@ -317,7 +331,7 @@ loop lo hi base f =  go base lo
 We can now use `loop` to implement `vectorSum`:
 
 \begin{code}
-vectorSum'      :: Vector Int -> Int 
+vectorSum'      :: Vector Int -> Int
 vectorSum' vec  = loop 0 n 0 body
   where
     body i acc  = acc + (vec ! i)
@@ -330,7 +344,7 @@ vectorSum' vec  = loop 0 n 0 body
 loop :: lo:Nat -> hi:{Nat|lo <= hi} -> a -> (Btwn lo hi -> a -> a) -> a
 ~~~~~
 
-\noindent In english, the above type states that 
+\noindent In english, the above type states that
 
 - `lo` the loop *lower* bound is a non-negative integer
 - `hi` the loop *upper* bound is a greater than `lo`,
@@ -373,9 +387,9 @@ accepts it. </div>
 
 \begin{code}
 -- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
--- 32 
+-- 32
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
-dotProduct x y = loop 0 sz 0 body 
+dotProduct x y = loop 0 sz 0 body
   where
     sz         = length x
     body i acc = acc + (x ! i)  *  (y ! i)
@@ -396,7 +410,7 @@ as a list of index-value tuples:
 \noindent Implicitly, all indices *other* than those in the list
 have the value `0` (or the equivalent value for the type `a`).
 
-\newthought{The Alias} `SparseN` is just a 
+\newthought{The Alias} `SparseN` is just a
 shorthand for the (longer) type on the right, it does not
 *define* a new type. If you are familiar with the *index-style*
 length encoding e.g. as found in [DML][dml] or [Agda][agdavec],
@@ -409,8 +423,8 @@ Let's write a function to compute a sparse product
 \begin{code}
 {-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct x y   = go 0 y
-  where 
-    go n ((i,v):y') = go (n + (x!i) * v) y' 
+  where
+    go n ((i,v):y') = go (n + (x!i) * v) y'
     go n []         = n
 \end{code}
 
@@ -420,7 +434,7 @@ value of `i` is within the bounds of the vector `x`, thereby
 proving `x ! i` safe.
 
 \newthought{Folds}
-The sharp reader will have undoubtedly noticed that the sparse product 
+The sharp reader will have undoubtedly noticed that the sparse product
 can be more cleanly expressed as a [fold][foldl]:
 
 ~~~~~{.spec}
@@ -432,21 +446,21 @@ as we go along
 
 \begin{code}
 {-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
-sparseProduct' x y  = foldl' body 0 y   
-  where 
+sparseProduct' x y  = foldl' body 0 y
+  where
     body sum (i, v) = sum + (x ! i)  * v
 \end{code}
 
 \noindent
-LiquidHaskell digests this without difficulty. 
+LiquidHaskell digests this without difficulty.
 The main trick is in how the polymorphism of
-`foldl'` is instantiated. 
+`foldl'` is instantiated.
 
 1. GHC infers that at this site, the type variable `b` from the
-   signature of `foldl'` is instantiated to the Haskell type `(Int, a)`. 
+   signature of `foldl'` is instantiated to the Haskell type `(Int, a)`.
 
 2. Correspondingly, LiquidHaskell infers that in fact `b`
-   can be instantiated to the *refined* `(Btwn 0 v (vlen x), a)`. 
+   can be instantiated to the *refined* `(Btwn 0 v (vlen x), a)`.
 
 Thus, the inference mechanism saves us a fair bit of typing and
 allows us to reuse existing polymorphic functions over containers
@@ -462,5 +476,3 @@ specify and verify properties of recursive and polymorphic
 functions. Next, let's see how we can use LiquidHaskell to
 prevent the creation of illegal values by refining data
 type definitions.
-
-
