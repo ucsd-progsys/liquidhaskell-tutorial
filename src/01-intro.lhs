@@ -218,6 +218,12 @@ $ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/src
 ~~~~~
 
+If you'd like to copy and paste code snippets instead of cloning the repo, 
+note that you may need to pass `--no-termination` to `liquid`. (By 
+default, `liquid` tries to ensure that all code it examines will terminate.
+Some of the code in this tutorial is written in such a way that termination
+is not immediately obvious to `liquid`.)
+
 **Note:** This tutorial is a *work in progress*, and we will be **very**
 grateful for feedback and suggestions, ideally via pull-requests on github.
 
