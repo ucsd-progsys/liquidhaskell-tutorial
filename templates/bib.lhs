@@ -13,6 +13,7 @@
 [liquid-tutorial]: http://github.com/ucsd-progsys/liquidhaskell-tutorial.git 
 [liquid-emacs]:    https://github.com/ucsd-progsys/liquid-types.el
 [liquid-vim]:      https://github.com/ucsd-progsys/liquid-types.vim
+[liquid-vim]:      https://github.com/ucsd-progsys/liquid-types-spacemacs
 [z3]:              http://z3.codeplex.com/
 [cvc4]:            http://cvc4.cs.nyu.edu/ 
 [mathsat]:         http://mathsat.fbk.eu/download.html
