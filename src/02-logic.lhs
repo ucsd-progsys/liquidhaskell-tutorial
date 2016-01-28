@@ -1,3 +1,4 @@
+
 Logic & SMT
 ===========
 
@@ -40,8 +41,8 @@ As we shall see shortly, a refinement type is:
 Let us begin by quickly recalling what we mean by "logical predicates"
 in the remainder of this tutorial. ^[If you are comfortable with this material,
 e.g. if you know what the "S", "M" and "T" stand for in SMT, and what QF-UFLIA
-stands for i.e. the quantifier free theory of linear arithmetic and uninterpreted
-functions, then feel free skip to the next chapter.]
+stands for (i.e. the quantifier free theory of linear arithmetic and
+uninterpreted functions), then feel free skip to the next chapter.]
 To this end, we will describe *syntax*, that is, what predicates *look*
 like, and *semantics*, which is a fancy word for what predicates *mean*.
 
@@ -53,7 +54,8 @@ from a *restricted* subset of Haskell. In particular, the expressions are
 drawn from the following grammar comprising *constants*, *expressions* and
 *predicates*.
 
-\newthought{A Constant} `c` is simply one of the numeric values:
+\newthought{A Constant}^[When you see := you should read it as "is defined
+to be"] `c` is simply one of the numeric values:
 
 ~~~~~{.spec}
     c := 0, 1, 2, ...
@@ -76,7 +78,7 @@ over variables and constants and uninterpreted function applications.
        | e + e               -- addition
        | e - e               -- subtraction
        | c * e               -- linear multiply
-       | v e1 e2 ... en      -- unint. func. appl.
+       | v e1 e2 ... en      -- uninterpreted function application
 ~~~~~
 
 \newthought{Examples of Expressions} include the following:
@@ -129,8 +131,8 @@ Semantics {#semantics}
 The syntax of predicates tells us what they *look* like, that is, what we
 can *write down* as valid predicates. Next, let us turn our attention to
 what a predicate *means*. Intuitively, a predicate is just a Boolean valued
-Haskell function -- `&&`, `||`, `not` are the usual operators and `==>` and
-`<=>` are two special operators.
+Haskell function with `&&`, `||`, `not` being the usual operators and `==>` and
+`<=>` being two special operators.
 
 \newthought{The Implication} operator `==>` is equivalent to the Haskell
 function:
@@ -144,7 +146,8 @@ True  ==> False = False
 \end{code}
 
 \newthought{The If-and-only-if} operator `<=>` is equivalent to the
-Haskell function:
+Haskell function:^[An observant reader may notice that <=> is the same as
+== if the arguments are of type Bool]
 
 \begin{code}
 (<=>)  :: Bool -> Bool -> Bool
@@ -155,7 +158,7 @@ True  <=> False = False
 \end{code}
 
 \newthought{An Environment} is a mapping from variables to their
-Haskell types. For example, the environment `G` defined
+Haskell types. For example, let `G` be an environment defined as
 
 ~~~~~{.spec}
     x :: Int
@@ -164,7 +167,7 @@ Haskell types. For example, the environment `G` defined
 ~~~~~
 
 \noindent
-maps each variable `x`, `y` and `z` to the type `Int`.
+which maps each variable `x`, `y` and `z` to the type `Int`.
 
 
 \newthought{An Assignment} under an environment, is a mapping
@@ -190,11 +193,12 @@ assignment. For example, the predicate
 
 \noindent
 evaluates to `False` given the above assignment but evaluates to `True`
-under the assignment 
+under the assignment
 
 ~~~~~{.spec}
     x := 10
     y := 10
+    z := 20
 ~~~~~
 
 
@@ -245,7 +249,7 @@ specifications in roughly two steps.
 impossible to do so as there are usually infinitely many assignments
 once the predicates refer to integers or lists and so on.  Instead,
 the SMT solver uses a variety of sophisticated *symbolic algorithms*
-to deduce whether a predicate is valid or not. This somewhat magical
+to deduce whether a predicate is valid or not. This
 process is the result of decades of work in mathematical logic and
 decision procedures; the [Ph.D thesis of Greg Nelson][nelson-thesis]
 is an excellent place to learn more about these beautiful algorithms.
@@ -275,7 +279,8 @@ predicate is indeed valid or not.
 \newthought{Let `TRUE` be a refined type} for `Bool`
 valued expressions that *always* evaluate to `True`.
 Similarly, we can define `FALSE` for `Bool` valued
-expressions that *always* evaluate to `False`:
+expressions that *always* evaluate to `False`:^[This syntax will be discussed in
+greater detail in [soon](#propositions)]
 
 \begin{code}
 {-@ type TRUE  = {v:Bool | Prop v}       @-}
@@ -344,7 +349,7 @@ ex3' a b = (a || b) ==> a
 The following predicates are valid because they encode
 [modus ponens](http://en.wikipedia.org/wiki/Modus_ponens):
 if you know that `a` implies `b` and you know that `a` is
-true, then it must be that `b` is also true:
+true, then it must be the case that `b` is also true:
 
 \begin{code}
 {-@ ex6 :: Bool -> Bool -> TRUE @-}
@@ -387,10 +392,10 @@ ax0 = 1 + 1 == 2
 \end{code}
 
 \noindent Again, a predicate that evaluates to `False`
-is not valid:
+is *not* valid:
 
 \begin{code}
-{-@ ax0 :: TRUE @-}
+{-@ ax0' :: TRUE @-}
 ax0' = 1 + 1 == 3
 \end{code}
 

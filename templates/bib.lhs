@@ -13,8 +13,8 @@
 [liquid-tutorial]: http://github.com/ucsd-progsys/liquidhaskell-tutorial.git 
 [liquid-emacs]:    https://github.com/ucsd-progsys/liquid-types.el
 [liquid-vim]:      https://github.com/ucsd-progsys/liquid-types.vim
-[liquid-vim]:      https://github.com/ucsd-progsys/liquid-types-spacemacs
-[z3]:              http://z3.codeplex.com/
+[liquid-spacemacs]: https://github.com/ucsd-progsys/liquid-types-spacemacs
+[z3]:              https://github.com/Z3Prover/z3
 [cvc4]:            http://cvc4.cs.nyu.edu/ 
 [mathsat]:         http://mathsat.fbk.eu/download.html
 [hoogle-assert]:   https://www.haskell.org/hoogle/?hoogle=assert

@@ -47,7 +47,7 @@ PANDOCHTML=pandoc \
 
 ####################################################################
 
-lhsObjects  := $(wildcard src/*.lhs)
+lhsObjects  := $(sort $(wildcard src/*.lhs))
 texObjects  := $(patsubst %.lhs,%.tex,$(wildcard src/*.lhs))
 htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 

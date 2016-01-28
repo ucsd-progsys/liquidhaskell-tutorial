@@ -15,22 +15,24 @@ die     :: String -> a
 \end{code}
 \end{comment}
 
-\newthought{What is a Refinement Type?} In a nutshell, 
+\newthought{What is a Refinement Type?} In a nutshell,
 
  > *Refinement Types* = *Types* + *Predicates*
 
 
 \noindent
-That is, refinement types allow us to decorate types with 
+That is, refinement types allow us to decorate types with
 *logical predicates*, which you can think of as *boolean-valued*
 Haskell expressions, that constrain the set of values described
 by the type. This lets us specify sophisticated invariants of
-the underlying values. 
+the underlying values.
 
 Defining Types {#definetype}
 --------------
 
-Let us define some refinement types:
+Let us define some refinement types:^[You can read the type of `Zero` as:
+"`v` is an `Int` *such that* `v` equals `0`" and `NonZero` as : "`v` is
+an `Int` *such that* `v` does not equal `0`"]
 
 \begin{code}
 {-@ type Zero    = {v:Int | v == 0} @-}
@@ -43,7 +45,7 @@ that are equal to `0`, that is, the singleton set containing just `0`, and
 `NonZero` describes the set of `Int` values that are *not* equal to `0`,
 that is, the set `{1, -1, 2, -2, ...}` and so on.
 ^[We will use `@`-marked comments to write refinement
-type annotations the Haskell source file, making these
+type annotations in the Haskell source file, making these
 types, quite literally, machine-checked comments!]
 
 \newthought{To use} these types we can write:
@@ -75,7 +77,7 @@ LiquidHaskell will complain with an error message:
     02-basic.lhs:58:8: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == (1  :  int)
-      
+
        not a subtype of Required type
          VV : Int | VV == 0
 ~~~~~
@@ -100,7 +102,7 @@ as `1` is not equal to `0`.
 Subtyping
 ---------
 
-What is this business of *subtyping*? Suppose we have some more refinements of `Int` 
+What is this business of *subtyping*? Suppose we have some more refinements of `Int`
 
 \begin{code}
 {-@ type Nat   = {v:Int | 0 <= v}        @-}
@@ -112,7 +114,7 @@ What is this business of *subtyping*? Suppose we have some more refinements of `
 
 \begin{code}
 {-@ zero' :: Nat @-}
-zero'     = zero 
+zero'     = zero
 \end{code}
 
 \noindent
@@ -120,7 +122,7 @@ and also `Even`:
 
 \begin{code}
 {-@ zero'' :: Even @-}
-zero''     = zero 
+zero''     = zero
 \end{code}
 
 \noindent
@@ -133,11 +135,11 @@ for each top-level name.]
 
 \begin{code}
 {-@ zero''' :: Lt100  @-}
-zero'''     = zero 
+zero'''     = zero
 \end{code}
 
 \newthought{Subtyping and Implication}
-`Zero` is the most precise type for `0::Int`, as it is *subtype* of `Nat`,
+`Zero` is the most precise type for `0::Int`, as it is a *subtype* of `Nat`,
 `Even` and `Lt100`. This is because the set of values defined by `Zero`
 is a *subset* of the values defined by `Nat`, `Even` and `Lt100`, as
 the following *logical implications* are valid:
@@ -146,25 +148,36 @@ the following *logical implications* are valid:
 + $v = 0 \Rightarrow v \ \mbox{mod}\ 2 = 0$
 + $v = 0 \Rightarrow v < 100$
 
+\begin{comment}
+Chris Tetreault: I believe that this whole section (within this comment block)
+can be eliminated. It should be clear to anybody who's still following at this
+point that if I can make a small boolean expression (Nat, Even, Lt100), that
+I can make a massive boolean expression (Nat && Even && Lt100). I fell that this
+section just uses a bunch of math runes to confuse us mere mortals, but doesn't
+really add much.
+
 \newthought{Composing Refinements}
 If $P \Rightarrow Q$ and $P \Rightarrow R$ then $P \Rightarrow Q \wedge R$.
 Thus, when a term satisfies multiple refinements, we can compose those
 refinements with `&&`:
 
-\begin{comment}
-ES: this is confusingly worded
-\end{comment}
-
 \begin{code}
 {-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
 zero''''     = 0
 \end{code}
+\end{comment}
+
+\begin{comment}
+ES: this is confusingly worded
+\end{comment}
 
 \newthought{In Summary} the key points about refinement types are:
 
 1. A refinement type is just a type *decorated* with logical predicates.
 2. A term can have *different* refinements for different properties.
-3. When we *erase* the predicates we get the standard Haskell types.^[Dually, a standard Haskell type, has the trivial refinement `true`. For example, `Int` is equivalent to `{v:Int|true}`.]
+3. When we *erase* the predicates we get the standard Haskell types.^[Dually, a
+standard Haskell type has the trivial refinement `true`. For example, `Int` is
+equivalent to `{v:Int|true}`.]
 
 Writing Specifications
 ----------------------
@@ -194,7 +207,7 @@ cantDie = if 1 + 1 == 3
 
 \noindent
 by inferring that the branch condition is always `False` and so `die`
-cannot be called. However, LiquidHaskell will *reject* 
+cannot be called. However, LiquidHaskell will *reject*
 
 \begin{code}
 canDie = if 1 + 1 == 2
@@ -212,7 +225,7 @@ Refining Function Types: Pre-conditions
 --------------------------------------
 
 Let's use `die` to write a *safe division* function that
-*only accepts* non-zero denominators. 
+*only accepts* non-zero denominators.
 
 \begin{code}
 divide'     :: Int -> Int -> Int
@@ -253,7 +266,7 @@ Thus, by contradition, LiquidHaskell deduces that the first equation is
 \newthought{Establishing Pre-conditions}
 The above signature forces us to ensure that that when we
 *use* `divide`, we only supply provably `NonZero` arguments.
-Hence, these two uses of `divide` are fine: 
+Hence, these two uses of `divide` are fine:
 
 \begin{code}
 avg2 x y   = divide (x + y) 2
@@ -290,7 +303,7 @@ abs n
   | otherwise = 0 - n
 \end{code}
 
-We can use a refinement on the output type to specify that the function 
+We can use a refinement on the output type to specify that the function
 returns non-negative values
 
 \begin{code}
@@ -306,7 +319,7 @@ by using an [SMT solver][smt-wiki] which has built-in
 decision procedures for arithmetic, to reason about the
 logical refinements.]
 
-Testing Values: Booleans and Propositions
+Testing Values: Booleans and Propositions {#propositions}
 -----------------------------------------
 
 In the above example, we *compute* a value that is guaranteed to be a `Nat`.
@@ -317,9 +330,9 @@ For example, let's write a command-line *calculator*:
 calc = do putStrLn "Enter numerator"
           n <- readLn
           putStrLn "Enter denominator"
-          d <- readLn 
+          d <- readLn
           putStrLn (result n d)
-          calc 
+          calc
 \end{code}
 
 \noindent which takes two numbers and divides them.
@@ -329,7 +342,7 @@ complains to the user:
 
 \begin{code}
 result n d
-  | isPositive d = "Result = " ++ show (n `divide` d) 
+  | isPositive d = "Result = " ++ show (n `divide` d)
   | otherwise    = "Humph, please enter positive denominator!"
 \end{code}
 
@@ -379,7 +392,7 @@ Write a suitable refinement type signature for `lAssert` so that
 lAssert True  x = x
 lAssert False _ = die "yikes, assertion fails!"
 
-yes = lAssert (1 + 1 == 2) () 
+yes = lAssert (1 + 1 == 2) ()
 no  = lAssert (1 + 1 == 3) ()
 \end{code}
 
@@ -388,17 +401,17 @@ no  = lAssert (1 + 1 == 3) ()
 Putting It All Together
 -----------------------
 
-Let's wrap up this introduction with a simple `truncate` function 
-that connects all the dots. 
+Let's wrap up this introduction with a simple `truncate` function
+that connects all the dots.
 
 \begin{code}
 truncate :: Int -> Int -> Int
-truncate i max  
+truncate i max
   | i' <= max' = i
   | otherwise  = max' * (i `divide` i')
     where
       i'       = abs i
-      max'     = abs max 
+      max'     = abs max
 \end{code}
 
 \noindent
@@ -409,7 +422,7 @@ safe by inferring that:
 
 1. `max' < i'` from the branch condition,
 2. `0 <= i'`   from the `abs` post-condition, and
-3. `0 <= max'` from the `abs` post-condition. 
+3. `0 <= max'` from the `abs` post-condition.
 
 From the above, LiquidHaskell infers that `i' /= 0`. That is, at the
 call site `i' :: NonZero`, thereby satisfying the pre-condition
@@ -421,12 +434,12 @@ Recap
 -----
 
 This concludes our quick introduction to Refinement Types and
-LiquidHaskell. Hopefully you have some sense of how to 
+LiquidHaskell. Hopefully you have some sense of how to
 
 1. **Specify** fine-grained properties of values by decorating their
    types with logical predicates.
 2. **Encode** assertions, pre-conditions, and post-conditions with suitable
    function types.
-3. **Verify** semantic properties of code by using automatic logic engines 
-   (SMT solvers) to track and establish the key relationships between 
+3. **Verify** semantic properties of code by using automatic logic engines
+   (SMT solvers) to track and establish the key relationships between
    program values.
