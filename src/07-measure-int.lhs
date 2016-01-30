@@ -3,7 +3,6 @@ Numeric Measures {#numericmeasure}
 
 \begin{comment}
 \begin{code}
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--real"           @-}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}

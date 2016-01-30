@@ -7,7 +7,6 @@ Elemental Measures {#setmeasure}
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--diff"           @-}
 
 module Sets where
 import Data.Set hiding (insert, partition, filter, split, elems)

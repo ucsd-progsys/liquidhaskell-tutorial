@@ -4,7 +4,6 @@ Logic & SMT
 
 \begin{comment}
 \begin{code}
-{-@ LIQUID "--diff" @-}
 {-@ LIQUID "--short-names" @-}
 
 module Logic where

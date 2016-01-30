@@ -5,7 +5,6 @@ Case Study: Associative Maps
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--diff"           @-}
 
 module AssocativeMap where
 

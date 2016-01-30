@@ -5,7 +5,6 @@ Refined Datatypes {#refineddatatypes}
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
 
 module RefinedDatatypes
