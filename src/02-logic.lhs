@@ -376,7 +376,7 @@ Can you fix it to get a valid formula?
 
 \begin{code}
 {-@ exDeMorgan2 :: Bool -> Bool -> TRUE @-}
-exDeMorgan2 a b = not (a && b) <=> (not a || not b)
+exDeMorgan2 a b = not (a && b) <=> (not a && not b)
 \end{code}
 
 Examples: Arithmetic
