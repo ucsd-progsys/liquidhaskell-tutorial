@@ -313,7 +313,7 @@ ex1 b = b || not b
 \end{code}
 
 \noindent Of course, a variable cannot be both `True`
-and `False`, and so the below predicate is invalid:
+and `False`, and so the below predicate is valid:
 
 \begin{code}
 {-@ ex2 :: Bool -> FALSE @-}
