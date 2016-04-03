@@ -72,12 +72,30 @@ MathJax.Hub.Config({
       reft:  ["\\{\\bindx{#1}{#2} \\mid {#3}\\}", 3],
       ereft: ["\\bindx{#1}{\\{#2 \\mid #3\\}}", 3],
       reftx: ["\\{{#1}\\mid{#2}\\}", 2],
-      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3]
+      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3],
+      tcap:  ["(\\mathtt{intersection}\\ #1\\ #2)", 2],
+      tcup:  ["(\\mathtt{union}\\ #1\\ #2)", 2],
+      tsng:  ["(\\mathtt{singleton}\\ #1)", 1]
   }
   }
 });
 </script>
-<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+<!-- GITHUB -->
+<script
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+  
+<!-- LOCAL 
+
+  <script src="js/MathJax-2.6.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    type="text/javascript"></script>
+    
+  -->
+  
+
+
+
 
 
 
