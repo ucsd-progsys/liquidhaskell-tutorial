@@ -1,0 +1,10 @@
+resolver: nightly-2016-01-06
+
+compiler-check: newer-minor
+
+flags: {}
+
+packages:
+  - '.'
+
+extra-deps: []
