@@ -80,9 +80,13 @@ dirLhs dir = do
 
 readDoc   :: FilePath -> IO Pandoc
 readDoc f = do
-  str <- readFile f
-  let doc = readMarkdown def str --  <$> readFile f
-  return doc
+  str    <- readFile f
+  let md = readMarkdown def str
+  case md of
+    Left e  -> error $ "readDoc hits Error!: " ++ show e
+    Right d -> return d
+
+
 
 fileTOC :: FilePath -> IO [(Ref, Info)]
 fileTOC f = query (getRef f) <$> readDoc f
@@ -144,5 +148,3 @@ inlinePandoc is = Pandoc mempty [Plain is]
 
 tocDB   :: TOC -> String
 tocDB _ = "undefined"
-
-

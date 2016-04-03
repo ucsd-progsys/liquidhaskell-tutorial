@@ -2,6 +2,7 @@ RSYNC=$(shell pwd)/sync.sh
 remoteuser=rjhala
 remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
+TMPDIR=~/tmp/
 
 LIQUIDCLIENT=../liquid-client
 INDEXER=filters/Toc.hs
@@ -81,5 +82,11 @@ src/%.html: src/%.lhs
 clean:
 	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
 
-rsync:
-	$(RSYNC) _site/ $(remoteuser) $(remotehost) $(remotedir)
+upload: html
+	git checkout master
+	make html
+	cp -r _site $(TMPDIR)
+	git checkout gh-pages
+	cp -r $(TMPDIR)/_site/* .
+	git commit -a
+	git push origin gh-pages
