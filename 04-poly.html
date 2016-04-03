@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -228,7 +230,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
   </button>
  
   <div id="program-0" class="programbox">{-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
 
 module VectorBounds
@@ -244,7 +245,7 @@ module VectorBounds
 
 import Prelude      hiding (head, abs, length)
 import Data.List    (foldl')
-import Data.Vector  hiding (head, foldl') 
+import Data.Vector  hiding (head, foldl')
 
 absoluteSum'     :: Vector Int -> Int
 dotProduct     :: Vector Int -> Vector Int -> Int
@@ -256,7 +257,8 @@ sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
 </div>
 
 <p>Refinement types shine when we want to establish properties of <em>polymorphic</em> datatypes and higher-order functions. Rather than be abstract, let's illustrate this with a <a href="http://www.cs.bu.edu/~hwxi/academic/papers/pldi98.pdf">classic</a> use-case.</p>
-<p><br /><strong>Array Bounds Verification</strong> aims to ensure that the indices used to retrieve values from an array are indeed <em>valid</em> for the array, i.e. are between <code>0</code> and the <em>size</em> of the array. For example, suppose we create an <code>array</code> with two elements:</p>
+<p><br />
+<strong>Array Bounds Verification</strong> aims to ensure that the indices used to retrieve values from an array are indeed <em>valid</em> for the array, i.e. are between <code>0</code> and the <em>size</em> of the array. For example, suppose we create an <code>array</code> with two elements:</p>
 <pre class="spec"><code>twoLangs  = fromList [&quot;haskell&quot;, &quot;javascript&quot;]</code></pre>
 <p>Lets attempt to look it up at various indices:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
@@ -281,7 +283,8 @@ Ok, modules loaded: VectorBounds.
 *VectorBounds&gt; eeks
 Loading package ... done.
 &quot;*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)</code></pre>
-<p><br /><strong>In a suitable Editor</strong> e.g. Vim or Emacs, or if you push the &quot;play&quot; button in the online demo, you will literally see the error <em>without</em> running the code. Lets see how LiquidHaskell checks <code>ok</code> and <code>yup</code> but flags <code>nono</code>, and along the way, learn how it reasons about <em>recursion</em>, <em>higher-order functions</em>, <em>data types</em> and <em>polymorphism</em>.</p>
+<p><br />
+<strong>In a suitable Editor</strong> e.g. Vim or Emacs, or if you push the &quot;play&quot; button in the online demo, you will literally see the error <em>without</em> running the code. Lets see how LiquidHaskell checks <code>ok</code> and <code>yup</code> but flags <code>nono</code>, and along the way, learn how it reasons about <em>recursion</em>, <em>higher-order functions</em>, <em>data types</em> and <em>polymorphism</em>.</p>
 <section id="vectorbounds" class="level2">
 <h2>Specification: Vector Bounds</h2>
 <p>First, let's see how to <em>specify</em> array bounds safety by <em>refining</em> the types for the <a href="https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/Data/Vector.spec">key functions</a> exported by <code>Data.Vector</code>, i.e. how to</p>
@@ -291,7 +294,10 @@ Loading package ... done.
 <li><em>restrict</em> the indices to those that are valid for a given size.</li>
 </ol>
 <div class="toolinfo">
-<p><br /><strong>Imports</strong> We can write specifications for imported modules -- for which we <em>lack</em> the code -- either directly in the client's source file or better, in <code>.spec</code> files which can be reused across multiple client modules. For example, we can write specifications for <code>Data.Vector</code> inside <code>include/Data/Vector.spec</code> which contains:</p>
+<p><br />
+<strong>Imports</strong> We can write specifications for imported modules -- for which we <em>lack</em> the code -- either directly in the client's source file or better, in <code>.spec</code> files which can be reused across multiple client modules.</p>
+<p><br />
+<strong>Include</strong> directories can be specified when checking a file. Suppose we want to check some file <code>target.hs</code> that imports an external dependency <code>Data.Vector</code>. We can write specifications for <code>Data.Vector</code> inside <code>include/Data/Vector.spec</code> which contains:</p>
 <pre class="spec"><code>-- | Define the size
 measure vlen :: Vector a -&gt; Int
 
@@ -301,10 +307,17 @@ assume length :: x:Vector a -&gt; {v:Int | v = vlen x}
 -- | Lookup at an index
 assume (!) :: x:Vector a -&gt; {v:Nat | v &lt; vlen x} -&gt; a</code></pre>
 </div>
-<p><br /><strong>Measures</strong> are used to define <em>properties</em> of Haskell data values that are useful for specification and verification. Think of <code>vlen</code> as the <em>actual</em> size of a <code>Vector</code> regardless of how the size was computed.</p>
-<p><br /><strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don't have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is betwen <code>0</code> and the real size of the input vector <code>x</code>.</p>
-<p><br /><strong>Dependent Refinements</strong> are used to describe relationships <em>between</em> the elements of a specification. For example, notice how the signature for <code>length</code> names the input with the binder <code>x</code> that then appears in the output type to constrain the output <code>Int</code>. Similarly, the signature for <code>(!)</code> names the input vector <code>x</code> so that the index can be constrained to be valid for <code>x</code>. Thus, dependency lets us write properties that connect <em>multiple</em> program values.</p>
-<p><br /><strong>Aliases</strong> are extremely useful for defining <em>abbreviations</em> for commonly occuring types. Just as we enjoy abstractions when programming, we will find it handy to have abstractions in the specification mechanism. To this end, LiquidHaskell supports <em>type aliases</em>. For example, we can define <code>Vector</code>s of a given size <code>N</code> as:</p>
+<p>Using this new specification is now a simple matter of telling LiquidHaskell to include this file:</p>
+<pre class="sh"><code>$ liquid -i include/ target.hs</code></pre>
+<p>LiquidHaskell ships with specifications for <code>Prelude</code>, <code>Data.List</code>, and <code>Data.Vector</code> which it includes by default.</p>
+<p><br />
+<strong>Measures</strong> are used to define <em>properties</em> of Haskell data values that are useful for specification and verification. Think of <code>vlen</code> as the <em>actual</em> size of a <code>Vector</code> regardless of how the size was computed.</p>
+<p><br />
+<strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don't have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is betwen <code>0</code> and the real size of the input vector <code>x</code>.</p>
+<p><br />
+<strong>Dependent Refinements</strong> are used to describe relationships <em>between</em> the elements of a specification. For example, notice how the signature for <code>length</code> names the input with the binder <code>x</code> that then appears in the output type to constrain the output <code>Int</code>. Similarly, the signature for <code>(!)</code> names the input vector <code>x</code> so that the index can be constrained to be valid for <code>x</code>. Thus, dependency lets us write properties that connect <em>multiple</em> program values.</p>
+<p><br />
+<strong>Aliases</strong> are extremely useful for defining <em>abbreviations</em> for commonly occuring types. Just as we enjoy abstractions when programming, we will find it handy to have abstractions in the specification mechanism. To this end, LiquidHaskell supports <em>type aliases</em>. For example, we can define <code>Vector</code>s of a given size <code>N</code> as:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -363,16 +376,17 @@ head vec = vec ! 0</div>
 <pre class="liquiderror"><code>     src/03-poly.lhs:127:23: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == ?a &amp;&amp; VV == 0
-      
+
        not a subtype of Required type
          VV : Int | VV &gt;= 0 &amp;&amp; VV &lt; vlen vec
-      
+
        In Context
-         VV  : Int | VV == ?a &amp;&amp; VV == 0 
+         VV  : Int | VV == ?a &amp;&amp; VV == 0
          vec : Vector a | 0 &lt;= vlen vec
          ?a  : Int | ?a == (0  :  int)</code></pre>
 <p>LiquidHaskell is saying that <code>0</code> is <em>not</em> a valid index as it is not between <code>0</code> and <code>vlen vec</code>. Say what? Well, what if <code>vec</code> had <em>no</em> elements! A formal verifier doesn't make <em>off by one</em> errors.</p>
-<p><br /><strong>To Fix</strong> the problem we can do one of two things.</p>
+<p><br />
+<strong>To Fix</strong> the problem we can do one of two things.</p>
 <ol type="1">
 <li><em>Require</em> that the input <code>vec</code> be non-empty, or</li>
 <li><em>Return</em> an output if <code>vec</code> is non-empty, or</li>
@@ -393,8 +407,11 @@ head' vec = vec ! 0</div>
 </div>
 
 <div id="Vector Head" class="hwex">
-<p><br /><strong>Exercise: (Vector Head): </strong>Replace the <code>undefined</code> with an <em>implementation</em> of <code>head''</code> which accepts <em>all</em> <code>Vector</code>s but returns a value only when the input <code>vec</code> is not empty.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Vector Head): </strong>Replace the <code>undefined</code> with an <em>implementation</em> of <code>head''</code> which accepts <em>all</em> <code>Vector</code>s but returns a value only when the input <code>vec</code> is not empty.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
@@ -404,13 +421,16 @@ head' vec = vec ! 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">head''     :: Vector a -> Maybe a 
+  <div id="program-7" class="programbox">head''     :: Vector a -> Maybe a
 head'' vec = undefined</div>
 </div>
 
 <div id="Unsafe Lookup" class="hwex">
-<p><br /><strong>Exercise: (Unsafe Lookup): </strong>The function <code>unsafeLookup</code> is a wrapper around the <code>(!)</code> with the arguments flipped. Modify the specification for <code>unsafeLookup</code> so that the <em>implementation</em> is accepted by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Unsafe Lookup): </strong>The function <code>unsafeLookup</code> is a wrapper around the <code>(!)</code> with the arguments flipped. Modify the specification for <code>unsafeLookup</code> so that the <em>implementation</em> is accepted by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
@@ -425,8 +445,11 @@ unsafeLookup index vec = vec ! index</div>
 </div>
 
 <div id="Safe Lookup" class="hwex">
-<p><br /><strong>Exercise: (Safe Lookup): </strong>Complete the implementation of <code>safeLookup</code> by filling in the implementation of <code>ok</code> so that it performs a bounds check before the access.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Safe Lookup): </strong>Complete the implementation of <code>safeLookup</code> by filling in the implementation of <code>ok</code> so that it performs a bounds check before the access.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
@@ -437,9 +460,9 @@ unsafeLookup index vec = vec ! index</div>
   </button>
  
   <div id="program-9" class="programbox">{-@ safeLookup :: Vector a -> Int -> Maybe a @-}
-safeLookup x i 
+safeLookup x i
   | ok        = Just (x ! i)
-  | otherwise = Nothing 
+  | otherwise = Nothing
   where
     ok        = undefined</div>
 </div>
@@ -457,23 +480,29 @@ safeLookup x i
   </button>
  
   <div id="program-10" class="programbox">-- >>> vectorSum (fromList [1, -2, 3])
--- 2 
-vectorSum         :: Vector Int -> Int 
+-- 2
+vectorSum         :: Vector Int -> Int
 vectorSum vec     = go 0 0
   where
-    go acc i 
+    go acc i
       | i < sz    = go (acc + (vec ! i)) (i + 1)
-      | otherwise = acc 
+      | otherwise = acc
     sz            = length vec</div>
 </div>
 
 <div id="Guards" class="hwex">
-<p><br /><strong>Exercise: (Guards): </strong>What happens if you <em>replace</em> the guard with <code>i &lt;= sz</code>?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Guards): </strong>What happens if you <em>replace</em> the guard with <code>i &lt;= sz</code>?</p>
+<br />
+<br />
+
 </div>
 <div id="Absolute Sum" class="hwex">
-<p><br /><strong>Exercise: (Absolute Sum): </strong>Write a variant of the above function that computes the <code>absoluteSum</code> of the elements of the vector.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Absolute Sum): </strong>Write a variant of the above function that computes the <code>absoluteSum</code> of the elements of the vector.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
@@ -489,12 +518,16 @@ vectorSum vec     = go 0 0
 absoluteSum     = undefined</div>
 </div>
 
-<p><br /><strong>Inference</strong> LiquidHaskell verifies <code>vectorSum</code> -- or, to be precise, the safety of the vector accesses <code>vec ! i</code>. The verification works out because LiquidHaskell is able to <em>automatically infer</em> <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><br />
+<strong>Inference</strong> LiquidHaskell verifies <code>vectorSum</code> -- or, to be precise, the safety of the vector accesses <code>vec ! i</code>. The verification works out because LiquidHaskell is able to <em>automatically infer</em> <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <pre class="spec"><code>go :: Int -&gt; {v:Int | 0 &lt;= v &amp;&amp; v &lt;= sz} -&gt; Int</code></pre>
 <p>which states that the second parameter <code>i</code> is between <code>0</code> and the length of <code>vec</code> (inclusive). LiquidHaskell uses this and the test that <code>i &lt; sz</code> to establish that <code>i</code> is between <code>0</code> and <code>(vlen vec)</code> to prove safety.</p>
 <div id="Off by one?" class="hwex">
-<p><br /><strong>Exercise: (Off by one?): </strong>Why does the type of <code>go</code> have <code>v &lt;= sz</code> and not <code>v &lt; sz</code> ?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Off by one?): </strong>Why does the type of <code>go</code> have <code>v &lt;= sz</code> and not <code>v &lt; sz</code> ?</p>
+<br />
+<br />
+
 </div>
 </section>
 <section id="higher-order-functions-bottling-recursion-in-a-loop" class="level2">
@@ -525,14 +558,15 @@ loop lo hi base f =  go base lo
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">vectorSum'      :: Vector Int -> Int 
+  <div id="program-13" class="programbox">vectorSum'      :: Vector Int -> Int
 vectorSum' vec  = loop 0 n 0 body
   where
     body i acc  = acc + (vec ! i)
     n           = length vec</div>
 </div>
 
-<p><br /><strong>Inference</strong> is a convenient option. LiquidHaskell finds:</p>
+<p><br />
+<strong>Inference</strong> is a convenient option. LiquidHaskell finds:</p>
 <pre class="spec"><code>loop :: lo:Nat -&gt; hi:{Nat|lo &lt;= hi} -&gt; a -&gt; (Btwn lo hi -&gt; a -&gt; a) -&gt; a</code></pre>
 <p>In english, the above type states that</p>
 <ul>
@@ -543,8 +577,11 @@ vectorSum' vec  = loop 0 n 0 body
 <p>It can be tedious to have to keep typing things like the above. If we wanted to make <code>loop</code> a public or exported function, we could use the inferred type to generate an explicit signature.</p>
 <p>At the call <code>loop 0 n 0 body</code> the parameters <code>lo</code> and <code>hi</code> are instantiated with <code>0</code> and <code>n</code> respectively, which, by the way is where the inference engine deduces non-negativity. Thus LiquidHaskell concludes that <code>body</code> is only called with values of <code>i</code> that are <em>between</em> <code>0</code> and <code>(vlen vec)</code>, which verifies the safety of the call <code>vec ! i</code>.</p>
 <div id="Using Higher-Order Loops" class="hwex">
-<p><br /><strong>Exercise: (Using Higher-Order Loops): </strong>Complete the implementation of <code>absoluteSum'</code> below. When you are done, what is the type that is inferred for <code>body</code>?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Using Higher-Order Loops): </strong>Complete the implementation of <code>absoluteSum'</code> below. When you are done, what is the type that is inferred for <code>body</code>?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
@@ -564,10 +601,13 @@ absoluteSum' vec = loop 0 n 0 body
 </div>
 
 <div id="Dot Product" class="hwex">
-<br /><strong>Exercise: (Dot Product): </strong>The following uses <code>loop</code> to compute <code>dotProduct</code>s. Why does LiquidHaskell flag an error? Fix the code or specification so that LiquidHaskell accepts it.
-<br /><br />
-</div>
+<br />
+<strong>Exercise: (Dot Product): </strong>The following uses <code>loop</code> to compute <code>dotProduct</code>s. Why does LiquidHaskell flag an error? Fix the code or specification so that LiquidHaskell accepts it.
+<br />
+<br />
 
+</div>
+\vspace{1.0in}
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -577,9 +617,9 @@ absoluteSum' vec = loop 0 n 0 body
   </button>
  
   <div id="program-15" class="programbox">-- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
--- 32 
+-- 32
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
-dotProduct x y = loop 0 sz 0 body 
+dotProduct x y = loop 0 sz 0 body
   where
     sz         = length x
     body i acc = acc + (x ! i)  *  (y ! i)</div>
@@ -601,8 +641,10 @@ dotProduct x y = loop 0 sz 0 body
 </div>
 
 <p>Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> (or the equivalent value for the type <code>a</code>).</p>
-<p><br /><strong>The Alias</strong> <code>SparseN</code> is just a shorthand for the (longer) type on the right, it does not <em>define</em> a new type. If you are familiar with the <em>index-style</em> length encoding e.g. as found in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, then note that despite appearances, our <code>Sparse</code> definition is <em>not</em> indexed.</p>
-<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<p><br />
+<strong>The Alias</strong> <code>SparseN</code> is just a shorthand for the (longer) type on the right, it does not <em>define</em> a new type. If you are familiar with the <em>index-style</em> length encoding e.g. as found in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, then note that despite appearances, our <code>Sparse</code> definition is <em>not</em> indexed.</p>
+<p><br />
+<strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -613,13 +655,14 @@ dotProduct x y = loop 0 sz 0 body
  
   <div id="program-17" class="programbox">{-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct x y   = go 0 y
-  where 
-    go n ((i,v):y') = go (n + (x!i) * v) y' 
+  where
+    go n ((i,v):y') = go (n + (x!i) * v) y'
     go n []         = n</div>
 </div>
 
 <p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br /><strong>Folds</strong> The sharp reader will have undoubtedly noticed that the sparse product can be more cleanly expressed as a <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html">fold</a>:</p>
+<p><br />
+<strong>Folds</strong> The sharp reader will have undoubtedly noticed that the sparse product can be more cleanly expressed as a <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html">fold</a>:</p>
 <pre class="spec"><code>foldl&#39; :: (a -&gt; b -&gt; a) -&gt; a -&gt; [b] -&gt; a</code></pre>
 <p>We can simply fold over the sparse vector, accumulating the <code>sum</code> as we go along</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
@@ -631,8 +674,8 @@ sparseProduct x y   = go 0 y
   </button>
  
   <div id="program-18" class="programbox">{-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
-sparseProduct' x y  = foldl' body 0 y   
-  where 
+sparseProduct' x y  = foldl' body 0 y
+  where
     body sum (i, v) = sum + (x ! i)  * v</div>
 </div>
 

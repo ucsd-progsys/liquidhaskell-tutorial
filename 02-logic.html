@@ -54,7 +54,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="./js/angular/angular.js"></script>
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
 
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -227,14 +229,16 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">{-@ LIQUID "--diff" @-}
+  <div id="program-0" class="programbox">{-@ LIQUID "--short-names" @-}
 
 module Logic where
 main :: IO ()
 main = return ()
 
 {-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p ==> Prop q)} @-}
+
 {-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
+
 {-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
 
 ax1 :: Int -> Bool
@@ -266,31 +270,37 @@ f = undefined
 <section id="syntax" class="level2">
 <h2>Syntax</h2>
 <p>A <em>logical predicate</em> is, informally speaking, a Boolean valued term drawn from a <em>restricted</em> subset of Haskell. In particular, the expressions are drawn from the following grammar comprising <em>constants</em>, <em>expressions</em> and <em>predicates</em>.</p>
-<p><br /><strong>A Constant</strong> <code>c</code> is simply one of the numeric values:</p>
+<p><br />
+<strong>A Constant</strong><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <code>c</code> is simply one of the numeric values:</p>
 <pre class="spec"><code>    c := 0, 1, 2, ...</code></pre>
-<p><br /><strong>A Variable</strong> <code>v</code> is one of <code>x</code>, <code>y</code>, <code>z</code>, etc., these will refer to (the values of) binders in our source programs.</p>
+<p><br />
+<strong>A Variable</strong> <code>v</code> is one of <code>x</code>, <code>y</code>, <code>z</code>, etc., these will refer to (the values of) binders in our source programs.</p>
 <pre class="spec"><code>    v := x, y, z, ...</code></pre>
-<p><br /><strong>An Expression</strong> <code>e</code> is one of the following forms; that is, an expression is built up as linear arithmetic expressions over variables and constants and uninterpreted function applications.</p>
+<p><br />
+<strong>An Expression</strong> <code>e</code> is one of the following forms; that is, an expression is built up as linear arithmetic expressions over variables and constants and uninterpreted function applications.</p>
 <pre class="spec"><code>    e := v                   -- variable
        | c                   -- constant
        | e + e               -- addition
        | e - e               -- subtraction
        | c * e               -- linear multiply
-       | v e1 e2 ... en      -- unint. func. appl.</code></pre>
-<p><br /><strong>Examples of Expressions</strong> include the following:</p>
+       | v e1 e2 ... en      -- uninterpreted function application</code></pre>
+<p><br />
+<strong>Examples of Expressions</strong> include the following:</p>
 <ul>
 <li><code>x + y - z</code></li>
 <li><code>2 * x</code></li>
 <li><code>1 + size x</code></li>
 </ul>
-<p><br /><strong>A Relation</strong> is one of the usual (arithmetic) comparison operators:</p>
+<p><br />
+<strong>A Relation</strong> is one of the usual (arithmetic) comparison operators:</p>
 <pre class="spec"><code>    r := ==               -- equality
        | /=               -- disequality
        | &gt;=               -- greater than or equal
        | &lt;=               -- less than or equal
        | &gt;                -- greater than
        | &lt;                -- less than</code></pre>
-<p><br /><strong>A Predicate</strong> is either an atomic predicate, obtained by comparing two expressions, or, an application of a predicate function to a list of arguments, or the Boolean combination of the above predicates with the operators <code>&amp;&amp;</code> (and), <code>||</code> (or), <code>==&gt;</code> (implies <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>), <code>&lt;=&gt;</code> (if and only if <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>), and <code>not</code>.</p>
+<p><br />
+<strong>A Predicate</strong> is either an atomic predicate, obtained by comparing two expressions, or, an application of a predicate function to a list of arguments, or the Boolean combination of the above predicates with the operators <code>&amp;&amp;</code> (and), <code>||</code> (or), <code>==&gt;</code> (implies <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>), <code>&lt;=&gt;</code> (if and only if <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>), and <code>not</code>.</p>
 <pre class="spec"><code>    p := true
        | false
        | e r e           -- atomic binary relation
@@ -300,7 +310,8 @@ f = undefined
        | p ==&gt; p         -- implies
        | p &lt;=&gt; p         -- if and only if
        | not p           -- negation</code></pre>
-<p><br /><strong>Examples of Predicates</strong> include the following:</p>
+<p><br />
+<strong>Examples of Predicates</strong> include the following:</p>
 <ul>
 <li><code>x + y &lt;= 3</code></li>
 <li><code>null x</code></li>
@@ -310,8 +321,9 @@ f = undefined
 </section>
 <section id="semantics" class="level2">
 <h2>Semantics</h2>
-<p>The syntax of predicates tells us what they <em>look</em> like, that is, what we can <em>write down</em> as valid predicates. Next, let us turn our attention to what a predicate <em>means</em>. Intuitively, a predicate is just a Boolean valued Haskell function -- <code>&amp;&amp;</code>, <code>||</code>, <code>not</code> are the usual operators and <code>==&gt;</code> and <code>&lt;=&gt;</code> are two special operators.</p>
-<p><br /><strong>The Implication</strong> operator <code>==&gt;</code> is equivalent to the Haskell function:</p>
+<p>The syntax of predicates tells us what they <em>look</em> like, that is, what we can <em>write down</em> as valid predicates. Next, let us turn our attention to what a predicate <em>means</em>. Intuitively, a predicate is just a Boolean valued Haskell function with <code>&amp;&amp;</code>, <code>||</code>, <code>not</code> being the usual operators and <code>==&gt;</code> and <code>&lt;=&gt;</code> being two special operators.</p>
+<p><br />
+<strong>The Implication</strong> operator <code>==&gt;</code> is equivalent to the Haskell function:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -327,7 +339,8 @@ True  ==> True  = True
 True  ==> False = False</div>
 </div>
 
-<p><br /><strong>The If-and-only-if</strong> operator <code>&lt;=&gt;</code> is equivalent to the Haskell function:</p>
+<p><br />
+<strong>The If-and-only-if</strong> operator <code>&lt;=&gt;</code> is equivalent to the Haskell function:<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -343,25 +356,31 @@ True  <=> True  = True
 True  <=> False = False</div>
 </div>
 
-<p><br /><strong>An Environment</strong> is a mapping from variables to their Haskell types. For example, the environment <code>G</code> defined</p>
+<p><br />
+<strong>An Environment</strong> is a mapping from variables to their Haskell types. For example, let <code>G</code> be an environment defined as</p>
 <pre class="spec"><code>    x :: Int
     y :: Int
     z :: Int</code></pre>
-<p>maps each variable <code>x</code>, <code>y</code> and <code>z</code> to the type <code>Int</code>.</p>
-<p><br /><strong>An Assignment</strong> under an environment, is a mapping from variables to values of the type specified in the environment. For example,</p>
+<p>which maps each variable <code>x</code>, <code>y</code> and <code>z</code> to the type <code>Int</code>.</p>
+<p><br />
+<strong>An Assignment</strong> under an environment, is a mapping from variables to values of the type specified in the environment. For example,</p>
 <pre class="spec"><code>    x := 1
     y := 2
     z := 3</code></pre>
 <p>is an assignment under <code>G</code> that maps <code>x</code>, <code>y</code> and <code>z</code> to the <code>Int</code> values <code>1</code>, <code>2</code> and <code>3</code> respectively.</p>
-<p><br /><strong>A Predicate Evaluates</strong> to either <code>True</code> or <code>False</code> under a given assignment. For example, the predicate</p>
+<p><br />
+<strong>A Predicate Evaluates</strong> to either <code>True</code> or <code>False</code> under a given assignment. For example, the predicate</p>
 <pre class="spec"><code>    x + y &gt; 10</code></pre>
 <p>evaluates to <code>False</code> given the above assignment but evaluates to <code>True</code> under the assignment</p>
 <pre class="spec"><code>    x := 10
-    y := 10</code></pre>
-<p><br /><strong>A Predicate is Satisfiable</strong> in an environment if <em>there exists</em> an assignment (in that environment) that makes the predicate evaluate to <code>True</code>. For example, in <code>G</code> the predicate</p>
+    y := 10
+    z := 20</code></pre>
+<p><br />
+<strong>A Predicate is Satisfiable</strong> in an environment if <em>there exists</em> an assignment (in that environment) that makes the predicate evaluate to <code>True</code>. For example, in <code>G</code> the predicate</p>
 <pre class="spec"><code>    x + y == z</code></pre>
 <p>is satisfiable, as the above assignment makes the predicate evaluate to <code>True</code>.</p>
-<p><br /><strong>A Predicate is Valid</strong> in an environment if <em>every</em> assignment in that environment makes the predicate evaluate to <code>True</code>. For example, the predicate</p>
+<p><br />
+<strong>A Predicate is Valid</strong> in an environment if <em>every</em> assignment in that environment makes the predicate evaluate to <code>True</code>. For example, the predicate</p>
 <pre class="spec"><code>    x &lt; 10 || x == 10 || x &gt; 10</code></pre>
 <p>is valid under <code>G</code> as no matter what value we assign to <code>x</code>, the above predicate will evaluate to <code>True</code>.</p>
 </section>
@@ -369,16 +388,19 @@ True  <=> False = False</div>
 <h2>Verification Conditions</h2>
 <p>LiquidHaskell works without actually <em>executing</em> your programs. Instead, it checks that your program meets the given specifications in roughly two steps.</p>
 <ol type="1">
-<li><p>First, LH combines the code and types down to a set of <em>Verification Conditions</em> (VC) which are predicates that are valid <em>only if</em> your program satisfies a given property. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p></li>
+<li><p>First, LH combines the code and types down to a set of <em>Verification Conditions</em> (VC) which are predicates that are valid <em>only if</em> your program satisfies a given property. <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p></li>
 <li><p>Next, LH <em>queries</em> an <a href="http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories">SMT solver</a> to determine whether these VCs are valid. If so, it says your program is <em>safe</em> and otherwise it <em>rejects</em> your program.</p></li>
 </ol>
-<p><br /><strong>The SMT Solver decides</strong> whether a predicate (VC) is valid <em>without enumerating</em> and evaluating all assignments. Indeed, it is impossible to do so as there are usually infinitely many assignments once the predicates refer to integers or lists and so on. Instead, the SMT solver uses a variety of sophisticated <em>symbolic algorithms</em> to deduce whether a predicate is valid or not. This somewhat magical process is the result of decades of work in mathematical logic and decision procedures; the <a href="http://research.microsoft.com/en-us/um/people/qadeer/cse599f/papers/nelsonthesis.pdf">Ph.D thesis of Greg Nelson</a> is an excellent place to learn more about these beautiful algorithms.</p>
-<p><br /><strong>We Restrict the Logic</strong> to ensure that all our VC queries fall within the <em>decidable fragment</em>. This makes LiquidHaskell extremely automatic -- there is <em>no</em> explicit manipulation of proofs, just the specification of properties via types and of course, the implementation via Haskell code! This automation comes at a price: all our refinements <em>must</em> belong to the logic above. Fortunately, with a bit of creativity, we can say a <em>lot</em> in this logic. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p><br />
+<strong>The SMT Solver decides</strong> whether a predicate (VC) is valid <em>without enumerating</em> and evaluating all assignments. Indeed, it is impossible to do so as there are usually infinitely many assignments once the predicates refer to integers or lists and so on. Instead, the SMT solver uses a variety of sophisticated <em>symbolic algorithms</em> to deduce whether a predicate is valid or not. This process is the result of decades of work in mathematical logic and decision procedures; the <a href="http://research.microsoft.com/en-us/um/people/qadeer/cse599f/papers/nelsonthesis.pdf">Ph.D thesis of Greg Nelson</a> is an excellent place to learn more about these beautiful algorithms.</p>
+<p><br />
+<strong>We Restrict the Logic</strong> to ensure that all our VC queries fall within the <em>decidable fragment</em>. This makes LiquidHaskell extremely automatic -- there is <em>no</em> explicit manipulation of proofs, just the specification of properties via types and of course, the implementation via Haskell code! This automation comes at a price: all our refinements <em>must</em> belong to the logic above. Fortunately, with a bit of creativity, we can say a <em>lot</em> in this logic. <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
 </section>
 <section id="examples-propositions" class="level2">
 <h2>Examples: Propositions</h2>
 <p>Finally, lets conclude this quick overview with some examples of predicates, in order to build up our own intuition about logic and validity. Each of the below is a predicate from our refinement logic. However, we write them as raw Haskell expressions that you may be more familiar with right now, and so that we can start to use LiquidHaskell to determine whether a predicate is indeed valid or not.</p>
-<p><br /><strong>Let `TRUE` be a refined type</strong> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>True</code>. Similarly, we can define <code>FALSE</code> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>False</code>:</p>
+<p><br />
+<strong>Let `TRUE` be a refined type</strong> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>True</code>. Similarly, we can define <code>FALSE</code> for <code>Bool</code> valued expressions that <em>always</em> evaluate to <code>False</code>:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -430,7 +452,7 @@ ex0' = False</div>
 ex1 b = b || not b</div>
 </div>
 
-<p>Of course, a variable cannot be both <code>True</code> and <code>False</code>, and so the below predicate is invalid:</p>
+<p>Of course, a variable cannot be both <code>True</code> and <code>False</code>, and so the below predicate is valid:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -460,8 +482,11 @@ ex4 a b = (a && b) ==> b</div>
 </div>
 
 <div id="Implications and Or" class="hwex">
-<br /><strong>Exercise: (Implications and Or): </strong>Of course, if we replace the <code>&amp;&amp;</code> with <code>||</code> the result is <em>not valid</em>. Can you shuffle the variables around -- <em>without changing the operators</em> -- to make the formula valid?
-<br /><br />
+<p><br />
+<strong>Exercise: (Implications and Or): </strong>Of course, if we replace the <code>&amp;&amp;</code> with <code>||</code> the result is <em>not valid</em>. Can you shuffle the variables around -- <em>without changing the operators</em> -- to make the formula valid?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
@@ -475,7 +500,7 @@ ex4 a b = (a && b) ==> b</div>
 ex3' a b = (a || b) ==> a</div>
 </div>
 
-<p>The following predicates are valid because they encode <a href="http://en.wikipedia.org/wiki/Modus_ponens">modus ponens</a>: if you know that <code>a</code> implies <code>b</code> and you know that <code>a</code> is true, then it must be that <code>b</code> is also true:</p>
+<p>The following predicates are valid because they encode <a href="http://en.wikipedia.org/wiki/Modus_ponens">modus ponens</a>: if you know that <code>a</code> implies <code>b</code> and you know that <code>a</code> is true, then it must be the case that <code>b</code> is also true:</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -505,8 +530,11 @@ exDeMorgan1 a b = not (a || b) <=> (not a && not b)</div>
 </div>
 
 <div id="DeMorgan&#39;s Law" class="hwex">
-<br /><strong>Exercise: (DeMorgan's Law): </strong>The following version of DeMorgan's law is wrong. Can you fix it to get a valid formula?
-<br /><br />
+<p><br />
+<strong>Exercise: (DeMorgan's Law): </strong>The following version of DeMorgan's law is wrong. Can you fix it to get a valid formula?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
@@ -536,7 +564,7 @@ exDeMorgan2 a b = not (a && b) <=> (not a && not b)</div>
 ax0 = 1 + 1 == 2</div>
 </div>
 
-<p>Again, a predicate that evaluates to <code>False</code> is not valid:</p>
+<p>Again, a predicate that evaluates to <code>False</code> is <em>not</em> valid:</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -545,11 +573,12 @@ ax0 = 1 + 1 == 2</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">{-@ ax0 :: TRUE @-}
-ax0' = 1 + 1 == 3</div>
+  <div id="program-14" class="programbox">{-@ ax0' :: TRUE @-}
+ax0' = 1 + 2 == 3</div>
 </div>
 
-<p><br /><strong>SMT Solvers determine Validity</strong> <em>without</em> enumerating assignments. For example, consider the predicate:</p>
+<p><br />
+<strong>SMT Solvers determine Validity</strong> <em>without</em> enumerating assignments. For example, consider the predicate:</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -563,7 +592,8 @@ ax1 x = x < x + 1</div>
 </div>
 
 <p>It is trivially valid; as via the usual laws of arithmetic, it is equivalent to <code>0 &lt; 1</code> which is <code>True</code> independent of the value of <code>x</code>. The SMT solver is able to determine this validity without enumerating the infinitely many possible values for <code>x</code>. This kind of validity checking lies at the heart of LiquidHaskell.</p>
-<p><br /><strong>We can combine arithmetic and propositional</strong> operators, as shown in the following examples:</p>
+<p><br />
+<strong>We can combine arithmetic and propositional</strong> operators, as shown in the following examples:</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -588,8 +618,11 @@ ax5 x y z =   (x <= 0 && x >= 0)
 </div>
 
 <div id="Addition and Order" class="hwex">
-<br /><strong>Exercise: (Addition and Order): </strong>The formula below is <em>not</em> valid. Do you know why? Change the <em>hypothesis</em> i.e. the thing to the left of the <code>==&gt;</code> to make it a valid formula.
-<br /><br />
+<p><br />
+<strong>Exercise: (Addition and Order): </strong>The formula below is <em>not</em> valid. Do you know why? Change the <em>hypothesis</em> i.e. the thing to the left of the <code>==&gt;</code> to make it a valid formula.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
@@ -619,7 +652,8 @@ ax6 x y = True ==> (x <= x + y)</div>
   <div id="program-18" class="programbox">{-@ measure f :: Int -> Int @-}</div>
 </div>
 
-<p><br /><strong>We Test the Axiom of Congruence</strong> by checking that the following predicate is valid:</p>
+<p><br />
+<strong>We Test the Axiom of Congruence</strong> by checking that the following predicate is valid:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -691,7 +725,7 @@ fx2 x xs = 0 < size ys
     ys   = x : xs</div>
 </div>
 
-<p>LiquidHaskell actually asks the SMT solver to prove the validity of a VC predicate which states that sizes are non-negative and that since <code>ys</code> equals <code>x:xs</code>, the size of <code>ys</code> is one more than <code>xs</code>. <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<p>LiquidHaskell actually asks the SMT solver to prove the validity of a VC predicate which states that sizes are non-negative and that since <code>ys</code> equals <code>x:xs</code>, the size of <code>ys</code> is one more than <code>xs</code>. <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -700,7 +734,8 @@ fx2 x xs = 0 < size ys
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-24" class="programbox">fx2VC x xs ys =   (0 <= size xs)
+  <div id="program-24" class="programbox">{-@ fx2VC :: _ -> _ -> _ -> FALSE @-}
+fx2VC x xs ys =   (0 <= size xs)
               ==> (size ys == 1 + size xs)
               ==> (0 < size ys)</div>
 </div>
@@ -720,12 +755,15 @@ fx2 x xs = 0 < size ys
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>If you are comfortable with this material, e.g. if you know what the &quot;S&quot;, &quot;M&quot; and &quot;T&quot; stand for in SMT, and what QF-UFLIA stands for i.e. the quantifier free theory of linear arithmetic and uninterpreted functions, then feel free skip to the next chapter.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Read <code>p ==&gt; q</code> as &quot;if <code>p</code> then <code>q</code>&quot;<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>Read <code>p &lt;=&gt; q</code> as &quot;if <code>p</code> then <code>q</code> <strong>and</strong> if <code>q</code> then <code>p</code>&quot;<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>The process is described at length in <a href="http://goto.ucsd.edu/~rjhala/liquid/liquid_types.pdf">this paper</a><a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>In particular, we will use the uninterpreted functions to create many sophisticated abstractions.<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>Fear not! We will describe how this works <a href="#autosmart">soon</a><a href="#fnref6">↩</a></p></li>
+<li id="fn1"><p>If you are comfortable with this material, e.g. if you know what the &quot;S&quot;, &quot;M&quot; and &quot;T&quot; stand for in SMT, and what QF-UFLIA stands for (i.e. the quantifier free theory of linear arithmetic and uninterpreted functions), then feel free skip to the next chapter.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>When you see := you should read it as &quot;is defined to be&quot;<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Read <code>p ==&gt; q</code> as &quot;if <code>p</code> then <code>q</code>&quot;<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Read <code>p &lt;=&gt; q</code> as &quot;if <code>p</code> then <code>q</code> <strong>and</strong> if <code>q</code> then <code>p</code>&quot;<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>An observant reader may notice that &lt;=&gt; is the same as == if the arguments are of type Bool<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>The process is described at length in <a href="http://goto.ucsd.edu/~rjhala/liquid/liquid_types.pdf">this paper</a><a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>In particular, we will use the uninterpreted functions to create many sophisticated abstractions.<a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>This syntax will be discussed in greater detail in <a href="#propositions">soon</a><a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p>Fear not! We will describe how this works <a href="#autosmart">soon</a><a href="#fnref9">↩</a></p></li>
 </ol>
 </section>
 
@@ -734,7 +772,7 @@ fx2 x xs = 0 < size ys
 
 <div class="hidden">
 <!--Site Meter -->
-  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
   <noscript>
     <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
       target="_top">

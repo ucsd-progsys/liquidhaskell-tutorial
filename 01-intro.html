@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -238,7 +240,8 @@ main = putStrLn "Intro"
 <section id="gowrong" class="level2">
 <h2>Well-Typed Programs Do Go Wrong</h2>
 <p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
-<p><br /><strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
+<p><br />
+<strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -257,7 +260,8 @@ average xs = sum xs `div` length xs</div>
 <p>However, if we call it with an empty list, we get a rather unpleasant crash: <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <pre class="ghci"><code>ghci&gt; average []
 *** Exception: divide by zero</code></pre>
-<p><br /><strong>Missing Keys</strong> Associative key-value maps are the new lists; they come &quot;built-in&quot; with modern languages like Go, Python, JavaScript and Lua; and of course, they're widely used in Haskell too.</p>
+<p><br />
+<strong>Missing Keys</strong> Associative key-value maps are the new lists; they come &quot;built-in&quot; with modern languages like Go, Python, JavaScript and Lua; and of course, they're widely used in Haskell too.</p>
 <pre class="ghci"><code>ghci&gt; :m +Data.Map 
 ghci&gt; let m = fromList [ (&quot;haskell&quot;, &quot;lazy&quot;)
                        , (&quot;ocaml&quot;  , &quot;eager&quot;)]
@@ -267,7 +271,8 @@ ghci&gt; m ! &quot;haskell&quot;
 <p>Alas, maps are another source of vexing errors that are tickled when we try to find the value of an absent key: <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <pre class="ghci"><code>ghci&gt; m ! &quot;javascript&quot;
 &quot;*** Exception: key is not in the map</code></pre>
-<p><br /><strong>Segmentation Faults</strong> Say what? How can one possibly get a segmentation fault with a <em>safe</em> language like Haskell. Well, here's the thing: every safe language is built on a foundation of machine code, or at the very least, <code>C</code>. Consider the ubiquitous <code>vector</code> library:</p>
+<p><br />
+<strong>Segmentation Faults</strong> Say what? How can one possibly get a segmentation fault with a <em>safe</em> language like Haskell. Well, here's the thing: every safe language is built on a foundation of machine code, or at the very least, <code>C</code>. Consider the ubiquitous <code>vector</code> library:</p>
 <pre class="ghci"><code>ghci&gt; :m +Data.Vector 
 ghci&gt; let v = fromList [&quot;haskell&quot;, &quot;ocaml&quot;]
 ghci&gt; unsafeIndex v 0
@@ -275,7 +280,8 @@ ghci&gt; unsafeIndex v 0
 <p>However, invalid inputs at the safe upper levels can percolate all the way down and stir a mutiny down below: <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <pre class="ghci"><code>ghci&gt; unsafeIndex v 3
 &#39;ghci&#39; terminated by signal SIGSEGV ...</code></pre>
-<p><br /><strong>Heart Bleeds</strong> Finally, for certain kinds of programs, there is a fate worse than death. <code>text</code> is a high-performance string processing library for Haskell, that is used, for example, to build web services.</p>
+<p><br />
+<strong>Heart Bleeds</strong> Finally, for certain kinds of programs, there is a fate worse than death. <code>text</code> is a high-performance string processing library for Haskell, that is used, for example, to build web services.</p>
 <pre class="ghci"><code>ghci&gt; :m + Data.Text Data.Text.Unsafe 
 ghci&gt; let t = pack &quot;Voltage&quot;
 ghci&gt; takeWord16 5 t
@@ -288,8 +294,10 @@ ghci&gt; takeWord16 5 t
 <section id="refinement-types" class="level2">
 <h2>Refinement Types</h2>
 <p>Refinement types allow us to enrich Haskell's type system with <em>predicates</em> that precisely describe the sets of <em>valid</em> inputs and outputs of functions, values held inside containers, and so on. These predicates are drawn from special <em>logics</em> for which there are fast <em>decision procedures</em> called SMT solvers.</p>
-<p><br /><strong>By combining types with predicates</strong> you can specify <em>contracts</em> which describe valid inputs and outputs of functions. The refinement type system <em>guarantees at compile-time</em> that functions adhere to their contracts. That is, you can rest assured that the above calamities <em>cannot occur at run-time</em>.</p>
-<p><br /><strong>LiquidHaskell</strong> is a Refinement Type Checker for Haskell, and in this tutorial we'll describe how you can use it to make programs better and programming even more fun. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br />
+<strong>By combining types with predicates</strong> you can specify <em>contracts</em> which describe valid inputs and outputs of functions. The refinement type system <em>guarantees at compile-time</em> that functions adhere to their contracts. That is, you can rest assured that the above calamities <em>cannot occur at run-time</em>.</p>
+<p><br />
+<strong>LiquidHaskell</strong> is a Refinement Type Checker for Haskell, and in this tutorial we'll describe how you can use it to make programs better and programming even more fun. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 </section>
 <section id="audience" class="level2">
 <h2>Audience</h2>
@@ -307,21 +315,26 @@ ghci&gt; takeWord16 5 t
 <section id="getting-started" class="level2">
 <h2>Getting Started</h2>
 <p>First things first; lets see how to install and run LiquidHaskell.</p>
-<p><br /><strong>LiquidHaskell Requires</strong> (in addition to the cabal dependencies) binary for an <code>SMTLIB2</code> compatible solver, e.g. one of</p>
+<p><br />
+<strong>LiquidHaskell Requires</strong> (in addition to the cabal dependencies) binary for an <code>SMTLIB2</code> compatible solver, e.g. one of</p>
 <ul>
-<li><a href="http://z3.codeplex.com/">Z3</a></li>
+<li><a href="https://github.com/Z3Prover/z3">Z3</a></li>
 <li><a href="http://cvc4.cs.nyu.edu/">CVC4</a></li>
 <li><a href="http://mathsat.fbk.eu/download.html">MathSat</a></li>
 </ul>
-<p><br /><strong>To Install</strong> LiquidHaskell, just do:</p>
+<p><br />
+<strong>To Install</strong> LiquidHaskell, just do:</p>
 <pre class="sh"><code>$ cabal install liquidhaskell</code></pre>
-<p><br /><strong>Command Line</strong> execution simply requires you type:</p>
+<p><br />
+<strong>Command Line</strong> execution simply requires you type:</p>
 <pre class="sh"><code>$ liquid /path/to/file.hs</code></pre>
 <p>You will see a report of <code>SAFE</code> or <code>UNSAFE</code> together with type errors at various points in the source.</p>
-<p><br /><strong>Emacs and Vim</strong> have LiquidHaskell plugins, which run <code>liquid</code> in the background as you edit any Haskell file, highlight errors, and display the inferred types, all of which we find to be extremely useful. Hence we <strong>strongly recommend</strong> these over the command line option.</p>
+<p><br />
+<strong>Emacs and Vim</strong> have LiquidHaskell plugins, which run <code>liquid</code> in the background as you edit any Haskell file, highlight errors, and display the inferred types, all of which we find to be extremely useful. Hence we <strong>strongly recommend</strong> these over the command line option.</p>
 <ul>
 <li>Emacs' <code>flycheck</code> plugin is described <a href="https://github.com/ucsd-progsys/liquid-types.el">here</a></li>
 <li>Vim's <code>syntastic</code> checker is described <a href="https://github.com/ucsd-progsys/liquid-types.vim">here</a></li>
+<li>Spacemacs' <code>flycheck</code> layer described <a href="https://github.com/ucsd-progsys/liquid-types-spacemacs">here</a></li>
 </ul>
 </section>
 <section id="sample-code" class="level2">
@@ -329,6 +342,7 @@ ghci&gt; takeWord16 5 t
 <p>This tutorial is written in literate Haskell and the code for it is available <a href="http://github.com/ucsd-progsys/liquidhaskell-tutorial.git">here</a>. We <em>strongly</em> recommend you grab the code, and follow along, and especially that you do the exercises.</p>
 <pre class="sh"><code>$ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/src</code></pre>
+<p>If you'd like to copy and paste code snippets instead of cloning the repo, note that you may need to pass <code>--no-termination</code> to <code>liquid</code>, or equivalently, add the pragma <code>{-@ LIQUID &quot;--no-termination&quot; @-}</code> to the top of the source file. (By default, <code>liquid</code> tries to ensure that all code it examines will terminate. Some of the code in this tutorial is written in such a way that termination is not immediately obvious to <code>liquid</code>.)</p>
 <p><strong>Note:</strong> This tutorial is a <em>work in progress</em>, and we will be <strong>very</strong> grateful for feedback and suggestions, ideally via pull-requests on github.</p>
 <p>Lets begin!</p>
 </section>

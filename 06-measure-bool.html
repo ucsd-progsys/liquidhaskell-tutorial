@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -271,7 +273,8 @@ divide _ 0 = die "divide-by-zero"
 divide x n = x `div` n</div>
 </div>
 
-<p><br /><strong>The Precondition</strong> asserted by the input type <code>NonZero</code> allows LiquidHaskell to prove that the <code>die</code> is <em>never</em> executed at run-time, but consequently, requires us to establish that wherever <code>divide</code> is <em>used</em>, the second parameter be provably non-zero. This requirement is not onerous when we know what the divisor is <em>statically</em></p>
+<p><br />
+<strong>The Precondition</strong> asserted by the input type <code>NonZero</code> allows LiquidHaskell to prove that the <code>die</code> is <em>never</em> executed at run-time, but consequently, requires us to establish that wherever <code>divide</code> is <em>used</em>, the second parameter be provably non-zero. This requirement is not onerous when we know what the divisor is <em>statically</em></p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -325,11 +328,13 @@ size (_:xs) =  1 + size xs</div>
        In Context
          VV    : Int | VV == elems
          elems : Int</code></pre>
-<p><br /><strong>We cannot prove</strong> that the divisor is <code>NonZero</code>, because it <em>can be</em> <code>0</code> -- when the list is <em>empty</em>. Thus, we need a way of specifying that the input to <code>avgMany</code> is indeed non-empty!</p>
+<p><br />
+<strong>We cannot prove</strong> that the divisor is <code>NonZero</code>, because it <em>can be</em> <code>0</code> -- when the list is <em>empty</em>. Thus, we need a way of specifying that the input to <code>avgMany</code> is indeed non-empty!</p>
 </section>
 <section id="usingmeasures" class="level2">
 <h2>Lifting Functions to Measures</h2>
-<p><br /><strong>How</strong> shall we tell LiquidHaskell that a list is <em>non-empty</em>? Recall the notion of <code>measure</code> previously <a href="#vectorbounds">introduced</a> to describe the size of a <code>Data.Vector</code>. In that spirit, lets write a function that computes whether a list is not empty:</p>
+<p><br />
+<strong>How</strong> shall we tell LiquidHaskell that a list is <em>non-empty</em>? Recall the notion of <code>measure</code> previously <a href="#vectorbounds">introduced</a> to describe the size of a <code>Data.Vector</code>. In that spirit, lets write a function that computes whether a list is not empty:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -343,7 +348,8 @@ notEmpty []    = False
 notEmpty (_:_) = True </div>
 </div>
 
-<p><br /><strong>A measure</strong> is a <em>total</em> Haskell function,</p>
+<p><br />
+<strong>A measure</strong> is a <em>total</em> Haskell function,</p>
 <ol type="1">
 <li>With a <em>single</em> equation per data constructor, and</li>
 <li>Guaranteed to <em>terminate</em>, typically via structural recursion.</li>
@@ -360,7 +366,8 @@ notEmpty (_:_) = True </div>
   <div id="program-6" class="programbox">{-@ measure notEmpty @-}</div>
 </div>
 
-<p><br /><strong>Non-Empty Lists</strong> can now be described as the <em>subset</em> of plain old Haskell lists <code>[a]</code> for which the predicate <code>notEmpty</code> holds</p>
+<p><br />
+<strong>Non-Empty Lists</strong> can now be described as the <em>subset</em> of plain old Haskell lists <code>[a]</code> for which the predicate <code>notEmpty</code> holds</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -373,7 +380,8 @@ notEmpty (_:_) = True </div>
 </div>
 
 <p>We can now refine various signatures to establish the safety of the list-average function.</p>
-<p><br /><strong>Size</strong> returns a non-zero value <em>if</em> the input list is not-empty. We capture this condition with an <a href="#semantics">implication</a> in the output refinement.</p>
+<p><br />
+<strong>Size</strong> returns a non-zero value <em>if</em> the input list is not-empty. We capture this condition with an <a href="#semantics">implication</a> in the output refinement.</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -385,7 +393,8 @@ notEmpty (_:_) = True </div>
   <div id="program-8" class="programbox">{-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}</div>
 </div>
 
-<p><br /><strong>Average</strong> is only sensible for non-empty lists. Happily, we can specify this using the refined <code>NEList</code> type:</p>
+<p><br />
+<strong>Average</strong> is only sensible for non-empty lists. Happily, we can specify this using the refined <code>NEList</code> type:</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -402,8 +411,11 @@ average xs = divide total elems
 </div>
 
 <div id="Average, Maybe" class="hwex">
-<p><br /><strong>Exercise: (Average, Maybe): </strong>Fix the code below to obtain an alternate variant <code>average'</code> that returns <code>Nothing</code> for empty lists:</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Average, Maybe): </strong>Fix the code below to obtain an alternate variant <code>average'</code> that returns <code>Nothing</code> for empty lists:</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
@@ -423,8 +435,11 @@ average' xs
 </div>
 
 <div id="Debugging Specifications" class="hwex">
-<p><br /><strong>Exercise: (Debugging Specifications): </strong>An important aspect of formal verifiers like LiquidHaskell is that they help establish properties not just of your <em>implementations</em> but equally, or more importantly, of your <em>specifications</em>. In that spirit, can you explain why the following two variants of <code>size</code> are <em>rejected</em> by LiquidHaskell?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Debugging Specifications): </strong>An important aspect of formal verifiers like LiquidHaskell is that they help establish properties not just of your <em>implementations</em> but equally, or more importantly, of your <em>specifications</em>. In that spirit, can you explain why the following two variants of <code>size</code> are <em>rejected</em> by LiquidHaskell?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
@@ -447,7 +462,8 @@ size2 (_:xs) =  1 + size2 xs</div>
 <section id="a-safe-list-api" class="level2">
 <h2>A Safe List API</h2>
 <p>Now that we can talk about non-empty lists, we can ensure the safety of various list-manipulating functions which are only well-defined on non-empty lists and crash otherwise.</p>
-<p><br /><strong>Head and Tail</strong> are two of the canonical <em>dangerous</em> functions, that only work on non-empty lists, and burn horribly otherwise. We can type them simple as:</p>
+<p><br />
+<strong>Head and Tail</strong> are two of the canonical <em>dangerous</em> functions, that only work on non-empty lists, and burn horribly otherwise. We can type them simple as:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -467,8 +483,11 @@ tail []     = die "Relaxeth! this too shall ne'er be"</div>
 
 <p>LiquidHaskell uses the precondition to deduce that the second equations are <em>dead code</em>. Of course, this requires us to establish that <em>callers</em> of <code>head</code> and <code>tail</code> only invoke the respective functions with non-empty lists.</p>
 <div id="Safe Head" class="hwex">
-<p><br /><strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified. Do <em>not</em> force <code>null</code> to only take non-empty inputs, that defeats the purpose. Instead, it's type should say that it works on <em>all</em> lists and returns <code>True</code> <em>if and only if</em> the input is non-empty.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified. Do <em>not</em> force <code>null</code> to only take non-empty inputs, that defeats the purpose. Instead, it's type should say that it works on <em>all</em> lists and returns <code>True</code> <em>if and only if</em> the input is non-empty.</p>
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>You may want to refresh your memory about implies <code>==&gt;</code> and <code>&lt;=&gt;</code> from the <a href="#semantics">chapter on logic</a>.</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
@@ -489,7 +508,8 @@ null []       =  True
 null (_:_)    =  False</div>
 </div>
 
-<p><br /><strong>Groups</strong> Lets use the above to write a function that chunks sequences into non-empty groups of equal elements:</p>
+<p><br />
+<strong>Groups</strong> Lets use the above to write a function that chunks sequences into non-empty groups of equal elements:</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -506,7 +526,8 @@ groupEq (x:xs) = (x:ys) : groupEq zs
 </div>
 
 <p>By using the fact that <em>each element</em> in the output returned by <code>groupEq</code> is in fact of the form <code>x:ys</code>, LiquidHaskell infers that <code>groupEq</code> returns a <code>[NEList a]</code> that is, a list of <em>non-empty lists</em>.</p>
-<p><br /><strong>To Eliminate Stuttering</strong> from a string, we can use <code>groupEq</code> to split the string into blocks of repeating <code>Char</code>s, and then just extract the first <code>Char</code> from each block:</p>
+<p><br />
+<strong>To Eliminate Stuttering</strong> from a string, we can use <code>groupEq</code> to split the string into blocks of repeating <code>Char</code>s, and then just extract the first <code>Char</code> from each block:</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -521,7 +542,8 @@ eliminateStutter xs = map head $ groupEq xs</div>
 </div>
 
 <p>LiquidHaskell automatically instantiates the type parameter for <code>map</code> in <code>eliminateStutter</code> to <code>notEmpty v</code> to deduce that <code>head</code> is only called on non-empty lists.</p>
-<p><br /><strong>Foldr1</strong> is one of my favorite folds; it uses the first element of the sequence as the initial value. Of course, it should only be called with non-empty sequences!</p>
+<p><br />
+<strong>Foldr1</strong> is one of my favorite folds; it uses the first element of the sequence as the initial value. Of course, it should only be called with non-empty sequences!</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -539,7 +561,8 @@ foldr _ acc []     = acc
 foldr f acc (x:xs) = f x (foldr f acc xs)</div>
 </div>
 
-<p><br /><strong>To Sum</strong> a non-empty list of numbers, we can just perform a <code>foldr1</code> with the <code>+</code> operator: Thanks to the precondition, LiquidHaskell will prove that the <code>die</code> code is indeed dead. Thus, we can write</p>
+<p><br />
+<strong>To Sum</strong> a non-empty list of numbers, we can just perform a <code>foldr1</code> with the <code>+</code> operator: Thanks to the precondition, LiquidHaskell will prove that the <code>die</code> code is indeed dead. Thus, we can write</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -568,8 +591,11 @@ sumBad = sum []             -- is rejected by LH</div>
 </div>
 
 <div id="Weighted Average" class="hwex">
-<p><br /><strong>Exercise: (Weighted Average): </strong>The function below computes a weighted average of its input. Unfortunately, LiquidHaskell is not very happy about it. Can you figure out why, and fix the code or specification appropriately?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Weighted Average): </strong>The function below computes a weighted average of its input. Unfortunately, LiquidHaskell is not very happy about it. Can you figure out why, and fix the code or specification appropriately?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
@@ -595,8 +621,11 @@ map f (x:xs)  =  f x : map f xs</div>
 
 <p><strong>Hint: </strong>On what variables are the errors? How are those variables' values computed? Can you think of a better specification for the function(s) doing those computations?</p>
 <div id="Mitchell&#39;s Risers" class="hwex">
-<p><br /><strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up in many places, and it is rather convenient to have the type system track non-emptiness without having to make up special types. Consider the <code>risers</code> function, popularized by <a href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil Mitchell</a>. <code>safeSplit</code> requires its input be non-empty; but LiquidHaskell believes that the call inside <code>risers</code> fails this requirement. Fix the specification for <code>risers</code> so that it is verified.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up in many places, and it is rather convenient to have the type system track non-emptiness without having to make up special types. Consider the <code>risers</code> function, popularized by <a href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil Mitchell</a>. <code>safeSplit</code> requires its input be non-empty; but LiquidHaskell believes that the call inside <code>risers</code> fails this requirement. Fix the specification for <code>risers</code> so that it is verified.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 

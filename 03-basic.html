@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -240,14 +242,15 @@ die     :: String -> a
 
 </div>
 
-<p><br /><strong>What is a Refinement Type?</strong> In a nutshell,</p>
+<p><br />
+<strong>What is a Refinement Type?</strong> In a nutshell,</p>
 <blockquote>
 <p><em>Refinement Types</em> = <em>Types</em> + <em>Predicates</em></p>
 </blockquote>
 <p>That is, refinement types allow us to decorate types with <em>logical predicates</em>, which you can think of as <em>boolean-valued</em> Haskell expressions, that constrain the set of values described by the type. This lets us specify sophisticated invariants of the underlying values.</p>
 <section id="definetype" class="level2">
 <h2>Defining Types</h2>
-<p>Let us define some refinement types:</p>
+<p>Let us define some refinement types:<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -260,8 +263,10 @@ die     :: String -> a
 {-@ type NonZero = {v:Int | v /= 0} @-}</div>
 </div>
 
-<p><br /><strong>The Value Variable</strong> <code>v</code> denotes the set of valid inhabitants of each refinement type. Hence, <code>Zero</code> describes the <em>set of</em> <code>Int</code> values that are equal to <code>0</code>, that is, the singleton set containing just <code>0</code>, and <code>NonZero</code> describes the set of <code>Int</code> values that are <em>not</em> equal to <code>0</code>, that is, the set <code>{1, -1, 2, -2, ...}</code> and so on. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>To use</strong> these types we can write:</p>
+<p><br />
+<strong>The Value Variable</strong> <code>v</code> denotes the set of valid inhabitants of each refinement type. Hence, <code>Zero</code> describes the <em>set of</em> <code>Int</code> values that are equal to <code>0</code>, that is, the singleton set containing just <code>0</code>, and <code>NonZero</code> describes the set of <code>Int</code> values that are <em>not</em> equal to <code>0</code>, that is, the set <code>{1, -1, 2, -2, ...}</code> and so on. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><br />
+<strong>To use</strong> these types we can write:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -299,7 +304,7 @@ one' = 1 :: Int</div>
 <pre class="sh"><code>    02-basic.lhs:58:8: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == (1  :  int)
-      
+
        not a subtype of Required type
          VV : Int | VV == 0</code></pre>
 <p>The message says that the expression <code>1 :: Int</code> has the type</p>
@@ -324,7 +329,8 @@ one' = 1 :: Int</div>
 {-@ type Lt100 = {v:Int | v < 100}       @-}</div>
 </div>
 
-<p><br /><strong>What is the type of</strong> <code>zero</code>? <code>Zero</code> of course, but also <code>Nat</code>:</p>
+<p><br />
+<strong>What is the type of</strong> <code>zero</code>? <code>Zero</code> of course, but also <code>Nat</code>:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -334,7 +340,7 @@ one' = 1 :: Int</div>
   </button>
  
   <div id="program-5" class="programbox">{-@ zero' :: Nat @-}
-zero'     = zero </div>
+zero'     = zero</div>
 </div>
 
 <p>and also <code>Even</code>:</p>
@@ -347,10 +353,10 @@ zero'     = zero </div>
   </button>
  
   <div id="program-6" class="programbox">{-@ zero'' :: Even @-}
-zero''     = zero </div>
+zero''     = zero</div>
 </div>
 
-<p>and also any other satisfactory refinement, such as <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>and also any other satisfactory refinement, such as <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -360,17 +366,50 @@ zero''     = zero </div>
   </button>
  
   <div id="program-7" class="programbox">{-@ zero''' :: Lt100  @-}
-zero'''     = zero </div>
+zero'''     = zero</div>
 </div>
 
-<p><br /><strong>Subtyping and Implication</strong> <code>Zero</code> is the most precise type for <code>0::Int</code>, as it is <em>subtype</em> of <code>Nat</code>, <code>Even</code> and <code>Lt100</code>. This is because the set of values defined by <code>Zero</code> is a <em>subset</em> of the values defined by <code>Nat</code>, <code>Even</code> and <code>Lt100</code>, as the following <em>logical implications</em> are valid:</p>
+<p><br />
+<strong>Subtyping and Implication</strong> <code>Zero</code> is the most precise type for <code>0::Int</code>, as it is a <em>subtype</em> of <code>Nat</code>, <code>Even</code> and <code>Lt100</code>. This is because the set of values defined by <code>Zero</code> is a <em>subset</em> of the values defined by <code>Nat</code>, <code>Even</code> and <code>Lt100</code>, as the following <em>logical implications</em> are valid:</p>
 <ul>
-<li><span class="math">\(v = 0 \Rightarrow 0 \leq v\)</span></li>
-<li><span class="math">\(v = 0 \Rightarrow v \ \mbox{mod}\ 2 = 0\)</span></li>
-<li><span class="math">\(v = 0 \Rightarrow v &lt; 100\)</span></li>
+<li><span class="math inline">\(v = 0 \Rightarrow 0 \leq v\)</span></li>
+<li><span class="math inline">\(v = 0 \Rightarrow v \ \mbox{mod}\ 2 = 0\)</span></li>
+<li><span class="math inline">\(v = 0 \Rightarrow v &lt; 100\)</span></li>
 </ul>
-<p><br /><strong>Composing Refinements</strong> If <span class="math">\(P \Rightarrow Q\)</span> and <span class="math">\(P \Rightarrow R\)</span> then <span class="math">\(P \Rightarrow Q \wedge R\)</span>. Thus, when a term satisfies multiple refinements, we can compose those refinements with <code>&amp;&amp;</code>:</p>
+\begin{comment}
+Chris Tetreault: I believe that this whole section (within this comment block)
+can be eliminated. It should be clear to anybody who&#39;s still following at this
+point that if I can make a small boolean expression (Nat, Even, Lt100), that
+I can make a massive boolean expression (Nat &amp;&amp; Even &amp;&amp; Lt100). I fell that this
+section just uses a bunch of math runes to confuse us mere mortals, but doesn&#39;t
+really add much.
 
+\newthought{Composing Refinements}
+If $P \Rightarrow Q$ and $P \Rightarrow R$ then $P \Rightarrow Q \wedge R$.
+Thus, when a term satisfies multiple refinements, we can compose those
+refinements with `&amp;&amp;`:
+
+\begin{code}
+{-@ zero&#39;&#39;&#39;&#39; :: {v:Int | 0 &lt;= v &amp;&amp; v mod 2 == 0 &amp;&amp; v &lt; 100} @-}
+zero&#39;&#39;&#39;&#39;     = 0
+\end{code}
+\end{comment}
+\begin{comment}
+ES: this is confusingly worded
+\end{comment}
+<p><br />
+<strong>In Summary</strong> the key points about refinement types are:</p>
+<ol type="1">
+<li>A refinement type is just a type <em>decorated</em> with logical predicates.</li>
+<li>A term can have <em>different</em> refinements for different properties.</li>
+<li>When we <em>erase</em> the predicates we get the standard Haskell types.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></li>
+</ol>
+</section>
+<section id="writing-specifications" class="level2">
+<h2>Writing Specifications</h2>
+<p>Let's write some more interesting specifications.</p>
+<p><br />
+<strong>Typing Dead Code</strong> We can wrap the usual <code>error</code> function in a function <code>die</code> with the type:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -379,21 +418,11 @@ zero'''     = zero </div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">{-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
-zero''''     = 0</div>
+  <div id="program-8" class="programbox">{-@ die :: {v:String | false} -> a  @-}
+die msg = error msg</div>
 </div>
 
-<p><br /><strong>In Summary</strong> the key points about refinement types are:</p>
-<ol type="1">
-<li>A refinement type is just a type <em>decorated</em> with logical predicates.</li>
-<li>A term can have <em>different</em> refinements for different properties.</li>
-<li>When we <em>erase</em> the predicates we get the standard Haskell types.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></li>
-</ol>
-</section>
-<section id="writing-specifications" class="level2">
-<h2>Writing Specifications</h2>
-<p>Let's write some more interesting specifications.</p>
-<p><br /><strong>Typing Dead Code</strong> We can wrap the usual <code>error</code> function in a function <code>die</code> with the type:</p>
+<p>The interesting thing about <code>die</code> is that the input type has the refinement <code>false</code>, meaning the function must only be called with <code>String</code>s that satisfy the predicate <code>false</code>. This seems bizarre; isn't it <em>impossible</em> to satisfy <code>false</code>? Indeed! Thus, a program containing <code>die</code> typechecks <em>only</em> when LiquidHaskell can prove that <code>die</code> is <em>never called</em>. For example, LiquidHaskell will <em>accept</em></p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -402,11 +431,12 @@ zero''''     = 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">{-@ die :: {v:String | false} -> a  @-}
-die msg = error msg</div>
+  <div id="program-9" class="programbox">cantDie = if 1 + 1 == 3
+            then die "horrible death"
+            else ()</div>
 </div>
 
-<p>The interesting thing about <code>die</code> is that the input type has the refinement <code>false</code>, meaning the function must only be called with <code>String</code>s that satisfy the predicate <code>false</code>. This seems bizarre; isn't it <em>impossible</em> to satisfy <code>false</code>? Indeed! Thus, a program containing <code>die</code> typechecks <em>only</em> when LiquidHaskell can prove that <code>die</code> is <em>never called</em>. For example, LiquidHaskell will <em>accept</em></p>
+<p>by inferring that the branch condition is always <code>False</code> and so <code>die</code> cannot be called. However, LiquidHaskell will <em>reject</em></p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -415,21 +445,7 @@ die msg = error msg</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-10" class="programbox">cantDie = if 1 + 1 == 3
-            then die "horrible death"
-            else ()</div>
-</div>
-
-<p>by inferring that the branch condition is always <code>False</code> and so <code>die</code> cannot be called. However, LiquidHaskell will <em>reject</em></p>
-<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-11" class="programbox">canDie = if 1 + 1 == 2
+  <div id="program-10" class="programbox">canDie = if 1 + 1 == 2
            then die "horrible death"
            else ()</div>
 </div>
@@ -439,6 +455,21 @@ die msg = error msg</div>
 <section id="refining-function-types-pre-conditions" class="level2">
 <h2>Refining Function Types: Pre-conditions</h2>
 <p>Let's use <code>die</code> to write a <em>safe division</em> function that <em>only accepts</em> non-zero denominators.</p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">divide'     :: Int -> Int -> Int
+divide' n 0 = die "divide by zero"
+divide' n d = n `div` d</div>
+</div>
+
+<p>From the above, it is clear to <em>us</em> that <code>div</code> is only called with non-zero divisors. However, LiquidHaskell reports an error at the call to <code>&quot;die&quot;</code> because, what if <code>divide'</code> is actually invoked with a <code>0</code> divisor?</p>
+<p>We can specify that will not happen, with a <em>pre-condition</em> that says that the second argument is non-zero:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -447,13 +478,17 @@ die msg = error msg</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">divide'     :: Int -> Int -> Int
-divide' n 0 = die "divide by zero"
-divide' n d = n `div` d</div>
+  <div id="program-12" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
+divide _ 0 = die "divide by zero"
+divide n d = n `div` d</div>
 </div>
 
-<p>From the above, it is clear to <em>us</em> that <code>div</code> is only called with non-zero divisors. However, LiquidHaskell reports an error at the call to <code>&quot;die&quot;</code> because, what if <code>divide'</code> is actually invoked with a <code>0</code> divisor?</p>
-<p>We can specify that will not happen, with a <em>pre-condition</em> that says that the second argument is non-zero:</p>
+<p><br />
+<strong>To Verify</strong> that <code>divide</code> never calls <code>die</code>, LiquidHaskell infers that <code>&quot;divide by zero&quot;</code> is not merely of type <code>String</code>, but in fact has the the refined type <code>{v:String | false}</code> <em>in the context</em> in which the call to <code>die</code> occurs. LiquidHaskell arrives at this conclusion by using the fact that in the first equation for <code>divide</code> the <em>denominator</em> is in fact</p>
+<pre class="sh"><code>    0 :: {v: Int | v == 0}</code></pre>
+<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradition, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
+<p><br />
+<strong>Establishing Pre-conditions</strong> The above signature forces us to ensure that that when we <em>use</em> <code>divide</code>, we only supply provably <code>NonZero</code> arguments. Hence, these two uses of <code>divide</code> are fine:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -462,15 +497,21 @@ divide' n d = n `div` d</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
-divide _ 0 = die "divide by zero"
-divide n d = n `div` d</div>
+  <div id="program-13" class="programbox">avg2 x y   = divide (x + y) 2
+avg3 x y z = divide (x + y + z) 3</div>
 </div>
 
-<p><br /><strong>To Verify</strong> that <code>divide</code> never calls <code>die</code>, LiquidHaskell infers that <code>&quot;divide by zero&quot;</code> is not merely of type <code>String</code>, but in fact has the the refined type <code>{v:String | false}</code> <em>in the context</em> in which the call to <code>die</code> occurs. LiquidHaskell arrives at this conclusion by using the fact that in the first equation for <code>divide</code> the <em>denominator</em> is in fact</p>
-<pre class="sh"><code>    0 :: {v: Int | v == 0}</code></pre>
-<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradition, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
-<p><br /><strong>Establishing Pre-conditions</strong> The above signature forces us to ensure that that when we <em>use</em> <code>divide</code>, we only supply provably <code>NonZero</code> arguments. Hence, these two uses of <code>divide</code> are fine:</p>
+<div id="List Average" class="hwex">
+<p><br />
+<strong>Exercise: (List Average): </strong>Consider the function <code>avg</code>:</p>
+<ol type="1">
+<li>Why does LiquidHaskell flag an error at <code>n</code> ?</li>
+<li>How can you change the code so LiquidHaskell verifies it?</li>
+</ol>
+<br />
+<br />
+
+</div>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -479,27 +520,7 @@ divide n d = n `div` d</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">avg2 x y   = divide (x + y) 2
-avg3 x y z = divide (x + y + z) 3</div>
-</div>
-
-<div id="List Average" class="hwex">
-<p><br /><strong>Exercise: (List Average): </strong>Consider the function <code>avg</code>:</p>
-<ol type="1">
-<li>Why does LiquidHaskell flag an error at <code>n</code> ?</li>
-<li>How can you change the code so LiquidHaskell verifies it?</li>
-</ol>
-<br /><br />
-</div>
-<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-15" class="programbox">avg       :: [Int] -> Int
+  <div id="program-14" class="programbox">avg       :: [Int] -> Int
 avg xs    = divide total n
   where
     total = sum xs
@@ -510,6 +531,21 @@ avg xs    = divide total n
 <section id="refining-function-types-post-conditions" class="level2">
 <h2>Refining Function Types: Post-conditions</h2>
 <p>Next, let's see how we can use refinements to describe the <em>outputs</em> of a function. Consider the following simple <em>absolute value</em> function</p>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">abs           :: Int -> Int
+abs n
+  | 0 < n     = n
+  | otherwise = 0 - n</div>
+</div>
+
+<p>We can use a refinement on the output type to specify that the function returns non-negative values</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -518,13 +554,14 @@ avg xs    = divide total n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">abs           :: Int -> Int
-abs n
-  | 0 < n     = n
-  | otherwise = 0 - n</div>
+  <div id="program-16" class="programbox">{-@ abs :: Int -> Nat @-}</div>
 </div>
 
-<p>We can use a refinement on the output type to specify that the function returns non-negative values</p>
+<p>LiquidHaskell <em>verifies</em> that <code>abs</code> indeed enjoys the above type by deducing that <code>n</code> is trivially non-negative when <code>0 &lt; n</code> and that in the <code>otherwise</code> case, the value <code>0 - n</code> is indeed non-negative. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+</section>
+<section id="propositions" class="level2">
+<h2>Testing Values: Booleans and Propositions</h2>
+<p>In the above example, we <em>compute</em> a value that is guaranteed to be a <code>Nat</code>. Sometimes, we need to <em>test</em> if a value satisfies some property, e.g., is <code>NonZero</code>. For example, let's write a command-line <em>calculator</em>:</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -533,14 +570,15 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">{-@ abs :: Int -> Nat @-}</div>
+  <div id="program-17" class="programbox">calc = do putStrLn "Enter numerator"
+          n <- readLn
+          putStrLn "Enter denominator"
+          d <- readLn
+          putStrLn (result n d)
+          calc</div>
 </div>
 
-<p>LiquidHaskell <em>verifies</em> that <code>abs</code> indeed enjoys the above type by deducing that <code>n</code> is trivially non-negative when <code>0 &lt; n</code> and that in the <code>otherwise</code> case, the value <code>0 - n</code> is indeed non-negative. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-</section>
-<section id="testing-values-booleans-and-propositions" class="level2">
-<h2>Testing Values: Booleans and Propositions</h2>
-<p>In the above example, we <em>compute</em> a value that is guaranteed to be a <code>Nat</code>. Sometimes, we need to <em>test</em> if a value satisfies some property, e.g., is <code>NonZero</code>. For example, let's write a command-line <em>calculator</em>:</p>
+<p>which takes two numbers and divides them. The function <code>result</code> checks if <code>d</code> is strictly positive (and hence, non-zero), and does the division, or otherwise complains to the user:</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -549,15 +587,12 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">calc = do putStrLn "Enter numerator"
-          n <- readLn
-          putStrLn "Enter denominator"
-          d <- readLn 
-          putStrLn (result n d)
-          calc </div>
+  <div id="program-18" class="programbox">result n d
+  | isPositive d = "Result = " ++ show (n `divide` d)
+  | otherwise    = "Humph, please enter positive denominator!"</div>
 </div>
 
-<p>which takes two numbers and divides them. The function <code>result</code> checks if <code>d</code> is strictly positive (and hence, non-zero), and does the division, or otherwise complains to the user:</p>
+<p>Finally, <code>isPositive</code> is a test that returns a <code>True</code> if its input is strictly greater than <code>0</code> or <code>False</code> otherwise:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -566,12 +601,12 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">result n d
-  | isPositive d = "Result = " ++ show (n `divide` d) 
-  | otherwise    = "Humph, please enter positive denominator!"</div>
+  <div id="program-19" class="programbox">isPositive :: Int -> Bool
+isPositive x = x > 0</div>
 </div>
 
-<p>Finally, <code>isPositive</code> is a test that returns a <code>True</code> if its input is strictly greater than <code>0</code> or <code>False</code> otherwise:</p>
+<p><br />
+<strong>To verify</strong> the call to <code>divide</code> inside <code>result</code> we need to tell LiquidHaskell that the division only happens with a <code>NonZero</code> value <code>d</code>. However, the non-zero-ness is established via the <em>test</em> that occurs inside the guard <code>isPositive d</code>. Hence, we require a <em>post-condition</em> that states that <code>isPositive</code> only returns <code>True</code> when the argument is positive:</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -580,11 +615,24 @@ abs n
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">isPositive :: Int -> Bool
-isPositive x = x > 0</div>
+  <div id="program-20" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}</div>
 </div>
 
-<p><br /><strong>To verify</strong> the call to <code>divide</code> inside <code>result</code> we need to tell LiquidHaskell that the division only happens with a <code>NonZero</code> value <code>d</code>. However, the non-zero-ness is established via the <em>test</em> that occurs inside the guard <code>isPositive d</code>. Hence, we require a <em>post-condition</em> that states that <code>isPositive</code> only returns <code>True</code> when the argument is positive:</p>
+<p>In the above signature, read <code>Prop v</code> as &quot;<code>v</code> is <code>True</code>&quot;; dually, read <code>not (Prop v)</code> as &quot;<code>v</code> is <code>False</code>&quot;. Hence, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
+<div id="Propositions" class="hwex">
+<p><br />
+<strong>Exercise: (Propositions): </strong>What happens if you <em>delete</em> the type for <code>isPositive</code> ? Can you <em>change</em> the type for <code>isPositive</code> (i.e. write some other type) while preserving safety?</p>
+<br />
+<br />
+
+</div>
+<div id="Assertions" class="hwex">
+<p><br />
+<strong>Exercise: (Assertions): </strong>Consider the following <a href="https://www.haskell.org/hoogle/?hoogle=assert">assert</a> function, and two use sites. Write a suitable refinement type signature for <code>lAssert</code> so that <code>lAssert</code> and <code>yes</code> are accepted but <code>no</code> is rejected.</p>
+<br />
+<br />
+
+</div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -593,31 +641,11 @@ isPositive x = x > 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-21" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}</div>
-</div>
-
-<p>In the above signature, read <code>Prop v</code> as &quot;<code>v</code> is <code>True</code>&quot;; dually, read <code>not (Prop v)</code> as &quot;<code>v</code> is <code>False</code>&quot;. Hence, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
-<div id="Propositions" class="hwex">
-<p><br /><strong>Exercise: (Propositions): </strong>What happens if you <em>delete</em> the type for <code>isPositive</code> ? Can you <em>change</em> the type for <code>isPositive</code> (i.e. write some other type) while preserving safety?</p>
-<br /><br />
-</div>
-<div id="Assertions" class="hwex">
-<p><br /><strong>Exercise: (Assertions): </strong>Consider the following <a href="https://www.haskell.org/hoogle/?hoogle=assert">assert</a> function, and two use sites. Write a suitable refinement type signature for <code>lAssert</code> so that <code>lAssert</code> and <code>yes</code> are accepted but <code>no</code> is rejected.</p>
-<br /><br />
-</div>
-<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-22" class="programbox">{-@ lAssert  :: Bool -> a -> a @-}
+  <div id="program-21" class="programbox">{-@ lAssert  :: Bool -> a -> a @-}
 lAssert True  x = x
 lAssert False _ = die "yikes, assertion fails!"
 
-yes = lAssert (1 + 1 == 2) () 
+yes = lAssert (1 + 1 == 2) ()
 no  = lAssert (1 + 1 == 3) ()</div>
 </div>
 
@@ -626,7 +654,7 @@ no  = lAssert (1 + 1 == 3) ()</div>
 <section id="putting-it-all-together" class="level2">
 <h2>Putting It All Together</h2>
 <p>Let's wrap up this introduction with a simple <code>truncate</code> function that connects all the dots.</p>
-<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -634,13 +662,13 @@ no  = lAssert (1 + 1 == 3) ()</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-23" class="programbox">truncate :: Int -> Int -> Int
-truncate i max  
+  <div id="program-22" class="programbox">truncate :: Int -> Int -> Int
+truncate i max
   | i' <= max' = i
   | otherwise  = max' * (i `divide` i')
     where
       i'       = abs i
-      max'     = abs max </div>
+      max'     = abs max</div>
 </div>
 
 <p>The expression <code>truncate i n</code> evaluates to <code>i</code> when the absolute value of <code>i</code> is less than the upper bound <code>max</code>, and otherwise <em>truncates</em> the value at the maximum <code>n</code>. LiquidHaskell verifies that the use of <code>divide</code> is safe by inferring that:</p>
@@ -664,10 +692,11 @@ truncate i max
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>We will use <code>@</code>-marked comments to write refinement type annotations the Haskell source file, making these types, quite literally, machine-checked comments!<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>We use a different names <code>zero'</code>, <code>zero''</code> etc. as (currently) LiquidHaskell supports <em>at most</em> one refinement type for each top-level name.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>Dually, a standard Haskell type, has the trivial refinement <code>true</code>. For example, <code>Int</code> is equivalent to <code>{v:Int|true}</code>.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>LiquidHaskell is able to automatically make these arithmetic deductions by using an <a href="http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories">SMT solver</a> which has built-in decision procedures for arithmetic, to reason about the logical refinements.<a href="#fnref4">↩</a></p></li>
+<li id="fn1"><p>You can read the type of <code>Zero</code> as: &quot;<code>v</code> is an <code>Int</code> <em>such that</em> <code>v</code> equals <code>0</code>&quot; and <code>NonZero</code> as : &quot;<code>v</code> is an <code>Int</code> <em>such that</em> <code>v</code> does not equal <code>0</code>&quot;<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>We will use <code>@</code>-marked comments to write refinement type annotations in the Haskell source file, making these types, quite literally, machine-checked comments!<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>We use a different names <code>zero'</code>, <code>zero''</code> etc. as (currently) LiquidHaskell supports <em>at most</em> one refinement type for each top-level name.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Dually, a standard Haskell type has the trivial refinement <code>true</code>. For example, <code>Int</code> is equivalent to <code>{v:Int|true}</code>.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>LiquidHaskell is able to automatically make these arithmetic deductions by using an <a href="http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories">SMT solver</a> which has built-in decision procedures for arithmetic, to reason about the logical refinements.<a href="#fnref5">↩</a></p></li>
 </ol>
 </section>
 

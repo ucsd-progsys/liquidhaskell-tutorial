@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -266,7 +268,8 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 <p>Wouldn't it be nice to have have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
 <section id="heartbleeds-in-haskell" class="level2">
 <h2>HeartBleeds in Haskell</h2>
-<p><br /><strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a a function that uses the <code>ByteString</code> library to truncate strings:</p>
+<p><br />
+<strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a a function that uses the <code>ByteString</code> library to truncate strings:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -289,7 +292,7 @@ chop' s n = s'
 <pre class="spec"><code>ghci&gt; chop&#39; ex 10
 &quot;Ranjit Lov&quot;</code></pre>
 <p>But, as illustrated in Figure <a href="#fig:overflow">11.1</a>, the machine silently reveals (or more colorfully, <em>bleeds</em>) the contents of adjacent memory or if we use an <em>invalid</em> prefix:</p>
-<pre class="spec"><code>ghci&gt; heartBleed ex 30
+<pre class="spec"><code>ghci&gt; chop&#39; ex 30
 &quot;Ranjit Loves Burritos\NUL\201\&amp;1j\DC3\SOH\NUL&quot;</code></pre>
 <div id="fig:overflow" style="align: left; text-align:center;">
   <img src="img/overflow.png" height="100px" style="display:block;  margin-left:auto; margin-right:auto">
@@ -298,7 +301,8 @@ chop' s n = s'
 <br>
 
 
-<p><br /><strong>Types against Overflows</strong> Now that we have stared the problem straight in the eye, look at how we can use LiquidHaskell to prevent the above at compile time. To this end, we decompose the system into a hierarchy of levels (i.e. modules). Here, we have three levels:</p>
+<p><br />
+<strong>Types against Overflows</strong> Now that we have stared the problem straight in the eye, look at how we can use LiquidHaskell to prevent the above at compile time. To this end, we decompose the system into a hierarchy of levels (i.e. modules). Here, we have three levels:</p>
 <ol type="1">
 <li><em>Machine</em> level <code>Pointers</code></li>
 <li><em>Library</em> level <code>ByteString</code></li>
@@ -309,27 +313,34 @@ chop' s n = s'
 <section id="low-level-pointer-api" class="level2">
 <h2>Low-level Pointer API</h2>
 <p>To get started, lets look at the low-level pointer API that is offered by GHC and the run-time. First, lets see who the <em>dramatis personae</em> are and how they might let heartbleeds in. Then we will see how to batten down the hatches with LiquidHaskell.</p>
-<p><br /><strong>Pointers</strong> are an (abstract) type <code>Ptr a</code> implemented by GHC.</p>
+<p><br />
+<strong>Pointers</strong> are an (abstract) type <code>Ptr a</code> implemented by GHC.</p>
 <pre class="spec"><code>-- | A value of type `Ptr a` represents a pointer to an object,
 --   or an array of objects, which may be marshalled to or from
 --   Haskell values of type `a`.
 
 data Ptr a</code></pre>
-<p><br /><strong>Foreign Pointers</strong> are <em>wrapped</em> pointers that can be exported to and from C code via the <a href="http://hackage.haskell.org/package/base/docs/Foreign-Ptr.html">Foreign Function Interface</a>.</p>
+<p><br />
+<strong>Foreign Pointers</strong> are <em>wrapped</em> pointers that can be exported to and from C code via the <a href="http://hackage.haskell.org/package/base/docs/Foreign-Ptr.html">Foreign Function Interface</a>.</p>
 <pre class="spec"><code>data ForeignPtr a</code></pre>
-<p><br /><strong>To Create</strong> a pointer we use <code>mallocForeignPtrBytes n</code> which creates a <code>Ptr</code> to a buffer of size <code>n</code> and wraps it as a <code>ForeignPtr</code></p>
+<p><br />
+<strong>To Create</strong> a pointer we use <code>mallocForeignPtrBytes n</code> which creates a <code>Ptr</code> to a buffer of size <code>n</code> and wraps it as a <code>ForeignPtr</code></p>
 <pre class="spec"><code>mallocForeignPtrBytes :: Int -&gt; ForeignPtr a</code></pre>
-<p><br /><strong>To Unwrap</strong> and actually use the <code>ForeignPtr</code> we use</p>
+<p><br />
+<strong>To Unwrap</strong> and actually use the <code>ForeignPtr</code> we use</p>
 <pre class="spec"><code>withForeignPtr :: ForeignPtr a     -- pointer
                -&gt; (Ptr a -&gt; IO b)  -- action
                -&gt; IO b             -- result</code></pre>
 <p>That is, <code>withForeignPtr fp act</code> lets us execute a action <code>act</code> on the actual <code>Ptr</code> wrapped within the <code>fp</code>. These actions are typically sequences of <em>dereferences</em>, i.e. reads or writes.</p>
-<p><br /><strong>To Dereference</strong> a pointer, i.e. to read or update the contents at the corresponding memory location, we use <code>peek</code> and <code>poke</code> respectively. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><br />
+<strong>To Dereference</strong> a pointer, i.e. to read or update the contents at the corresponding memory location, we use <code>peek</code> and <code>poke</code> respectively. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <pre class="spec"><code>peek :: Ptr a -&gt; IO a         -- Read
 poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
-<p><br /><strong>For Fine Grained Access</strong> we can directly shift pointers to arbitrary offsets using the <em>pointer arithmetic</em> operation <code>plusPtr p off</code> which takes a pointer <code>p</code> an integer <code>off</code> and returns the address obtained shifting <code>p</code> by <code>off</code>:</p>
+<p><br />
+<strong>For Fine Grained Access</strong> we can directly shift pointers to arbitrary offsets using the <em>pointer arithmetic</em> operation <code>plusPtr p off</code> which takes a pointer <code>p</code> an integer <code>off</code> and returns the address obtained shifting <code>p</code> by <code>off</code>:</p>
 <pre class="spec"><code>plusPtr :: Ptr a -&gt; Int -&gt; Ptr b</code></pre>
-<p><br /><strong>Example</strong> That was rather dry; lets look at a concrete example of how one might use the low-level API. The following function allocates a block of 4 bytes and fills it with zeros:</p>
+<p><br />
+<strong>Example</strong> That was rather dry; lets look at a concrete example of how one might use the low-level API. The following function allocates a block of 4 bytes and fills it with zeros:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -378,7 +389,8 @@ poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
 <li><em>Track</em> sizes in pointer operations,</li>
 <li><em>Enforce</em> pointer are valid at reads and writes.</li>
 </ol>
-<p><br /><strong>To Refine Pointers</strong> with the <em>size</em> of their associated buffers, we can use an <em>abstract measure</em>, i.e. a measure specification <em>without</em> any underlying implementation.</p>
+<p><br />
+<strong>To Refine Pointers</strong> with the <em>size</em> of their associated buffers, we can use an <em>abstract measure</em>, i.e. a measure specification <em>without</em> any underlying implementation.</p>
 <pre class="spec"><code>-- | Size of `Ptr`
 measure plen  :: Ptr a -&gt; Int
 
@@ -387,10 +399,13 @@ measure fplen :: ForeignPtr a -&gt; Int</code></pre>
 <p>It is helpful to define aliases for pointers of a given size <code>N</code>:</p>
 <pre class="spec"><code>type PtrN a N        = {v:Ptr a        | plen v  = N}
 type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}</code></pre>
-<p><br /><strong>Abstract Measures</strong> are extremely useful when we don't have a concrete implementation of the underlying value, but we know that the value <em>exists</em>. Here, we don't have the value -- inside Haskell -- because the buffers are manipulated within C. However, this is no cause for alarm as we will simply use measures to refine the API, not to perform any computations. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
-<p><br /><strong>To Refine Allocation</strong> we stipulate that the size parameter be non-negative, and that the returned pointer indeed refers to a buffer with exactly <code>n</code> bytes:</p>
+<p><br />
+<strong>Abstract Measures</strong> are extremely useful when we don't have a concrete implementation of the underlying value, but we know that the value <em>exists</em>. Here, we don't have the value -- inside Haskell -- because the buffers are manipulated within C. However, this is no cause for alarm as we will simply use measures to refine the API, not to perform any computations. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br />
+<strong>To Refine Allocation</strong> we stipulate that the size parameter be non-negative, and that the returned pointer indeed refers to a buffer with exactly <code>n</code> bytes:</p>
 <pre class="spec"><code>mallocForeignPtrBytes :: n:Nat -&gt; ForeignPtrN a n</code></pre>
-<p><br /><strong>To Refine Unwrapping</strong> we specify that the <em>action</em> gets as input, an unwrapped <code>Ptr</code> whose size <em>equals</em> that of the given <code>ForeignPtr</code>.</p>
+<p><br />
+<strong>To Refine Unwrapping</strong> we specify that the <em>action</em> gets as input, an unwrapped <code>Ptr</code> whose size <em>equals</em> that of the given <code>ForeignPtr</code>.</p>
 <pre class="spec"><code>withForeignPtr :: fp:ForeignPtr a
                -&gt; (PtrN a (fplen fp) -&gt; IO b)
                -&gt; IO b</code></pre>
@@ -413,18 +428,21 @@ type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}</code></pre>
            zero = 0 :: Word8</div>
 </div>
 
-<p><br /><strong>To Refine Reads and Writes</strong> we specify that they can only be done if the pointer refers to a non-empty (remaining) buffer. That is, we define an alias:</p>
+<p><br />
+<strong>To Refine Reads and Writes</strong> we specify that they can only be done if the pointer refers to a non-empty (remaining) buffer. That is, we define an alias:</p>
 <pre class="spec"><code>type OkPtr a = {v:Ptr a | 0 &lt; plen v}</code></pre>
 <p>that describes pointers referring to <em>non-empty</em> buffers (of strictly positive <code>plen</code>), and then use the alias to refine:</p>
 <pre class="spec"><code>peek :: OkPtr a -&gt; IO a
 poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
 <p>In essence the above type says that no matter how arithmetic was used to shift pointers around, when the actual dereference happens, the size <em>remaining</em> after the pointer must be non-negative, so that a byte can be safely read from or written to the underlying buffer.</p>
-<p><br /><strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p><br />
+<strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <pre class="spec"><code>plusPtr :: p:Ptr a -&gt; off:BNat (plen p) -&gt; PtrN b (plen p - off)</code></pre>
 <p>using the alias <code>BNat</code>, defined as:</p>
 <pre class="spec"><code>type BNat N = {v:Nat | v &lt;= N}</code></pre>
 <p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
-<p><br /><strong>Types Prevent Overflows</strong> Lets revisit the zero-fill example from above to understand how the refinements help detect the error:</p>
+<p><br />
+<strong>Types Prevent Overflows</strong> Lets revisit the zero-fill example from above to understand how the refinements help detect the error:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -468,13 +486,16 @@ poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
 <section id="assumptions-vs-guarantees" class="level2">
 <h2>Assumptions vs Guarantees</h2>
 <p>At this point you ought to wonder: where is the code for <code>peek</code>, <code>poke</code> or <code>mallocForeignPtrBytes</code> and so on? How can we be sure that the types we assigned to them are in fact legitimate?</p>
-<p><br /><strong>Frankly, we cannot</strong> as those functions are <em>externally</em> implemented (in this case, in <code>C</code>), and hence, invisible to the otherwise all-seeing eyes of LiquidHaskell. Thus, we are <em>assuming</em> or <em>trusting</em> that those functions behave according to their types. Put another way, the types for the low-level API are our <em>specification</em> for what low-level pointer safety. We shall now <em>guarantee</em> that the higher level modules that build upon this API in fact use the low-level function in a manner consistent with this specification.</p>
-<p><br /><strong>Assumptions are a Feature</strong> and not a bug, as they let us to verify systems that use some modules for which we do not have the code. Here, we can <em>assume</em> a boundary specification, and then <em>guarantee</em> that the rest of the system is safe with respect to that specification. <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<p><br />
+<strong>Frankly, we cannot</strong> as those functions are <em>externally</em> implemented (in this case, in <code>C</code>), and hence, invisible to the otherwise all-seeing eyes of LiquidHaskell. Thus, we are <em>assuming</em> or <em>trusting</em> that those functions behave according to their types. Put another way, the types for the low-level API are our <em>specification</em> for what low-level pointer safety. We shall now <em>guarantee</em> that the higher level modules that build upon this API in fact use the low-level function in a manner consistent with this specification.</p>
+<p><br />
+<strong>Assumptions are a Feature</strong> and not a bug, as they let us to verify systems that use some modules for which we do not have the code. Here, we can <em>assume</em> a boundary specification, and then <em>guarantee</em> that the rest of the system is safe with respect to that specification. <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
 </section>
 <section id="bytestring-api" class="level2">
 <h2>ByteString API</h2>
 <p>Next, lets see how the low-level API can be used to implement to implement <a href="https://hackage.haskell.org/package/bytestring">ByteStrings</a>, in a way that lets us perform fast string operations without opening the door to overflows.</p>
-<p><br /><strong>A ByteString</strong> is implemented as a record of three fields:</p>
+<p><br />
+<strong>A ByteString</strong> is implemented as a record of three fields:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -503,7 +524,8 @@ poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
 <br>
 
 
-<p><br /><strong>In a Legal ByteString</strong> the <em>start</em> (<code>bOff</code>) and <em>end</em> (<code>bOff + bLen</code>) offsets lie inside the buffer referred to by the pointer <code>bPtr</code>. We can formalize this invariant with a data definition that will then make it impossible to create illegal <code>ByteString</code>s:</p>
+<p><br />
+<strong>In a Legal ByteString</strong> the <em>start</em> (<code>bOff</code>) and <em>end</em> (<code>bOff + bLen</code>) offsets lie inside the buffer referred to by the pointer <code>bPtr</code>. We can formalize this invariant with a data definition that will then make it impossible to create illegal <code>ByteString</code>s:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -521,7 +543,8 @@ poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
 </div>
 
 <p>The refinements on <code>bOff</code> and <code>bLen</code> correspond exactly to the legality requirements that the start and end of the <code>ByteString</code> be <em>within</em> the block of memory referred to by <code>bPtr</code>.</p>
-<p><br /><strong>For brevity</strong> lets define an alias for <code>ByteString</code>s of a given size:</p>
+<p><br />
+<strong>For brevity</strong> lets define an alias for <code>ByteString</code>s of a given size:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -533,7 +556,8 @@ poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
   <div id="program-8" class="programbox">{-@ type ByteStringN N = {v:ByteString | bLen v = N} @-}</div>
 </div>
 
-<p><br /><strong>Legal Bytestrings</strong> can be created by directly using the constructor, as long as we pass in suitable offsets and lengths. For example,</p>
+<p><br />
+<strong>Legal Bytestrings</strong> can be created by directly using the constructor, as long as we pass in suitable offsets and lengths. For example,</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -561,7 +585,8 @@ good2 = do fp <- mallocForeignPtrBytes 5
            return (BS fp 3 2)</div>
 </div>
 
-<p><br /><strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>'s length is exceeds its buffer size, and is flagged as such:</p>
+<p><br />
+<strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>'s length is exceeds its buffer size, and is flagged as such:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -588,11 +613,15 @@ good2 = do fp <- mallocForeignPtrBytes 5
 </div>
 
 <div id="Legal ByteStrings" class="hwex">
-<p><br /><strong>Exercise: (Legal ByteStrings): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so they are <em>accepted</em> by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Legal ByteStrings): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so they are <em>accepted</em> by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div class="toolinfo">
-<p><br /><strong>Measures are generated from Fields</strong> in the datatype definition. As GHC lets us use the fields as accessor functions, we can <em>refine</em> the types of those functions to specify their behavior to LiquidHaskell. For example, we can type the (automatically generated) field-accessor function <code>bLen</code> so that it actually returns the exact size of the <code>ByteString</code> argument.</p>
+<p><br />
+<strong>Measures are generated from Fields</strong> in the datatype definition. As GHC lets us use the fields as accessor functions, we can <em>refine</em> the types of those functions to specify their behavior to LiquidHaskell. For example, we can type the (automatically generated) field-accessor function <code>bLen</code> so that it actually returns the exact size of the <code>ByteString</code> argument.</p>
 </div>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
@@ -605,7 +634,8 @@ good2 = do fp <- mallocForeignPtrBytes 5
   <div id="program-13" class="programbox">{-@ bLen :: b:ByteString -> {v: Nat | v = bLen b} @-}</div>
 </div>
 
-<p><br /><strong>To Safely Create</strong> a <code>ByteString</code> the implementation defines a higher order <code>create</code> function, that takes a size <code>n</code> and accepts a <code>fill</code> action, and runs the action after allocating the pointer. After running the action, the function tucks the pointer into and returns a <code>ByteString</code> of size <code>n</code>.</p>
+<p><br />
+<strong>To Safely Create</strong> a <code>ByteString</code> the implementation defines a higher order <code>create</code> function, that takes a size <code>n</code> and accepts a <code>fill</code> action, and runs the action after allocating the pointer. After running the action, the function tucks the pointer into and returns a <code>ByteString</code> of size <code>n</code>.</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -622,8 +652,11 @@ create n fill = unsafePerformIO $ do
 </div>
 
 <div id="Create" class="hwex">
-<p><br /><strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Create): </strong>Why does LiquidHaskell <em>reject</em> the following function that creates a <code>ByteString</code> corresponding to <code>&quot;GHC&quot;</code>?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
@@ -640,7 +673,8 @@ create n fill = unsafePerformIO $ do
 </div>
 
 <p><strong>Hint: </strong>The function writes into 3 slots starting at <code>p</code>. How big should <code>plen p</code> be to allow this? What type does LiquidHaskell infer for <code>p</code> above? Does it meet the requirement? Which part of the <em>specification</em> or <em>implementation</em> needs to be modified so that the relevant information about <code>p</code> becomes available within the <code>do</code>-block above? Make sure you figure out the above before proceeding.</p>
-<p><br /><strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
+<p><br />
+<strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -658,8 +692,11 @@ create n fill = unsafePerformIO $ do
 </div>
 
 <div id="Pack" class="hwex">
-<p><br /><strong>Exercise: (Pack): </strong>We can compute the size of a <code>ByteString</code> by using the function: Fix the specification for <code>pack</code> so that (it still typechecks!) and furthermore, the following <a href="#quickcheck">QuickCheck style property</a> is proved.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Pack): </strong>We can compute the size of a <code>ByteString</code> by using the function: Fix the specification for <code>pack</code> so that (it still typechecks!) and furthermore, the following <a href="#quickcheck">QuickCheck style property</a> is proved.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
@@ -674,10 +711,14 @@ prop_pack_length xs   = bLen (pack xs) == length xs</div>
 </div>
 
 <p><strong>Hint: </strong>Look at the type of <code>length</code>, and recall that <code>len</code> is a <a href="#numericmeasure">numeric measure</a> denoting the size of a list.</p>
-<p><br /><strong>The magic of inference</strong> ensures that <code>pack</code> just works. Notice there is a tricky little recursive loop <code>go</code> that is used to recursively fill in the <code>ByteString</code> and actually, it has a rather subtle type signature that LiquidHaskell is able to automatically infer.</p>
+<p><br />
+<strong>The magic of inference</strong> ensures that <code>pack</code> just works. Notice there is a tricky little recursive loop <code>go</code> that is used to recursively fill in the <code>ByteString</code> and actually, it has a rather subtle type signature that LiquidHaskell is able to automatically infer.</p>
 <div id="Pack Invariant" class="hwex">
-<p><br /><strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
@@ -699,8 +740,11 @@ pLoop _ []     = return ()</div>
 
 <p><strong>Hint: </strong>Remember that <code>len xs</code> denotes the size of the list <code>xs</code>.</p>
 <div id="Unsafe Take and Drop" class="hwex">
-<p><br /><strong>Exercise: (Unsafe Take and Drop): </strong>The functions <code>unsafeTake</code> and <code>unsafeDrop</code> respectively extract the prefix and suffix of a <code>ByteString</code> from a given position. They are really fast since we only have to change the offsets. But why does LiquidHaskell reject them? Can you fix the specifications so that they are accepted?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Unsafe Take and Drop): </strong>The functions <code>unsafeTake</code> and <code>unsafeDrop</code> respectively extract the prefix and suffix of a <code>ByteString</code> from a given position. They are really fast since we only have to change the offsets. But why does LiquidHaskell reject them? Can you fix the specifications so that they are accepted?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
@@ -718,7 +762,8 @@ unsafeDrop n (BS x s l) = BS x (s + n) (l - n)</div>
 </div>
 
 <p><strong>Hint: </strong>Under what conditions are the returned <code>ByteString</code>s legal?</p>
-<p><br /><strong>To Unpack</strong> a <code>ByteString</code> into a plain old <code>String</code>, we essentially run <code>pack</code> in reverse, by walking over the pointer, and reading out the characters one by one till we reach the end:</p>
+<p><br />
+<strong>To Unpack</strong> a <code>ByteString</code> into a plain old <code>String</code>, we essentially run <code>pack</code> in reverse, by walking over the pointer, and reading out the characters one by one till we reach the end:</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -740,8 +785,11 @@ unpack (BS ps s l)  = unsafePerformIO
 </div>
 
 <div id="Unpack" class="hwex">
-<p><br /><strong>Exercise: (Unpack): </strong>Fix the specification for <code>unpack</code> so that the below QuickCheck style property is proved by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Unpack): </strong>Fix the specification for <code>unpack</code> so that the below QuickCheck style property is proved by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
@@ -776,7 +824,8 @@ chop s n = s'
     s'   = unpack b'       -- up to high-level</div>
 </div>
 
-<p><br /><strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
+<p><br />
+<strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -809,8 +858,11 @@ prop_chop_length s n
 </div>
 
 <div id="Checked Chop" class="hwex">
-<p><br /><strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
@@ -844,7 +896,8 @@ queryAndChop  = do putStrLn "Give me a string:"
 <li>list of <em>non-empty</em> <code>ByteStrings</code>,</li>
 <li>the <em>sum of</em> whose lengths equals that of the input string.</li>
 </ol>
-<p><br /><strong>Non-empty ByteStrings</strong> are those whose length is non-zero:</p>
+<p><br />
+<strong>Non-empty ByteStrings</strong> are those whose length is non-zero:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -888,7 +941,8 @@ unsafeHead (BS x s _) = unsafePerformIO $
 unsafeTail (BS ps s l) = BS ps (s + 1) (l - 1)</div>
 </div>
 
-<p><br /><strong>The Group`</strong> function recursively calls <code>spanByte</code> to carve off the next group, and then returns the accumulated results:</p>
+<p><br />
+<strong>The Group`</strong> function recursively calls <code>spanByte</code> to carve off the next group, and then returns the accumulated results:</p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -920,7 +974,8 @@ bsLen []     = 0
 bsLen (b:bs) = bLen b + bsLen bs</div>
 </div>
 
-<p><br /><strong>SpanByte</strong> does a lot of the heavy lifting. It uses low-level pointer arithmetic to find the <em>first</em> position in the <code>ByteString</code> that is different from the input character <code>c</code> and then splits the <code>ByteString</code> into a pair comprising the prefix and suffix at that point.</p>
+<p><br />
+<strong>SpanByte</strong> does a lot of the heavy lifting. It uses low-level pointer arithmetic to find the <em>first</em> position in the <code>ByteString</code> that is different from the input character <code>c</code> and then splits the <code>ByteString</code> into a pair comprising the prefix and suffix at that point.</p>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -967,7 +1022,8 @@ spanByte c ps@(BS x s l)
 <li><em>design and validate</em> the layers above.</li>
 </ol>
 <p>We saw this recipe in action by developing a low-level <code>Pointer</code> API, using it to implement fast <code>ByteString</code>s API, and then building some higher-level functions on top of the <code>ByteStrings</code>.</p>
-<p><br /><strong>The Trusted Computing Base</strong> in this approach includes exactly those layers for which the code is <em>not</em> available, for example, because they are implemented outside the language and accessed via the FFI as with <code>mallocForeignPtrBytes</code> and <code>peek</code> and <code>poke</code>. In this case, we can make progress by <em>assuming</em> the APIs hold for those layers and verify the rest of the system with respect to that API. It is important to note that in the entire case study, it is only the above FFI signatures that are <em>trusted</em>; the rest are all verified by LiquidHaskell.</p>
+<p><br />
+<strong>The Trusted Computing Base</strong> in this approach includes exactly those layers for which the code is <em>not</em> available, for example, because they are implemented outside the language and accessed via the FFI as with <code>mallocForeignPtrBytes</code> and <code>peek</code> and <code>poke</code>. In this case, we can make progress by <em>assuming</em> the APIs hold for those layers and verify the rest of the system with respect to that API. It is important to note that in the entire case study, it is only the above FFI signatures that are <em>trusted</em>; the rest are all verified by LiquidHaskell.</p>
 <div class="hidden">
 <div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
 

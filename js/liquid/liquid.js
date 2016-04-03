@@ -24,6 +24,22 @@ function replicatei(n, f) {
     return a;
 }
 
+/*******************************************************************************/
+/************** Setting Up Editor **********************************************/
+/*******************************************************************************/
+
+var hidden = true;
+
+function toggleHidden(){
+    if (hidden) {
+      $(".hidden").removeClass("hidden").addClass("unhidden");
+      hidden = false;
+    } else {
+      $(".unhidden").removeClass("unhidden").addClass("hidden");
+      hidden = false;
+    }
+}
+
 
 /*******************************************************************************/
 /************** Setting Up Editor **********************************************/
@@ -358,6 +374,7 @@ function LiquidDemoCtrl($scope, $http, $location) {
   // NUKE $scope.categories    = getCategories();
   // NUKE $scope.isLocalServer = (document.location.hostname == "localhost");
   // NUKE $scope.localFilePath = "";
+  $scope.gotoLink = 0;
 
   clearStatus($scope);
 
@@ -406,9 +423,14 @@ function LiquidDemoCtrl($scope, $http, $location) {
          });
   };
 
+
   $scope.verifySource   = function(){ verifyQuery(getCheckQuery($scope));   };
 
   // $scope.reVerifySource = function(){ verifyQuery(getRecheckQuery($scope)); };
+  $scope.jumpToProgPane = function(err) {  
+    var slideNum = progPaneSlide(err.data);
+    gotoSlide(slideNum);
+  };
 }
 
 /************************************************************************/

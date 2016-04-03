@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -269,8 +271,10 @@ replicate :: Int -> a -> Queue a
 <br>
 
 
-<p><br /><strong>To efficiently implement</strong> a queue we need to have rapid access to both the front as well as the back because we <code>remove</code> elements from former and <code>insert</code> elements into the latter. This is quite straightforward with explicit pointers and mutation -- one uses an old school linked list and maintains pointers to the head and the tail. But can we implement the structure efficiently without having stoop so low?</p>
-<p><br /><strong>Chris Okasaki</strong> came up with a very cunning way to implement queues using a <em>pair</em> of lists -- let's call them <code>front</code> and <code>back</code> which represent the corresponding parts of the Queue.</p>
+<p><br />
+<strong>To efficiently implement</strong> a queue we need to have rapid access to both the front as well as the back because we <code>remove</code> elements from former and <code>insert</code> elements into the latter. This is quite straightforward with explicit pointers and mutation -- one uses an old school linked list and maintains pointers to the head and the tail. But can we implement the structure efficiently without having stoop so low?</p>
+<p><br />
+<strong>Chris Okasaki</strong> came up with a very cunning way to implement queues using a <em>pair</em> of lists -- let's call them <code>front</code> and <code>back</code> which represent the corresponding parts of the Queue.</p>
 <ul>
 <li>To <code>insert</code> elements, we just <em>cons</em> them onto the <code>back</code> list,</li>
 <li>To <code>remove</code> elements, we just <em>un-cons</em> them from the <code>front</code> list.</li>
@@ -283,7 +287,8 @@ replicate :: Int -> a -> Queue a
 <br>
 
 
-<p><br /><strong>The catch</strong> is that we need to shunt elements from the back to the front every so often, e.g. we can transfer the elements from the <code>back</code> to the <code>front</code>, when:</p>
+<p><br />
+<strong>The catch</strong> is that we need to shunt elements from the back to the front every so often, e.g. we can transfer the elements from the <code>back</code> to the <code>front</code>, when:</p>
 <ol type="1">
 <li>a <code>remove</code> call is triggered, and</li>
 <li>the <code>front</code> list is empty.</li>
@@ -295,11 +300,14 @@ replicate :: Int -> a -> Queue a
 <br>
 
 
-<p><br /><strong>Okasaki's first insight</strong> was to note that every element is only moved <em>once</em> from the front to the back; hence, the time for <code>insert</code> and <code>lookup</code> could be <code>O(1)</code> when <em>amortized</em> over all the operations. This is perfect, <em>except</em> that some set of unlucky <code>remove</code> calls (which occur when the <code>front</code> is empty) are stuck paying the bill. They have a rather high latency up to <code>O(n)</code> where <code>n</code> is the total number of operations.</p>
-<p><br /><strong>Okasaki's second insight</strong> saves the day: he observed that all we need to do is to enforce a simple <em>balance invariant</em>:</p>
-<p><span class="math">\[\mbox{Size of front} \geq \mbox{Size of back}\]</span></p>
+<p><br />
+<strong>Okasaki's first insight</strong> was to note that every element is only moved <em>once</em> from the front to the back; hence, the time for <code>insert</code> and <code>lookup</code> could be <code>O(1)</code> when <em>amortized</em> over all the operations. This is perfect, <em>except</em> that some set of unlucky <code>remove</code> calls (which occur when the <code>front</code> is empty) are stuck paying the bill. They have a rather high latency up to <code>O(n)</code> where <code>n</code> is the total number of operations.</p>
+<p><br />
+<strong>Okasaki's second insight</strong> saves the day: he observed that all we need to do is to enforce a simple <em>balance invariant</em>:</p>
+<p><span class="math display">\[\mbox{Size of front} \geq \mbox{Size of back}\]</span></p>
 <p>If the lists are lazy i.e. only constructed as the head value is demanded, then a single <code>remove</code> needs only a tiny <code>O(log n)</code> in the worst case, and so no single <code>remove</code> is stuck paying the bill.</p>
-<p><br /><strong>Lets implement Queues</strong> and ensure the crucial invariant(s) with LiquidHaskell. What we need are the following ingredients:</p>
+<p><br />
+<strong>Lets implement Queues</strong> and ensure the crucial invariant(s) with LiquidHaskell. What we need are the following ingredients:</p>
 <ol type="1">
 <li><p>A type for <code>List</code>s, and a way to track their <code>size</code>,</p></li>
 <li><p>A type for <code>Queue</code>s which encodes the balance invariant</p></li>
@@ -366,7 +374,8 @@ realSize (_:xs) = 1 + realSize xs</div>
 badList = SL 1 []         -- rejected</div>
 </div>
 
-<p><br /><strong>Lets define an alias</strong> for lists of a given size <code>N</code>:</p>
+<p><br />
+<strong>Lets define an alias</strong> for lists of a given size <code>N</code>:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -379,7 +388,8 @@ badList = SL 1 []         -- rejected</div>
 </div>
 
 <p>Finally, we can define a basic API for <code>SList</code>.</p>
-<p><br /><strong>To Construct lists</strong>, we use <code>nil</code> and <code>cons</code>:</p>
+<p><br />
+<strong>To Construct lists</strong>, we use <code>nil</code> and <code>cons</code>:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -396,8 +406,11 @@ cons x (SL n xs) = SL (n+1) (x:xs)</div>
 </div>
 
 <div id="Destructing Lists" class="hwex">
-<p><br /><strong>Exercise: (Destructing Lists): </strong>We can destruct lists by writing a <code>hd</code> and <code>tl</code> function as shown below. Fix the specification or implementation such that the definitions typecheck.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Destructing Lists): </strong>We can destruct lists by writing a <code>hd</code> and <code>tl</code> function as shown below. Fix the specification or implementation such that the definitions typecheck.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
@@ -448,7 +461,8 @@ badHd = hd (tl okList)  -- rejected</div>
      }                                    @-}</div>
 </div>
 
-<p><br /><strong>The alias</strong> <code>SListLE a L</code> corresponds to lists with at most <code>N</code> elements:</p>
+<p><br />
+<strong>The alias</strong> <code>SListLE a L</code> corresponds to lists with at most <code>N</code> elements:</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -478,7 +492,8 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 <section id="queue-operations" class="level2">
 <h2>Queue Operations</h2>
 <p>Almost there! Now all that remains is to define the <code>Queue</code> API. The code below is more or less identical to Okasaki's (I prefer <code>front</code> and <code>back</code> to his <code>left</code> and <code>right</code>.)</p>
-<p><br /><strong>The Empty Queue</strong> is simply one where both <code>front</code> and <code>back</code> are both empty:</p>
+<p><br />
+<strong>The Empty Queue</strong> is simply one where both <code>front</code> and <code>back</code> are both empty:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -490,7 +505,8 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
   <div id="program-12" class="programbox">emp = Q nil nil</div>
 </div>
 
-<p><br /><strong>To Remove</strong> an element we pop it off the <code>front</code> by using <code>hd</code> and <code>tl</code>. Notice that the <code>remove</code> is only called on non-empty <code>Queue</code>s, which together with the key balance invariant, ensures that the calls to <code>hd</code> and <code>tl</code> are safe.</p>
+<p><br />
+<strong>To Remove</strong> an element we pop it off the <code>front</code> by using <code>hd</code> and <code>tl</code>. Notice that the <code>remove</code> is only called on non-empty <code>Queue</code>s, which together with the key balance invariant, ensures that the calls to <code>hd</code> and <code>tl</code> are safe.</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -503,17 +519,23 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 </div>
 
 <div id="Whither pattern matching?" class="hwex">
-<p><br /><strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn't use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn't use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?</p>
+<br />
+<br />
+
 </div>
 <div id="Queue Sizes" class="hwex">
-<p><br /><strong>Exercise: (Queue Sizes): </strong>If you did the <em>List Destructing</em> exercise above, then you will notice that the code for <code>remove</code> has a type error: namely, the calls to <code>hd</code> and <code>tl</code> may fail if the <code>f</code> list is empty.</p>
+<p><br />
+<strong>Exercise: (Queue Sizes): </strong>If you did the <em>List Destructing</em> exercise above, then you will notice that the code for <code>remove</code> has a type error: namely, the calls to <code>hd</code> and <code>tl</code> may fail if the <code>f</code> list is empty.</p>
 <ol type="1">
 <li>Write a <em>measure</em> to describe the queue size,</li>
 <li>Use it to complete the definition of <code>QueueN</code> below, and</li>
 <li>Use it to give <code>remove</code> a type that verifies the safety of the calls made to <code>hd</code> and <code>tl</code>.</li>
 </ol>
-<br /><br />
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>When you are done, <code>okRemove</code> should be accepted, <code>badRemove</code> should be rejected, and <code>emp</code> should have the type shown below:</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
@@ -539,7 +561,8 @@ example2Q = Q (1 `cons` (2 `cons` nil)) nil
 example0Q = Q nil nil</div>
 </div>
 
-<p><br /><strong>To Insert</strong> an element we just <code>cons</code> it to the <code>back</code> list, and call the <em>smart constructor</em> <code>makeq</code> to ensure that the balance invariant holds:</p>
+<p><br />
+<strong>To Insert</strong> an element we just <code>cons</code> it to the <code>back</code> list, and call the <em>smart constructor</em> <code>makeq</code> to ensure that the balance invariant holds:</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -552,8 +575,11 @@ example0Q = Q nil nil</div>
 </div>
 
 <div id="Insert" class="hwex">
-<p><br /><strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
@@ -574,7 +600,8 @@ y3     = replicate 3 "Yeah!"
 y2     = replicate 1 "No!" </div>
 </div>
 
-<p><br /><strong>To Ensure the Invariant</strong> we use the smart constructor <code>makeq</code>, which is where the heavy lifting happens. The constructor takes two lists, the front <code>f</code> and back <code>b</code> and if they are balanced, directly returns the <code>Queue</code>, and otherwise transfers the elements from <code>b</code> over using the rotate function <code>rot</code> described next.</p>
+<p><br />
+<strong>To Ensure the Invariant</strong> we use the smart constructor <code>makeq</code>, which is where the heavy lifting happens. The constructor takes two lists, the front <code>f</code> and back <code>b</code> and if they are balanced, directly returns the <code>Queue</code>, and otherwise transfers the elements from <code>b</code> over using the rotate function <code>rot</code> described next.</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -590,8 +617,11 @@ makeq f b
 </div>
 
 <div id="Rotate" class="hwex">
-<p><br /><strong>Exercise: (Rotate): </strong>The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Rotate): </strong>The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.</p>
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>You may have to modify a precondition in <code>makeq</code> to capture the relationship between <code>f</code> and <code>b</code>.</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
@@ -608,8 +638,11 @@ makeq f b
 </div>
 
 <div id="Transfer" class="hwex">
-<p><br /><strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Transfer): </strong>Write down a signature for <code>take</code> which extracts <code>n</code> elements from its input <code>q</code> and puts them into a new output Queue. When you are done, <code>okTake</code> should be accepted, but <code>badTake</code> should be rejected.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 

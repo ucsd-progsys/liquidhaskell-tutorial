@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -270,8 +272,10 @@ member :: (Ord a) => a -> AVL a -> Bool
 </div>
 
 <p>One of the most fundamental abstractions in computing is that of a <em>collection</em> of values -- names, numbers, records -- into which we can rapidly <code>insert</code>, <code>delete</code> and check for <code>member</code>ship.</p>
-<p><br /><strong>Trees</strong> offer an an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
-<p><br /><strong>As in real life</strong> maintaining order and balance is rather easier said than done. Often we must go through rather sophisticated gymnastics to ensure everything is in its right place. Fortunately, LiquidHaskell can help. Lets see a concrete example, that should be familiar from your introductory data structures class: the Georgy Adelson-Velsky and Landis' or <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Tree</a>.</p>
+<p><br />
+<strong>Trees</strong> offer an an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
+<p><br />
+<strong>As in real life</strong> maintaining order and balance is rather easier said than done. Often we must go through rather sophisticated gymnastics to ensure everything is in its right place. Fortunately, LiquidHaskell can help. Lets see a concrete example, that should be familiar from your introductory data structures class: the Georgy Adelson-Velsky and Landis' or <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Tree</a>.</p>
 <section id="avl-trees" class="level2">
 <h2>AVL Trees</h2>
 <p>An <code>AVL</code> tree is defined by the following Haskell datatype:<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
@@ -301,14 +305,18 @@ member :: (Ord a) => a -> AVL a -> Bool
 <br>
 
 
-<p><br /><strong>A Binary Search Ordered</strong> tree is one where at <em>each</em> <code>Node</code>, the values of the <code>left</code> and <code>right</code> subtrees are strictly less and greater than the values at the <code>Node</code>. In the tree in Figure <a href="#fig:avl">12.1</a> the root has value <code>50</code> while its left and right subtrees have values in the range <code>9-23</code> and <code>54-76</code> respectively. This holds at all nodes, not just the root. For example, the node <code>12</code> has left and right children strictly less and greater than <code>12</code>.</p>
-<p><br /><strong>A Balanced</strong> tree is one where at <em>each</em> node, the <em>heights</em> of the left and right subtrees differ by at most <code>1</code>. In Figure <a href="#fig:avl">12.1</a>, at the root, the heights of the left and right subtrees are the same, but at the node <code>72</code> the left subtree has height <code>2</code> which is one more then the right subtree.</p>
-<p><br /><strong>The Invariants Lead To Fast Operations.</strong> Order ensures that there is at most a single path of <code>left</code> and <code>right</code> moves from the root at which an element can be found; balance ensures that each such path in the tree is of size <span class="math">\(O(\log\ n)\)</span> where <span class="math">\(n\)</span> is the numbers of nodes. Thus, together they ensure that the collection operations are efficient: they take time logarithmic in the size of the collection.</p>
+<p><br />
+<strong>A Binary Search Ordered</strong> tree is one where at <em>each</em> <code>Node</code>, the values of the <code>left</code> and <code>right</code> subtrees are strictly less and greater than the values at the <code>Node</code>. In the tree in Figure <a href="#fig:avl">12.1</a> the root has value <code>50</code> while its left and right subtrees have values in the range <code>9-23</code> and <code>54-76</code> respectively. This holds at all nodes, not just the root. For example, the node <code>12</code> has left and right children strictly less and greater than <code>12</code>.</p>
+<p><br />
+<strong>A Balanced</strong> tree is one where at <em>each</em> node, the <em>heights</em> of the left and right subtrees differ by at most <code>1</code>. In Figure <a href="#fig:avl">12.1</a>, at the root, the heights of the left and right subtrees are the same, but at the node <code>72</code> the left subtree has height <code>2</code> which is one more then the right subtree.</p>
+<p><br />
+<strong>The Invariants Lead To Fast Operations.</strong> Order ensures that there is at most a single path of <code>left</code> and <code>right</code> moves from the root at which an element can be found; balance ensures that each such path in the tree is of size <span class="math inline">\(O(\log\ n)\)</span> where <span class="math inline">\(n\)</span> is the numbers of nodes. Thus, together they ensure that the collection operations are efficient: they take time logarithmic in the size of the collection.</p>
 </section>
 <section id="specifying-avl-trees" class="level2">
 <h2>Specifying AVL Trees</h2>
 <p>The tricky bit is to ensure order and balance. Before we can ensure anything, lets tell LiquidHaskell what we mean by these terms, by defining legal or valid AVL trees.</p>
-<p><br /><strong>To Specify Order</strong> we just define two aliases <code>AVLL</code> and <code>AVLR</code> -- read <em>AVL-left</em> and <em>AVL-right</em> -- for trees whose values are strictly less than and greater than some value <code>X</code>:</p>
+<p><br />
+<strong>To Specify Order</strong> we just define two aliases <code>AVLL</code> and <code>AVLR</code> -- read <em>AVL-left</em> and <em>AVL-right</em> -- for trees whose values are strictly less than and greater than some value <code>X</code>:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -324,7 +332,8 @@ member :: (Ord a) => a -> AVL a -> Bool
 {-@ type AVLR a X = AVL {v:a | X < v}  @-}</div>
 </div>
 
-<p><br /><strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because thats just some arbitrary <code>Int</code> -- there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><br />
+<strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because thats just some arbitrary <code>Int</code> -- there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -349,7 +358,8 @@ max :: Int -> Int -> Int
 max x y = if x > y then x else y</div>
 </div>
 
-<p><br /><strong>A Reality Check</strong> predicate ensures that a value <code>v</code> is indeed the <em>real</em> height of a node with subtrees <code>l</code> and <code>r</code>:</p>
+<p><br />
+<strong>A Reality Check</strong> predicate ensures that a value <code>v</code> is indeed the <em>real</em> height of a node with subtrees <code>l</code> and <code>r</code>:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -362,7 +372,8 @@ max x y = if x > y then x else y</div>
 isReal v l r = v == nodeHeight l r</div>
 </div>
 
-<p><br /><strong>A Node is $n$-Balanced</strong> if its left and right subtrees have a (real) height difference of at most <span class="math">\(n\)</span>. We can specify this requirement as a predicate <code>isBal l r n</code></p>
+<p><br />
+<strong>A Node is $n$-Balanced</strong> if its left and right subtrees have a (real) height difference of at most <span class="math inline">\(n\)</span>. We can specify this requirement as a predicate <code>isBal l r n</code></p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -377,7 +388,8 @@ isBal l r n = 0 - n <= d && d <= n
     d       = realHeight l - realHeight r</div>
 </div>
 
-<p><br /><strong>A Legal AVL Tree</strong> can now be defined via the following <a href="#refineddatatypes">refined data type</a>, which states that each <code>Node</code> is <span class="math">\(1\)</span>-balanced, and that the saved height field is indeed the <em>real</em> height:</p>
+<p><br />
+<strong>A Legal AVL Tree</strong> can now be defined via the following <a href="#refineddatatypes">refined data type</a>, which states that each <code>Node</code> is <span class="math inline">\(1\)</span>-balanced, and that the saved height field is indeed the <em>real</em> height:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -413,7 +425,8 @@ isBal l r n = 0 - n <= d && d <= n
 {-@ type AVLT a T = AVLN a {realHeight T} @-}</div>
 </div>
 
-<p><br /><strong>An Empty</strong> collection is represented by a <code>Leaf</code>, which has height <code>0</code>:</p>
+<p><br />
+<strong>An Empty</strong> collection is represented by a <code>Leaf</code>, which has height <code>0</code>:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -427,8 +440,11 @@ empty = Leaf</div>
 </div>
 
 <div id="Singleton" class="hwex">
-<p><br /><strong>Exercise: (Singleton): </strong>Consider the function <code>singleton</code> that builds an <code>AVL</code> tree from a single element. Fix the code below so that it is accepted by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Singleton): </strong>Consider the function <code>singleton</code> that builds an <code>AVL</code> tree from a single element. Fix the code below so that it is accepted by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
@@ -443,7 +459,8 @@ singleton x =  Node x empty empty 0</div>
 </div>
 
 <p>As you can imagine, it can be quite tedious to keep the saved height field <code>ah</code> <em>in sync</em> with the <em>real</em> height. In general in such situations, which arose also with <a href="#lazyqueue">lazy queues</a>, the right move is to eschew the data constructor and instead use a <em>smart constructor</em> that will fill in the appropriate values correctly. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
-<p><br /><strong>The Smart Constructor</strong> <code>node</code> takes as input the node's value <code>x</code>, left and right subtrees <code>l</code> and <code>r</code> and returns a tree by filling in the right value for the height field.</p>
+<p><br />
+<strong>The Smart Constructor</strong> <code>node</code> takes as input the node's value <code>x</code>, left and right subtrees <code>l</code> and <code>r</code> and returns a tree by filling in the right value for the height field.</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -463,8 +480,11 @@ mkNode v l r = Node v l r h
 </div>
 
 <div id="Constructor" class="hwex">
-<p><br /><strong>Exercise: (Constructor): </strong>Unfortunately, LiquidHaskell rejects the above smart constructor <code>node</code>. Can you explain why? Can you fix the code (implementation or specification) so that the function is accepted?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Constructor): </strong>Unfortunately, LiquidHaskell rejects the above smart constructor <code>node</code>. Can you explain why? Can you fix the code (implementation or specification) so that the function is accepted?</p>
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>Think about the (refined) type of the actual constructor <code>Node</code>, and the properties it requires and ensures.</p>
 </section>
@@ -495,8 +515,10 @@ insL0 y (Node x l r _) = node x (insert0 y l) r
 insR0 y (Node x l r _) = node x l (insert0 y r)</div>
 </div>
 
-<p><br /><strong>Unfortunately</strong> <code>insert0</code> does not work. If you did the exercise above, you can replace it with <code>mkNode</code> and you will see that the above function is rejected by LiquidHaskell. The error message would essentially say that at the calls to the smart constructor, the arguments violate the balance requirement.</p>
-<p><br /><strong>Insertion Increases The Height</strong> of a sub-tree, making it <em>too large</em> relative to its sibling. For example, consider the tree <code>t0</code> defined as:</p>
+<p><br />
+<strong>Unfortunately</strong> <code>insert0</code> does not work. If you did the exercise above, you can replace it with <code>mkNode</code> and you will see that the above function is rejected by LiquidHaskell. The error message would essentially say that at the calls to the smart constructor, the arguments violate the balance requirement.</p>
+<p><br />
+<strong>Insertion Increases The Height</strong> of a sub-tree, making it <em>too large</em> relative to its sibling. For example, consider the tree <code>t0</code> defined as:</p>
 <pre class="ghci"><code>ghci&gt; let t0 = Node { key = &#39;a&#39;
                     , l   = Leaf
                     , r   = Node {key = &#39;d&#39;
@@ -525,19 +547,23 @@ insR0 y (Node x l r _) = node x l (insert0 y r)</div>
 
 
 <p>In the above, illustrated in Figure <a href="#fig:avl-insert0">12.2</a> the value <code>'e'</code> is inserted into the valid tree <code>t0</code>; it is inserted using <code>insR0</code>, into the <em>right</em> subtree of <code>t0</code> which already has height <code>1</code> and causes its height to go up to <code>2</code> which is too large relative to the empty left subtree of height <code>0</code>.</p>
-<p><br /><strong>LiquidHaskell catches the imbalance</strong> by rejecting <code>insert0</code>. The new value <code>y</code> is inserted into the right subtree <code>r</code>, which (may already be bigger than the left by a factor of <code>1</code>). As insert can return a tree with arbitrary height, possibly much larger than <code>l</code> and hence, LiquidHaskell rejects the call to the constructor <code>node</code> as the balance requirement does not hold.</p>
-<p><br /><strong>Two lessons</strong> can be drawn from the above exercise. First, <code>insert</code> may <em>increase</em> the height of a tree by at most <code>1</code>. So, second, we need a way to <em>rebalance</em> sibling trees where one has height <code>2</code> more than the other.</p>
+<p><br />
+<strong>LiquidHaskell catches the imbalance</strong> by rejecting <code>insert0</code>. The new value <code>y</code> is inserted into the right subtree <code>r</code>, which (may already be bigger than the left by a factor of <code>1</code>). As insert can return a tree with arbitrary height, possibly much larger than <code>l</code> and hence, LiquidHaskell rejects the call to the constructor <code>node</code> as the balance requirement does not hold.</p>
+<p><br />
+<strong>Two lessons</strong> can be drawn from the above exercise. First, <code>insert</code> may <em>increase</em> the height of a tree by at most <code>1</code>. So, second, we need a way to <em>rebalance</em> sibling trees where one has height <code>2</code> more than the other.</p>
 </section>
 <section id="rebalancing-trees" class="level2">
 <h2>Rebalancing Trees</h2>
 <p>The brilliant insight of Adelson-Velsky and Landis was that we can, in fact, perform such a rebalancing with a clever bit of gardening. Suppose we have inserted a value into the <em>left</em> subtree <code>l</code> to obtain a new tree <code>l'</code> (the right case is symmetric.)</p>
-<p><br /><strong>The relative heights</strong> of <code>l'</code> and <code>r</code> fall under one of three cases:</p>
+<p><br />
+<strong>The relative heights</strong> of <code>l'</code> and <code>r</code> fall under one of three cases:</p>
 <ul>
 <li><em>(RightBig)</em> <code>r</code> is two more than <code>l'</code>,</li>
 <li><em>(LeftBig)</em> <code>l'</code> is two more than <code>r</code>, and otherwise</li>
 <li><em>(NoBig)</em> <code>l'</code> and <code>r</code> are within a factor of <code>1</code>,</li>
 </ul>
-<p><br /><strong>We can specify</strong> these cases as follows.</p>
+<p><br />
+<strong>We can specify</strong> these cases as follows.</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -571,13 +597,15 @@ getHeight (Node _ _ _ n) = n</div>
 </div>
 
 <p>In <code>insL</code>, the <em>RightBig</em> case cannot arise as <code>l'</code> is at least as big as <code>l</code>, which was within a factor of <code>1</code> of <code>r</code> in the valid input tree <code>t</code>. In <em>NoBig</em>, we can safely link <code>l'</code> and <code>r</code> with the smart constructor as they satisfy the balance requirements. The <em>LeftBig</em> case is the tricky one: we need a way to shuffle elements from the left subtree over to the right side.</p>
-<p><br /><strong>What is a LeftBig tree?</strong> Lets split into the possible cases for <code>l'</code>, immediately ruling out the <em>empty</em> tree because its height is <code>0</code> which cannot be <code>2</code> larger than any other tree.</p>
+<p><br />
+<strong>What is a LeftBig tree?</strong> Lets split into the possible cases for <code>l'</code>, immediately ruling out the <em>empty</em> tree because its height is <code>0</code> which cannot be <code>2</code> larger than any other tree.</p>
 <ul>
 <li><em>(NoHeavy)</em> the left and right subtrees of <code>l'</code> have the same height,</li>
 <li><em>(LeftHeavy)</em> the left subtree of <code>l'</code> is bigger than the right,</li>
 <li><em>(RightHeavy)</em> the right subtree of <code>l'</code> is bigger than the left.</li>
 </ul>
-<p><br /><strong>The Balance Factor</strong> of a tree can be used to make the above cases precise. Note that while the <code>getHeight</code> function returns the saved height (for efficiency), thanks to the invariants, we know it is in fact equal to the <code>realHeight</code> of the given tree.</p>
+<p><br />
+<strong>The Balance Factor</strong> of a tree can be used to make the above cases precise. Note that while the <code>getHeight</code> function returns the saved height (for efficiency), thanks to the invariants, we know it is in fact equal to the <code>realHeight</code> of the given tree.</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -591,7 +619,8 @@ balFac Leaf           = 0
 balFac (Node _ l r _) = getHeight l - getHeight r</div>
 </div>
 
-<p><br /><strong>Heaviness</strong> can be encoded by testing the balance factor:</p>
+<p><br />
+<strong>Heaviness</strong> can be encoded by testing the balance factor:</p>
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -618,7 +647,8 @@ noHeavy    t = balFac t == 0</div>
 <br>
 
 
-<p><br /><strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">12.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here's how you would implement the rotation. Note how the preconditions capture the exact case we're in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
+<p><br />
+<strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">12.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here's how you would implement the rotation. Note how the preconditions capture the exact case we're in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -642,7 +672,8 @@ balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
 <br>
 
 
-<p><br /><strong>In the LeftHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLL">12.4</a>, the subtree <code>ll</code> is larger than <code>lr</code>; hence <code>lr</code> has the same height as <code>r</code>, and again we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. As in the <em>NoHeavy</em> case, the input types capture the exact case, and the output the height of the resulting tree.</p>
+<p><br />
+<strong>In the LeftHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLL">12.4</a>, the subtree <code>ll</code> is larger than <code>lr</code>; hence <code>lr</code> has the same height as <code>r</code>, and again we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. As in the <em>NoHeavy</em> case, the input types capture the exact case, and the output the height of the resulting tree.</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -666,7 +697,8 @@ balLL v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
 <br>
 
 
-<p><br /><strong>In the RightHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLR">12.5</a>, the subtree <code>lr</code> is larger than <code>ll</code>. We cannot directly link it with <code>r</code> as the result would again be too large. Hence, we split it further into its own subtrees <code>lrl</code> and <code>lrr</code> and link the latter with <code>r</code>. Again, the types capture the requirements and guarantees of the rotation.</p>
+<p><br />
+<strong>In the RightHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLR">12.5</a>, the subtree <code>lr</code> is larger than <code>ll</code>. We cannot directly link it with <code>r</code> as the result would again be too large. Hence, we split it further into its own subtrees <code>lrl</code> and <code>lrr</code> and link the latter with <code>r</code>. Again, the types capture the requirements and guarantees of the rotation.</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -686,10 +718,13 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
 
 <p>The <em>RightBig</em> cases are symmetric to the above cases where the left subtree is the larger one.</p>
 <div id="RightBig, NoHeavy" class="hwex">
-<p><br /><strong>Exercise: (RightBig, NoHeavy): </strong>Fix the implementation of <code>balR0</code> so that it implements the given type.</p>
-<br /><br />
-</div>
+<p><br />
+<strong>Exercise: (RightBig, NoHeavy): </strong>Fix the implementation of <code>balR0</code> so that it implements the given type.</p>
+<br />
+<br />
 
+</div>
+\vspace{1.0in}\vspace*{\fill}
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -707,8 +742,11 @@ balR0 v l r = undefined</div>
 </div>
 
 <div id="RightBig, RightHeavy" class="hwex">
-<p><br /><strong>Exercise: (RightBig, RightHeavy): </strong>Fix the implementation of <code>balRR</code> so that it implements the given type.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (RightBig, RightHeavy): </strong>Fix the implementation of <code>balRR</code> so that it implements the given type.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
@@ -727,8 +765,11 @@ balRR v l r = undefined</div>
 </div>
 
 <div id="RightBig, LeftHeavy" class="hwex">
-<p><br /><strong>Exercise: (RightBig, LeftHeavy): </strong>Fix the implementation of <code>balRL</code> so that it implements the given type.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (RightBig, LeftHeavy): </strong>Fix the implementation of <code>balRL</code> so that it implements the given type.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
@@ -746,7 +787,8 @@ balRR v l r = undefined</div>
 balRL v l r = undefined</div>
 </div>
 
-<p><br /><strong>To Correctly Insert</strong> an element, we recursively add it to the left or right subtree as appropriate and then determine which of the above cases hold in order to call the corresponding <em>rebalance</em> function which restores the invariants.</p>
+<p><br />
+<strong>To Correctly Insert</strong> an element, we recursively add it to the left or right subtree as appropriate and then determine which of the above cases hold in order to call the corresponding <em>rebalance</em> function which restores the invariants.</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -778,7 +820,8 @@ eqOrUp s t = d == 0 || d == 1
     d      = diff t s</div>
 </div>
 
-<p><br /><strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here's the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
+<p><br />
+<strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here's the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -802,8 +845,11 @@ insL a (Node v l r _)
 </div>
 
 <div id="InsertRight" class="hwex">
-<p><br /><strong>Exercise: (InsertRight): </strong>The code for <code>insR</code> is symmetric. To make sure you're following along, why don't you fill it in?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (InsertRight): </strong>The code for <code>insR</code> is symmetric. To make sure you're following along, why don't you fill it in?</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
@@ -829,8 +875,10 @@ insR = undefined</div>
 <li>observe that deleting can <em>decrease</em> the height by at most <code>1</code>,</li>
 <li>perform a rotation to fix the imbalance caused by the decrease.</li>
 </ol>
-<p><br /><strong>We painted ourselves into a corner</strong> with <code>insert</code>: the code for actually inserting an element is intermingled with the code for determining and performing the rotation. That is, see how the code that determines which rotation to apply -- <code>leftBig</code>, <code>leftHeavy</code>, etc. -- is <em>inside</em> the <code>insL</code> which does the insertion as well. This is correct, but it means we would have to <em>repeat</em> the case analysis when deleting a value, which is unfortunate.</p>
-<p><br /><strong>Instead lets refactor</strong> the rebalancing code into a separate function, that can be used by <em>both</em> <code>insert</code> and <code>delete</code>. It looks like this:</p>
+<p><br />
+<strong>We painted ourselves into a corner</strong> with <code>insert</code>: the code for actually inserting an element is intermingled with the code for determining and performing the rotation. That is, see how the code that determines which rotation to apply -- <code>leftBig</code>, <code>leftHeavy</code>, etc. -- is <em>inside</em> the <code>insL</code> which does the insertion as well. This is correct, but it means we would have to <em>repeat</em> the case analysis when deleting a value, which is unfortunate.</p>
+<p><br />
+<strong>Instead lets refactor</strong> the rebalancing code into a separate function, that can be used by <em>both</em> <code>insert</code> and <code>delete</code>. It looks like this:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -885,7 +933,8 @@ bigHt l r t = lBig && rBig
     hr      = realHeight r</div>
 </div>
 
-<p><br /><strong>Insert</strong> can now be written very simply as the following function that recursively inserts into the appropriate subtree and then calls <code>bal</code> to fix any imbalance:</p>
+<p><br />
+<strong>Insert</strong> can now be written very simply as the following function that recursively inserts into the appropriate subtree and then calls <code>bal</code> to fix any imbalance:</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -925,7 +974,8 @@ delete _ Leaf = Leaf
 eqOrDn s t = eqOrUp t s</div>
 </div>
 
-<p><br /><strong>The tricky case</strong> is when we actually <em>find</em> the element that is to be removed. Here, we call <code>merge</code> to link up the two subtrees <code>l</code> and <code>r</code> after hoisting the smallest element from the right tree <code>r</code> as the new root which replaces the deleted element <code>x</code>.</p>
+<p><br />
+<strong>The tricky case</strong> is when we actually <em>find</em> the element that is to be removed. Here, we call <code>merge</code> to link up the two subtrees <code>l</code> and <code>r</code> after hoisting the smallest element from the right tree <code>r</code> as the new root which replaces the deleted element <code>x</code>.</p>
 <div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -969,7 +1019,8 @@ getMin (Node x l r _)    = (x', bal x l' r)
 <li><em>Verifying</em> the implemetation. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></li>
 </ol>
 <p>We've done this <a href="#lemmas">once before</a> already, so this is a good exercise to solidify your understanding of that material.</p>
-<p><br /><strong>The Elements</strong> of an <code>AVL</code> tree can be described via a measure defined as follows:</p>
+<p><br />
+<strong>The Elements</strong> of an <code>AVL</code> tree can be described via a measure defined as follows:</p>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -988,8 +1039,11 @@ elems Leaf           = S.empty</div>
 
 <p>Let us use the above <code>measure</code> to specify and verify that our <code>AVL</code> library actually implements a <code>Set</code> or collection API.</p>
 <div id="Membership" class="hwex">
-<p><br /><strong>Exercise: (Membership): </strong>Complete the implementation of the implementation of <code>member</code> that checks if an element is in an <code>AVL</code> tree:</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Membership): </strong>Complete the implementation of the implementation of <code>member</code> that checks if an element is in an <code>AVL</code> tree:</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
 
@@ -1011,8 +1065,11 @@ hasElem x t = True
 </div>
 
 <div id="Insertion" class="hwex">
-<p><br /><strong>Exercise: (Insertion): </strong>Modify <code>insert'</code> to obtain a function <code>insertAPI</code> that states that the output tree contains the newly inserted element (in addition to the old elements):</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Insertion): </strong>Modify <code>insert'</code> to obtain a function <code>insertAPI</code> that states that the output tree contains the newly inserted element (in addition to the old elements):</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
 
@@ -1032,8 +1089,11 @@ addElem x s t = True
 </div>
 
 <div id="Insertion" class="hwex">
-<p><br /><strong>Exercise: (Insertion): </strong>Modify <code>delete</code> to obtain a function <code>deleteAPI</code> that states that the output tree contains the old elements minus the removed element:</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Insertion): </strong>Modify <code>delete</code> to obtain a function <code>deleteAPI</code> that states that the output tree contains the old elements minus the removed element:</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
 

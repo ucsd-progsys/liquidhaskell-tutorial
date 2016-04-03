@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -228,7 +230,6 @@ code > span.er { color: #ff0000; font-weight: bold; }
   </button>
  
   <div id="program-0" class="programbox">{-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
 
 module RefinedDatatypes
@@ -296,8 +297,10 @@ die msg = error msg
 </div>
 
 <p>Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
-<p><br /><strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
-<p><br /><strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
+<p><br />
+<strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><br />
+<strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -323,7 +326,8 @@ die msg = error msg
 {-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> The refined data definition is internally converted into refined types for the data constructor <code>SP</code>:</p>
+<p><br />
+<strong>Refined Data Constructors</strong> The refined data definition is internally converted into refined types for the data constructor <code>SP</code>:</p>
 <pre class="spec"><code>-- Generated Internal representation
 data Sparse a where
   SP :: spDim:Nat
@@ -357,7 +361,8 @@ badSP = SP 5 [ (0, "cat")
              , (6, "dog") ]</div>
 </div>
 
-<p><br /><strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p><br />
+<strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -369,7 +374,8 @@ badSP = SP 5 [ (0, "cat")
   <div id="program-6" class="programbox">{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-}</div>
 </div>
 
-<p><br /><strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<p><br />
+<strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -386,7 +392,8 @@ dotProd x (SP _ y) = go 0 y
 </div>
 
 <p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br /><strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
+<p><br />
+<strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -403,8 +410,11 @@ dotProd' x (SP _ y) = foldl' body 0 y
 
 <p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
 <div id="Sanitization" class="hwex">
-<p><br /><strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:</p>
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>You need to check that <em>all</em> the indices in <code>elts</code> are less than <code>dim</code>; the easiest way is to compute a new <code>Maybe [(Int, a)]</code> which is <code>Just</code> the original pairs if they are valid, and <code>Nothing</code> otherwise.</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
@@ -423,8 +433,11 @@ test1     = fromJust $ fromList 3 [(0, "cat"), (2, "mouse")]</div>
 </div>
 
 <div id="Addition" class="hwex">
-<p><br /><strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Addition): </strong>Write the specification and implementation of a function <code>plus</code> that performs the addition of two <code>Sparse</code> vectors of the <em>same</em> dimension, yielding an output of that dimension. When you are done, the following code should typecheck:</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
@@ -477,7 +490,8 @@ infixr 9 :<</div>
       | (:<) { hd :: a, tl :: IncList {v:a | hd <= v}}  @-}</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
+<p><br />
+<strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
 <pre class="spec"><code>-- Generated Internal representation
 data IncList a where
   Emp  :: IncList a
@@ -497,7 +511,8 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
 </div>
 
 <p>Its all very well to <em>specify</em> ordered lists. Next, lets see how its equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
-<p><br /><strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<p><br />
+<strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -528,8 +543,11 @@ insert y (x :< xs)
 </div>
 
 <div id="Insertion Sort" class="hwex">
-<p><br /><strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Insertion Sort): </strong>Complete the implementation of the function below to use <code>foldr</code> to eliminate the explicit recursion in <code>insertSort</code>.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
@@ -546,7 +564,8 @@ insertSort' xs  = foldr f b xs
      b          = undefined    -- Fill this in</div>
 </div>
 
-<p><br /><strong>Merge Sort</strong> Similarly, it is easy to write merge sort, by implementing the three steps. First, we write a function that <em>splits</em> the input into two equal sized halves:</p>
+<p><br />
+<strong>Merge Sort</strong> Similarly, it is easy to write merge sort, by implementing the three steps. First, we write a function that <em>splits</em> the input into two equal sized halves:</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -597,8 +616,11 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
 </div>
 
 <div id="QuickSort" class="hwex">
-<p><br /><strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.</p>
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>Think about how <code>append</code> should behave so that the <code>quickSort</code> has the desired property. That is, suppose that <code>ys</code> and <code>zs</code> are already in <em>increasing order</em>. Does that mean that <code>append x ys zs</code> are <em>also</em> in increasing order? No! What other requirement do you need? bottle that intuition into a suitable <em>specification</em> for <code>append</code> and then ensure that the code satisfies that specification.</p>
 <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
@@ -642,7 +664,8 @@ append z (x :< xs) ys = x :< append z xs ys</div>
                   , right :: BST a }</div>
 </div>
 
-<p><br /><strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
+<p><br />
+<strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
 <div id="fig:bst" style="align: left; text-align:center;">
   <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
   <div class="caption" style="text-align:center"><b>Figure 5.1:</b> A Binary Search Tree with values between 1 and 9.
@@ -671,7 +694,8 @@ okBST =  Node 6
                  Leaf)</div>
 </div>
 
-<p><br /><strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p><br />
+<strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -689,7 +713,8 @@ okBST =  Node 6
 {-@ type BSTR a X = BST {v:a | X < v}             @-}</div>
 </div>
 
-<p><br /><strong>Refined Data Constructors</strong> As before, the above data definition creates a refined smart constructor for <code>BST</code></p>
+<p><br />
+<strong>Refined Data Constructors</strong> As before, the above data definition creates a refined smart constructor for <code>BST</code></p>
 <pre class="spec"><code>data BST a where
   Leaf :: BST a
   Node :: r:a -&gt; BST {v:a| v &lt; r}
@@ -707,17 +732,21 @@ okBST =  Node 6
   <div id="program-24" class="programbox">badBST =  Node 66
              (Node 4
                  (Node 1 Leaf Leaf)
-                 (Node 29 Leaf Leaf))  -- Out of order, rejected
+                 (Node 69 Leaf Leaf))  -- Out of order, rejected
              (Node 99
                  (Node 77 Leaf Leaf)
                  Leaf)</div>
 </div>
 
 <div id="Duplicates" class="hwex">
-<p><br /><strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Duplicates): </strong>Can a <code>BST Int</code> contain duplicates?</p>
+<br />
+<br />
+
 </div>
-<p><br /><strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
+<p><br />
+<strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -734,7 +763,8 @@ mem k (Node k' l r)
   | otherwise       = mem k r</div>
 </div>
 
-<p><br /><strong>Singleton</strong> Next, another easy warm-up: a function to create a <code>BST</code> with a single given element:</p>
+<p><br />
+<strong>Singleton</strong> Next, another easy warm-up: a function to create a <code>BST</code> with a single given element:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -747,7 +777,8 @@ mem k (Node k' l r)
 one x = Node x Leaf Leaf</div>
 </div>
 
-<p><br /><strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br />
+<strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -764,7 +795,8 @@ add k' t@(Node k l r)
   | otherwise        = t</div>
 </div>
 
-<p><br /><strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p><br />
+<strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -806,8 +838,11 @@ delMin Leaf            = die "Don't say I didn't warn ya!"</div>
 </div>
 
 <div id="Delete" class="hwex">
-<p><br /><strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Delete): </strong>Use <code>delMin</code> to complete the implementation of <code>del</code> which <em>deletes</em> a given element from a <code>BST</code>, if it is present.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
@@ -822,15 +857,25 @@ del k' t@(Node k l r) = undefined
 del _  Leaf           = Leaf</div>
 </div>
 
-
+\begin{comment}
+**FIXME** See issue about using RAW FIELDS vs PATTERN MATCHING.
+\end{comment}
 <div id="Safely Deleting Minimum" class="hwex">
-<p><br /><strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.</p>
-<br /><br />
-</div>
+<p><br />
+<strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.</p>
+<br />
+<br />
 
+</div>
+\begin{comment}
+**FIXME**  I shouldn&#39;t have to read a future chapter to complete an exercise in this chapter.
+\end{comment}
 <div id="BST Sort" class="hwex">
-<p><br /><strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
@@ -857,7 +902,8 @@ toIncList Leaf         = undefined</div>
 <h2>Recap</h2>
 <p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them &quot;smart&quot; in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
 <p>One recurring theme in this chapter was that we had to create new versions of standard datatypes, just in order to specify certain invariants. For example, we had to write a special list type, with its own <em>copies</em> of nil and cons. Similarly, to implement <code>delMin</code> we had to create our own pair type.</p>
-<p><br /><strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
+<p><br />
+<strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
 </section>
 </section>
 <section class="footnotes">

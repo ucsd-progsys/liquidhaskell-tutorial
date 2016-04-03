@@ -56,6 +56,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
 </head>
 <body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
@@ -96,7 +97,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
 <li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
 <li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#testing-values-booleans-and-propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
+<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
 <li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
 <li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
 </ul>
@@ -164,7 +165,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
 <li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
 <li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#nested-bytestrings'><b>11.6.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
 </ul>
 <li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
 <ul class='section'>
@@ -227,8 +229,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">{-@ LIQUID "--diff"           @-}
-{-@ LIQUID "--real"           @-}
+  <div id="program-0" class="programbox">{-@ LIQUID "--real"           @-}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}
 
@@ -252,7 +253,8 @@ flatten :: Int -> Int -> Vector (Vector a) -> Vector a
 </div>
 
 <p>Many of the programs we have seen so far, for example those in <a href="#vectorbounds">here</a>, suffer from <em>indexitis</em>. This is a term coined by <a href="http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383">Richard Bird</a> which describes a tendency to perform low-level manipulations to iterate over the indices into a collection, opening the door to various off-by-one errors. Such errors can be eliminated by instead programming at a higher level, using a <a href="http://www.cs.ox.ac.uk/ralf.hinze/publications/ICFP09.pdf">wholemeal approach</a> where the emphasis is on using aggregate operations, like <code>map</code>, <code>fold</code> and <code>reduce</code>.</p>
-<p><br /><strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><br />
+<strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <section id="wholemeal-programming" class="level2">
 <h2>Wholemeal Programming</h2>
 <p>Indexitis begone! As an example of wholemeal programming, lets write a small library that represents vectors as lists and matrices as nested vectors:</p>
@@ -276,7 +278,8 @@ data Matrix a = M { mRow  :: Int
               deriving (Eq)</div>
 </div>
 
-<p><br /><strong>The Dot Product</strong> of two <code>Vector</code>s can be easily computed using a fold:</p>
+<p><br />
+<strong>The Dot Product</strong> of two <code>Vector</code>s can be easily computed using a fold:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -293,7 +296,8 @@ dotProd vx vy = sum (prod xs ys)
     ys        = vElts vy</div>
 </div>
 
-<p><br /><strong>Matrix Multiplication</strong> can similarly be expressed in a high-level, wholemeal fashion, by eschewing low level index manipulations in favor of a high-level <em>iterator</em> over the <code>Matrix</code> elements:</p>
+<p><br />
+<strong>Matrix Multiplication</strong> can similarly be expressed in a high-level, wholemeal fashion, by eschewing low level index manipulations in favor of a high-level <em>iterator</em> over the <code>Matrix</code> elements:</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -311,10 +315,12 @@ matProd (M rx _ xs) (M _ cy ys)
                        dotProd xi yj</div>
 </div>
 
-<p><br /><strong>The Iteration</strong> embodied by the <code>for</code> combinator, is simply a <code>map</code> over the elements of the vector.</p>
+<p><br />
+<strong>The Iteration</strong> embodied by the <code>for</code> combinator, is simply a <code>map</code> over the elements of the vector.</p>
 <pre class="spec"><code>for            :: Vector a -&gt; (a -&gt; b) -&gt; Vector b
 for (V n xs) f = V n (map f xs)</code></pre>
-<p><br /><strong>Wholemeal programming frees</strong> us from having to fret about low-level index range manipulation, but is hardly a panacea. Instead, we must now think carefully about the <em>compatibility</em> of the various aggreates. For example,</p>
+<p><br />
+<strong>Wholemeal programming frees</strong> us from having to fret about low-level index range manipulation, but is hardly a panacea. Instead, we must now think carefully about the <em>compatibility</em> of the various aggreates. For example,</p>
 <ul>
 <li><p><code>dotProd</code> is only sensible on vectors of the same dimension; if one vector is shorter than another (i.e. has fewer elements) then we will won't get a run-time crash but instead will get some gibberish result that will be dreadfully hard to debug.</p></li>
 <li><p><code>matProd</code> is only well defined on matrices of compatible dimensions; the number of columns of <code>mx</code> must equal the number of rows of <code>my</code>. Otherwise, again, rather than an error, we will get the wrong output.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p></li>
@@ -323,7 +329,8 @@ for (V n xs) f = V n (map f xs)</code></pre>
 <section id="specifying-list-dimensions" class="level2">
 <h2>Specifying List Dimensions</h2>
 <p>In order to start reasoning about dimensions, we need a way to represent the <em>dimension</em> of a list inside the refinement logic. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
-<p><br /><strong>Measures</strong> are ideal for this task. <a href="#boolmeasures">Previously</a> we saw how we could lift Haskell functions up to the refinement logic. Lets write a measure to describe the length of a list: <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p><br />
+<strong>Measures</strong> are ideal for this task. <a href="#boolmeasures">Previously</a> we saw how we could lift Haskell functions up to the refinement logic. Lets write a measure to describe the length of a list: <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -338,11 +345,13 @@ size []     = 0
 size (_:rs) = 1 + size rs</div>
 </div>
 
-<p><br /><strong>Measures Refine Constructors</strong> As with <a href="#autosmart">refined data definitions</a>, the measures are translated into strengthened types for the type's constructors. For example, the <code>size</code> measure is translated into:</p>
+<p><br />
+<strong>Measures Refine Constructors</strong> As with <a href="#autosmart">refined data definitions</a>, the measures are translated into strengthened types for the type's constructors. For example, the <code>size</code> measure is translated into:</p>
 <pre class="spec"><code>data [a] where
   []  :: {v: [a] | size v = 0}
   (:) :: a -&gt; xs:[a] -&gt; {v:[a]|size v = 1 + size xs}</code></pre>
-<p><br /><strong>Multiple Measures</strong> may be defined for the same data type. For example, in addition to the <code>size</code> measure, we can define a <code>notEmpty</code> measure for the list type:</p>
+<p><br />
+<strong>Multiple Measures</strong> may be defined for the same data type. For example, in addition to the <code>size</code> measure, we can define a <code>notEmpty</code> measure for the list type:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -357,7 +366,8 @@ notEmpty []    = False
 notEmpty (_:_) = True</div>
 </div>
 
-<p><br /><strong>We Compose Different Measures</strong> simply by <em>conjoining</em> the refinements in the strengthened constructors. For example, the two measures for lists end up yielding the constructors:</p>
+<p><br />
+<strong>We Compose Different Measures</strong> simply by <em>conjoining</em> the refinements in the strengthened constructors. For example, the two measures for lists end up yielding the constructors:</p>
 <pre class="spec"><code>data [a] where
   []  :: {v: [a] | not (notEmpty v) &amp;&amp; size v = 0}
   (:) :: a
@@ -365,7 +375,8 @@ notEmpty (_:_) = True</div>
       -&gt; {v:[a]| notEmpty v &amp;&amp; size v = 1 + size xs}</code></pre>
 <p>This is a very significant advantage of using measures instead of indices as in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, as <em>decouples property from structure</em>, which crucially enables the use of the same structure for many different purposes. That is, we need not know <em>a priori</em> what indices to bake into the structure, but can define a generic structure and refine it <em>a posteriori</em> as needed with new measures.</p>
 <p>We are almost ready to begin creating a dimension aware API for lists; one last thing that is useful is a couple of aliases for describing lists of a given dimension.</p>
-<p><br /><strong>To make signatures symmetric</strong> lets define an alias for plain old (unrefined) lists:</p>
+<p><br />
+<strong>To make signatures symmetric</strong> lets define an alias for plain old (unrefined) lists:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -378,7 +389,8 @@ notEmpty (_:_) = True</div>
 </div>
 
 <div class="toolinfo">
-<p><br /><strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.</p>
+<p><br />
+<strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.</p>
 </div>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
@@ -397,8 +409,12 @@ notEmpty (_:_) = True</div>
 <h2>Lists: Size Preserving API</h2>
 <p>With the types and aliases firmly in our pockets, let us write dimension-aware variants of the usual list functions. The implementations are the same as in the standard library i.e. <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html"><code>Data.List</code></a>, but the specifications are enriched with dimension information.</p>
 <div id="Map" class="hwex">
-<p><br /><strong>Exercise: (Map): </strong><br /><strong>map</strong> yields a list with the same size as the input. Fix the specification of <code>map</code> so that the <code>prop_map</code> is verified.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Map): </strong><br />
+<strong>map</strong> yields a list with the same size as the input. Fix the specification of <code>map</code> so that the <code>prop_map</code> is verified.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
@@ -419,8 +435,11 @@ prop_map xs = size ys == size xs
 </div>
 
 <div id="Reverse" class="hwex">
-<p><br /><strong>Exercise: (Reverse): </strong>We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Reverse): </strong>We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.</p>
+<br />
+<br />
+
 </div>
 <p><strong>Hint: </strong>How big is the list returned by <code>go</code>?</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
@@ -438,7 +457,8 @@ reverse xs        = go [] xs
     go acc (x:xs) = go (x:acc) xs</div>
 </div>
 
-<p><br /><strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p><br />
+<strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -456,7 +476,8 @@ zipWith _ [] []         = []
 zipWith _ _  _          = die "no other cases"</div>
 </div>
 
-<p><br /><strong>unsafeZip</strong> The signature for <code>zipWith</code> is quite severe -- it rules out the case where the zipping occurs only upto the shorter input. Here's a function that actually allows for that case, where the output type is the <em>shorter</em> of the two inputs:</p>
+<p><br />
+<strong>unsafeZip</strong> The signature for <code>zipWith</code> is quite severe -- it rules out the case where the zipping occurs only upto the shorter input. Here's a function that actually allows for that case, where the output type is the <em>shorter</em> of the two inputs:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -485,8 +506,11 @@ zip _  []         = []</div>
 </div>
 
 <div id="Zip Unless Empty" class="hwex">
-<p><br /><strong>Exercise: (Zip Unless Empty): </strong>In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Zip Unless Empty): </strong>In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
@@ -516,7 +540,8 @@ test3     = zipOrNull ["cat", "dog"] []</div>
 <section id="listreducing" class="level2">
 <h2>Lists: Size Reducing API</h2>
 <p>Next, lets look at some functions that truncate lists, in one way or another.</p>
-<p><br /><strong>Take</strong> lets us grab the first <code>k</code> elements from a list:</p>
+<p><br />
+<strong>Take</strong> lets us grab the first <code>k</code> elements from a list:</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -544,8 +569,11 @@ take' _ _      = die "won't  happen"</div>
 </div>
 
 <div id="Drop" class="hwex">
-<p><br /><strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>'s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>'s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
@@ -564,8 +592,11 @@ test4 = drop 1 ["cat", "dog", "mouse"]</div>
 </div>
 
 <div id="Take it easy" class="hwex">
-<p><br /><strong>Exercise: (Take it easy): </strong>The version <code>take'</code> above is too restrictive; it insists that the list actually have at least <code>n</code> elements. Modify the signature for the <em>real</em> <code>take</code> function so that the code below is accepted by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Take it easy): </strong>The version <code>take'</code> above is too restrictive; it insists that the list actually have at least <code>n</code> elements. Modify the signature for the <em>real</em> <code>take</code> function so that the code below is accepted by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
@@ -584,7 +615,8 @@ test5 = [ take 2  ["cat", "dog", "mouse"]
         , take 20 ["cow", "goat"]        ]</div>
 </div>
 
-<p><br /><strong>The Partition</strong> function breaks a list into two sub-lists of elements that either satisfy or fail a user supplied predicate.</p>
+<p><br />
+<strong>The Partition</strong> function breaks a list into two sub-lists of elements that either satisfy or fail a user supplied predicate.</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -633,8 +665,11 @@ snd (_, y) = y</code></pre>
 </div>
 
 <div id="QuickSort" class="hwex">
-<p><br /><strong>Exercise: (QuickSort): </strong>Use <code>partition</code> to implement <code>quickSort</code>.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (QuickSort): </strong>Use <code>partition</code> to implement <code>quickSort</code>.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
@@ -659,7 +694,8 @@ test10 = quickSort test4</div>
 <section id="dimension-safe-vector-api" class="level2">
 <h2>Dimension Safe Vector API</h2>
 <p>We can use the dimension aware lists to create a safe vector API.</p>
-<p><br /><strong>Legal Vectors</strong> are those whose <code>vDim</code> field actually equals the size of the underlying list:</p>
+<p><br />
+<strong>Legal Vectors</strong> are those whose <code>vDim</code> field actually equals the size of the underlying list:</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -717,7 +753,8 @@ badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
 {-@ type VectorX a X = VectorN a {vDim X}        @-}</div>
 </div>
 
-<p><br /><strong>To Create</strong> a <code>Vector</code> safely, we can start with the empty vector <code>vEmp</code> and then add elements one-by-one with <code>vCons</code>:</p>
+<p><br />
+<strong>To Create</strong> a <code>Vector</code> safely, we can start with the empty vector <code>vEmp</code> and then add elements one-by-one with <code>vCons</code>:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -733,7 +770,8 @@ vEmp = V 0 []
 vCons x (V n xs) = V (n+1) (x:xs)</div>
 </div>
 
-<p><br /><strong>To Access</strong> vectors at a low-level, we can use equivalents of <em>head</em> and <em>tail</em>, which only work on non-empty <code>Vector</code>s:</p>
+<p><br />
+<strong>To Access</strong> vectors at a low-level, we can use equivalents of <em>head</em> and <em>tail</em>, which only work on non-empty <code>Vector</code>s:</p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -751,7 +789,8 @@ vTl (V n (_:xs)) = V (n-1) xs
 vTl _            = die "nope"</div>
 </div>
 
-<p><br /><strong>To Iterate</strong> over a vector we can use the <code>for</code> combinator:</p>
+<p><br />
+<strong>To Iterate</strong> over a vector we can use the <code>for</code> combinator:</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -764,7 +803,8 @@ vTl _            = die "nope"</div>
 for (V n xs) f = V n (map f xs)</div>
 </div>
 
-<p><br /><strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
+<p><br />
+<strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -780,7 +820,8 @@ for (V n xs) f = V n (map f xs)</div>
 vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)</div>
 </div>
 
-<p><br /><strong>The Dot Product</strong> of two <code>Vector</code>s can be now implemented in a wholemeal <em>and</em> dimension safe manner, as:</p>
+<p><br />
+<strong>The Dot Product</strong> of two <code>Vector</code>s can be now implemented in a wholemeal <em>and</em> dimension safe manner, as:</p>
 <div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -794,8 +835,11 @@ dotProduct x y = sum $ vElts $ vBin (*) x y</div>
 </div>
 
 <div id="Vector Constructor" class="hwex">
-<p><br /><strong>Exercise: (Vector Constructor): </strong>Complete the <em>specification</em> and <em>implementation</em> of <code>vecFromList</code> which <em>creates</em> a <code>Vector</code> from a plain list.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Vector Constructor): </strong>Complete the <em>specification</em> and <em>implementation</em> of <code>vecFromList</code> which <em>creates</em> a <code>Vector</code> from a plain list.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
@@ -815,8 +859,11 @@ test6  = dotProduct vx vy    -- should be accepted by LH
 </div>
 
 <div id="Flatten" class="hwex">
-<p><br /><strong>Exercise: (Flatten): </strong>Write a function to <code>flatten</code> a nested <code>Vector</code>.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Flatten): </strong>Write a function to <code>flatten</code> a nested <code>Vector</code>.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
@@ -834,7 +881,8 @@ test6  = dotProduct vx vy    -- should be accepted by LH
 flatten = undefined</div>
 </div>
 
-<p><br /><strong>The Cross Product</strong> of two vectors can now be computed in a nice wholemeal style, by a nested iteration followed by a <code>flatten</code>.</p>
+<p><br />
+<strong>The Cross Product</strong> of two vectors can now be computed in a nice wholemeal style, by a nested iteration followed by a <code>flatten</code>.</p>
 <div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -858,7 +906,8 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
 <section id="dimension-safe-matrix-api" class="level2">
 <h2>Dimension Safe Matrix API</h2>
 <p>The same methods let us create a dimension safe Matrix API which ensures that only legal matrices are created and that operations are performed on compatible matrices.</p>
-<p><br /><strong>Legal Matrices</strong> are those where the dimension of the outer vector equals the number of rows <code>mRow</code> and the dimension of each inner vector is <code>mCol</code>. We can specify legality in a refined data definition:</p>
+<p><br />
+<strong>Legal Matrices</strong> are those where the dimension of the outer vector equals the number of rows <code>mRow</code> and the dimension of each inner vector is <code>mCol</code>. We can specify legality in a refined data definition:</p>
 <div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -915,8 +964,11 @@ ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
 </div>
 
 <div id="Legal Matrix" class="hwex">
-<p><br /><strong>Exercise: (Legal Matrix): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so that they are legal matrices accepted by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Legal Matrix): </strong>Modify the definitions of <code>bad1</code> and <code>bad2</code> so that they are legal matrices accepted by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
 
@@ -936,8 +988,11 @@ bad2 = M 2 3 (V 2 [ V 2 [1, 2]
 </div>
 
 <div id="Matrix Constructor" class="hwex">
-<p><br /><strong>Exercise: (Matrix Constructor): </strong>Write a function to construct a <code>Matrix</code> from a nested list.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Matrix Constructor): </strong>Write a function to construct a <code>Matrix</code> from a nested list.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
 
@@ -960,8 +1015,11 @@ matFromList xss@(xs:_)
 </div>
 
 <div id="Refined Matrix Constructor" class="hwex">
-<p><br /><strong>Exercise: (Refined Matrix Constructor): </strong>Refine the specification for <code>matFromList</code> so that the following is accepted by LiquidHaskell.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Refined Matrix Constructor): </strong>Refine the specification for <code>matFromList</code> so that the following is accepted by LiquidHaskell.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
 
@@ -977,7 +1035,8 @@ mat23     = matFromList [ [1, 2]
 </div>
 
 <p><strong>Hint: </strong>It is easy to specify the number of rows from <code>xss</code>. How will you figure out the number of columns? A measure may be useful.</p>
-<p><br /><strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You'd think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second -- after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
+<p><br />
+<strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You'd think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second -- after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
 <div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1016,8 +1075,11 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
 </div>
 
 <div id="Matrix Transpose" class="hwex">
-<p><br /><strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don't.</p>
-<br /><br />
+<p><br />
+<strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don't.</p>
+<br />
+<br />
+
 </div>
 <div id="program-pane-43" class="welleditor" style="background:#fff; position:relative">
 
