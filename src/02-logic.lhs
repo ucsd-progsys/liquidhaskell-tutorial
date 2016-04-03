@@ -11,7 +11,9 @@ main :: IO ()
 main = return ()
 
 {-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p ==> Prop q)} @-}
+
 {-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
+
 {-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
 
 ax1 :: Int -> Bool
@@ -395,7 +397,7 @@ is *not* valid:
 
 \begin{code}
 {-@ ax0' :: TRUE @-}
-ax0' = 1 + 1 == 3
+ax0' = 1 + 2 == 3
 \end{code}
 
 \newthought{SMT Solvers determine Validity} *without*
@@ -522,6 +524,7 @@ the size of `ys` is one more than `xs`. ^[Fear not! We
 will describe how this works [soon](#autosmart)]
 
 \begin{code}
+{-@ fx2VC :: _ -> _ -> _ -> FALSE @-}
 fx2VC x xs ys =   (0 <= size xs)
               ==> (size ys == 1 + size xs)
               ==> (0 < size ys)
