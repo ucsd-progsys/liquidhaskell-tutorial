@@ -83,8 +83,8 @@ readDoc f = do
   str    <- readFile f
   let md = readMarkdown def str
   case md of
-    Left e  -> error $ "readDoc hits Error!: " ++ show e
     Right d -> return d
+    -- Left e  -> error $ "readDoc hits Error!: " ++ show e
 
 
 
