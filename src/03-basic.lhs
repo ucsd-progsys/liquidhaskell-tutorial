@@ -66,20 +66,26 @@ Errors
 If we try to say nonsensical things like:
 
 \begin{code}
-{-@ one' :: Zero @-}
-one' = 1 :: Int
+nonsense = one'
+  where
+  {-@ one' :: Zero @-}
+  one' = 1 :: Int
 \end{code}
 
 \noindent
 LiquidHaskell will complain with an error message:
 
 ~~~~~{.sh}
-    02-basic.lhs:58:8: Error: Liquid Type Mismatch
-       Inferred type
-         VV : Int | VV == (1  :  int)
+../liquidhaskell-tutorial/src/03-basic.lhs:72:3-6: Error: Liquid Type Mismatch
 
-       not a subtype of Required type
-         VV : Int | VV == 0
+72 |   one' = 1 :: Int
+       ^^^^
+
+  Inferred type
+    VV : {VV : Int | VV == (1 : int)}
+
+  not a subtype of Required type
+    VV : {VV : Int | VV == 0}
 ~~~~~
 
 \noindent
