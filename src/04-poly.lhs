@@ -4,8 +4,9 @@ Polymorphism {#polymorphism}
 
 \begin{comment}
 \begin{code}
-{-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--no-termination" @-}
+{-@ LIQUID "--short-names"         @-}
+{-@ LIQUID "--no-termination"      @-}
+{-@ LIQUID "--scrape-used-imports" @-}
 
 module VectorBounds
    ( safeLookup
