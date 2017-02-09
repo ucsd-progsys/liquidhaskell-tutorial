@@ -12,7 +12,7 @@ invariant with LiquidHaskell.
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--total"          @-}
+{-@ LIQUID "--totality"       @-}
 {-@ LIQUID "--maxparams=3"    @-}
 
 module LazyQueue (Queue, insert, remove, emp) where
@@ -30,15 +30,15 @@ data Queue a = Q  { front :: SList a
 die x = error x
 
 {-@ invariant {v:SList a | size v >= 0} @-}
-        
+
 -- Source: Okasaki, JFP 1995
 -- http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
 
-replicate :: Int -> a -> Queue a 
+replicate :: Int -> a -> Queue a
 \end{code}
 \end{comment}
 
-Queues 
+Queues
 ------
 
 A [queue][queue-wiki] is a structure into which we can `insert` and `remove` data
@@ -148,7 +148,7 @@ that the *real* size is saved in the `size` field:
 
 \begin{code}
 {-@ data SList a = SL {
-       size  :: Nat 
+       size  :: Nat
      , elems :: {v:[a] | realSize v = size}
      }
   @-}
@@ -183,7 +183,7 @@ cons x (SL n xs) = SL (n+1) (x:xs)
 
 <div class="hwex" id="Destructing Lists">We can destruct lists by writing a `hd` and `tl`
 function as shown below. Fix the specification or implementation such that the definitions
-typecheck. 
+typecheck.
 </div>
 
 \begin{code}
@@ -192,7 +192,7 @@ tl (SL n (_:xs)) = SL (n-1) xs
 tl _             = die "empty SList"
 
 {-@ hd           :: xs:SList a -> a @-}
-hd (SL _ (x:_))  = x 
+hd (SL _ (x:_))  = x
 hd _             = die "empty SList"
 \end{code}
 
@@ -213,7 +213,7 @@ It is quite straightforward to define the `Queue` type, as a pair of lists,
 
 \begin{code}
 {-@ data Queue a = Q {
-       front :: SList a 
+       front :: SList a
      , back  :: SListLE a (size front)
      }                                    @-}
 \end{code}
@@ -228,7 +228,7 @@ It is quite straightforward to define the `Queue` type, as a pair of lists,
 As a quick check, notice that we *cannot represent illegal Queues*:
 
 \begin{code}
-okQ  = Q okList nil  -- accepted, |front| > |back| 
+okQ  = Q okList nil  -- accepted, |front| > |back|
 
 badQ = Q nil okList  -- rejected, |front| < |back|
 \end{code}
@@ -261,7 +261,7 @@ Can you explain why we (or Okasaki) didn't use pattern matching here, and have
 instead opted for the explicit `hd` and `tl`?
 </div>
 
-<div class="hwex" id="Queue Sizes"> 
+<div class="hwex" id="Queue Sizes">
 If you did the *List Destructing* exercise above, then you will notice that
 the code for `remove` has a type error: namely, the calls to `hd` and `tl` may
 fail if the `f` list is empty.
@@ -286,7 +286,7 @@ badRemove = remove example0Q   -- reject
 {-@ emp :: QueueN _ 0 @-}
 
 {-@ example2Q :: QueueN _ 2 @-}
-example2Q = Q (1 `cons` (2 `cons` nil)) nil 
+example2Q = Q (1 `cons` (2 `cons` nil)) nil
 
 {-@ example0Q :: QueueN _ 0 @-}
 example0Q = Q nil nil
@@ -312,10 +312,10 @@ replicate 0 _ = emp
 replicate n x = insert x (replicate (n-1) x)
 
 {-@ y3 :: QueueN _ 3 @-}
-y3     = replicate 3 "Yeah!" 
+y3     = replicate 3 "Yeah!"
 
 {-@ y2 :: QueueN _ 3 @-}
-y2     = replicate 1 "No!" 
+y2     = replicate 1 "No!"
 \end{code}
 
 
@@ -327,12 +327,12 @@ from `b` over using the rotate function `rot` described next.
 
 \begin{code}
 {-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
-makeq f b 
+makeq f b
   | size b <= size f = Q f b
   | otherwise        = Q (rot f b nil) nil
 \end{code}
 
-<div class="hwex" id="Rotate"> \doublestar 
+<div class="hwex" id="Rotate"> \doublestar
 The Rotate function `rot` is only called when the `back` is one
 larger than the `front` (we never let things drift beyond that). It is
 arranged so that it the `hd` is built up fast, before the entire
@@ -384,4 +384,3 @@ This example is particularly interesting because
 1. The refinements express invariants that are critical for efficiency,
 2. The code introspects on the `size` to guarantee the invariants, and
 3. The code is quite simple and we hope, easy to follow!
-

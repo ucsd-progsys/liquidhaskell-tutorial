@@ -3,14 +3,13 @@ Numeric Measures {#numericmeasure}
 
 \begin{comment}
 \begin{code}
-{-@ LIQUID "--real"           @-}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}
 
 module NumericMeasures where
 import Prelude  hiding  (map, zipWith, zip, take, drop, reverse)
 
-{-@ type TRUE = {v:Bool | Prop v} @-}
+{-@ type TRUE = {v:Bool | v} @-}
 
 {-@ die :: {v:_ | false} -> a @-}
 die msg = error msg
