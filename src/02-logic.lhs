@@ -10,9 +10,6 @@ module Logic where
 main :: IO ()
 main = return ()
 
-{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p ==> Prop q)} @-}
-
-{-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
 
 {-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
 
@@ -135,11 +132,13 @@ what a predicate *means*. Intuitively, a predicate is just a Boolean valued
 Haskell function with `&&`, `||`, `not` being the usual operators and `==>` and
 `<=>` being two special operators.
 
-\newthought{The Implication} operator `==>` is equivalent to the Haskell
-function:
+\newthought{The Implication} operator `==>` is equivalent to the following
+Haskell function. (For now, ignore the signature: it just says the output
+is a `Bool` that is equal to the *logical* implication between the inputs `p`
+and `q`.)
 
 \begin{code}
-(==>) :: Bool -> Bool -> Bool
+{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | v <=> (p ==> q)} @-}
 False ==> False = True
 False ==> True  = True
 True  ==> True  = True
@@ -151,7 +150,7 @@ Haskell function:^[An observant reader may notice that <=> is the same as
 == if the arguments are of type Bool]
 
 \begin{code}
-(<=>)  :: Bool -> Bool -> Bool
+{-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | v <=> (p <=> q)} @-}
 False <=> False = True
 False <=> True  = False
 True  <=> True  = True
@@ -284,8 +283,8 @@ expressions that *always* evaluate to `False`:^[This syntax will be discussed in
 greater detail in [soon](#propositions)]
 
 \begin{code}
-{-@ type TRUE  = {v:Bool | Prop v}       @-}
-{-@ type FALSE = {v:Bool | not (Prop v)} @-}
+{-@ type TRUE  = {v:Bool | v    } @-}
+{-@ type FALSE = {v:Bool | not v} @-}
 \end{code}
 
 \noindent
@@ -524,7 +523,7 @@ the size of `ys` is one more than `xs`. ^[Fear not! We
 will describe how this works [soon](#autosmart)]
 
 \begin{code}
-{-@ fx2VC :: _ -> _ -> _ -> FALSE @-}
+{-@ fx2VC :: _ -> _ -> _ -> TRUE @-}
 fx2VC x xs ys =   (0 <= size xs)
               ==> (size ys == 1 + size xs)
               ==> (0 < size ys)
