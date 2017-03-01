@@ -6,7 +6,8 @@ Case Study: Pointers & Bytes {#case-study-pointers}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--diffcheck"     @-}
+{-@ LIQUID "--prune"          @-}
+
 {-# LANGUAGE ForeignFunctionInterface #-}
 
 module Memory where
@@ -27,7 +28,7 @@ unsafeHead       :: ByteString -> Word8
 create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
 -- boilerplate
-{-@ type TRUE = {v:Bool | Prop v } @-}
+{-@ type TRUE = {v:Bool | v } @-}
 
 -- TODO: we really shouldn't need this...
 {-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
@@ -765,7 +766,7 @@ The specification is that `group` should produce a
 \noindent We can use these to enrich the API with a `null` check
 
 \begin{code}
-{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
+{-@ null :: b:_ -> {v:Bool | v <=> Null b} @-}
 null (BS _ _ l) = l == 0
 \end{code}
 

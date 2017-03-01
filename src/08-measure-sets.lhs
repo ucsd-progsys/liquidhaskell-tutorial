@@ -108,7 +108,7 @@ type signatures that precisely track their set-theoretic behavior:
 empty        :: {v:Set a | v = empty}
 member       :: x:a
              -> s:Set a
-             -> {v:Bool | Prop v <=> member x s}
+             -> {v:Bool | v <=> member x s}
 
 singleton    :: x:a -> {v:Set a | v = singleton x}
 
@@ -131,8 +131,8 @@ output that must always be `True`. Lets define aliases for the the
 `Bool`eans that are always `True` or `False`
 
 \begin{code}
-{-@ type True  = {v:Bool |      Prop v } @-}
-{-@ type False = {v:Bool | not (Prop v)} @-}
+{-@ type True  = {v:Bool |     v} @-}
+{-@ type False = {v:Bool | not v} @-}
 \end{code}
 
 \noindent We can use `True` to state theorems.
@@ -155,7 +155,7 @@ implies _    _     = False
 \noindent and `Implies p q` is defined as
 
 \begin{code}
-{-@ type Implies P Q = {v:_ | Prop v <=> (Prop P => Prop Q)} @-}
+{-@ type Implies P Q = {v:_ | v <=> (P => Q)} @-}
 \end{code}
 
 <div class="hwex" id="Bounded Addition">
@@ -370,10 +370,10 @@ elem x (y:ys) = x == y || elem x ys
 elem _ []     = False
 
 {-@ test1 :: True @-}
-test1      = elem 2 [1,2,3]
+test1      = elem 2 [1, 2, 3]
 
 {-@ test2 :: False @-}
-test2      = elem 2 [1,3]
+test2      = elem 2 [1, 3]
 \end{code}
 
 Permutations
@@ -576,7 +576,7 @@ if you did a certain exercise above \ldots.]
 -- FIXME
 {-@ predicate In X Xs = Set_mem X (elts Xs) @-}
 
-{-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys }@-}
+{-@ isin :: x:_ -> ys:_ -> {v:Bool | v <=> In x ys }@-}
 isin x (y:ys)
   | x == y    = True
   | otherwise = x `isin` ys

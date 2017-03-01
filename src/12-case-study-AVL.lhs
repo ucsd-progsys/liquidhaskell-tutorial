@@ -778,10 +778,10 @@ actually implements a `Set` or collection API.
 
 \begin{code}
 -- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
-{-@ member :: (Ord a) => x:a -> t:AVL a -> {v: Bool | Prop v <=> hasElem x t} @-}
+{-@ member :: (Ord a) => x:a -> t:AVL a -> {v: Bool | v <=> hasElem x t} @-}
 member x t = undefined
 
-{-@ type BoolP P = {v:Bool | Prop v <=> Prop P} @-}
+{-@ type BoolP P = {v:Bool | v <=> P} @-}
 
 {-@ inline hasElem @-}
 hasElem x t = True

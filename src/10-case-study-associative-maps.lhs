@@ -144,7 +144,7 @@ returns the value associated with a given key.
 
 ~~~~~{.spec}
 -- | Check if key is defined
-mem :: k:k -> m:Map k v -> {v:Bool|Prop v <=> HasKey k m}
+mem :: k:k -> m:Map k v -> {v:Bool | v <=> HasKey k m}
 
 -- | Lookup key's value
 get :: k:k -> {m:Map k v | HasKey k m} -> v
@@ -561,7 +561,7 @@ so that it verifiably implements the given signature.
 
 \begin{code}
 {-@ mem :: (Ord k) => k:k -> m:Map k v
-                   -> {v:_ | Prop v <=> HasKey k m} @-}
+                   -> {v:_ | v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
   | k' <  k   = mem k' l
