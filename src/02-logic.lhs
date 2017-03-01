@@ -524,7 +524,7 @@ the size of `ys` is one more than `xs`. ^[Fear not! We
 will describe how this works [soon](#autosmart)]
 
 \begin{code}
-{-@ fx2VC :: _ -> _ -> _ -> FALSE @-}
+{-@ fx2VC :: _ -> _ -> _ -> TRUE @-}
 fx2VC x xs ys =   (0 <= size xs)
               ==> (size ys == 1 + size xs)
               ==> (0 < size ys)
