@@ -274,7 +274,7 @@ MathJax.Hub.Config({
   </button>
  
   <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--total"          @-}
+{-@ LIQUID "--totality"       @-}
 {-@ LIQUID "--maxparams=3"    @-}
 
 module LazyQueue (Queue, insert, remove, emp) where
@@ -292,11 +292,11 @@ data Queue a = Q  { front :: SList a
 die x = error x
 
 {-@ invariant {v:SList a | size v >= 0} @-}
-        
+
 -- Source: Okasaki, JFP 1995
 -- http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
 
-replicate :: Int -> a -> Queue a 
+replicate :: Int -> a -> Queue a
 </div>
 </div>
 
@@ -397,7 +397,7 @@ realSize (_:xs) = 1 + realSize xs</div>
   </button>
  
   <div id="program-3" class="programbox">{-@ data SList a = SL {
-       size  :: Nat 
+       size  :: Nat
      , elems :: {v:[a] | realSize v = size}
      }
   @-}</div>
@@ -468,7 +468,7 @@ tl (SL n (_:xs)) = SL (n-1) xs
 tl _             = die "empty SList"
 
 {-@ hd           :: xs:SList a -> a @-}
-hd (SL _ (x:_))  = x 
+hd (SL _ (x:_))  = x
 hd _             = die "empty SList"</div>
 </div>
 
@@ -499,7 +499,7 @@ badHd = hd (tl okList)  -- rejected</div>
   </button>
  
   <div id="program-9" class="programbox">{-@ data Queue a = Q {
-       front :: SList a 
+       front :: SList a
      , back  :: SListLE a (size front)
      }                                    @-}</div>
 </div>
@@ -526,7 +526,7 @@ badHd = hd (tl okList)  -- rejected</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-11" class="programbox">okQ  = Q okList nil  -- accepted, |front| > |back| 
+  <div id="program-11" class="programbox">okQ  = Q okList nil  -- accepted, |front| > |back|
 
 badQ = Q nil okList  -- rejected, |front| < |back|</div>
 </div>
@@ -598,7 +598,7 @@ badRemove = remove example0Q   -- reject
 {-@ emp :: QueueN _ 0 @-}
 
 {-@ example2Q :: QueueN _ 2 @-}
-example2Q = Q (1 `cons` (2 `cons` nil)) nil 
+example2Q = Q (1 `cons` (2 `cons` nil)) nil
 
 {-@ example0Q :: QueueN _ 0 @-}
 example0Q = Q nil nil</div>
@@ -637,10 +637,10 @@ replicate 0 _ = emp
 replicate n x = insert x (replicate (n-1) x)
 
 {-@ y3 :: QueueN _ 3 @-}
-y3     = replicate 3 "Yeah!" 
+y3     = replicate 3 "Yeah!"
 
 {-@ y2 :: QueueN _ 3 @-}
-y2     = replicate 1 "No!" </div>
+y2     = replicate 1 "No!"</div>
 </div>
 
 <p><br />
@@ -654,7 +654,7 @@ y2     = replicate 1 "No!" </div>
   </button>
  
   <div id="program-17" class="programbox">{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
-makeq f b 
+makeq f b
   | size b <= size f = Q f b
   | otherwise        = Q (rot f b nil) nil</div>
 </div>

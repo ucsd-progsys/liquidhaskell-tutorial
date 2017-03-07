@@ -339,17 +339,23 @@ three = 3 :: Int</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">{-@ one' :: Zero @-}
-one' = 1 :: Int</div>
+  <div id="program-3" class="programbox">nonsense = one'
+  where
+  {-@ one' :: Zero @-}
+  one' = 1 :: Int</div>
 </div>
 
 <p>LiquidHaskell will complain with an error message:</p>
-<pre class="sh"><code>    02-basic.lhs:58:8: Error: Liquid Type Mismatch
-       Inferred type
-         VV : Int | VV == (1  :  int)
+<pre class="sh"><code>../liquidhaskell-tutorial/src/03-basic.lhs:72:3-6: Error: Liquid Type Mismatch
 
-       not a subtype of Required type
-         VV : Int | VV == 0</code></pre>
+72 |   one&#39; = 1 :: Int
+       ^^^^
+
+  Inferred type
+    VV : {VV : Int | VV == (1 : int)}
+
+  not a subtype of Required type
+    VV : {VV : Int | VV == 0}</code></pre>
 <p>The message says that the expression <code>1 :: Int</code> has the type</p>
 <pre class="sh"><code>    {v:Int | v == 1}</code></pre>
 <p>which is <em>not</em> (a subtype of) the <em>required</em> type</p>
@@ -474,9 +480,9 @@ die msg = error msg</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">cantDie = if 1 + 1 == 3
-            then die "horrible death"
-            else ()</div>
+  <div id="program-9" class="programbox">cannotDie = if 1 + 1 == 3
+              then die "horrible death"
+              else ()</div>
 </div>
 
 <p>by inferring that the branch condition is always <code>False</code> and so <code>die</code> cannot be called. However, LiquidHaskell will <em>reject</em></p>
@@ -658,10 +664,10 @@ isPositive x = x > 0</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}</div>
+  <div id="program-20" class="programbox">{-@ isPositive :: x:Int -> {v:Bool | v <=> x > 0} @-}</div>
 </div>
 
-<p>In the above signature, read <code>Prop v</code> as &quot;<code>v</code> is <code>True</code>&quot;; dually, read <code>not (Prop v)</code> as &quot;<code>v</code> is <code>False</code>&quot;. Hence, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
+<p>In the above signature, the output type (post-condition) states that <code>isPositive x</code> returns <code>True</code> if and only if <code>x</code> was in fact strictly greater than <code>0</code>. In other words, we can write post-conditions for plain-old <code>Bool</code>-valued <em>tests</em> to establish that user-supplied values satisfy some desirable property (here, <code>Pos</code> and hence <code>NonZero</code>) in order to then safely perform some computation on it.</p>
 <div id="Propositions" class="hwex">
 <p><br />
 <strong>Exercise: (Propositions): </strong>What happens if you <em>delete</em> the type for <code>isPositive</code> ? Can you <em>change</em> the type for <code>isPositive</code> (i.e. write some other type) while preserving safety?</p>

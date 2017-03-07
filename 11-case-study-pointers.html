@@ -274,7 +274,8 @@ MathJax.Hub.Config({
  
   <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--diffcheck"     @-}
+{-@ LIQUID "--prune"          @-}
+
 {-# LANGUAGE ForeignFunctionInterface #-}
 
 module Memory where
@@ -295,7 +296,7 @@ unsafeHead       :: ByteString -> Word8
 create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
 -- boilerplate
-{-@ type TRUE = {v:Bool | Prop v } @-}
+{-@ type TRUE = {v:Bool | v } @-}
 
 -- TODO: we really shouldn't need this...
 {-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
@@ -962,7 +963,7 @@ queryAndChop  = do putStrLn "Give me a string:"
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-27" class="programbox">{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
+  <div id="program-27" class="programbox">{-@ null :: b:_ -> {v:Bool | v <=> Null b} @-}
 null (BS _ _ l) = l == 0</div>
 </div>
 

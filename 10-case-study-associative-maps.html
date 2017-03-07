@@ -358,7 +358,7 @@ predicate AddKey K M N = keys N = Set_cup (Set_sng K) (keys M)</code></pre>
 <pre class="spec"><code>predicate HasKey K M = In K (keys M)</code></pre>
 <p>and use it to type <code>mem</code> which <em>checks</em> if a key is defined in the <code>Map</code> and <code>get</code> which actually returns the value associated with a given key.</p>
 <pre class="spec"><code>-- | Check if key is defined
-mem :: k:k -&gt; m:Map k v -&gt; {v:Bool|Prop v &lt;=&gt; HasKey k m}
+mem :: k:k -&gt; m:Map k v -&gt; {v:Bool | v &lt;=&gt; HasKey k m}
 
 -- | Lookup key&#39;s value
 get :: k:k -&gt; {m:Map k v | HasKey k m} -&gt; v</code></pre>
@@ -781,7 +781,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
   </button>
  
   <div id="program-21" class="programbox">{-@ mem :: (Ord k) => k:k -> m:Map k v
-                   -> {v:_ | Prop v <=> HasKey k m} @-}
+                   -> {v:_ | v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
   | k' <  k   = mem k' l

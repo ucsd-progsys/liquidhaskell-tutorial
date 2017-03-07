@@ -272,8 +272,9 @@ MathJax.Hub.Config({
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">{-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--no-termination" @-}
+  <div id="program-0" class="programbox">{-@ LIQUID "--short-names"         @-}
+{-@ LIQUID "--no-termination"      @-}
+{-@ LIQUID "--scrape-used-imports" @-}
 
 module VectorBounds
    ( safeLookup

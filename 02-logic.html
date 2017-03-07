@@ -278,9 +278,6 @@ module Logic where
 main :: IO ()
 main = return ()
 
-{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p ==> Prop q)} @-}
-
-{-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | Prop v <=> (Prop p <=> Prop q)} @-}
 
 {-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
 
@@ -366,7 +363,7 @@ f = undefined
 <h2>Semantics</h2>
 <p>The syntax of predicates tells us what they <em>look</em> like, that is, what we can <em>write down</em> as valid predicates. Next, let us turn our attention to what a predicate <em>means</em>. Intuitively, a predicate is just a Boolean valued Haskell function with <code>&amp;&amp;</code>, <code>||</code>, <code>not</code> being the usual operators and <code>==&gt;</code> and <code>&lt;=&gt;</code> being two special operators.</p>
 <p><br />
-<strong>The Implication</strong> operator <code>==&gt;</code> is equivalent to the Haskell function:</p>
+<strong>The Implication</strong> operator <code>==&gt;</code> is equivalent to the following Haskell function. (For now, ignore the signature: it just says the output is a <code>Bool</code> that is equal to the <em>logical</em> implication between the inputs <code>p</code> and <code>q</code>.)</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -375,7 +372,7 @@ f = undefined
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">(==>) :: Bool -> Bool -> Bool
+  <div id="program-1" class="programbox">{-@ (==>) :: p:Bool -> q:Bool -> {v:Bool | v <=> (p ==> q)} @-}
 False ==> False = True
 False ==> True  = True
 True  ==> True  = True
@@ -392,7 +389,7 @@ True  ==> False = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">(<=>)  :: Bool -> Bool -> Bool
+  <div id="program-2" class="programbox">{-@ (<=>) :: p:Bool -> q:Bool -> {v:Bool | v <=> (p <=> q)} @-}
 False <=> False = True
 False <=> True  = False
 True  <=> True  = True
@@ -452,8 +449,8 @@ True  <=> False = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">{-@ type TRUE  = {v:Bool | Prop v}       @-}
-{-@ type FALSE = {v:Bool | not (Prop v)} @-}</div>
+  <div id="program-3" class="programbox">{-@ type TRUE  = {v:Bool | v    } @-}
+{-@ type FALSE = {v:Bool | not v} @-}</div>
 </div>
 
 <p>Thus, a <em>valid predicate</em> is one that has the type <code>TRUE</code>. The simplest example of a valid predicate is just <code>True</code>:</p>
@@ -617,7 +614,7 @@ ax0 = 1 + 1 == 2</div>
   </button>
  
   <div id="program-14" class="programbox">{-@ ax0' :: TRUE @-}
-ax0' = 1 + 2 == 3</div>
+ax0' = 1 + 2 == 2</div>
 </div>
 
 <p><br />
@@ -777,7 +774,7 @@ fx2 x xs = 0 < size ys
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-24" class="programbox">{-@ fx2VC :: _ -> _ -> _ -> FALSE @-}
+  <div id="program-24" class="programbox">{-@ fx2VC :: _ -> _ -> _ -> TRUE @-}
 fx2VC x xs ys =   (0 <= size xs)
               ==> (size ys == 1 + size xs)
               ==> (0 < size ys)</div>

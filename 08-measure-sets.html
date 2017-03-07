@@ -331,7 +331,7 @@ measure difference   :: Set a -&gt; Set a -&gt; Set a</code></pre>
 <pre class="spec"><code>empty        :: {v:Set a | v = empty}
 member       :: x:a
              -&gt; s:Set a
-             -&gt; {v:Bool | Prop v &lt;=&gt; member x s}
+             -&gt; {v:Bool | v &lt;=&gt; member x s}
 
 singleton    :: x:a -&gt; {v:Set a | v = singleton x}
 
@@ -356,8 +356,8 @@ difference   :: x:Set a
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">{-@ type True  = {v:Bool |      Prop v } @-}
-{-@ type False = {v:Bool | not (Prop v)} @-}</div>
+  <div id="program-1" class="programbox">{-@ type True  = {v:Bool |     v} @-}
+{-@ type False = {v:Bool | not v} @-}</div>
 </div>
 
 <p>We can use <code>True</code> to state theorems. For example, the unexciting arithmetic equality above becomes:</p>
@@ -397,7 +397,7 @@ implies _    _     = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ type Implies P Q = {v:_ | Prop v <=> (Prop P => Prop Q)} @-}</div>
+  <div id="program-4" class="programbox">{-@ type Implies P Q = {v:_ | v <=> (P => Q)} @-}</div>
 </div>
 
 <div id="Bounded Addition" class="hwex">
@@ -706,10 +706,10 @@ elem x (y:ys) = x == y || elem x ys
 elem _ []     = False
 
 {-@ test1 :: True @-}
-test1      = elem 2 [1,2,3]
+test1      = elem 2 [1, 2, 3]
 
 {-@ test2 :: False @-}
-test2      = elem 2 [1,3]</div>
+test2      = elem 2 [1, 3]</div>
 </div>
 
 </section>
@@ -967,7 +967,7 @@ nub xs                = go [] xs
   <div id="program-33" class="programbox">-- FIXME
 {-@ predicate In X Xs = Set_mem X (elts Xs) @-}
 
-{-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys }@-}
+{-@ isin :: x:_ -> ys:_ -> {v:Bool | v <=> In x ys }@-}
 isin x (y:ys)
   | x == y    = True
   | otherwise = x `isin` ys
