@@ -225,6 +225,7 @@ $if(author)$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 $endif$
 
+
 \date{$date$}
 
 $for(header-includes)$
@@ -257,6 +258,9 @@ $endfor$
 \thispagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{\baselineskip}
+
+\textbf{Version $version$}, $date$.
+
 Copyright \copyright\ \the\year\ Ranjit Jhala
 
 \par\smallcaps{https://ucsd-progsys.github.io/liquidhaskell-blog/}

@@ -10,5 +10,6 @@ notitle:        true
 root:           "."
 liquidserver:   "http://goto.ucsd.edu:8090/"
 pdflink:        "book.pdf"
+version:        12
 ---
 
