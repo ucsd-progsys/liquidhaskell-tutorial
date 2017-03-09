@@ -360,7 +360,7 @@ done, `okTake` should be accepted, but `badTake` should be rejected.
 \begin{code}
 take           :: Int -> Queue a -> (Queue a, Queue a)
 take 0 q       = (emp          , q)
-take n q       = (insert x out , q')
+take n q       = (insert x out , q'')
   where
     (x  , q')  = remove q
     (out, q'') = take (n-1) q'
