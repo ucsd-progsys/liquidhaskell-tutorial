@@ -816,13 +816,13 @@ prefix and suffix at that point.
 
 \begin{code}
 {-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
-spanByte c ps@(BS x s l)
+spanByte c ps@(BS x s ln)
   = unsafePerformIO
       $ withForeignPtr x $ \p ->
          go (p `plusPtr` s) 0
   where
     go p i
-      | i >= l    = return (ps, empty)
+      | i >= ln   = return (ps, empty)
       | otherwise = do c' <- peekByteOff p i
                        if c /= c'
                          then return $ splitAt i
