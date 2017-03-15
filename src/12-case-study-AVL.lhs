@@ -6,7 +6,6 @@ Case Study: AVL Trees {#case-study-avltree}
 \begin{code}
 {- Example of AVL trees by michaelbeaumont -}
 
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--totality"       @-}
 
