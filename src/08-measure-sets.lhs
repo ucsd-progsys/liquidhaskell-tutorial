@@ -61,7 +61,7 @@ Talking about Sets
 
 First, we need a way to talk about sets in the refinement logic. We could
 roll our own special Haskell type but for now, lets just use the `Set a`
-type from the prelude's `Data.Set`.^[See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/03/26/talking-about-sets.lhs/)
+type from the prelude's `Data.Set`.^[See [this](https://ucsd-progsys.github.io/liquidhaskell-blog/2013/03/26/talking-about-sets.lhs/)
 for a brief description of how to work directly with the set operators natively
 supported by LiquidHaskell.]
 
@@ -357,7 +357,8 @@ prop_halve_append n xs = elts xs == elts xs'
 
 \hint You may want to remind yourself about the
 *dimension-aware* signature for `partition` from
-[the earlier chapter](#listreducing).
+[the earlier chapter](https://ucsd-progsys.github.io/liquidhaskell-tutorial/07-measure-int.html#/listreducing).
+
 
 <div class="hwex" id="Membership">
 Write down a signature for `elem` that suffices to verify
