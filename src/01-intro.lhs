@@ -60,7 +60,7 @@ ghci> m ! "haskell"
 
 Alas, maps are another source of vexing errors that are tickled
 when we try to find the value of an absent key: ^[Again, one could
-use a `Maybe` but its just deferring the inevitable.]
+use a `Maybe` but it's just deferring the inevitable.]
 
 ~~~~~{.ghci}
 ghci> m ! "javascript"

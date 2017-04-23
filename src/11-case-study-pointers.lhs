@@ -46,7 +46,7 @@ need to, you can drop down to low-level pointer twiddling to squeeze the
 most performance out of your machine. But of course, that opens the door
 to the heartbleeds.
 
-Wouldn't it be nice to have have our cake and eat it too?
+Wouldn't it be nice to have our cake and eat it too?
 Wouldn't it be great if we could twiddle pointers at a
 low-level and still get the nice safety assurances of
 high-level types? Lets see how LiquidHaskell lets us
@@ -59,7 +59,7 @@ HeartBleeds in Haskell
 \newthought{Modern Languages} like Haskell are ultimately built upon the
 foundation of `C`. Thus, implementation errors could open up unpleasant
 vulnerabilities that could easily slither past the type system and even
-code inspection. As a concrete example, lets look at a a function that
+code inspection. As a concrete example, lets look at a function that
 uses the `ByteString` library to truncate strings:
 
 \begin{code}

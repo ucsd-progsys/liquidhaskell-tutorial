@@ -266,7 +266,7 @@ using the fact that in the first equation for `divide` the
 
 \noindent
 which *contradicts* the pre-condition (i.e. input) type.
-Thus, by contradition, LiquidHaskell deduces that the first equation is
+Thus, by contradiction, LiquidHaskell deduces that the first equation is
 *dead code* and hence `die` will not be called at run-time.
 
 \newthought{Establishing Pre-conditions}

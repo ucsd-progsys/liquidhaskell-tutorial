@@ -224,7 +224,7 @@ only invoke the respective functions with non-empty lists.
 <div class="hwex" id="Safe Head">
 Write down a specification for `null` such that `safeHead`
 is verified. Do *not* force `null` to only take non-empty inputs,
-that defeats the purpose. Instead, it's type should say that it
+that defeats the purpose. Instead, its type should say that it
 works on *all* lists and returns `True` *if and only if* the input
 is non-empty.
 </div>

@@ -55,10 +55,10 @@ die msg = error msg
 
 
 So far, we have seen how to refine the types of *functions*, to
-specify, for example, pre-conditions on the inputs, or postconditions
+specify, for example, pre-conditions on the inputs, or post-conditions
 on the outputs. Very often, we wish to define *datatypes* that satisfy
 certain invariants. In these cases, it is handy to be able to directly
-refine the the `data` definition, making it impossible to create
+refine the `data` definition, making it impossible to create
 illegal inhabitants.
 
 Sparse Vectors Revisited {#autosmart}
@@ -276,8 +276,8 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH
 \end{code}
 
 \noindent
-Its all very well to *specify* ordered lists.
-Next, lets see how its equally easy to *establish*
+It's all very well to *specify* ordered lists.
+Next, lets see how it's equally easy to *establish*
 these invariants by implementing several textbook
 sorting routines.
 

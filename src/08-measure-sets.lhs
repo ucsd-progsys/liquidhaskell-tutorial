@@ -96,7 +96,7 @@ to learn how modern SMT solvers prove equalities like the above.]
 Proving QuickCheck Style Properties {#quickcheck}
 -----------------------------------
 
-To get the hang of whats going on, lets do a few warmup exercises,
+To get the hang of whats going on, lets do a few warm up exercises,
 using LiquidHaskell to prove various simple theorems about sets
 and operations over them.
 
@@ -127,7 +127,7 @@ difference   :: x:Set a
 
 \newthought{We Can Assert Theorems} as [QuickCheck](quickcheck) style
 *properties*, that is, as functions from arbitrary inputs to a `Bool`
-output that must always be `True`. Lets define aliases for the the
+output that must always be `True`. Lets define aliases for the
 `Bool`eans that are always `True` or `False`
 
 \begin{code}
@@ -231,7 +231,7 @@ from Haskell and Scala respectively.]
 Content-Aware List API {#listelems}
 ----------------------------------
 
-Lets return to our real goal, which is to to verify
+Lets return to our real goal, which is to verify
 properties of programs. First, we need a way to refine
 the list API to precisely track the set of elements
 in a list.
@@ -464,7 +464,7 @@ Uniqueness
 Often, we want to enforce the invariant that a particular collection
 contains *no duplicates*; as multiple copies in a collection of file
 handles or system resources can create unpleasant leaks.
-For example, the [XMonad][xmonad] window manager creates a
+For example, the [xmonad][xmonad] window manager creates a
 sophisticated *zipper* data structure to hold the list of
 active user windows and carefully maintains the invariant
 that that the zipper contains no duplicates. Next, lets see how to
@@ -619,7 +619,7 @@ range i j
 Unique Zippers
 --------------
 
-A [zipper](wiki-zipper) is an aggregate data stucture
+A [zipper](wiki-zipper) is an aggregate data structure
 that is used to arbitrarily traverse the structure and
 update its contents. For example, a zipper for a list is
 a data type that contains an element (called `focus`)
@@ -636,9 +636,9 @@ data Zipper a = Zipper {
   }
 \end{code}
 
-\newthought{XMonad} is a wonderful tiling window manager, that uses
+\newthought{xmonad} is a wonderful tiling window manager, that uses
 a [zipper][xmonad-stackset] to store the set of windows being managed.
-Xmonad requires the crucial invariant that the values in the zipper
+xmonad requires the crucial invariant that the values in the zipper
 be unique, that is, be free of duplicates.
 
 \newthought{We Refine Zipper} to capture the requirement

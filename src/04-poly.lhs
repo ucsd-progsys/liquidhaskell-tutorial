@@ -132,7 +132,7 @@ size of a `Vector` regardless of how the size was computed.
 functions that we cannot verify e.g. because we don't have the code
 for them. Here, we are assuming that the library function `Data.Vector.length`
 indeed computes the size of the input vector. Furthermore, we are stipulating
-that the lookup function `(!)` requires an index that is betwen `0` and the real
+that the lookup function `(!)` requires an index that is between `0` and the real
 size of the input vector `x`.
 
 \newthought{Dependent Refinements} are used to describe relationships
@@ -144,7 +144,7 @@ can be constrained to be valid for `x`.  Thus, dependency lets us
 write properties that connect *multiple* program values.
 
 \newthought{Aliases} are extremely useful for defining
-*abbreviations* for commonly occuring types. Just as we
+*abbreviations* for commonly occurring types. Just as we
 enjoy abstractions when programming, we will find it
 handy to have abstractions in the specification mechanism.
 To this end, LiquidHaskell supports *type aliases*.
@@ -344,7 +344,7 @@ vectorSum' vec  = loop 0 n 0 body
 loop :: lo:Nat -> hi:{Nat|lo <= hi} -> a -> (Btwn lo hi -> a -> a) -> a
 ~~~~~
 
-\noindent In english, the above type states that
+\noindent In English, the above type states that
 
 - `lo` the loop *lower* bound is a non-negative integer
 - `hi` the loop *upper* bound is a greater than `lo`,
