@@ -48,7 +48,7 @@ One of the most fundamental abstractions in computing is that of a
 *collection* of values -- names, numbers, records -- into which we can
 rapidly `insert`, `delete` and check for `member`ship.
 
-\newthought{Trees} offer an an attractive means of implementing
+\newthought{Trees} offer an attractive means of implementing
 collections in the immutable setting. We can *order* the values
 to ensure that each operation takes time proportional to the
 *path* from the root to the datum being operated upon.
@@ -137,7 +137,7 @@ than and greater than some value `X`:
 \newthought{The Real Height} of a tree is defined recursively as `0`
 for `Leaf`s and one more than the larger of left and right subtrees
 for `Node`s.  Note that we cannot simply use the `ah` field because
-thats just some arbitrary `Int` -- there is nothing to prevent a buggy
+that's just some arbitrary `Int` -- there is nothing to prevent a buggy
 implementation from just filling that field with `0` everywhere.  In
 short, we need the ground truth: a measure that computes the *actual*
 height of a tree. ^[**FIXME** The `inline` pragma indicates that the
@@ -562,7 +562,7 @@ insert y t@(Node x _ _ _)
 \end{code}
 
 \noindent The refinement, `eqOrUp` says that the height of `t` is the same
-as `s` or goes *up* by atmost `1`.
+as `s` or goes *up* by at most `1`.
 
 \begin{code}
 {-@ inline eqOrUp @-}
@@ -738,7 +738,7 @@ getMin (Node x l r _)    = (x', bal x l' r)
 Functional Correctness
 ----------------------
 
-We just saw how to implement some tricky data structure gynastics.
+We just saw how to implement some tricky data structure gymnastics.
 Fortunately, with LiquidHaskell as a safety net we can be sure to have
 gotten all the rotation cases right and to have preserved the
 invariants crucial for efficiency and correctness.  However, there is
@@ -750,7 +750,7 @@ and verify that our AVL operations indeed implement sets correctly, by:
 
 1. *Defining* the set of elements in a tree,
 2. *Specifying* the desired semantics of operations via types,
-3. *Verifying* the implemetation. ^[By adding [ghost operations](#lemmas), if needed.]
+3. *Verifying* the implementation. ^[By adding [ghost operations](#lemmas), if needed.]
 
 We've done this [once before](#lemmas) already, so this is a good exercise
 to solidify your understanding of that material.

@@ -540,7 +540,7 @@ mean by the term *logical predicate*.
 2. The restricted grammar lets us use SMT solvers to decide whether
    a predicate is *valid* that is, evaluates to `True` for *all* values
    of the variables.
-3. Crucially, the SMT solver determins validity *without enumerating*
+3. Crucially, the SMT solver determines validity *without enumerating*
    and evaluating the predicates (which would take forever!) but instead
    by using clever symbolic algorithms.
 

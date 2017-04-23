@@ -100,7 +100,7 @@ for (V n xs) f = V n (map f xs)
 \newthought{Wholemeal programming frees} us from having to fret
 about low-level index range manipulation, but is hardly a panacea.
 Instead, we must now think carefully about the *compatibility*
-of the various aggreates. For example,
+of the various aggregates. For example,
 
 + `dotProd` is only sensible on vectors of the same dimension;
   if one vector is shorter than another (i.e. has fewer elements)
@@ -268,7 +268,7 @@ zipWith _ _  _          = die "no other cases"
 \end{code}
 
 \newthought{unsafeZip} The signature for `zipWith` is quite severe -- it
-rules out the case where the zipping occurs only upto the shorter input.
+rules out the case where the zipping occurs only up to the shorter input.
 Here's a function that actually allows for that case, where the output
 type is the *shorter* of the two inputs:
 
