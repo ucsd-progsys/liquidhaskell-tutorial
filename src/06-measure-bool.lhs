@@ -343,7 +343,7 @@ specification for `risers` so that it is verified.
 </div>
 
 \begin{code}
-{-@ risers   :: (Ord a) => xs:[a] -> {v: [[a]] | notEmpty xs => notEmpty v} @-}
+{-@ risers       :: (Ord a) => [a] -> [[a]] @-}
 risers           :: (Ord a) => [a] -> [[a]]
 risers []        = []
 risers [x]       = [[x]]
