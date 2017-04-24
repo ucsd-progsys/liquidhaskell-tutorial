@@ -274,7 +274,6 @@ MathJax.Hub.Config({
  
   <div id="program-0" class="programbox">{- Example of AVL trees by michaelbeaumont -}
 
-{-@ LIQUID "--diff"           @-}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--totality"       @-}
 
@@ -316,7 +315,7 @@ member :: (Ord a) => a -> AVL a -> Bool
 
 <p>One of the most fundamental abstractions in computing is that of a <em>collection</em> of values -- names, numbers, records -- into which we can rapidly <code>insert</code>, <code>delete</code> and check for <code>member</code>ship.</p>
 <p><br />
-<strong>Trees</strong> offer an an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
+<strong>Trees</strong> offer an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
 <p><br />
 <strong>As in real life</strong> maintaining order and balance is rather easier said than done. Often we must go through rather sophisticated gymnastics to ensure everything is in its right place. Fortunately, LiquidHaskell can help. Lets see a concrete example, that should be familiar from your introductory data structures class: the Georgy Adelson-Velsky and Landis' or <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Tree</a>.</p>
 <section id="avl-trees" class="level2">
@@ -376,7 +375,7 @@ member :: (Ord a) => a -> AVL a -> Bool
 </div>
 
 <p><br />
-<strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because thats just some arbitrary <code>Int</code> -- there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because that's just some arbitrary <code>Int</code> -- there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -848,7 +847,7 @@ insert y t@(Node x _ _ _)
   | otherwise = t</div>
 </div>
 
-<p>The refinement, <code>eqOrUp</code> says that the height of <code>t</code> is the same as <code>s</code> or goes <em>up</em> by atmost <code>1</code>.</p>
+<p>The refinement, <code>eqOrUp</code> says that the height of <code>t</code> is the same as <code>s</code> or goes <em>up</em> by at most <code>1</code>.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1055,11 +1054,11 @@ getMin (Node x l r _)    = (x', bal x l' r)
 </section>
 <section id="functional-correctness" class="level2">
 <h2>Functional Correctness</h2>
-<p>We just saw how to implement some tricky data structure gynastics. Fortunately, with LiquidHaskell as a safety net we can be sure to have gotten all the rotation cases right and to have preserved the invariants crucial for efficiency and correctness. However, there is nothing in the types above that captures &quot;functional correctness&quot;, which, in this case, means that the operations actually implement a collection or set API, for example, as described <a href="#mapapi">here</a>. Lets use the techniques from that chapter to precisely specify and verify that our AVL operations indeed implement sets correctly, by:</p>
+<p>We just saw how to implement some tricky data structure gymnastics. Fortunately, with LiquidHaskell as a safety net we can be sure to have gotten all the rotation cases right and to have preserved the invariants crucial for efficiency and correctness. However, there is nothing in the types above that captures &quot;functional correctness&quot;, which, in this case, means that the operations actually implement a collection or set API, for example, as described <a href="#mapapi">here</a>. Lets use the techniques from that chapter to precisely specify and verify that our AVL operations indeed implement sets correctly, by:</p>
 <ol type="1">
 <li><em>Defining</em> the set of elements in a tree,</li>
 <li><em>Specifying</em> the desired semantics of operations via types,</li>
-<li><em>Verifying</em> the implemetation. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></li>
+<li><em>Verifying</em> the implementation. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></li>
 </ol>
 <p>We've done this <a href="#lemmas">once before</a> already, so this is a good exercise to solidify your understanding of that material.</p>
 <p><br />

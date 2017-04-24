@@ -490,7 +490,7 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
 </div>
 
 <p><br />
-<strong>An Expression is Closed</strong> with respect to an environment <code>G</code> if all the <em>free</em> variables in the expression appear in <code>G</code>, i.e. the environment contains bindings for all the variables in the expression that are <em>not</em> bound within the expression. As we've seen repeatedly, often a whole pile of informal handwaving, can be succinctly captured by a type definition that says the <code>free</code> variables in the <code>Expr</code> must be contained in the <code>keys</code> of the environment <code>G</code>:</p>
+<strong>An Expression is Closed</strong> with respect to an environment <code>G</code> if all the <em>free</em> variables in the expression appear in <code>G</code>, i.e. the environment contains bindings for all the variables in the expression that are <em>not</em> bound within the expression. As we've seen repeatedly, often a whole pile of informal hand-waving, can be succinctly captured by a type definition that says the <code>free</code> variables in the <code>Expr</code> must be contained in the <code>keys</code> of the environment <code>G</code>:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -697,7 +697,7 @@ get'  _ Tip   = die  "Lookup Never Fails"</div>
      k  : a
      l  : Map a b
      k&#39; : a</code></pre>
-<p>LiquidHaskell is <em>unable</em> to deduce that the the key <code>k'</code> definitely belongs in the <code>left</code> subtree <code>l</code>. Well, lets ask ourselves: <em>why</em> must <code>k'</code> belong in the left subtree? From the input, we know <code>HasKey k' m</code> i.e. that <code>k'</code> is <em>somewhere</em> in <code>m</code>. That is <em>one of</em> the following holds:</p>
+<p>LiquidHaskell is <em>unable</em> to deduce that the key <code>k'</code> definitely belongs in the <code>left</code> subtree <code>l</code>. Well, lets ask ourselves: <em>why</em> must <code>k'</code> belong in the left subtree? From the input, we know <code>HasKey k' m</code> i.e. that <code>k'</code> is <em>somewhere</em> in <code>m</code>. That is <em>one of</em> the following holds:</p>
 <ol type="1">
 <li><code>k' == k</code> or,</li>
 <li><code>HasKey k' l</code> or,</li>
@@ -826,7 +826,7 @@ elems (x:xs) = (singleton x) `union` (elems xs)</div>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>In this chapter we saw how to combine several of the techniques from previous chapters in a case study. We learnt how to:</p>
+<p>In this chapter we saw how to combine several of the techniques from previous chapters in a case study. We learned how to:</p>
 <ol type="1">
 <li><p><em>Define</em> an API for associative maps that used refinements to track the <em>set</em> of <code>keys</code> stored in a map, in order to prevent lookup failures, the <code>NullPointerDereference</code> errors of the functional world,</p></li>
 <li><p><em>Use</em> the API to implement a small interpreter that is guaranteed to never fail with <code>UnboundVariable</code> errors, as long as the input expressions were closed,</p></li>

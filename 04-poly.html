@@ -357,11 +357,11 @@ assume (!) :: x:Vector a -&gt; {v:Nat | v &lt; vlen x} -&gt; a</code></pre>
 <p><br />
 <strong>Measures</strong> are used to define <em>properties</em> of Haskell data values that are useful for specification and verification. Think of <code>vlen</code> as the <em>actual</em> size of a <code>Vector</code> regardless of how the size was computed.</p>
 <p><br />
-<strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don't have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is betwen <code>0</code> and the real size of the input vector <code>x</code>.</p>
+<strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don't have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is between <code>0</code> and the real size of the input vector <code>x</code>.</p>
 <p><br />
 <strong>Dependent Refinements</strong> are used to describe relationships <em>between</em> the elements of a specification. For example, notice how the signature for <code>length</code> names the input with the binder <code>x</code> that then appears in the output type to constrain the output <code>Int</code>. Similarly, the signature for <code>(!)</code> names the input vector <code>x</code> so that the index can be constrained to be valid for <code>x</code>. Thus, dependency lets us write properties that connect <em>multiple</em> program values.</p>
 <p><br />
-<strong>Aliases</strong> are extremely useful for defining <em>abbreviations</em> for commonly occuring types. Just as we enjoy abstractions when programming, we will find it handy to have abstractions in the specification mechanism. To this end, LiquidHaskell supports <em>type aliases</em>. For example, we can define <code>Vector</code>s of a given size <code>N</code> as:</p>
+<strong>Aliases</strong> are extremely useful for defining <em>abbreviations</em> for commonly occurring types. Just as we enjoy abstractions when programming, we will find it handy to have abstractions in the specification mechanism. To this end, LiquidHaskell supports <em>type aliases</em>. For example, we can define <code>Vector</code>s of a given size <code>N</code> as:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -612,7 +612,7 @@ vectorSum' vec  = loop 0 n 0 body
 <p><br />
 <strong>Inference</strong> is a convenient option. LiquidHaskell finds:</p>
 <pre class="spec"><code>loop :: lo:Nat -&gt; hi:{Nat|lo &lt;= hi} -&gt; a -&gt; (Btwn lo hi -&gt; a -&gt; a) -&gt; a</code></pre>
-<p>In english, the above type states that</p>
+<p>In English, the above type states that</p>
 <ul>
 <li><code>lo</code> the loop <em>lower</em> bound is a non-negative integer</li>
 <li><code>hi</code> the loop <em>upper</em> bound is a greater than <code>lo</code>,</li>

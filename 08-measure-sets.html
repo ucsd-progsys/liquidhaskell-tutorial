@@ -325,7 +325,7 @@ measure difference   :: Set a -&gt; Set a -&gt; Set a</code></pre>
 </section>
 <section id="quickcheck" class="level2">
 <h2>Proving QuickCheck Style Properties</h2>
-<p>To get the hang of whats going on, lets do a few warmup exercises, using LiquidHaskell to prove various simple theorems about sets and operations over them.</p>
+<p>To get the hang of whats going on, lets do a few warm up exercises, using LiquidHaskell to prove various simple theorems about sets and operations over them.</p>
 <p><br />
 <strong>We Refine The Set API</strong> to make it easy to write down theorems. That is, we give the operators in <code>Data.Set</code> refinement type signatures that precisely track their set-theoretic behavior:</p>
 <pre class="spec"><code>empty        :: {v:Set a | v = empty}
@@ -347,7 +347,7 @@ difference   :: x:Set a
              -&gt; y:Set a
              -&gt; {v:Set a | v = difference x y}</code></pre>
 <p><br />
-<strong>We Can Assert Theorems</strong> as <a href="quickcheck">QuickCheck</a> style <em>properties</em>, that is, as functions from arbitrary inputs to a <code>Bool</code> output that must always be <code>True</code>. Lets define aliases for the the <code>Bool</code>eans that are always <code>True</code> or <code>False</code></p>
+<strong>We Can Assert Theorems</strong> as <a href="quickcheck">QuickCheck</a> style <em>properties</em>, that is, as functions from arbitrary inputs to a <code>Bool</code> output that must always be <code>True</code>. Lets define aliases for the <code>Bool</code>eans that are always <code>True</code> or <code>False</code></p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -498,7 +498,7 @@ prop_cup_dif_bad x y
 </section>
 <section id="listelems" class="level2">
 <h2>Content-Aware List API</h2>
-<p>Lets return to our real goal, which is to to verify properties of programs. First, we need a way to refine the list API to precisely track the set of elements in a list.</p>
+<p>Lets return to our real goal, which is to verify properties of programs. First, we need a way to refine the list API to precisely track the set of elements in a list.</p>
 <p><br />
 <strong>The Elements of a List</strong> can be described by a simple recursive measure that walks over the list, building up the set:</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
@@ -685,7 +685,7 @@ prop_halve_append n xs = elts xs == elts xs'
     (ys, zs) =  halve n xs</div>
 </div>
 
-<p><strong>Hint: </strong>You may want to remind yourself about the <em>dimension-aware</em> signature for <code>partition</code> from <a href="#listreducing">the earlier chapter</a>.</p>
+<p><strong>Hint: </strong>You may want to remind yourself about the <em>dimension-aware</em> signature for <code>partition</code> from <a href="https://ucsd-progsys.github.io/liquidhaskell-tutorial/07-measure-int.html#/listreducing">the earlier chapter</a>.</p>
 <div id="Membership" class="hwex">
 <p><br />
 <strong>Exercise: (Membership): </strong>Write down a signature for <code>elem</code> that suffices to verify <code>test1</code> and <code>test2</code>.</p>
@@ -817,7 +817,7 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
 </section>
 <section id="uniqueness" class="level2">
 <h2>Uniqueness</h2>
-<p>Often, we want to enforce the invariant that a particular collection contains <em>no duplicates</em>; as multiple copies in a collection of file handles or system resources can create unpleasant leaks. For example, the <a href="http://xmonad.org/">XMonad</a> window manager creates a sophisticated <em>zipper</em> data structure to hold the list of active user windows and carefully maintains the invariant that that the zipper contains no duplicates. Next, lets see how to specify and verify this invariant using LiquidHaskell, first for lists, and then for a simplified zipper.</p>
+<p>Often, we want to enforce the invariant that a particular collection contains <em>no duplicates</em>; as multiple copies in a collection of file handles or system resources can create unpleasant leaks. For example, the <a href="http://xmonad.org/">xmonad</a> window manager creates a sophisticated <em>zipper</em> data structure to hold the list of active user windows and carefully maintains the invariant that that the zipper contains no duplicates. Next, lets see how to specify and verify this invariant using LiquidHaskell, first for lists, and then for a simplified zipper.</p>
 <p><br />
 <strong>To Specify Uniqueness</strong> we need a way of saying that a list has <em>no duplicates</em>. There are many ways to do so; the simplest is a <em>measure</em>:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
@@ -1021,7 +1021,7 @@ range i j
 </section>
 <section id="unique-zippers" class="level2">
 <h2>Unique Zippers</h2>
-<p>A <a href="wiki-zipper">zipper</a> is an aggregate data stucture that is used to arbitrarily traverse the structure and update its contents. For example, a zipper for a list is a data type that contains an element (called <code>focus</code>) that we are currently <code>focus</code>-ed on, a list of elements to the <code>left</code> of (i.e. before) the focus, and a list of elements to the <code>right</code> (i.e. after) the focus.</p>
+<p>A <a href="wiki-zipper">zipper</a> is an aggregate data structure that is used to arbitrarily traverse the structure and update its contents. For example, a zipper for a list is a data type that contains an element (called <code>focus</code>) that we are currently <code>focus</code>-ed on, a list of elements to the <code>left</code> of (i.e. before) the focus, and a list of elements to the <code>right</code> (i.e. after) the focus.</p>
 <div id="program-pane-36" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1038,7 +1038,7 @@ range i j
 </div>
 
 <p><br />
-<strong>XMonad</strong> is a wonderful tiling window manager, that uses a <a href="http://hackage.haskell.org/package/xmonad-0.11/docs/XMonad-StackSet.html">zipper</a> to store the set of windows being managed. Xmonad requires the crucial invariant that the values in the zipper be unique, that is, be free of duplicates.</p>
+<strong>xmonad</strong> is a wonderful tiling window manager, that uses a <a href="http://hackage.haskell.org/package/xmonad-0.11/docs/XMonad-StackSet.html">zipper</a> to store the set of windows being managed. xmonad requires the crucial invariant that the values in the zipper be unique, that is, be free of duplicates.</p>
 <p><br />
 <strong>We Refine Zipper</strong> to capture the requirement that legal zippers are unique. To this end, we state that the <code>left</code> and <code>right</code> lists are unique, disjoint, and do not contain <code>focus</code>.</p>
 <div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
@@ -1160,7 +1160,7 @@ filterZipper p (Zipper f ls rs)
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>See <a href="http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/03/26/talking-about-sets.lhs/">this</a> for a brief description of how to work directly with the set operators natively supported by LiquidHaskell.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>See <a href="https://ucsd-progsys.github.io/liquidhaskell-blog/2013/03/26/talking-about-sets.lhs/">this</a> for a brief description of how to work directly with the set operators natively supported by LiquidHaskell.<a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>See <a href="http://research.microsoft.com/en-us/um/people/leonardo/fmcad09.pdf">this recent paper</a> to learn how modern SMT solvers prove equalities like the above.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>The <a href="https://github.com/LeventErkok/sbv">SBV</a> and <a href="http://lara.epfl.ch/w/leon">Leon</a> projects describe a different DSL based approach for using SMT solvers from Haskell and Scala respectively.<a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p>Since we are focusing on the elements, lets not distract ourselves with the <a href="#orderedlists">ordering invariant</a> and reuse plain old lists. See <a href="http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/07/29/putting-things-in-order.lhs/">this</a> for how to specify and verify order with plain old lists.<a href="#fnref4">↩</a></p></li>

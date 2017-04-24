@@ -309,11 +309,11 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 </div>
 
 <p>A large part of the allure of Haskell is its elegant, high-level ADTs that ensure that programs won't be plagued by problems like the infamous <a href="heartbleed.com">SSL heartbleed bug</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> However, another part of Haskell's charm is that when you really really need to, you can drop down to low-level pointer twiddling to squeeze the most performance out of your machine. But of course, that opens the door to the heartbleeds.</p>
-<p>Wouldn't it be nice to have have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
+<p>Wouldn't it be nice to have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
 <section id="heartbleeds-in-haskell" class="level2">
 <h2>HeartBleeds in Haskell</h2>
 <p><br />
-<strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a a function that uses the <code>ByteString</code> library to truncate strings:</p>
+<strong>Modern Languages</strong> like Haskell are ultimately built upon the foundation of <code>C</code>. Thus, implementation errors could open up unpleasant vulnerabilities that could easily slither past the type system and even code inspection. As a concrete example, lets look at a function that uses the <code>ByteString</code> library to truncate strings:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->

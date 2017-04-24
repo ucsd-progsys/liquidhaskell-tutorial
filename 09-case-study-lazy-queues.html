@@ -697,7 +697,7 @@ makeq f b
  
   <div id="program-19" class="programbox">take           :: Int -> Queue a -> (Queue a, Queue a)
 take 0 q       = (emp          , q)
-take n q       = (insert x out , q')
+take n q       = (insert x out , q'')
   where
     (x  , q')  = remove q
     (out, q'') = take (n-1) q'

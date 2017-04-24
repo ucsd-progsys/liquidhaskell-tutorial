@@ -535,7 +535,7 @@ divide n d = n `div` d</div>
 <p><br />
 <strong>To Verify</strong> that <code>divide</code> never calls <code>die</code>, LiquidHaskell infers that <code>&quot;divide by zero&quot;</code> is not merely of type <code>String</code>, but in fact has the the refined type <code>{v:String | false}</code> <em>in the context</em> in which the call to <code>die</code> occurs. LiquidHaskell arrives at this conclusion by using the fact that in the first equation for <code>divide</code> the <em>denominator</em> is in fact</p>
 <pre class="sh"><code>    0 :: {v: Int | v == 0}</code></pre>
-<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradition, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
+<p>which <em>contradicts</em> the pre-condition (i.e. input) type. Thus, by contradiction, LiquidHaskell deduces that the first equation is <em>dead code</em> and hence <code>die</code> will not be called at run-time.</p>
 <p><br />
 <strong>Establishing Pre-conditions</strong> The above signature forces us to ensure that that when we <em>use</em> <code>divide</code>, we only supply provably <code>NonZero</code> arguments. Hence, these two uses of <code>divide</code> are fine:</p>
 <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">

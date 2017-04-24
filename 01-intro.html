@@ -394,7 +394,7 @@ $ cd liquidhaskell-tutorial/src</code></pre>
 <hr />
 <ol>
 <li id="fn1"><p>We could write <code>average</code> more <em>defensively</em>, returning a <code>Maybe</code> or <code>Either</code> value. However, this merely kicks the can down the road. Ultimately, we will want to extract the <code>Int</code> from the <code>Maybe</code> and if the inputs were invalid to start with, then at that point we'd be stuck.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Again, one could use a <code>Maybe</code> but its just deferring the inevitable.<a href="#fnref2">↩</a></p></li>
+<li id="fn2"><p>Again, one could use a <code>Maybe</code> but it's just deferring the inevitable.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>Why use a function marked <code>unsafe</code>? Because it's very fast! Furthermore, even if we used the safe variant, we'd get a <em>run-time</em> exception which is only marginally better. Finally, we should remember to thank the developers for carefully marking it unsafe, because in general, given the many layers of abstraction, it is hard to know which functions are indeed safe.<a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p>If you are familiar with the notion of Dependent Types, for example, as in the Coq proof assistant, then Refinement Types can be thought of as restricted class of the former where the logic is restricted, at the cost of expressiveness, but with the reward of a considerable amount of automation.<a href="#fnref4">↩</a></p></li>
 </ol>

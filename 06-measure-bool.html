@@ -527,7 +527,7 @@ tail []     = die "Relaxeth! this too shall ne'er be"</div>
 <p>LiquidHaskell uses the precondition to deduce that the second equations are <em>dead code</em>. Of course, this requires us to establish that <em>callers</em> of <code>head</code> and <code>tail</code> only invoke the respective functions with non-empty lists.</p>
 <div id="Safe Head" class="hwex">
 <p><br />
-<strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified. Do <em>not</em> force <code>null</code> to only take non-empty inputs, that defeats the purpose. Instead, it's type should say that it works on <em>all</em> lists and returns <code>True</code> <em>if and only if</em> the input is non-empty.</p>
+<strong>Exercise: (Safe Head): </strong>Write down a specification for <code>null</code> such that <code>safeHead</code> is verified. Do <em>not</em> force <code>null</code> to only take non-empty inputs, that defeats the purpose. Instead, its type should say that it works on <em>all</em> lists and returns <code>True</code> <em>if and only if</em> the input is non-empty.</p>
 <br />
 <br />
 
@@ -678,7 +678,7 @@ map f (x:xs)  =  f x : map f xs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">{-@ risers   :: (Ord a) => xs:[a] -> {v: [[a]] | notEmpty xs => notEmpty v} @-}
+  <div id="program-20" class="programbox">{-@ risers       :: (Ord a) => [a] -> [[a]] @-}
 risers           :: (Ord a) => [a] -> [[a]]
 risers []        = []
 risers [x]       = [[x]]
