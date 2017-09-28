@@ -61,7 +61,7 @@ Talking about Sets
 
 First, we need a way to talk about sets in the refinement logic. We could
 roll our own special Haskell type but for now, lets just use the `Set a`
-type from the prelude's `Data.Set`.^[See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/03/26/talking-about-sets.lhs/)
+type from the prelude's `Data.Set`.^[See [this](https://ucsd-progsys.github.io/liquidhaskell-blog/2013/03/26/talking-about-sets.lhs/)
 for a brief description of how to work directly with the set operators natively
 supported by LiquidHaskell.]
 
@@ -96,7 +96,7 @@ to learn how modern SMT solvers prove equalities like the above.]
 Proving QuickCheck Style Properties {#quickcheck}
 -----------------------------------
 
-To get the hang of whats going on, lets do a few warmup exercises,
+To get the hang of whats going on, lets do a few warm up exercises,
 using LiquidHaskell to prove various simple theorems about sets
 and operations over them.
 
@@ -108,7 +108,7 @@ type signatures that precisely track their set-theoretic behavior:
 empty        :: {v:Set a | v = empty}
 member       :: x:a
              -> s:Set a
-             -> {v:Bool | Prop v <=> member x s}
+             -> {v:Bool | v <=> member x s}
 
 singleton    :: x:a -> {v:Set a | v = singleton x}
 
@@ -127,12 +127,12 @@ difference   :: x:Set a
 
 \newthought{We Can Assert Theorems} as [QuickCheck](quickcheck) style
 *properties*, that is, as functions from arbitrary inputs to a `Bool`
-output that must always be `True`. Lets define aliases for the the
+output that must always be `True`. Lets define aliases for the
 `Bool`eans that are always `True` or `False`
 
 \begin{code}
-{-@ type True  = {v:Bool |      Prop v } @-}
-{-@ type False = {v:Bool | not (Prop v)} @-}
+{-@ type True  = {v:Bool |     v} @-}
+{-@ type False = {v:Bool | not v} @-}
 \end{code}
 
 \noindent We can use `True` to state theorems.
@@ -155,7 +155,7 @@ implies _    _     = False
 \noindent and `Implies p q` is defined as
 
 \begin{code}
-{-@ type Implies P Q = {v:_ | Prop v <=> (Prop P => Prop Q)} @-}
+{-@ type Implies P Q = {v:_ | v <=> (P => Q)} @-}
 \end{code}
 
 <div class="hwex" id="Bounded Addition">
@@ -231,7 +231,7 @@ from Haskell and Scala respectively.]
 Content-Aware List API {#listelems}
 ----------------------------------
 
-Lets return to our real goal, which is to to verify
+Lets return to our real goal, which is to verify
 properties of programs. First, we need a way to refine
 the list API to precisely track the set of elements
 in a list.
@@ -357,7 +357,8 @@ prop_halve_append n xs = elts xs == elts xs'
 
 \hint You may want to remind yourself about the
 *dimension-aware* signature for `partition` from
-[the earlier chapter](#listreducing).
+[the earlier chapter](https://ucsd-progsys.github.io/liquidhaskell-tutorial/07-measure-int.html#/listreducing).
+
 
 <div class="hwex" id="Membership">
 Write down a signature for `elem` that suffices to verify
@@ -370,10 +371,10 @@ elem x (y:ys) = x == y || elem x ys
 elem _ []     = False
 
 {-@ test1 :: True @-}
-test1      = elem 2 [1,2,3]
+test1      = elem 2 [1, 2, 3]
 
 {-@ test2 :: False @-}
-test2      = elem 2 [1,3]
+test2      = elem 2 [1, 3]
 \end{code}
 
 Permutations
@@ -464,7 +465,7 @@ Uniqueness
 Often, we want to enforce the invariant that a particular collection
 contains *no duplicates*; as multiple copies in a collection of file
 handles or system resources can create unpleasant leaks.
-For example, the [XMonad][xmonad] window manager creates a
+For example, the [xmonad][xmonad] window manager creates a
 sophisticated *zipper* data structure to hold the list of
 active user windows and carefully maintains the invariant
 that that the zipper contains no duplicates. Next, lets see how to
@@ -576,7 +577,7 @@ if you did a certain exercise above \ldots.]
 -- FIXME
 {-@ predicate In X Xs = Set_mem X (elts Xs) @-}
 
-{-@ isin :: x:_ -> ys:_ -> {v:Bool | Prop v <=> In x ys }@-}
+{-@ isin :: x:_ -> ys:_ -> {v:Bool | v <=> In x ys }@-}
 isin x (y:ys)
   | x == y    = True
   | otherwise = x `isin` ys
@@ -619,7 +620,7 @@ range i j
 Unique Zippers
 --------------
 
-A [zipper](wiki-zipper) is an aggregate data stucture
+A [zipper](wiki-zipper) is an aggregate data structure
 that is used to arbitrarily traverse the structure and
 update its contents. For example, a zipper for a list is
 a data type that contains an element (called `focus`)
@@ -636,9 +637,9 @@ data Zipper a = Zipper {
   }
 \end{code}
 
-\newthought{XMonad} is a wonderful tiling window manager, that uses
+\newthought{xmonad} is a wonderful tiling window manager, that uses
 a [zipper][xmonad-stackset] to store the set of windows being managed.
-Xmonad requires the crucial invariant that the values in the zipper
+xmonad requires the crucial invariant that the values in the zipper
 be unique, that is, be free of duplicates.
 
 \newthought{We Refine Zipper} to capture the requirement

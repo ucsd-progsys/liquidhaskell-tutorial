@@ -1,5 +1,12 @@
 # LiquidHaskell Tutorial
 
+**TODO: UPDATE the website with the new code**
+
+**NOTE** The PDF/HTML are sometimes not up-to-date 
+with the latest LiquidHaskell release. Please clone 
+the github repository and run locally for best results.
+
+
 ## Contents
 
 #### Part I: Refinement Types

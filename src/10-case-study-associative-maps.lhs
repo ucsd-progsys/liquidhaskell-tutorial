@@ -144,7 +144,7 @@ returns the value associated with a given key.
 
 ~~~~~{.spec}
 -- | Check if key is defined
-mem :: k:k -> m:Map k v -> {v:Bool|Prop v <=> HasKey k m}
+mem :: k:k -> m:Map k v -> {v:Bool | v <=> HasKey k m}
 
 -- | Lookup key's value
 get :: k:k -> {m:Map k v | HasKey k m} -> v
@@ -271,7 +271,7 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
 `G` if all the *free* variables in the expression appear in `G`, i.e.
 the environment contains bindings for all the variables in the
 expression that are *not* bound within the expression. As we've seen
-repeatedly, often a whole pile of informal handwaving, can be
+repeatedly, often a whole pile of informal hand-waving, can be
 succinctly captured by a type definition that says the `free` variables
 in the `Expr` must be contained in the `keys` of the environment `G`:
 
@@ -454,7 +454,7 @@ Well, lets look at the error for the call `get' k' l`
      k' : a
 ~~~~~
 
-\noindent LiquidHaskell is *unable* to deduce that the the key `k'`
+\noindent LiquidHaskell is *unable* to deduce that the key `k'`
 definitely belongs in the `left` subtree `l`. Well, lets ask ourselves:
 *why* must `k'` belong in the left subtree? From the input, we know
 `HasKey k' m` i.e. that `k'` is *somewhere* in `m`.
@@ -561,7 +561,7 @@ so that it verifiably implements the given signature.
 
 \begin{code}
 {-@ mem :: (Ord k) => k:k -> m:Map k v
-                   -> {v:_ | Prop v <=> HasKey k m} @-}
+                   -> {v:_ | v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
   | k' <  k   = mem k' l
@@ -594,7 +594,7 @@ Recap
 -----
 
 In this chapter we saw how to combine several of the techniques from previous chapters
-in a case study. We learnt how to:
+in a case study. We learned how to:
 
 1. *Define* an API for associative maps that used refinements to track the *set* of `keys`
    stored in a map, in order to prevent lookup failures, the `NullPointerDereference` errors

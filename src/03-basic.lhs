@@ -206,9 +206,9 @@ Indeed! Thus, a program containing `die` typechecks *only* when
 LiquidHaskell can prove that `die` is *never called*. For example, LiquidHaskell will *accept*
 
 \begin{code}
-cantDie = if 1 + 1 == 3
-            then die "horrible death"
-            else ()
+cannotDie = if 1 + 1 == 3
+              then die "horrible death"
+              else ()
 \end{code}
 
 \noindent
@@ -266,7 +266,7 @@ using the fact that in the first equation for `divide` the
 
 \noindent
 which *contradicts* the pre-condition (i.e. input) type.
-Thus, by contradition, LiquidHaskell deduces that the first equation is
+Thus, by contradiction, LiquidHaskell deduces that the first equation is
 *dead code* and hence `die` will not be called at run-time.
 
 \newthought{Establishing Pre-conditions}
@@ -368,15 +368,13 @@ that occurs inside the guard `isPositive d`. Hence, we require a
 when the argument is positive:
 
 \begin{code}
-{-@ isPositive :: x:Int -> {v:Bool | Prop v <=> x > 0} @-}
+{-@ isPositive :: x:Int -> {v:Bool | v <=> x > 0} @-}
 \end{code}
 
-In the above signature, read `Prop v` as "`v` is `True`";
-dually, read `not (Prop v)` as "`v` is `False`".
-Hence, the output type (post-condition) states that
-`isPositive x` returns `True` if and only if `x` was in
-fact strictly greater than `0`. In other words, we can
-write post-conditions for plain-old `Bool`-valued *tests*
+In the above signature, the output type (post-condition)
+states that `isPositive x` returns `True` if and only if
+`x` was in fact strictly greater than `0`. In other words,
+we can write post-conditions for plain-old `Bool`-valued *tests*
 to establish that user-supplied values satisfy some desirable
 property (here, `Pos` and hence `NonZero`) in order to then
 safely perform some computation on it.

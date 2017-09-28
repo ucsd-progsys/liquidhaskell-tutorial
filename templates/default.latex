@@ -225,6 +225,7 @@ $if(author)$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 $endif$
 
+
 \date{$date$}
 
 $for(header-includes)$
@@ -257,9 +258,12 @@ $endfor$
 \thispagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{\baselineskip}
+
+\textbf{Version $version$}, $date$.
+
 Copyright \copyright\ \the\year\ Ranjit Jhala
 
-\par\smallcaps{goto.ucsd.edu/liquid}
+\par\smallcaps{https://ucsd-progsys.github.io/liquidhaskell-blog/}
 
 \par Licensed under the Apache License, Version 2.0 (the ``License''); you may not
 use this file except in compliance with the License. You may obtain a copy

@@ -6,7 +6,8 @@ Case Study: Pointers & Bytes {#case-study-pointers}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--short-names"    @-}
-{-@ LIQUID "--diffcheck"     @-}
+{-@ LIQUID "--prune"          @-}
+
 {-# LANGUAGE ForeignFunctionInterface #-}
 
 module Memory where
@@ -27,7 +28,7 @@ unsafeHead       :: ByteString -> Word8
 create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
 -- boilerplate
-{-@ type TRUE = {v:Bool | Prop v } @-}
+{-@ type TRUE = {v:Bool | v } @-}
 
 -- TODO: we really shouldn't need this...
 {-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
@@ -45,7 +46,7 @@ need to, you can drop down to low-level pointer twiddling to squeeze the
 most performance out of your machine. But of course, that opens the door
 to the heartbleeds.
 
-Wouldn't it be nice to have have our cake and eat it too?
+Wouldn't it be nice to have our cake and eat it too?
 Wouldn't it be great if we could twiddle pointers at a
 low-level and still get the nice safety assurances of
 high-level types? Lets see how LiquidHaskell lets us
@@ -58,7 +59,7 @@ HeartBleeds in Haskell
 \newthought{Modern Languages} like Haskell are ultimately built upon the
 foundation of `C`. Thus, implementation errors could open up unpleasant
 vulnerabilities that could easily slither past the type system and even
-code inspection. As a concrete example, lets look at a a function that
+code inspection. As a concrete example, lets look at a function that
 uses the `ByteString` library to truncate strings:
 
 \begin{code}
@@ -765,7 +766,7 @@ The specification is that `group` should produce a
 \noindent We can use these to enrich the API with a `null` check
 
 \begin{code}
-{-@ null :: b:_ -> {v:Bool | Prop v <=> Null b} @-}
+{-@ null :: b:_ -> {v:Bool | v <=> Null b} @-}
 null (BS _ _ l) = l == 0
 \end{code}
 
@@ -815,13 +816,13 @@ prefix and suffix at that point.
 
 \begin{code}
 {-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
-spanByte c ps@(BS x s l)
+spanByte c ps@(BS x s ln)
   = unsafePerformIO
       $ withForeignPtr x $ \p ->
          go (p `plusPtr` s) 0
   where
     go p i
-      | i >= l    = return (ps, empty)
+      | i >= ln   = return (ps, empty)
       | otherwise = do c' <- peekByteOff p i
                        if c /= c'
                          then return $ splitAt i
