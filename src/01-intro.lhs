@@ -105,7 +105,7 @@ Finally, for certain kinds of programs, there is a fate worse than death.
 is used, for example, to build web services.
 
 ~~~~~{.ghci}
-ghci> :m + Data.Text Data.Text.Unsafe 
+ghci> :m +Data.Text Data.Text.Unsafe 
 ghci> let t = pack "Voltage"
 ghci> takeWord16 5 t
 "Volta"
