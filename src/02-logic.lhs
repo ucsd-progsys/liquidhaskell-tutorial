@@ -396,7 +396,7 @@ is *not* valid:
 
 \begin{code}
 {-@ ax0' :: TRUE @-}
-ax0' = 1 + 2 == 2
+ax0' = 1 + 1 == 3
 \end{code}
 
 \newthought{SMT Solvers determine Validity} *without*

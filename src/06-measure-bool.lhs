@@ -172,7 +172,7 @@ average' xs
   | otherwise = Nothing 
   where
     elems     = size xs
-    ok        = elems > 0 -- What expression goes here? 
+    ok        = True   -- What expression goes here? 
 \end{code}
 
 <div class="hwex" id="Debugging Specifications">
