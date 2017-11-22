@@ -1,6 +1,6 @@
 {-@ LIQUID "--no-termination" @-}
 
-module InTex where
+module Main (main) where
 
 import Data.Maybe
 import Text.Pandoc.JSON

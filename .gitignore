@@ -1,3 +1,7 @@
 .liquid
 .*.swp
 .*.swo
+.stack-work
+liquidhaskell-tutorial.cabal
+_site
+dist

@@ -2,10 +2,9 @@
 
 **TODO: UPDATE the website with the new code**
 
-**NOTE** The PDF/HTML are sometimes not up-to-date 
-with the latest LiquidHaskell release. Please clone 
+**NOTE** The PDF/HTML are sometimes not up-to-date
+with the latest LiquidHaskell release. Please clone
 the github repository and run locally for best results.
-
 
 ## Contents
 
@@ -40,47 +39,83 @@ the github repository and run locally for best results.
 
 12. [Case Study: AVL Trees](src/12-case-study-AVL.lhs)
 
+## Get Started
+
+```
+$ git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
+$ cd liquidhaskell-tutorial/
+
+$ stack install
+$ PATH=~/.local/bin:$PATH
+
+$ stack exec -- liquid ./src/01-intro.lhs
+$ stack exec -- liquid ./src/02-logic.lhs
+$ stack exec -- liquid ./src/03-basic.lhs
+$ stack exec -- liquid ./src/04-poly.lhs
+$ stack exec -- liquid ./src/05-datatypes.lhs
+$ stack exec -- liquid ./src/06-measure-bool.lhs
+$ stack exec -- liquid ./src/07-measure-int.lhs
+$ stack exec -- liquid ./src/08-measure-sets.lhs
+$ stack exec -- liquid ./src/09-case-study-lazy-queues.lhs
+$ stack exec -- liquid ./src/10-case-study-associative-maps.lhs
+$ stack exec -- liquid ./src/11-case-study-pointers.lhs
+$ stack exec -- liquid ./src/12-case-study-AVL.lhs
+```
+
 # Building
 
 ## Deploy on Github
 
+### Dependencies
+
+```
+$ stack install pandoc
+```
+
 #### Prerequisites
 
 ~~~~~
-cabal install template
-cd .. && git clone git://github.com/ucsd-progsys/liquid-client.git
+$ cd .. && git clone https://github.com/ucsd-progsys/liquid-client.git
 ~~~~~
 
 #### Actual deployment
+
 ~~~~~
-git checkout master
-make html
-cp -r _site ~/tmp/
-git checkout gh-pages
-cp -r ~/tmp/* .
-git commit -a
-git push origin gh-pages
+$ git checkout master
+$ make html
+$ cp -r _site ~/tmp/
+$ git checkout gh-pages
+$ cp -r ~/tmp/* .
+$ git commit -a
+$ git push origin gh-pages
 ~~~~~
 
 ## Compiling .pdf
 
+### Dependencies
+
+```
+$ stack install pandoc pandoc-citeproc
+```
+
 #### Prerequisites
 
-* Install Haskell dependencies
-
-~~~~~
-cabal install pandoc template
-~~~~~
-
 * Install LaTeX dependencies:
-   * [Texlive](https://www.tug.org/texlive/)
-   * texlive-latex-extra
-   * texlive-fonts-extra
+  * [Texlive](https://www.tug.org/texlive/)
+  * texlive-latex-extra
+  * texlive-fonts-extra
+
+**Ubuntu 17.10**
+
+```
+$ sudo apt install -y texlive-latex-base texlive-latex-extra texlive-fonts-extra
+```
 
 #### Producing .pdf Book
 
 ~~~~~
-make pdf
+$ make pdf
+$ evince dist/pbook.pdf
 ~~~~~
 
 ## Solutions to Exercises

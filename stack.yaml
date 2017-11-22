@@ -1,10 +1,11 @@
-resolver: nightly-2017-10-06
-
+resolver: nightly-2017-11-22
 compiler-check: newer-minor
-
 flags: {}
-
 packages:
-  - '.'
-
-extra-deps: []
+- '.'
+- ./liquidhaskell
+- ./liquidhaskell/liquid-fixpoint
+extra-deps:
+- dotgen-0.4.2
+- fgl-visualize-0.1.0.1
+- located-base-0.1.1.1

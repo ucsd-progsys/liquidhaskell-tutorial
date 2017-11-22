@@ -4,7 +4,7 @@
 {-# LANGUAGE TupleSections     #-}
 {-@ LIQUID "--diff" @-}
 
-module Toc where
+module Main (main) where
 
 import Data.Monoid (mempty)
 import Debug.Trace
@@ -24,6 +24,7 @@ import qualified Data.Text.Lazy as L
 import qualified Data.Text.IO as TIO
 import System.Environment (getArgs)
 import Data.Text.Template
+import qualified Data.Text.IO as TIO
 
 -- Use as:
 -- toc src/ templates/pagemeta.template templates/index.template dist/page.template src/index.html dist/links.txt
@@ -80,8 +81,8 @@ dirLhs dir = do
 
 readDoc   :: FilePath -> IO Pandoc
 readDoc f = do
-  str    <- readFile f
-  let md = readMarkdown def str
+  str <- TIO.readFile f
+  let md =  runPure $ readMarkdown def str
   case md of
     Right d -> return d
     -- Left e  -> error $ "readDoc hits Error!: " ++ show e
@@ -141,7 +142,8 @@ htmlFile file = (takeFileName file) `replaceExtension` ".html"
 
 -------------------------------------------------------------------------------
 
-inlineString    = writeHtmlString def . inlinePandoc
+inlineString = either errHandler T.unpack . runPure . writeHtml5String def . inlinePandoc
+  where errHandler = error $ mconcat ["inlineString"]
 inlinePandoc is = Pandoc mempty [Plain is]
 
 -------------------------------------------------------------------------------
