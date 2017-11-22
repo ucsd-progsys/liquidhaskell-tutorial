@@ -43,7 +43,11 @@ the github repository and run locally for best results.
 
 ```
 $ git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
+$ cd liquidhaskell-tutorial/
+
 $ stack install
+$ PATH=~/.local/bin:$PATH
+
 $ stack exec -- liquid ./src/01-intro.lhs
 $ stack exec -- liquid ./src/02-logic.lhs
 $ stack exec -- liquid ./src/03-basic.lhs
