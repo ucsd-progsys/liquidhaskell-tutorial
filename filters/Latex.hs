@@ -1,7 +1,8 @@
 {-# LANGUAGE ViewPatterns #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-@ LIQUID "--no-termination" @-}
 
-module InTex where
+module Main (main) where
 
 import Text.Pandoc.JSON
 import Text.Pandoc
@@ -10,6 +11,8 @@ import Data.List
 import Data.Monoid (mempty)
 import Debug.Trace
 import Text.Printf (printf)
+import Data.Text (Text, unpack)
+import Data.Either (either)
 
 main :: IO ()
 main = toJSONFilter readFootnotes
@@ -17,16 +20,22 @@ main = toJSONFilter readFootnotes
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-    
+
+readFootnotes :: Block -> Block
 readFootnotes (Div (id, [cls], _) bs)
   | cls `elem` mydivs                 = RawBlock (Format "tex") $ toLaTeX cls id bs
 readFootnotes i                       = i
 
-toLaTeX cls id                        = wrapLatex cls id . writeLaTeX def . Pandoc mempty 
+toLaTeX :: String -> String -> [Block] -> String
+toLaTeX cls id                        = wrapLatex cls id . either errHandler unpack . runPure . writeLaTeX def . Pandoc mempty
+  where errHandler = error $ mconcat ["toLaTex: ", cls, " ", id]
+
+wrapLatex :: String -> String -> String -> String
 wrapLatex "footnotetext" _ str        = printf "\\footnotetext{%s}" str
 wrapLatex "hwex" name str             = printf "\\begin{hwex}[%s]\n%s\n\\end{hwex}" name str
 wrapLatex cls name str                = error $ printf "WrapLatex: %s %s" cls name
 
+mydivs :: [String]
 mydivs = ["footnotetext", "hwex"]
 
 
@@ -36,7 +45,7 @@ mydivs = ["footnotetext", "hwex"]
 --   if fnString `isPrefixOf` s
 --     then Just . safeInit . drop (length fnString) $ s -- Remove closing brace
 --     else Nothing
--- 
+--
 -- footnoteText x = Nothing
 
 
@@ -56,13 +65,13 @@ safeInit xs = init xs
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
 
-              
--- main = toJSONFilter txBlock 
+
+-- main = toJSONFilter txBlock
 
 -- bb = CodeBlock ("",["sourceCode","literate","haskell"],[]) "ranjit :: Int\nranjit = 12 + flibbertypopp \n\nflibbertypopp :: Int\nflibbertypopp = 42"
 
 txBlock :: Maybe Format -> Block -> [Block]
-txBlock _ cb@(CodeBlock _ _) = expandCodeBlock cb 
+txBlock _ cb@(CodeBlock _ _) = expandCodeBlock cb
 txBlock _ b                  = [b]
 
 expandCodeBlock :: Block -> [Block]
@@ -83,7 +92,7 @@ stringTokens s = go [] s
                      go ((WhiteSpace sp) : (Word w) : acc) s''
 
 tokensString :: [Token] -> String
-tokensString = concat . map tokenString 
+tokensString = concat . map tokenString
 
 tokenString :: Token -> String
 tokenString (Word s)       = s

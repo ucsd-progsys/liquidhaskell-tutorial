@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-@ LIQUID "--no-termination" @-}
 
-module Figures where
+module Main (main) where
 
 import Data.IORef
 import Text.Pandoc.JSON
@@ -83,9 +83,9 @@ tx tgt prefix t r b0
 txLink r = walkM (reLink r)
 
 reLink   :: IORef Info -> Inline -> IO Inline
-reLink r (Link [Str "auto"] tgt@('#':id,_))
+reLink r (Link attr [Str "auto"] tgt@('#':id,_))
   = do n <- getCount r id
-       return $ Link [Str (show n)] tgt
+       return $ Link attr [Str (show n)] tgt
 
 reLink _ i
   = return i

@@ -5,7 +5,6 @@ remotehost=goto.ucsd.edu
 # TMPDIR=~/tmp/
 
 LIQUIDCLIENT=../liquid-client
-INDEXER=filters/Toc.hs
 
 METATEMPLATE=templates/pagemeta.template
 INDEXTEMPLATE=templates/index.template
@@ -17,33 +16,37 @@ PAGETEMPLATE=dist/page.template
 LINKS=dist/links.txt
 INDEX=dist/index.lhs
 
+# bin
+PANDOC=stack exec -- pandoc
+INDEXER=stack exec -- toc
+
 
 ##############################################
 
-PANDOCPDF=pandoc \
+PANDOCPDF=$(PANDOC) \
 	--highlight-style=tango \
 	--from=markdown+lhs \
-	--biblio templates/sw.bib \
-	--chapters \
-	--latex-engine=pdflatex \
+	--bibliography=templates/sw.bib \
+	--biblatex \
+	--top-level-division=chapter \
+	--pdf-engine=pdflatex \
 	--template=templates/default.latex \
 	--filter filters/Figures.hs \
 	--filter filters/Latex.hs
 
-PANDOCHTML=pandoc \
-     --from=markdown+lhs \
-	 --to=html5 \
-     -s --mathjax \
-	 --standalone \
-     --parse-raw \
-	 --mathjax \
-	 --toc \
-	 --section-divs \
-	 --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
-	 --filter filters/Figures.hs \
-	 --filter filters/Html.hs \
-	 --variable=notitle \
-	 --highlight-style=tango
+PANDOCHTML=$(PANDOC) \
+  --from=markdown+lhs+raw_html \
+  --to=html5 \
+  -s --mathjax \
+  --standalone \
+  --mathjax \
+  --toc \
+  --section-divs \
+  --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
+  --filter filters/Figures.hs \
+  --filter filters/Html.hs \
+  --variable=notitle \
+  --highlight-style=tango
 
 
 ####################################################################
@@ -71,7 +74,7 @@ thing: dist/index.lhs src/00-temp.html
 	mv src/00-*.html _site/
 
 indexhtml: $(INDEX)
-	pandoc --from=markdown+lhs --to=html5 --template=$(INDEX) $(PREAMBLE) -o _site/index.html
+	$(PANDOC) --from=markdown+lhs --to=html5 --template=$(INDEX) $(PREAMBLE) -o _site/index.html
 
 $(INDEX):
 	$(INDEXER) src/ $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS)

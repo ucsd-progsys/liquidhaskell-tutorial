@@ -2,12 +2,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-@ LIQUID "--no-termination" @-}
 
-module Links where
+module Main (main) where
 
 -- import Data.Char (isSpace)
 -- import Data.Monoid (mempty)
 -- import System.Environment (getEnv)
- 
+
 import Text.Pandoc.JSON
 import Debug.Trace
 
@@ -16,7 +16,7 @@ import Debug.Trace
 import Text.Pandoc.Walk (walk)
 import Data.List (isSuffixOf, isPrefixOf)
 import Text.Printf (printf)
- 
+
 
 import System.Directory
 import System.IO
@@ -42,7 +42,7 @@ tx   :: LinkMap -> Block -> Block
 tx m = walk (txLink m)
 
 txLink   :: LinkMap -> Inline -> Inline
-txLink m (Link x (y, z)) = Link x (reLink m y, z)
+txLink m (Link attr x (y, z)) = Link attr x (reLink m y, z)
 txLink _ i               = i
 
 reLink m l = case M.lookup l m of
