@@ -1,0 +1,38 @@
+name: liquidhaskell-tutorial
+version: '0.1.0.0'
+synopsis: Source for "Programming with Refinement Types"
+category: Web
+author: Ranjit Jhala
+maintainer: jhala@cs.ucsd.edu
+copyright: Ranjit Jhala
+license: MIT
+homepage: https://github.com/ucsd-progsys/liquidhaskell-tutorial
+extra-source-files:
+- README.md
+dependencies:
+- base
+- template
+- containers
+- text
+- bytestring
+- directory
+- pandoc-types
+- pandoc
+- filepath
+
+executables:
+  filters-toc:
+    main: filters/Toc.hs
+    ghc-options: -threaded
+  filters-links:
+    main: filters/Links.hs
+    ghc-options: -threaded
+  filters-latex:
+    main: filters/Latex.hs
+    ghc-options: -threaded
+  filters-html:
+    main: filters/Html.hs
+    ghc-options: -threaded
+  filters-figures:
+    main: filters/Figures.hs
+    ghc-options: -threaded
