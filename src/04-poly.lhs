@@ -347,7 +347,7 @@ loop :: lo:Nat -> hi:{Nat|lo <= hi} -> a -> (Btwn lo hi -> a -> a) -> a
 \noindent In English, the above type states that
 
 - `lo` the loop *lower* bound is a non-negative integer
-- `hi` the loop *upper* bound is a greater than `lo`,
+- `hi` the loop *upper* bound is a greater then or equal to `lo`,
 - `f`  the loop *body* is only called with integers between `lo` and `hi`.
 
 \noindent
@@ -373,8 +373,8 @@ When you are done, what is the type that is inferred for `body`?
 {-@ absoluteSum' :: Vector Int -> Nat @-}
 absoluteSum' vec = loop 0 n 0 body
   where
-    n            = length vec
     body i acc   = undefined
+    n            = length vec
 \end{code}
 
 <div class="hwex" id="Dot Product">
@@ -383,16 +383,14 @@ The following uses `loop` to compute
 Fix the code or specification so that LiquidHaskell
 accepts it. </div>
 
-\vspace{1.0in}
-
 \begin{code}
 -- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
 -- 32
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
 dotProduct x y = loop 0 sz 0 body
   where
-    sz         = length x
     body i acc = acc + (x ! i)  *  (y ! i)
+    sz         = length x
 \end{code}
 
 Refinements and Polymorphism {#sparsetype}
@@ -424,8 +422,8 @@ Let's write a function to compute a sparse product
 {-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct x y   = go 0 y
   where
-    go n ((i,v):y') = go (n + (x!i) * v) y'
     go n []         = n
+    go n ((i,v):y') = go (n + (x!i) * v) y'
 \end{code}
 
 LiquidHaskell verifies the above by using the specification
@@ -448,7 +446,7 @@ as we go along
 {-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct' x y  = foldl' body 0 y
   where
-    body sum (i, v) = sum + (x ! i)  * v
+    body sum (i, v) = sum + (x ! i) * v
 \end{code}
 
 \noindent
@@ -460,7 +458,7 @@ The main trick is in how the polymorphism of
    signature of `foldl'` is instantiated to the Haskell type `(Int, a)`.
 
 2. Correspondingly, LiquidHaskell infers that in fact `b`
-   can be instantiated to the *refined* `(Btwn 0 v (vlen x), a)`.
+   can be instantiated to the *refined* `(Btwn 0 (vlen x), a)`.
 
 Thus, the inference mechanism saves us a fair bit of typing and
 allows us to reuse existing polymorphic functions over containers
