@@ -104,15 +104,15 @@ or the Boolean combination of the above predicates with the operators `&&` (and)
 if ^[Read `p <=> q` as "if `p` then `q` **and** if `q` then `p`"]), and `not`.
 
 ~~~~~{.spec}
-    p := true
-       | false
-       | e r e           -- atomic binary relation
-       | v e1 e2 ... en  -- predicate application
-       | p  && p         -- and
-       | p  || p         -- or
-       | p ==> p         -- implies
-       | p <=> p         -- if and only if
-       | not p           -- negation
+    p := (e r e)                -- binary relation
+       | (v e1 e2 ... en)       -- predicate (or alias) application
+       | (p && p)               -- and
+       | (p || p)               -- or
+       | (p => p) | (p ==> p)   -- implies
+       | (p <=> p)              -- iff
+       | (not p)                -- negation
+       | true | True
+       | false | False
 ~~~~~
 
 
