@@ -1,5 +1,4 @@
 resolver: nightly-2017-11-22
-compiler-check: newer-minor
 flags: {}
 packages:
 - '.'
