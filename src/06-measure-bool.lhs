@@ -18,7 +18,7 @@ such structures.
 
 module Measures where
 
-import Prelude hiding(foldr, foldr1, map, sum, head, tail, null)
+import Prelude hiding(foldl, foldl1, map, sum, head, tail, null)
 
 main = putStrLn "Hello"
 
@@ -38,7 +38,7 @@ size1, size2 :: [a] -> Int
 \end{comment}
 
 
-Partial Functions 
+Partial Functions
 ------------------
 
 As a motivating example, let us return to the problem of ensuring
@@ -76,22 +76,22 @@ size (_:xs) =  1 + size xs
 \noindent and use it to compute the average value of a list:
 
 \begin{code}
-avgMany xs = divide total elems 
+avgMany xs = divide total elems
   where
     total  = sum  xs
     elems  = size xs
 \end{code}
 
-Uh oh. LiquidHaskell wags its finger at us! 
+Uh oh. LiquidHaskell wags its finger at us!
 
 ~~~~~{.liquiderror}
      src/04-measure.lhs:77:27-31: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == elems
-      
+
        not a subtype of Required type
          VV : Int | 0 /= VV
-      
+
        In Context
          VV    : Int | VV == elems
          elems : Int
@@ -111,14 +111,14 @@ to describe the size of a `Data.Vector`. In that spirit, lets write
 a function that computes whether a list is not empty:
 
 \begin{code}
-notEmpty       :: [a] -> Bool 
+notEmpty       :: [a] -> Bool
 notEmpty []    = False
-notEmpty (_:_) = True 
+notEmpty (_:_) = True
 \end{code}
 
 \newthought{A measure} is a *total* Haskell function,
 
-1. With a *single* equation per data constructor, and 
+1. With a *single* equation per data constructor, and
 2. Guaranteed to *terminate*, typically via structural recursion.
 
 \noindent
@@ -168,11 +168,11 @@ Fix the code below to obtain an alternate variant
 \begin{code}
 average'      :: [Int] -> Maybe Int
 average' xs
-  | ok        = Just $ divide (sum xs) elems 
-  | otherwise = Nothing 
+  | ok        = Just $ divide (sum xs) elems
+  | otherwise = Nothing
   where
     elems     = size xs
-    ok        = True   -- What expression goes here? 
+    ok        = True   -- What expression goes here?
 \end{code}
 
 <div class="hwex" id="Debugging Specifications">
@@ -180,7 +180,7 @@ An important aspect of formal verifiers like LiquidHaskell
 is that they help establish properties not just of your *implementations*
 but equally, or more importantly, of your *specifications*. In that spirit,
 can you explain why the following two variants of `size` are *rejected*
-by LiquidHaskell? 
+by LiquidHaskell?
 </div>
 
 \begin{code}
@@ -194,7 +194,7 @@ size2 (_:xs) =  1 + size2 xs
 \end{code}
 
 
-A Safe List API 
+A Safe List API
 ---------------
 
 Now that we can talk about non-empty lists, we can ensure
@@ -275,29 +275,29 @@ LiquidHaskell automatically instantiates the type parameter
 for `map` in `eliminateStutter` to `notEmpty v` to deduce that
 `head` is only called on non-empty lists.
 
-\newthought{Foldr1} is one of my favorite folds; it uses
+\newthought{Foldl1} is one of my favorite folds; it uses
 the first element of the sequence as the initial value.
 Of course, it should only be called with non-empty sequences!
 
 \begin{code}
-{-@ foldr1         :: (a -> a -> a) -> NEList a -> a @-} 
-foldr1 f (x:xs)    = foldr f x xs
-foldr1 _ []        = die "foldr1" 
+{-@ foldl1         :: (a -> a -> a) -> NEList a -> a @-}
+foldl1 f (x:xs)    = foldl f x xs
+foldl1 _ []        = die "foldl1"
 
-foldr              :: (a -> b -> b) -> b -> [a] -> b 
-foldr _ acc []     = acc
-foldr f acc (x:xs) = f x (foldr f acc xs)
+foldl              :: (a -> b -> b) -> b -> [a] -> b
+foldl _ acc []     = acc
+foldl f acc (x:xs) = f x (foldl f acc xs)
 \end{code}
 
 \newthought{To Sum} a non-empty list of numbers, we can just
-perform a `foldr1` with the `+` operator:
+perform a `foldl1` with the `+` operator:
 Thanks to the precondition, LiquidHaskell will prove that
 the `die` code is indeed dead. Thus, we can write
 
 \begin{code}
 {-@ sum :: (Num a) => NEList a -> a  @-}
 sum []  = die "cannot add up empty list"
-sum xs  = foldr1 (+) xs
+sum xs  = foldl1 (+) xs
 \end{code}
 
 \noindent Consequently, we can only invoke `sum` on non-empty lists, so:
@@ -316,13 +316,13 @@ why, and fix the code or specification appropriately?
 
 \begin{code}
 {-@ wtAverage :: NEList (Pos, Pos) -> Int @-}
-wtAverage wxs = divide totElems totWeight 
+wtAverage wxs = divide totElems totWeight
   where
     elems     = map (\(w, x) -> w * x) wxs
     weights   = map (\(w, _) -> w    ) wxs
     totElems  = sum elems
     totWeight = sum weights
-    sum       = foldr1 (+)
+    sum       = foldl1 (+)
 
 map           :: (a -> b) -> [a] -> [b]
 map _ []      =  []
@@ -361,9 +361,9 @@ safeSplit _      = die "don't worry, be happy"
 Recap
 -----
 
-In this chapter we saw how LiquidHaskell lets you 
+In this chapter we saw how LiquidHaskell lets you
 
-1. *Define* structural properties of data types, 
+1. *Define* structural properties of data types,
 
 2. *Use refinements* over these properties to describe key
    invariants that establish, at compile-time, the safety
@@ -376,7 +376,7 @@ In this chapter we saw how LiquidHaskell lets you
    a multitude of constructors and conversions which
    often clutter implementations and specifications.
 
-\noindent 
+\noindent
 Of course, we can do a lot more with measures, so lets press on!
 
 
