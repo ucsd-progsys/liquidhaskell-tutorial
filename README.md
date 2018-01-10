@@ -8,45 +8,35 @@ the github repository and run locally for best results.
 
 ## Contents
 
-#### Part I: Refinement Types
+### Part I: Refinement Types
 
 1. [Introduction](src/01-intro.lhs)
-
-2. [Logic](src/02-logic.lhs)
-
+2. [Logic & SMT](src/02-logic.lhs)
 3. [Refinement Types](src/03-basic.lhs)
+4. [Polymorphism](src/04-poly.lhs)
+5. [Refined Datatypes](src/05-datatypes.lhs)
 
-4. [Polymorphism & Higher Order Functions](src/04-poly.lhs)
+### Part II: Measures
 
-5. [Refining Data Types](src/05-datatypes.lhs)
+6. [Boolean Measures](src/06-measure-bool.lhs)
+7. [Numeric Measures](src/07-measure-int.lhs)
+8. [Elemental Measures](src/08-measure-sets.lhs)
 
-#### Part II: Measures
+### Part III : Case Studies
 
-6. [Propositions](src/06-measure-bool.lhs)
-
-7. [Numbers](src/07-measure-int.lhs)
-
-8. [Sets](src/08-measure-sets.lhs)
-
-
-#### Part III : Case Studies
-
-9. [Case Study: Lazy Queue](src/09-case-study-lazy-queues.lhs)
-
+9. [Case Study: Okasaki's Lazy Queues](src/09-case-study-lazy-queues.lhs)
 10. [Case Study: Associative Maps](src/10-case-study-associative-maps.lhs)
-
-11. [Case Study: Pointers without Overflows](src/11-case-study-pointers.lhs)
-
+11. [Case Study: Pointers & Bytes](src/11-case-study-pointers.lhs)
 12. [Case Study: AVL Trees](src/12-case-study-AVL.lhs)
 
 ## Get Started
 
-```
+```bash
 $ git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cd liquidhaskell-tutorial/
 
 $ stack install
-$ PATH=~/.local/bin:$PATH
+$ export PATH=~/.local/bin:$PATH
 
 $ stack exec -- liquid ./src/01-intro.lhs
 $ stack exec -- liquid ./src/02-logic.lhs
@@ -62,25 +52,32 @@ $ stack exec -- liquid ./src/11-case-study-pointers.lhs
 $ stack exec -- liquid ./src/12-case-study-AVL.lhs
 ```
 
-# Building
+### Update
 
-## Deploy on Github
-
-### Dependencies
-
+```bash
+$ git pull origin master
+$ git submodule update --recursive
 ```
+
+## Building
+
+### Deploy on Github
+
+#### Dependencies
+
+```bash
 $ stack install pandoc
 ```
 
-#### Prerequisites
+##### Prerequisites
 
-~~~~~
-$ cd .. && git clone https://github.com/ucsd-progsys/liquid-client.git
-~~~~~
+```bash
+$ cd ../ && git clone https://github.com/ucsd-progsys/liquid-client.git
+```
 
-#### Actual deployment
+##### Actual deployment
 
-~~~~~
+```bash
 $ git checkout master
 $ make html
 $ cp -r _site ~/tmp/
@@ -88,13 +85,13 @@ $ git checkout gh-pages
 $ cp -r ~/tmp/* .
 $ git commit -a
 $ git push origin gh-pages
-~~~~~
-
-## Compiling .pdf
-
-### Dependencies
-
 ```
+
+### Compiling .pdf
+
+#### Dependencies
+
+```bash
 $ stack install pandoc pandoc-citeproc
 ```
 
@@ -105,18 +102,18 @@ $ stack install pandoc pandoc-citeproc
   * texlive-latex-extra
   * texlive-fonts-extra
 
-**Ubuntu 17.10**
+To install LaTeX dependencies on `Ubuntu 17.10`, following them:
 
-```
+```bash
 $ sudo apt install -y texlive-latex-base texlive-latex-extra texlive-fonts-extra
 ```
 
 #### Producing .pdf Book
 
-~~~~~
+```bash
 $ make pdf
 $ evince dist/pbook.pdf
-~~~~~
+```
 
 ## Solutions to Exercises
 
