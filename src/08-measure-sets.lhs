@@ -292,9 +292,9 @@ then make the subsequent specifications pithy and crisp.
 we get the automatically refined types for "nil" and "cons":
 
 ~~~~~{.spec}
-data List a where
+data [a] where
   []  :: ListEmp a
-  (:) :: x:a -> xs:List a -> ListUn1 a x xs
+  (:) :: x:a -> xs:[a] -> ListUn1 a x xs
 ~~~~~
 
 \begin{comment}
@@ -329,7 +329,7 @@ Write down a type for `revHelper` so that `reverse'` is verified by LiquidHaskel
 </div>
 
 \begin{code}
-{-@ reverse' :: xs:List a -> ListEq a xs @-}
+{-@ reverse' :: xs:[a] -> ListEq a xs @-}
 reverse' xs = revHelper [] xs
 
 revHelper acc []     = acc
@@ -404,14 +404,14 @@ insert x (y:ys)
 elements of the input `xs`, plus the new element `x`:
 
 \begin{code}
-{-@ insert :: x:a -> xs:List a -> ListUn1 a x xs @-}
+{-@ insert :: x:a -> xs:[a] -> ListUn1 a x xs @-}
 \end{code}
 
 \noindent The above signature lets us prove that the output
 of the sorting routine indeed has the elements of the input:
 
 \begin{code}
-{-@ insertSort :: (Ord a) => xs:List a -> ListEq a xs @-}
+{-@ insertSort :: (Ord a) => xs:[a] -> ListEq a xs @-}
 insertSort []     = []
 insertSort (x:xs) = insert x (insertSort xs)
 \end{code}
@@ -422,7 +422,7 @@ Fix the specification of `merge` so that the subsequent property
 </div>
 
 \begin{code}
-{-@ merge :: xs:List a -> ys:List a -> List a @-}
+{-@ merge :: xs:[a] -> ys:[a] -> [a] @-}
 merge (x:xs) (y:ys)
   | x <= y           = x : merge xs (y:ys)
   | otherwise        = y : merge (x:xs) ys
@@ -451,7 +451,7 @@ unexpected signature for `mergeSort` below.
 </div>
 
 \begin{code}
-{-@ mergeSort :: (Ord a) => xs:List a -> ListEmp a @-}
+{-@ mergeSort :: (Ord a) => xs:[a] -> ListEmp a @-}
 mergeSort []  = []
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where
@@ -478,7 +478,7 @@ simplest is a *measure*:
 
 \begin{code}
 {-@ measure unique @-}
-unique        :: (Ord a) => List a -> Bool
+unique        :: (Ord a) => [a] -> Bool
 unique []     = True
 unique (x:xs) = unique xs && not (member x (elts xs))
 \end{code}
@@ -486,7 +486,7 @@ unique (x:xs) = unique xs && not (member x (elts xs))
 \noindent We can use the above to write an alias for duplicate-free lists
 
 \begin{code}
-{-@ type UList a = {v:List a | unique v }@-}
+{-@ type UList a = {v:[a] | unique v }@-}
 \end{code}
 
 \noindent Lets quickly check that the right lists are indeed `unique`
@@ -549,7 +549,7 @@ so that we can prove that the output is a `UList a`?
 {-@ reverse    :: xs:UList a -> UList a    @-}
 reverse         = go []
   where
-    {-@ go     :: a:List a -> xs:List a -> List a @-}
+    {-@ go     :: a:[a] -> xs:[a] -> [a] @-}
     go a []     = a
     go a (x:xs) = go (x:a) xs
 \end{code}
@@ -559,7 +559,7 @@ an arbitrary input by traversing the input and tossing out
 elements that are already `seen`:
 
 \begin{code}
-{-@ nub              :: List a -> UList a @-}
+{-@ nub              :: [a] -> UList a @-}
 nub xs                = go [] xs
   where
     go seen []        = seen
@@ -632,8 +632,8 @@ elements to the `right` (i.e. after) the focus.
 \begin{code}
 data Zipper a = Zipper {
     focus  :: a
-  , left   :: List a
-  , right  :: List a
+  , left   :: [a]
+  , right  :: [a]
   }
 \end{code}
 
