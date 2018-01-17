@@ -83,7 +83,7 @@ measure difference   :: Set a -> Set a -> Set a
 The above operators are *interpreted* by the SMT solver.
 That is, just like the SMT solver "knows", via the
 axioms of the theory of arithmetic that:
-$$x = 2 + 2 \Rightarrow x = 4$$
+$$x = 1 + 1 \Rightarrow x = 2$$
 is a valid formula, i.e. holds for all $x$,
 the solver "knows" that:
 $$x = \tsng{1} \Rightarrow y = \tsng{2} \Rightarrow x = \tcap{x}{\tcup{y}{x}}$$
