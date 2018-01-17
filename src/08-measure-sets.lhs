@@ -181,14 +181,14 @@ prop_intersection_comm x y
 \newthought{The Associativity of Union} can similarly be confirmed:
 
 \begin{code}
-{-@ prop_intersection_comm :: _ -> _ -> True @-}
+{-@ prop_union_assoc :: _ -> _ -> _ -> True @-}
 prop_union_assoc x y z
   = (x `union` (y `union` z)) == (x `union` y) `union` z
 \end{code}
 
 \newthought{The Distributivity Laws} for Boolean Algebra can
 be verified by writing properties over the relevant operators.
-For example, we lets check that `union` distributes over `intersection`:
+For example, we lets check that `intersection` distributes over `union`:
 
 \begin{code}
 {-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
@@ -439,8 +439,8 @@ prop_merge_app xs ys = elts zs == elts zs'
 
 <div class="hwex" id="Merge Sort">
 \doublestar Once you write the correct type
-for `merge` above, you should be able to prove the
-er, unexpected signature for `mergeSort` below.
+for `merge` above, you should be able to prove thet
+unexpected signature for `mergeSort` below.
 
 1. Make sure you are able verify the given signature.
 
