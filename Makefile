@@ -60,6 +60,7 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 all: pdf
 
 pdf: $(lhsObjects)
+	mkdir -p dist
 	cat $(lhsObjects) > dist/pbook.lhs
 	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) $(PREAMBLE) $(BIB) dist/pbook.lhs -o dist/pbook.pdf
 
