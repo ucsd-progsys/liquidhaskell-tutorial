@@ -132,7 +132,6 @@ equation per data-constructor]
 
 \begin{code}
 {-@ measure size @-}
-{-@ size    :: xs:[a] -> {v:Nat | v = size xs} @-}
 size []     = 0
 size (_:rs) = 1 + size rs
 \end{code}
