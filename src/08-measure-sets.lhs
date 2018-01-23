@@ -493,10 +493,12 @@ unique (x:xs) = unique xs && not (member x (elts xs))
 
 \begin{code}
 {-@ isUnique    :: UList Int @-}
-isUnique        = [1, 2, 3]        -- accepted by LH
+isUnique :: [Int]
+isUnique = [1, 2, 3]           -- accepted by LH
 
 {-@ isNotUnique :: UList Int @-}
-isNotUnique     = [1, 2, 3, 1]     -- rejected by LH
+isNotUnique :: [Int]
+isNotUnique = [1, 2, 3, 1]     -- rejected by LH
 \end{code}
 
 \newthought{The Filter} function returns a *subset* of
@@ -549,9 +551,9 @@ so that we can prove that the output is a `UList a`?
 {-@ reverse    :: xs:UList a -> UList a    @-}
 reverse         = go []
   where
-    {-@ go     :: a:[a] -> xs:[a] -> [a] @-}
-    go a []     = a
-    go a (x:xs) = go (x:a) xs
+    {-@ go     :: acc:[a] -> xs:[a] -> [a] @-}
+    go acc []     = acc
+    go acc (x:xs) = go (x:acc) xs
 \end{code}
 
 \newthought{The Nub} function constructs a `unique` list from
@@ -562,6 +564,7 @@ elements that are already `seen`:
 {-@ nub              :: [a] -> UList a @-}
 nub xs                = go [] xs
   where
+    {-@ go :: UList a -> xs:[a] -> UList a / [len xs] @-}
     go seen []        = seen
     go seen (x:xs)
       | x `isin` seen = go seen     xs
