@@ -367,8 +367,8 @@ Write down a signature for `elem` that suffices to verify
 
 \begin{code}
 {-@ elem      :: (Eq a) => a -> [a] -> Bool @-}
-elem x (y:ys) = x == y || elem x ys
 elem _ []     = False
+elem x (y:ys) = x == y || elem x ys
 
 {-@ test1 :: True @-}
 test1      = elem 2 [1, 2, 3]
@@ -423,11 +423,11 @@ Fix the specification of `merge` so that the subsequent property
 
 \begin{code}
 {-@ merge :: xs:[a] -> ys:[a] -> [a] @-}
+merge [] ys          = ys
+merge xs []          = xs
 merge (x:xs) (y:ys)
   | x <= y           = x : merge xs (y:ys)
   | otherwise        = y : merge (x:xs) ys
-merge [] ys          = ys
-merge xs []          = xs
 
 {-@ prop_merge_app   :: _ -> _ -> True   @-}
 prop_merge_app xs ys = elts zs == elts zs'
