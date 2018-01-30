@@ -395,6 +395,7 @@ the appropriate position of the output:
 
 \begin{code}
 insert x []     = [x]
+insert x [x]    = [x]
 insert x (y:ys)
   | x <= y      = x : y : ys
   | otherwise   = y : insert x ys
