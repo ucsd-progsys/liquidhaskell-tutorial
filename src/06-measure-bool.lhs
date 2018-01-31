@@ -284,9 +284,9 @@ Of course, it should only be called with non-empty sequences!
 foldl1 f (x:xs)    = foldl f x xs
 foldl1 _ []        = die "foldl1"
 
-foldl              :: (a -> b -> b) -> b -> [a] -> b
+foldl              :: (a -> b -> a) -> a -> [b] -> a
 foldl _ acc []     = acc
-foldl f acc (x:xs) = f x (foldl f acc xs)
+foldl f acc (x:xs) = foldl f (f acc x) xs
 \end{code}
 
 \newthought{To Sum} a non-empty list of numbers, we can just
