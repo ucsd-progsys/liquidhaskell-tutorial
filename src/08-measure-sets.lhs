@@ -395,7 +395,6 @@ the appropriate position of the output:
 
 \begin{code}
 insert x []     = [x]
-insert x [x]    = [x]
 insert x (y:ys)
   | x <= y      = x : y : ys
   | otherwise   = y : insert x ys
@@ -440,7 +439,7 @@ prop_merge_app xs ys = elts zs == elts zs'
 
 <div class="hwex" id="Merge Sort">
 \doublestar Once you write the correct type
-for `merge` above, you should be able to prove thet
+for `merge` above, you should be able to prove the
 unexpected signature for `mergeSort` below.
 
 1. Make sure you are able verify the given signature.
@@ -454,6 +453,7 @@ unexpected signature for `mergeSort` below.
 \begin{code}
 {-@ mergeSort :: (Ord a) => xs:[a] -> ListEmp a @-}
 mergeSort []  = []
+mergeSort [x] = [x]
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where
    (ys, zs)   = halve mid xs
