@@ -83,7 +83,7 @@ measure difference   :: Set a -> Set a -> Set a
 The above operators are *interpreted* by the SMT solver.
 That is, just like the SMT solver "knows", via the
 axioms of the theory of arithmetic that:
-$$x = 2 + 2 \Rightarrow x = 4$$
+$$x = 1 + 1 \Rightarrow x = 2$$
 is a valid formula, i.e. holds for all $x$,
 the solver "knows" that:
 $$x = \tsng{1} \Rightarrow y = \tsng{2} \Rightarrow x = \tcap{x}{\tcup{y}{x}}$$
@@ -181,14 +181,14 @@ prop_intersection_comm x y
 \newthought{The Associativity of Union} can similarly be confirmed:
 
 \begin{code}
-{-@ prop_intersection_comm :: _ -> _ -> True @-}
+{-@ prop_union_assoc :: _ -> _ -> _ -> True @-}
 prop_union_assoc x y z
   = (x `union` (y `union` z)) == (x `union` y) `union` z
 \end{code}
 
 \newthought{The Distributivity Laws} for Boolean Algebra can
 be verified by writing properties over the relevant operators.
-For example, we lets check that `union` distributes over `intersection`:
+For example, we lets check that `intersection` distributes over `union`:
 
 \begin{code}
 {-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
@@ -292,9 +292,9 @@ then make the subsequent specifications pithy and crisp.
 we get the automatically refined types for "nil" and "cons":
 
 ~~~~~{.spec}
-data List a where
+data [a] where
   []  :: ListEmp a
-  (:) :: x:a -> xs:List a -> ListUn1 a x xs
+  (:) :: x:a -> xs:[a] -> ListUn1 a x xs
 ~~~~~
 
 \begin{comment}
@@ -329,7 +329,7 @@ Write down a type for `revHelper` so that `reverse'` is verified by LiquidHaskel
 </div>
 
 \begin{code}
-{-@ reverse' :: xs:List a -> ListEq a xs @-}
+{-@ reverse' :: xs:[a] -> ListEq a xs @-}
 reverse' xs = revHelper [] xs
 
 revHelper acc []     = acc
@@ -367,8 +367,8 @@ Write down a signature for `elem` that suffices to verify
 
 \begin{code}
 {-@ elem      :: (Eq a) => a -> [a] -> Bool @-}
-elem x (y:ys) = x == y || elem x ys
 elem _ []     = False
+elem x (y:ys) = x == y || elem x ys
 
 {-@ test1 :: True @-}
 test1      = elem 2 [1, 2, 3]
@@ -404,14 +404,14 @@ insert x (y:ys)
 elements of the input `xs`, plus the new element `x`:
 
 \begin{code}
-{-@ insert :: x:a -> xs:List a -> ListUn1 a x xs @-}
+{-@ insert :: x:a -> xs:[a] -> ListUn1 a x xs @-}
 \end{code}
 
 \noindent The above signature lets us prove that the output
 of the sorting routine indeed has the elements of the input:
 
 \begin{code}
-{-@ insertSort :: (Ord a) => xs:List a -> ListEq a xs @-}
+{-@ insertSort :: (Ord a) => xs:[a] -> ListEq a xs @-}
 insertSort []     = []
 insertSort (x:xs) = insert x (insertSort xs)
 \end{code}
@@ -422,12 +422,12 @@ Fix the specification of `merge` so that the subsequent property
 </div>
 
 \begin{code}
-{-@ merge :: xs:List a -> ys:List a -> List a @-}
+{-@ merge :: xs:[a] -> ys:[a] -> [a] @-}
+merge [] ys          = ys
+merge xs []          = xs
 merge (x:xs) (y:ys)
   | x <= y           = x : merge xs (y:ys)
   | otherwise        = y : merge (x:xs) ys
-merge [] ys          = ys
-merge xs []          = xs
 
 {-@ prop_merge_app   :: _ -> _ -> True   @-}
 prop_merge_app xs ys = elts zs == elts zs'
@@ -440,7 +440,7 @@ prop_merge_app xs ys = elts zs == elts zs'
 <div class="hwex" id="Merge Sort">
 \doublestar Once you write the correct type
 for `merge` above, you should be able to prove the
-er, unexpected signature for `mergeSort` below.
+unexpected signature for `mergeSort` below.
 
 1. Make sure you are able verify the given signature.
 
@@ -451,8 +451,9 @@ er, unexpected signature for `mergeSort` below.
 </div>
 
 \begin{code}
-{-@ mergeSort :: (Ord a) => xs:List a -> ListEmp a @-}
+{-@ mergeSort :: (Ord a) => xs:[a] -> ListEmp a @-}
 mergeSort []  = []
+mergeSort [x] = [x]
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where
    (ys, zs)   = halve mid xs
@@ -478,7 +479,7 @@ simplest is a *measure*:
 
 \begin{code}
 {-@ measure unique @-}
-unique        :: (Ord a) => List a -> Bool
+unique        :: (Ord a) => [a] -> Bool
 unique []     = True
 unique (x:xs) = unique xs && not (member x (elts xs))
 \end{code}
@@ -486,17 +487,19 @@ unique (x:xs) = unique xs && not (member x (elts xs))
 \noindent We can use the above to write an alias for duplicate-free lists
 
 \begin{code}
-{-@ type UList a = {v:List a | unique v }@-}
+{-@ type UList a = {v:[a] | unique v }@-}
 \end{code}
 
 \noindent Lets quickly check that the right lists are indeed `unique`
 
 \begin{code}
 {-@ isUnique    :: UList Int @-}
-isUnique        = [1, 2, 3]        -- accepted by LH
+isUnique :: [Int]
+isUnique = [1, 2, 3]           -- accepted by LH
 
 {-@ isNotUnique :: UList Int @-}
-isNotUnique     = [1, 2, 3, 1]     -- rejected by LH
+isNotUnique :: [Int]
+isNotUnique = [1, 2, 3, 1]     -- rejected by LH
 \end{code}
 
 \newthought{The Filter} function returns a *subset* of
@@ -549,9 +552,9 @@ so that we can prove that the output is a `UList a`?
 {-@ reverse    :: xs:UList a -> UList a    @-}
 reverse         = go []
   where
-    {-@ go     :: a:List a -> xs:List a -> List a @-}
-    go a []     = a
-    go a (x:xs) = go (x:a) xs
+    {-@ go     :: acc:[a] -> xs:[a] -> [a] @-}
+    go acc []     = acc
+    go acc (x:xs) = go (x:acc) xs
 \end{code}
 
 \newthought{The Nub} function constructs a `unique` list from
@@ -559,9 +562,10 @@ an arbitrary input by traversing the input and tossing out
 elements that are already `seen`:
 
 \begin{code}
-{-@ nub              :: List a -> UList a @-}
+{-@ nub              :: [a] -> UList a @-}
 nub xs                = go [] xs
   where
+    {-@ go :: UList a -> xs:[a] -> UList a / [len xs] @-}
     go seen []        = seen
     go seen (x:xs)
       | x `isin` seen = go seen     xs
@@ -632,8 +636,8 @@ elements to the `right` (i.e. after) the focus.
 \begin{code}
 data Zipper a = Zipper {
     focus  :: a
-  , left   :: List a
-  , right  :: List a
+  , left   :: [a]
+  , right  :: [a]
   }
 \end{code}
 
