@@ -12,10 +12,9 @@ invariant with LiquidHaskell.
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--totality"       @-}
 {-@ LIQUID "--maxparams=3"    @-}
 
-module LazyQueue (Queue, insert, remove, emp) where
+module LazyQueue (Queue, insert, remove, emp, realSize) where
 
 import Prelude hiding (replicate, take, length)
 

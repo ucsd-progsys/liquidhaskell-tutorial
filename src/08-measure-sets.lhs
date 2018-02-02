@@ -494,11 +494,9 @@ unique (x:xs) = unique xs && not (member x (elts xs))
 
 \begin{code}
 {-@ isUnique    :: UList Int @-}
-isUnique :: [Int]
 isUnique = [1, 2, 3]           -- accepted by LH
 
 {-@ isNotUnique :: UList Int @-}
-isNotUnique :: [Int]
 isNotUnique = [1, 2, 3, 1]     -- rejected by LH
 \end{code}
 

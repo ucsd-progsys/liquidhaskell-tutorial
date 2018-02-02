@@ -31,7 +31,7 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 {-@ type TRUE = {v:Bool | v } @-}
 
 -- TODO: we really shouldn't need this...
-{-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
+-- {- bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
 
 {-@ type StringN N = {v:String | len v = N} @-}
 {-@ type BNat N    = {v:Nat    | v <= N}    @-}

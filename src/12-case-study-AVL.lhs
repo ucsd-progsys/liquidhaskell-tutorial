@@ -7,10 +7,23 @@ Case Study: AVL Trees {#case-study-avltree}
 {- Example of AVL trees by michaelbeaumont -}
 
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--totality"       @-}
 
-module AVL (AVL, empty, singleton, insert, insert', delete) where
+module AVL
+  ( -- * Main datatype
+    AVL
+    -- * Key operations
+  , empty, singleton, insert, insert', delete
 
+    -- * Specification related binders
+  , getHeight, balFac, realHeight,  nodeHeight
+  , max, isReal, isBal
+  , leftBig, rightBig , diff
+  , leftHeavy, rightHeavy, noHeavy
+  , eqOrUp, reBal, balHt, bigHt, eqOrDn
+  , elems, hasElem, addElem, delElem
+  )
+  where
+    
 import qualified Data.Set as S
 import Prelude hiding (max)
 -- import Language.Haskell.Liquid.Prelude (liquidAssume)
@@ -276,13 +289,10 @@ constructor `mkNode`. Do the exercise *without* looking at it.]
 \begin{code}
 {-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
 insert0 y t@(Node x l r _)
-  | y < x      = insL0 y t
-  | x < y      = insR0 y t
+  | y < x      = node x (insert0 y l) r
+  | x < y      = node x l (insert0 y r)
   | otherwise  = t
 insert0 y Leaf = singleton y
-
-insL0 y (Node x l r _) = node x (insert0 y l) r
-insR0 y (Node x l r _) = node x l (insert0 y r)
 \end{code}
 
 
