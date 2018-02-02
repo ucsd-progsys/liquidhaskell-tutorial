@@ -5,6 +5,7 @@ Logic & SMT
 \begin{comment}
 \begin{code}
 {-@ LIQUID "--short-names" @-}
+{-@ LIQUID "--higherorder" @-}
 
 module Logic where
 main :: IO ()
@@ -20,15 +21,15 @@ ax4 :: Int -> Int -> Bool
 ax5 :: Int -> Int -> Int -> Bool
 ax6 :: Int -> Int -> Bool
 
+congruence :: (Int -> Int) -> Int -> Int -> Bool 
+fx1 :: (Int -> Int) -> Int -> Bool 
+
 ex1, ex2 :: Bool -> Bool
 ex3, ex3', ex4, ex6, ex7, exDeMorgan1, exDeMorgan2 :: Bool -> Bool -> Bool
 
 infixr 9 ==>
 
 {-@ invariant {v:[a] | size v >= 0} @-}
-{-@ f :: x:Int -> {v:Int | v = f x} @-}
-f :: Int -> Int
-f = undefined
 \end{code}
 \end{comment}
 
@@ -458,7 +459,7 @@ inputs.
 Let us define an uninterpreted function from `Int` to `Int`:
 
 \begin{code}
-{-@ measure f :: Int -> Int @-}
+{- measure f :: Int -> Int @-}
 \end{code}
 
 \newthought{We Test the Axiom of Congruence} by checking that the
@@ -466,8 +467,8 @@ following predicate
 is valid:
 
 \begin{code}
-{-@ congruence :: Int -> Int -> TRUE @-}
-congruence x y = (x == y) ==> (f x == f y)
+{-@ congruence :: (Int -> Int) -> Int -> Int -> TRUE @-}
+congruence f x y = (x == y) ==> (f x == f y)
 \end{code}
 
 \noindent Again, remember we are *not evaluating* the code above;
@@ -480,10 +481,10 @@ Here is a fun example; can you figure out why this
 predicate is indeed valid? (The SMT solver can...)
 
 \begin{code}
-{-@ fx1 :: Int -> TRUE @-}
-fx1 x =   (x == f (f (f x)))
-      ==> (x == f (f (f (f (f x)))))
-      ==> (x == f x)
+{-@ fx1 :: (Int -> Int) -> Int -> TRUE @-}
+fx1 f x =   (x == f (f (f x)))
+        ==> (x == f (f (f (f (f x)))))
+        ==> (x == f x)
 \end{code}
 
 To get a taste of why uninterpreted functions will prove useful

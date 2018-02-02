@@ -29,7 +29,6 @@ PANDOCPDF=$(PANDOC) \
 	--bibliography=templates/sw.bib \
 	--biblatex \
 	--top-level-division=chapter \
-	--pdf-engine=pdflatex \
 	--template=templates/default.latex \
 	--filter filters/Figures.hs \
 	--filter filters/Latex.hs
@@ -59,10 +58,12 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 all: pdf
 
-pdf: $(lhsObjects)
+pdf: dist/pbook.lhs 
+	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) $(PREAMBLE) $(BIB) dist/pbook.lhs -o dist/pbook.pdf
+
+dist/pbook.lhs: $(lhsObjects)
 	mkdir -p dist
 	cat $(lhsObjects) > dist/pbook.lhs
-	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) $(PREAMBLE) $(BIB) dist/pbook.lhs -o dist/pbook.pdf
 
 html: indexhtml $(htmlObjects)
 	mv src/*.html      _site/
