@@ -21,8 +21,8 @@ ax4 :: Int -> Int -> Bool
 ax5 :: Int -> Int -> Int -> Bool
 ax6 :: Int -> Int -> Bool
 
-congruence :: (Int -> Int) -> Int -> Int -> Bool 
-fx1 :: (Int -> Int) -> Int -> Bool 
+congruence :: (Int -> Int) -> Int -> Int -> Bool
+fx1 :: (Int -> Int) -> Int -> Bool
 
 ex1, ex2 :: Bool -> Bool
 ex3, ex3', ex4, ex6, ex7, exDeMorgan1, exDeMorgan2 :: Bool -> Bool -> Bool
@@ -72,12 +72,13 @@ that is, an expression is built up as linear arithmetic expressions
 over variables and constants and uninterpreted function applications.
 
 ~~~~~{.spec}
-    e := v                   -- variable
-       | c                   -- constant
-       | e + e               -- addition
-       | e - e               -- subtraction
-       | c * e               -- linear multiply
-       | v e1 e2 ... en      -- uninterpreted function application
+    e := v                      -- variable
+       | c                      -- constant
+       | (e + e)                -- addition
+       | (e - e)                -- subtraction
+       | (c * e)                -- multiplication by constant
+       | (v e1 e2 ... en)       -- uninterpreted function application
+       | (if p then e else e)   -- if-then-else
 ~~~~~
 
 \newthought{Examples of Expressions} include the following:
@@ -360,7 +361,7 @@ ex6 a b = (a && (a ==> b)) ==> b
 ex7 a b = a ==> (a ==> b) ==> b
 \end{code}
 
-Recall that `p <=> q` (read `p` if and only iff `q`) evaluates to `True`
+Recall that `p <=> q` (read `p` if and only if `q`) evaluates to `True`
 exactly when `p` and `q` evaluate to the *same* values (`True` or `False`).
 It is used to encode *equalities* between predicates. For example, we can
 write down [De Morgan's laws](http://en.wikipedia.org/wiki/De_Morgan's_laws)
