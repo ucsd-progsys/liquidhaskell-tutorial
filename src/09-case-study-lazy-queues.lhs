@@ -21,9 +21,6 @@ import Prelude hiding (replicate, take, length)
 -- | Size function actually returns the size: (Duh!)
 
 {-@ size :: q:SList a -> {v:Nat | v = size q} @-}
-data Queue a = Q  { front :: SList a
-                  , back  :: SList a
-                  }
 
 {-@ die :: {v:String | false} -> a @-}
 die x = error x
@@ -91,8 +88,8 @@ the `back` to the `front`, when:
 </div>
 
 \newthought{Okasaki's first insight} was to note that every element is only moved
-*once* from the front to the back; hence, the time for `insert` and
-`lookup` could be `O(1)` when *amortized* over all the
+*once* from the back to the front; hence, the time for `insert` and
+`remove` could be `O(1)` when *amortized* over all the
 operations. This is perfect, *except* that some set of unlucky
 `remove` calls (which occur when the `front` is empty) are stuck
 paying the bill. They have a rather high latency up to `O(n)` where
@@ -123,7 +120,7 @@ Sized Lists
 The first part is super easy. Let's define a type:
 
 \begin{code}
-data SList a = SL { size :: Int, elems :: [a]}
+data SList a = SL { size :: Int, elems :: [a] }
 \end{code}
 
 We have a special field that saves the `size` because otherwise, we
@@ -147,10 +144,10 @@ that the *real* size is saved in the `size` field:
 
 \begin{code}
 {-@ data SList a = SL {
-       size  :: Nat
-     , elems :: {v:[a] | realSize v = size}
-     }
-  @-}
+      size  :: Nat
+    , elems :: {v:[a] | realSize v = size}
+    }
+@-}
 \end{code}
 
 As a sanity check, consider this:
@@ -198,6 +195,8 @@ hd _             = die "empty SList"
 \hint When you are done, `okHd` should be verified, but `badHd` should be rejected.
 
 \begin{code}
+{-@ okList :: SListN String 1 @-}
+
 okHd  = hd okList       -- accepted
 
 badHd = hd (tl okList)  -- rejected
@@ -212,9 +211,14 @@ It is quite straightforward to define the `Queue` type, as a pair of lists,
 
 \begin{code}
 {-@ data Queue a = Q {
-       front :: SList a
-     , back  :: SListLE a (size front)
-     }                                    @-}
+      front :: SList a
+    , back  :: SListLE a (size front)
+    }
+@-}
+data Queue a = Q
+  { front :: SList a
+  , back  :: SList a
+  }
 \end{code}
 
 \newthought{The alias} `SListLE a L` corresponds to lists with at most `N` elements:
@@ -301,7 +305,7 @@ insert e (Q f b) = makeq f (e `cons` b)
 \end{code}
 
 <div class="hwex" id="Insert">Write down a type for `insert` such
-that `replicate` and `y3` are accepted by LiquidHaskell, but `y2`
+that `replicate` and `okReplicate` are accepted by LiquidHaskell, but `badReplicate`
 is rejected.
 </div>
 
@@ -310,11 +314,11 @@ is rejected.
 replicate 0 _ = emp
 replicate n x = insert x (replicate (n-1) x)
 
-{-@ y3 :: QueueN _ 3 @-}
-y3     = replicate 3 "Yeah!"
+{-@ okReplicate :: QueueN _ 3 @-}
+okReplicate = replicate 3 "Yeah!"  -- accept
 
-{-@ y2 :: QueueN _ 3 @-}
-y2     = replicate 1 "No!"
+{-@ badReplicate :: QueueN _ 3 @-}
+badReplicate = replicate 1 "No!"   -- reject
 \end{code}
 
 
@@ -344,9 +348,9 @@ that it typechecks and verifies the type for `makeq`.
 relationship between `f` and `b`.
 
 \begin{code}
-rot f b a
-  | size f == 0 = hd b `cons` a
-  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` a)
+rot f b acc
+  | size f == 0 = hd b `cons` acc
+  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` acc)
 \end{code}
 
 
