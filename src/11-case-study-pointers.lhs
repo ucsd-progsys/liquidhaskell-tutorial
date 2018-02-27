@@ -622,8 +622,8 @@ packEx str     = create' n $ \p -> pLoop p xs
   xs           = map c2w str
 
 {-@ pLoop      :: (Storable a) => p:Ptr a -> xs:[a] -> IO () @-}
-pLoop p (x:xs) = poke p x >> pLoop (plusPtr p 1) xs
 pLoop _ []     = return ()
+pLoop p (x:xs) = poke p x >> pLoop (p `plusPtr` 1) xs
 \end{code}
 
 \hint Remember that `len xs` denotes the size of the list `xs`.
