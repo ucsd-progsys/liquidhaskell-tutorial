@@ -149,7 +149,7 @@ which creates a `Ptr` to a buffer of size `n` and wraps it as a
 `ForeignPtr`
 
 ~~~~~{.spec}
-mallocForeignPtrBytes :: Int -> ForeignPtr a
+mallocForeignPtrBytes :: Int -> IO (ForeignPtr a)
 ~~~~~
 
 \newthought{To Unwrap} and actually use the `ForeignPtr` we use
@@ -262,7 +262,7 @@ the size parameter be non-negative, and that the returned
 pointer indeed refers to a buffer with exactly `n` bytes:
 
 ~~~~~{.spec}
-mallocForeignPtrBytes :: n:Nat -> ForeignPtrN a n
+mallocForeignPtrBytes :: n:Nat -> IO (ForeignPtrN a n)
 ~~~~~
 
 \newthought{To Refine Unwrapping} we specify that the *action*
@@ -582,8 +582,8 @@ pack str      = create' n $ \p -> go p xs
   where
   n           = length str
   xs          = map c2w str
-  go p (x:xs) = poke p x >> go (plusPtr p 1) xs
   go _ []     = return  ()
+  go p (x:xs) = poke p x >> go (p `plusPtr` 1) xs
 \end{code}
 
 <div class="hwex" id="Pack">
@@ -622,8 +622,8 @@ packEx str     = create' n $ \p -> pLoop p xs
   xs           = map c2w str
 
 {-@ pLoop      :: (Storable a) => p:Ptr a -> xs:[a] -> IO () @-}
-pLoop p (x:xs) = poke p x >> pLoop (plusPtr p 1) xs
 pLoop _ []     = return ()
+pLoop p (x:xs) = poke p x >> pLoop (p `plusPtr` 1) xs
 \end{code}
 
 \hint Remember that `len xs` denotes the size of the list `xs`.
