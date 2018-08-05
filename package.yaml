@@ -21,18 +21,18 @@ dependencies:
 - pandoc-types
 
 executables:
-  filters-toc:
+  toc:
     main: filters/Toc.hs
     ghc-options: -threaded
-  filters-links:
+  links:
     main: filters/Links.hs
     ghc-options: -threaded
-  filters-latex:
+  latex:
     main: filters/Latex.hs
     ghc-options: -threaded
-  filters-html:
+  html:
     main: filters/Html.hs
     ghc-options: -threaded
-  filters-figures:
+  figures:
     main: filters/Figures.hs
     ghc-options: -threaded
