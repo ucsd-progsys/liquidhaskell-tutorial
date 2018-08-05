@@ -58,7 +58,7 @@ htmlObjects := $(patsubst %.lhs,%.html,$(wildcard src/*.lhs))
 
 all: pdf
 
-pdf: dist/pbook.lhs 
+pdf: dist/pbook.lhs
 	PANDOC_TARGET=pbook.pdf $(PANDOCPDF) $(PREAMBLE) $(BIB) dist/pbook.lhs -o dist/pbook.pdf
 
 dist/pbook.lhs: $(lhsObjects)
@@ -76,7 +76,7 @@ thing: dist/index.lhs src/00-temp.html
 	mv src/00-*.html _site/
 
 indexhtml: $(INDEX)
-	mkdir -p [_site]
+	mkdir _site
 	$(PANDOC) --from=markdown+lhs --to=html5 --template=$(INDEX) $(PREAMBLE) -o _site/index.html
 
 $(INDEX):
@@ -86,7 +86,7 @@ src/%.html: src/%.lhs
 	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
 
 clean:
-	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html && rm -rf _site
+	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
 
 upload: html
 	git checkout master
