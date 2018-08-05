@@ -11,14 +11,14 @@ extra-source-files:
 - README.md
 dependencies:
 - base
-- template
-- containers
-- text
 - bytestring
+- containers
 - directory
-- pandoc-types
-- pandoc
 - filepath
+- template
+- text
+- pandoc
+- pandoc-types
 
 executables:
   filters-toc:
