@@ -6,25 +6,26 @@
 
 module Main (main) where
 
-import Data.Monoid (mempty)
-import Debug.Trace
-import Text.Printf (printf)
-import System.Directory
-import System.FilePath ((</>), replaceExtension, takeFileName, takeExtension)
-import System.IO
+import           Control.Applicative  ((<$>))
+import           Control.Monad
 import qualified Data.ByteString.Lazy as S
-import Text.Pandoc
-import Text.Pandoc.Walk (query)
-import Control.Monad
-import Control.Applicative ((<$>))
+import           Data.Monoid          (mempty)
+import           Debug.Trace
+import           System.Directory
+import           System.FilePath      (replaceExtension, takeExtension,
+                                       takeFileName, (</>))
+import           System.IO
+import           Text.Pandoc
+import           Text.Pandoc.Walk     (query)
+import           Text.Printf          (printf)
 
-import qualified Data.Map as M
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as L
-import qualified Data.Text.IO as TIO
-import System.Environment (getArgs)
-import Data.Text.Template
-import qualified Data.Text.IO as TIO
+import qualified Data.Map             as M
+import qualified Data.Text            as T
+import qualified Data.Text.IO         as TIO
+import qualified Data.Text.IO         as TIO
+import qualified Data.Text.Lazy       as L
+import           Data.Text.Template
+import           System.Environment   (getArgs)
 
 -- Use as:
 -- toc src/ templates/pagemeta.template templates/index.template dist/page.template src/index.html dist/links.txt
@@ -50,21 +51,21 @@ plug tplt toc = L.unpack $ substitute tplt ctx
 -------------------------------------------------------------------------------
 
 newtype TOC = TOC [(Int, FilePath, [(Ref, Info)])]
-              deriving (Show)
+  deriving Show
 
 type Ref  = String
 
-data Info = Info { i_file  :: FilePath
-                 , i_level :: Int
-                 , i_name  :: String
-                 }
-            deriving (Show)
+data Info = Info
+  { i_file  :: FilePath
+  , i_level :: Int
+  , i_name  :: String
+  } deriving Show
 
-data Chapter = Ch { c_num  :: Int
-                  , c_name :: (Ref, Info)
-                  , c_secs :: [(Int, Ref, Info)]
-                  }
-               deriving (Show)
+data Chapter = Ch
+  { c_num  :: Int
+  , c_name :: (Ref, Info)
+  , c_secs :: [(Int, Ref, Info)]
+  } deriving Show
 
 -------------------------------------------------------------------------------
 
@@ -87,17 +88,14 @@ readDoc f = do
     Right d -> return d
     -- Left e  -> error $ "readDoc hits Error!: " ++ show e
 
-
-
 fileTOC :: FilePath -> IO [(Ref, Info)]
 fileTOC f = query (getRef f) <$> readDoc f
-
 
 getRef :: FilePath -> Block -> [(Ref, Info)]
 getRef f b@(Header n (l,_,_) is) = [(l, Info f n $ inlineString is)]
 getRef _ _                       = []
 
-tocHtml     :: TOC -> String
+tocHtml :: TOC -> String
 tocHtml toc = unlines $  ["<ul class='chapter'>"]
                       ++ chaptersHtml (tocChapters toc)
                       ++ ["</ul>"]
@@ -109,7 +107,6 @@ mkChapter :: (Int, FilePath, [(Ref, Info)]) -> Chapter
 mkChapter (i, f, ri:ris) = Ch i ri secs
   where
     secs = zipWith (\j (x, y) -> (j,x,y)) [1..] ris
-
 
 chaptersHtml :: [Chapter] -> [String]
 chaptersHtml = concatMap chapterHtml
