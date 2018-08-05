@@ -6,25 +6,26 @@
 
 module Main (main) where
 
-import Data.Monoid (mempty)
-import Debug.Trace
-import Text.Printf (printf)
-import System.Directory
-import System.FilePath ((</>), replaceExtension, takeFileName, takeExtension)
-import System.IO
+import           Control.Applicative  ((<$>))
+import           Control.Monad
 import qualified Data.ByteString.Lazy as S
-import Text.Pandoc
-import Text.Pandoc.Walk (query)
-import Control.Monad
-import Control.Applicative ((<$>))
+import           Data.Monoid          (mempty)
+import           Debug.Trace
+import           System.Directory
+import           System.FilePath      (replaceExtension, takeExtension,
+                                       takeFileName, (</>))
+import           System.IO
+import           Text.Pandoc
+import           Text.Pandoc.Walk     (query)
+import           Text.Printf          (printf)
 
-import qualified Data.Map as M
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as L
-import qualified Data.Text.IO as TIO
-import System.Environment (getArgs)
-import Data.Text.Template
-import qualified Data.Text.IO as TIO
+import qualified Data.Map             as M
+import qualified Data.Text            as T
+import qualified Data.Text.IO         as TIO
+import qualified Data.Text.IO         as TIO
+import qualified Data.Text.Lazy       as L
+import           Data.Text.Template
+import           System.Environment   (getArgs)
 
 -- Use as:
 -- toc src/ templates/pagemeta.template templates/index.template dist/page.template src/index.html dist/links.txt
