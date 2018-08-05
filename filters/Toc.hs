@@ -51,21 +51,21 @@ plug tplt toc = L.unpack $ substitute tplt ctx
 -------------------------------------------------------------------------------
 
 newtype TOC = TOC [(Int, FilePath, [(Ref, Info)])]
-              deriving (Show)
+  deriving Show
 
 type Ref  = String
 
-data Info = Info { i_file  :: FilePath
-                 , i_level :: Int
-                 , i_name  :: String
-                 }
-            deriving (Show)
+data Info = Info
+  { i_file  :: FilePath
+  , i_level :: Int
+  , i_name  :: String
+  } deriving Show
 
-data Chapter = Ch { c_num  :: Int
-                  , c_name :: (Ref, Info)
-                  , c_secs :: [(Int, Ref, Info)]
-                  }
-               deriving (Show)
+data Chapter = Ch
+  { c_num  :: Int
+  , c_name :: (Ref, Info)
+  , c_secs :: [(Int, Ref, Info)]
+  } deriving Show
 
 -------------------------------------------------------------------------------
 
@@ -88,17 +88,14 @@ readDoc f = do
     Right d -> return d
     -- Left e  -> error $ "readDoc hits Error!: " ++ show e
 
-
-
 fileTOC :: FilePath -> IO [(Ref, Info)]
 fileTOC f = query (getRef f) <$> readDoc f
-
 
 getRef :: FilePath -> Block -> [(Ref, Info)]
 getRef f b@(Header n (l,_,_) is) = [(l, Info f n $ inlineString is)]
 getRef _ _                       = []
 
-tocHtml     :: TOC -> String
+tocHtml :: TOC -> String
 tocHtml toc = unlines $  ["<ul class='chapter'>"]
                       ++ chaptersHtml (tocChapters toc)
                       ++ ["</ul>"]
@@ -110,7 +107,6 @@ mkChapter :: (Int, FilePath, [(Ref, Info)]) -> Chapter
 mkChapter (i, f, ri:ris) = Ch i ri secs
   where
     secs = zipWith (\j (x, y) -> (j,x,y)) [1..] ris
-
 
 chaptersHtml :: [Chapter] -> [String]
 chaptersHtml = concatMap chapterHtml
