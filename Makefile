@@ -76,6 +76,7 @@ thing: dist/index.lhs src/00-temp.html
 	mv src/00-*.html _site/
 
 indexhtml: $(INDEX)
+	mkdir -p [_site]
 	$(PANDOC) --from=markdown+lhs --to=html5 --template=$(INDEX) $(PREAMBLE) -o _site/index.html
 
 $(INDEX):
@@ -85,7 +86,7 @@ src/%.html: src/%.lhs
 	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
 
 clean:
-	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
+	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html && rm -rf _site
 
 upload: html
 	git checkout master
