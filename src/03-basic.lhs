@@ -10,7 +10,6 @@ module Intro where
 
 import Prelude hiding (abs)
 divide     :: Int -> Int -> Int
-zero'''' :: Int
 die     :: String -> a
 \end{code}
 \end{comment}
@@ -169,6 +168,7 @@ refinements with `&&`:
 
 \begin{code}
 {-@ zero'''' :: {v:Int | 0 <= v && v mod 2 == 0 && v < 100} @-}
+zero'''' :: Int
 zero''''     = 0
 \end{code}
 \end{comment}
