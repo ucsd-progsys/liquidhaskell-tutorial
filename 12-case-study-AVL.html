@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -275,10 +288,23 @@ MathJax.Hub.Config({
   <div id="program-0" class="programbox">{- Example of AVL trees by michaelbeaumont -}
 
 {-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--totality"       @-}
 
-module AVL (AVL, empty, singleton, insert, insert', delete) where
+module AVL
+  ( -- * Main datatype
+    AVL
+    -- * Key operations
+  , empty, singleton, insert, insert', delete
 
+    -- * Specification related binders
+  , getHeight, balFac, realHeight,  nodeHeight
+  , max, isReal, isBal
+  , leftBig, rightBig , diff
+  , leftHeavy, rightHeavy, noHeavy
+  , eqOrUp, reBal, balHt, bigHt, eqOrDn
+  , elems, hasElem, addElem, delElem
+  )
+  where
+    
 import qualified Data.Set as S
 import Prelude hiding (max)
 -- import Language.Haskell.Liquid.Prelude (liquidAssume)
@@ -313,14 +339,14 @@ member :: (Ord a) => a -> AVL a -> Bool
 
 </div>
 
-<p>One of the most fundamental abstractions in computing is that of a <em>collection</em> of values -- names, numbers, records -- into which we can rapidly <code>insert</code>, <code>delete</code> and check for <code>member</code>ship.</p>
+<p>One of the most fundamental abstractions in computing is that of a <em>collection</em> of values – names, numbers, records – into which we can rapidly <code>insert</code>, <code>delete</code> and check for <code>member</code>ship.</p>
 <p><br />
 <strong>Trees</strong> offer an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
-<p><br />
-<strong>As in real life</strong> maintaining order and balance is rather easier said than done. Often we must go through rather sophisticated gymnastics to ensure everything is in its right place. Fortunately, LiquidHaskell can help. Lets see a concrete example, that should be familiar from your introductory data structures class: the Georgy Adelson-Velsky and Landis' or <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Tree</a>.</p>
+
+<p>maintaining order and balance is rather easier said than done. Often we must go through rather sophisticated gymnastics to ensure everything is in its right place. Fortunately, LiquidHaskell can help. Lets see a concrete example, that should be familiar from your introductory data structures class: the Georgy Adelson-Velsky and Landis’ or <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Tree</a>.</p>
 <section id="avl-trees" class="level2">
 <h2>AVL Trees</h2>
-<p>An <code>AVL</code> tree is defined by the following Haskell datatype:<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>An <code>AVL</code> tree is defined by the following Haskell datatype:<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -351,14 +377,14 @@ member :: (Ord a) => a -> AVL a -> Bool
 <strong>A Binary Search Ordered</strong> tree is one where at <em>each</em> <code>Node</code>, the values of the <code>left</code> and <code>right</code> subtrees are strictly less and greater than the values at the <code>Node</code>. In the tree in Figure <a href="#fig:avl">12.1</a> the root has value <code>50</code> while its left and right subtrees have values in the range <code>9-23</code> and <code>54-76</code> respectively. This holds at all nodes, not just the root. For example, the node <code>12</code> has left and right children strictly less and greater than <code>12</code>.</p>
 <p><br />
 <strong>A Balanced</strong> tree is one where at <em>each</em> node, the <em>heights</em> of the left and right subtrees differ by at most <code>1</code>. In Figure <a href="#fig:avl">12.1</a>, at the root, the heights of the left and right subtrees are the same, but at the node <code>72</code> the left subtree has height <code>2</code> which is one more then the right subtree.</p>
-<p><br />
-<strong>The Invariants Lead To Fast Operations.</strong> Order ensures that there is at most a single path of <code>left</code> and <code>right</code> moves from the root at which an element can be found; balance ensures that each such path in the tree is of size <span class="math inline">\(O(\log\ n)\)</span> where <span class="math inline">\(n\)</span> is the numbers of nodes. Thus, together they ensure that the collection operations are efficient: they take time logarithmic in the size of the collection.</p>
+
+<p>Order ensures that there is at most a single path of <code>left</code> and <code>right</code> moves from the root at which an element can be found; balance ensures that each such path in the tree is of size <span class="math inline">\(O(\log\ n)\)</span> where <span class="math inline">\(n\)</span> is the numbers of nodes. Thus, together they ensure that the collection operations are efficient: they take time logarithmic in the size of the collection.</p>
 </section>
 <section id="specifying-avl-trees" class="level2">
 <h2>Specifying AVL Trees</h2>
 <p>The tricky bit is to ensure order and balance. Before we can ensure anything, lets tell LiquidHaskell what we mean by these terms, by defining legal or valid AVL trees.</p>
 <p><br />
-<strong>To Specify Order</strong> we just define two aliases <code>AVLL</code> and <code>AVLR</code> -- read <em>AVL-left</em> and <em>AVL-right</em> -- for trees whose values are strictly less than and greater than some value <code>X</code>:</p>
+<strong>To Specify Order</strong> we just define two aliases <code>AVLL</code> and <code>AVLR</code> – read <em>AVL-left</em> and <em>AVL-right</em> – for trees whose values are strictly less than and greater than some value <code>X</code>:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -375,7 +401,7 @@ member :: (Ord a) => a -> AVL a -> Bool
 </div>
 
 <p><br />
-<strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because that's just some arbitrary <code>Int</code> -- there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because that’s just some arbitrary <code>Int</code> – there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -500,9 +526,9 @@ empty = Leaf</div>
 singleton x =  Node x empty empty 0</div>
 </div>
 
-<p>As you can imagine, it can be quite tedious to keep the saved height field <code>ah</code> <em>in sync</em> with the <em>real</em> height. In general in such situations, which arose also with <a href="#lazyqueue">lazy queues</a>, the right move is to eschew the data constructor and instead use a <em>smart constructor</em> that will fill in the appropriate values correctly. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p>As you can imagine, it can be quite tedious to keep the saved height field <code>ah</code> <em>in sync</em> with the <em>real</em> height. In general in such situations, which arose also with <a href="#lazyqueue">lazy queues</a>, the right move is to eschew the data constructor and instead use a <em>smart constructor</em> that will fill in the appropriate values correctly. <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <p><br />
-<strong>The Smart Constructor</strong> <code>node</code> takes as input the node's value <code>x</code>, left and right subtrees <code>l</code> and <code>r</code> and returns a tree by filling in the right value for the height field.</p>
+<strong>The Smart Constructor</strong> <code>node</code> takes as input the node’s value <code>x</code>, left and right subtrees <code>l</code> and <code>r</code> and returns a tree by filling in the right value for the height field.</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -537,7 +563,7 @@ mkNode v l r = Node v l r h
 <li><em>Find</em> the appropriate location (per ordering) to add the value,</li>
 <li><em>Replace</em> the <code>Leaf</code> at that location with the singleton value.</li>
 </ol>
-<p>If you prefer the spare precision of code to the informality of English, here is a first stab at implementing insertion: <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p>If you prefer the spare precision of code to the informality of English, here is a first stab at implementing insertion: <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -548,13 +574,10 @@ mkNode v l r = Node v l r h
  
   <div id="program-11" class="programbox">{-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
 insert0 y t@(Node x l r _)
-  | y < x      = insL0 y t
-  | x < y      = insR0 y t
+  | y < x      = node x (insert0 y l) r
+  | x < y      = node x l (insert0 y r)
   | otherwise  = t
-insert0 y Leaf = singleton y
-
-insL0 y (Node x l r _) = node x (insert0 y l) r
-insR0 y (Node x l r _) = node x l (insert0 y r)</div>
+insert0 y Leaf = singleton y</div>
 </div>
 
 <p><br />
@@ -569,7 +592,7 @@ insR0 y (Node x l r _) = node x l (insert0 y r)</div>
                                  , ah = 1 }
                     , ah = 2}</code></pre>
 <p>If we use <code>insert0</code> to add the key <code>'e'</code> (which goes after <code>'d'</code>) then we end up with the result:</p>
-<p></p>
+
 <pre class="ghci"><code>ghci&gt; insert0 &#39;e&#39; t0
   Node { key = &#39;a&#39;
        , l   = Leaf
@@ -681,7 +704,7 @@ rightHeavy t = balFac t < 0
 noHeavy    t = balFac t == 0</div>
 </div>
 
-<p>Adelson-Velsky and Landis observed that once you've drilled down into these three cases, the shuffling suggests itself.</p>
+<p>Adelson-Velsky and Landis observed that once you’ve drilled down into these three cases, the shuffling suggests itself.</p>
 <div id="fig:avl-balL0" style="align: left; text-align:center;">
   <img src="img/avl-balL0.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
   <div class="caption" style="text-align:center"><b>Figure 12.3:</b> Rotating when in the LeftBig, NoHeavy case. </div>
@@ -690,7 +713,7 @@ noHeavy    t = balFac t == 0</div>
 
 
 <p><br />
-<strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">12.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here's how you would implement the rotation. Note how the preconditions capture the exact case we're in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
+<strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">12.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here’s how you would implement the rotation. Note how the preconditions capture the exact case we’re in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -766,22 +789,6 @@ balLR v (Node lv ll (Node lrv lrl lrr _) _) r
 <br />
 
 </div>
-\vspace{1.0in}\vspace*{\fill}
-<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-19" class="programbox">{-@ balR0 :: x:a
-          -> l: AVLL a x
-          -> r: {AVLR a x | rightBig l r && noHeavy r}
-          -> AVLN a {realHeight r + 1}
-  @-}
-balR0 v l r = undefined</div>
-</div>
 
 <div id="RightBig, RightHeavy" class="hwex">
 <p><br />
@@ -790,7 +797,7 @@ balR0 v l r = undefined</div>
 <br />
 
 </div>
-<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -798,7 +805,7 @@ balR0 v l r = undefined</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">{-@ balRR :: x:a
+  <div id="program-19" class="programbox">{-@ balRR :: x:a
           -> l: AVLL a x
           -> r:{AVLR a x | rightBig l r && rightHeavy r}
           -> AVLT a r
@@ -813,7 +820,7 @@ balRR v l r = undefined</div>
 <br />
 
 </div>
-<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -821,7 +828,7 @@ balRR v l r = undefined</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-21" class="programbox">{-@ balRL :: x:a
+  <div id="program-20" class="programbox">{-@ balRL :: x:a
           -> l: AVLL a x
           -> r:{AVLR a x | rightBig l r && leftHeavy r}
           -> AVLT a r
@@ -831,7 +838,7 @@ balRL v l r = undefined</div>
 
 <p><br />
 <strong>To Correctly Insert</strong> an element, we recursively add it to the left or right subtree as appropriate and then determine which of the above cases hold in order to call the corresponding <em>rebalance</em> function which restores the invariants.</p>
-<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -839,7 +846,7 @@ balRL v l r = undefined</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-22" class="programbox">{-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
+  <div id="program-21" class="programbox">{-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert y Leaf = singleton y
 insert y t@(Node x _ _ _)
   | y < x     = insL y t
@@ -848,6 +855,22 @@ insert y t@(Node x _ _ _)
 </div>
 
 <p>The refinement, <code>eqOrUp</code> says that the height of <code>t</code> is the same as <code>s</code> or goes <em>up</em> by at most <code>1</code>.</p>
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-22" class="programbox">{-@ inline eqOrUp @-}
+eqOrUp s t = d == 0 || d == 1
+  where
+    d      = diff t s</div>
+</div>
+
+<p><br />
+<strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here’s the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -856,23 +879,7 @@ insert y t@(Node x _ _ _)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-23" class="programbox">{-@ inline eqOrUp @-}
-eqOrUp s t = d == 0 || d == 1
-  where
-    d      = diff t s</div>
-</div>
-
-<p><br />
-<strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here's the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
-<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-24" class="programbox">{-@ insL :: x:a
+  <div id="program-23" class="programbox">{-@ insL :: x:a
          -> t:{AVL a | x < key t && 0 < realHeight t}
          -> {v: AVL a | eqOrUp t v}
   @-}
@@ -888,12 +895,12 @@ insL a (Node v l r _)
 
 <div id="InsertRight" class="hwex">
 <p><br />
-<strong>Exercise: (InsertRight): </strong>The code for <code>insR</code> is symmetric. To make sure you're following along, why don't you fill it in?</p>
+<strong>Exercise: (InsertRight): </strong> The code for <code>insR</code> is symmetric. To make sure you’re following along, why don’t you fill it in?</p>
 <br />
 <br />
 
 </div>
-<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -901,7 +908,7 @@ insL a (Node v l r _)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-25" class="programbox">{-@ insR :: x:a
+  <div id="program-24" class="programbox">{-@ insR :: x:a
          -> t:{AVL a  | key t < x && 0 < realHeight t }
          -> {v: AVL a | eqOrUp t v}
   @-}
@@ -918,10 +925,10 @@ insR = undefined</div>
 <li>perform a rotation to fix the imbalance caused by the decrease.</li>
 </ol>
 <p><br />
-<strong>We painted ourselves into a corner</strong> with <code>insert</code>: the code for actually inserting an element is intermingled with the code for determining and performing the rotation. That is, see how the code that determines which rotation to apply -- <code>leftBig</code>, <code>leftHeavy</code>, etc. -- is <em>inside</em> the <code>insL</code> which does the insertion as well. This is correct, but it means we would have to <em>repeat</em> the case analysis when deleting a value, which is unfortunate.</p>
+<strong>We painted ourselves into a corner</strong> with <code>insert</code>: the code for actually inserting an element is intermingled with the code for determining and performing the rotation. That is, see how the code that determines which rotation to apply – <code>leftBig</code>, <code>leftHeavy</code>, etc. – is <em>inside</em> the <code>insL</code> which does the insertion as well. This is correct, but it means we would have to <em>repeat</em> the case analysis when deleting a value, which is unfortunate.</p>
 <p><br />
 <strong>Instead lets refactor</strong> the rebalancing code into a separate function, that can be used by <em>both</em> <code>insert</code> and <code>delete</code>. It looks like this:</p>
-<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -929,7 +936,7 @@ insR = undefined</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-26" class="programbox">{-@ bal :: x:a
+  <div id="program-25" class="programbox">{-@ bal :: x:a
         -> l:AVLL a x
         -> r:{AVLR a x | isBal l r 2}
         -> {t:AVL a | reBal l r t}
@@ -950,9 +957,9 @@ bal v l r
 <p>The <code>bal</code> function is a combination of the case-splits and rotation calls made by <code>insL</code> (and ahem, <code>insR</code>); it takes as input a value <code>x</code> and valid left and right subtrees for <code>x</code> whose heights are off by at most <code>2</code> because as we will have created them by inserting or deleting a value from a sibling whose height was at most <code>1</code> away. The <code>bal</code> function returns a valid <code>AVL</code> tree, whose height is constrained to satisfy the predicate <code>reBal l r t</code>, which says:</p>
 <ul>
 <li>(<code>bigHt</code>) The height of <code>t</code> is the same or one bigger than the larger of <code>l</code> and <code>r</code>, and</li>
-<li>(<code>balHt</code>) If <code>l</code> and <code>r</code> were already balanced (i.e. within <code>1</code>) then the height of <code>t</code> is exactly equal to that of a tree built by directly linking <code>l</code> and <code>r</code>.</li>
+<li>(<code>balHt</code>) If <code>l</code> and <code>r</code> were already balanced (i.e. within <code>1</code>) then the height of <code>t</code> is exactly equal to that of a tree built by directly linking <code>l</code> and <code>r</code>.</li>
 </ul>
-<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -960,7 +967,7 @@ bal v l r
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-27" class="programbox">{-@ inline reBal @-}
+  <div id="program-26" class="programbox">{-@ inline reBal @-}
 reBal l r t = bigHt l r t && balHt l r t
 
 {-@ inline balHt @-}
@@ -977,7 +984,7 @@ bigHt l r t = lBig && rBig
 
 <p><br />
 <strong>Insert</strong> can now be written very simply as the following function that recursively inserts into the appropriate subtree and then calls <code>bal</code> to fix any imbalance:</p>
-<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -985,7 +992,7 @@ bigHt l r t = lBig && rBig
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-28" class="programbox">{-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
+  <div id="program-27" class="programbox">{-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
 insert' a t@(Node v l r n)
   | a < v      = bal v (insert' a l) r
   | a > v      = bal v l (insert' a r)
@@ -997,7 +1004,7 @@ insert' a Leaf = singleton a</div>
 <section id="deleting-elements" class="level2">
 <h2>Deleting Elements</h2>
 <p>Now we can write the <code>delete</code> function in a manner similar to <code>insert</code>: the easy cases are the recursive ones; here we just delete from the subtree and summon <code>bal</code> to clean up. Notice that the height of the output <code>t</code> is at most <code>1</code> <em>less</em> than that of the input <code>s</code>.</p>
-<div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1005,7 +1012,7 @@ insert' a Leaf = singleton a</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-29" class="programbox">{-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
+  <div id="program-28" class="programbox">{-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
 delete y (Node x l r _)
   | y < x     = bal x (delete y l) r
   | x < y     = bal x l (delete y r)
@@ -1018,7 +1025,7 @@ eqOrDn s t = eqOrUp t s</div>
 
 <p><br />
 <strong>The tricky case</strong> is when we actually <em>find</em> the element that is to be removed. Here, we call <code>merge</code> to link up the two subtrees <code>l</code> and <code>r</code> after hoisting the smallest element from the right tree <code>r</code> as the new root which replaces the deleted element <code>x</code>.</p>
-<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1026,7 +1033,7 @@ eqOrDn s t = eqOrUp t s</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-30" class="programbox">{-@ merge :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1}
+  <div id="program-29" class="programbox">{-@ merge :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1}
           -> {t:AVL a | bigHt l r t}
   @-}
 merge _ Leaf r = r
@@ -1036,8 +1043,8 @@ merge x l r    = bal y l r'
    (y, r')     = getMin r</div>
 </div>
 
-<p><code>getMin</code> recursively finds the smallest (i.e. leftmost) value in a tree, and returns the value and the remainder tree. The height of each remainder <code>l'</code> may be lower than <code>l</code> (by at most <code>1</code>.) Hence, we use <code>bal</code> to restore the invariants when linking against the corresponding right subtree <code>r</code>.</p>
-<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
+<p><code>getMin</code> recursively finds the smallest (i.e. leftmost) value in a tree, and returns the value and the remainder tree. The height of each remainder <code>l'</code> may be lower than <code>l</code> (by at most <code>1</code>.) Hence, we use <code>bal</code> to restore the invariants when linking against the corresponding right subtree <code>r</code>.</p>
+<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1045,7 +1052,7 @@ merge x l r    = bal y l r'
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-31" class="programbox">getMin (Node x Leaf r _) = (x, r)
+  <div id="program-30" class="programbox">getMin (Node x Leaf r _) = (x, r)
 getMin (Node x l r _)    = (x', bal x l' r)
   where
     (x', l')             = getMin l</div>
@@ -1054,16 +1061,16 @@ getMin (Node x l r _)    = (x', bal x l' r)
 </section>
 <section id="functional-correctness" class="level2">
 <h2>Functional Correctness</h2>
-<p>We just saw how to implement some tricky data structure gymnastics. Fortunately, with LiquidHaskell as a safety net we can be sure to have gotten all the rotation cases right and to have preserved the invariants crucial for efficiency and correctness. However, there is nothing in the types above that captures &quot;functional correctness&quot;, which, in this case, means that the operations actually implement a collection or set API, for example, as described <a href="#mapapi">here</a>. Lets use the techniques from that chapter to precisely specify and verify that our AVL operations indeed implement sets correctly, by:</p>
+<p>We just saw how to implement some tricky data structure gymnastics. Fortunately, with LiquidHaskell as a safety net we can be sure to have gotten all the rotation cases right and to have preserved the invariants crucial for efficiency and correctness. However, there is nothing in the types above that captures “functional correctness”, which, in this case, means that the operations actually implement a collection or set API, for example, as described <a href="#mapapi">here</a>. Lets use the techniques from that chapter to precisely specify and verify that our AVL operations indeed implement sets correctly, by:</p>
 <ol type="1">
 <li><em>Defining</em> the set of elements in a tree,</li>
 <li><em>Specifying</em> the desired semantics of operations via types,</li>
-<li><em>Verifying</em> the implementation. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></li>
+<li><em>Verifying</em> the implementation. <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></li>
 </ol>
-<p>We've done this <a href="#lemmas">once before</a> already, so this is a good exercise to solidify your understanding of that material.</p>
+<p>We’ve done this <a href="#lemmas">once before</a> already, so this is a good exercise to solidify your understanding of that material.</p>
 <p><br />
 <strong>The Elements</strong> of an <code>AVL</code> tree can be described via a measure defined as follows:</p>
-<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1071,7 +1078,7 @@ getMin (Node x l r _)    = (x', bal x l' r)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-32" class="programbox">{-@ measure elems @-}
+  <div id="program-31" class="programbox">{-@ measure elems @-}
 elems                :: (Ord a) => AVL a -> S.Set a
 elems (Node x l r _) = (S.singleton x) `S.union`
                        (elems l)       `S.union`
@@ -1087,7 +1094,7 @@ elems Leaf           = S.empty</div>
 <br />
 
 </div>
-<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1095,7 +1102,7 @@ elems Leaf           = S.empty</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-33" class="programbox">-- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
+  <div id="program-32" class="programbox">-- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
 {-@ member :: (Ord a) => x:a -> t:AVL a -> {v: Bool | v <=> hasElem x t} @-}
 member x t = undefined
 
@@ -1113,7 +1120,7 @@ hasElem x t = True
 <br />
 
 </div>
-<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1121,7 +1128,7 @@ hasElem x t = True
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-34" class="programbox">{-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
+  <div id="program-33" class="programbox">{-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
 insertAPI x s = insert' x s
 
 {-@ inline addElem @-}
@@ -1137,7 +1144,7 @@ addElem x s t = True
 <br />
 
 </div>
-<div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1145,7 +1152,7 @@ addElem x s t = True
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-35" class="programbox">{-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
+  <div id="program-34" class="programbox">{-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
 deleteAPI x s = delete x s
 
 {-@ inline delElem @-}
@@ -1159,11 +1166,11 @@ delElem x s t = True
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>This chapter is based on code by Michael Beaumont.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><strong>FIXME</strong> The <code>inline</code> pragma indicates that the Haskell functions can be directly lifted into and used inside the refinement logic and measures.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>Why bother to save the height anyway? Why not just recompute it instead?<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p><code>node</code> is a fixed variant of the smart constructor <code>mkNode</code>. Do the exercise <em>without</em> looking at it.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>By adding <a href="#lemmas">ghost operations</a>, if needed.<a href="#fnref5">↩</a></p></li>
+<li id="fn1"><p>This chapter is based on code by Michael Beaumont.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><strong>FIXME</strong> The <code>inline</code> pragma indicates that the Haskell functions can be directly lifted into and used inside the refinement logic and measures.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>Why bother to save the height anyway? Why not just recompute it instead?<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><code>node</code> is a fixed variant of the smart constructor <code>mkNode</code>. Do the exercise <em>without</em> looking at it.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>By adding <a href="#lemmas">ghost operations</a>, if needed.<a href="#fnref5" class="footnote-back">↩</a></p></li>
 </ol>
 </section>
 

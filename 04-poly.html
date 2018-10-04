@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -300,9 +313,9 @@ sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
 
 </div>
 
-<p>Refinement types shine when we want to establish properties of <em>polymorphic</em> datatypes and higher-order functions. Rather than be abstract, let's illustrate this with a <a href="http://www.cs.bu.edu/~hwxi/academic/papers/pldi98.pdf">classic</a> use-case.</p>
+<p>Refinement types shine when we want to establish properties of <em>polymorphic</em> datatypes and higher-order functions. Rather than be abstract, let’s illustrate this with a <a href="http://www.cs.bu.edu/~hwxi/academic/papers/pldi98.pdf">classic</a> use-case.</p>
 <p><br />
-<strong>Array Bounds Verification</strong> aims to ensure that the indices used to retrieve values from an array are indeed <em>valid</em> for the array, i.e. are between <code>0</code> and the <em>size</em> of the array. For example, suppose we create an <code>array</code> with two elements:</p>
+<strong>Array Bounds Verification</strong> aims to ensure that the indices used to retrieve values from an array are indeed <em>valid</em> for the array, i.e. are between <code>0</code> and the <em>size</em> of the array. For example, suppose we create an <code>array</code> with two elements:</p>
 <pre class="spec"><code>twoLangs  = fromList [&quot;haskell&quot;, &quot;javascript&quot;]</code></pre>
 <p>Lets attempt to look it up at various indices:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
@@ -320,26 +333,25 @@ sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
     nono  = twoLangs ! 3</div>
 </div>
 
-<p>If we try to <em>run</em> the above, we get a nasty shock: an exception that says we're trying to look up <code>twoLangs</code> at index <code>3</code> whereas the size of <code>twoLangs</code> is just <code>2</code>.</p>
-<pre class="sh"><code>Prelude&gt; :l 03-poly.lhs
-[1 of 1] Compiling VectorBounds     ( 03-poly.lhs, interpreted )
-Ok, modules loaded: VectorBounds.
-*VectorBounds&gt; eeks
-Loading package ... done.
-&quot;*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)</code></pre>
+<p>If we try to <em>run</em> the above, we get a nasty shock: an exception that says we’re trying to look up <code>twoLangs</code> at index <code>3</code> whereas the size of <code>twoLangs</code> is just <code>2</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">Prelude</span><span class="op">&gt;</span> :l 03-poly.lhs</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">[<span class="ex">1</span> of 1] Compiling VectorBounds     ( 03-poly.lhs, interpreted )</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="ex">Ok</span>, modules loaded: VectorBounds.</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="ex">*VectorBounds</span><span class="op">&gt;</span> eeks</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="ex">Loading</span> package ... done.</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">&quot;*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)</span></a></code></pre></div>
 <p><br />
-<strong>In a suitable Editor</strong> e.g. Vim or Emacs, or if you push the &quot;play&quot; button in the online demo, you will literally see the error <em>without</em> running the code. Lets see how LiquidHaskell checks <code>ok</code> and <code>yup</code> but flags <code>nono</code>, and along the way, learn how it reasons about <em>recursion</em>, <em>higher-order functions</em>, <em>data types</em> and <em>polymorphism</em>.</p>
+<strong>In a suitable Editor</strong> e.g. Vim or Emacs, or if you push the “play” button in the online demo, you will literally see the error <em>without</em> running the code. Lets see how LiquidHaskell checks <code>ok</code> and <code>yup</code> but flags <code>nono</code>, and along the way, learn how it reasons about <em>recursion</em>, <em>higher-order functions</em>, <em>data types</em> and <em>polymorphism</em>.</p>
 <section id="vectorbounds" class="level2">
 <h2>Specification: Vector Bounds</h2>
-<p>First, let's see how to <em>specify</em> array bounds safety by <em>refining</em> the types for the <a href="https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/Data/Vector.spec">key functions</a> exported by <code>Data.Vector</code>, i.e. how to</p>
+<p>First, let’s see how to <em>specify</em> array bounds safety by <em>refining</em> the types for the <a href="https://github.com/ucsd-progsys/liquidhaskell/blob/master/include/Data/Vector.spec">key functions</a> exported by <code>Data.Vector</code>, i.e. how to</p>
 <ol type="1">
 <li><em>define</em> the size of a <code>Vector</code></li>
 <li><em>compute</em> the size of a <code>Vector</code></li>
 <li><em>restrict</em> the indices to those that are valid for a given size.</li>
 </ol>
 <div class="toolinfo">
-<p><br />
-<strong>Imports</strong> We can write specifications for imported modules -- for which we <em>lack</em> the code -- either directly in the client's source file or better, in <code>.spec</code> files which can be reused across multiple client modules.</p>
+<p>We can write specifications for imported modules – for which we <em>lack</em> the code – either directly in the client’s source file or better, in <code>.spec</code> files which can be reused across multiple client modules.</p>
 <p><br />
 <strong>Include</strong> directories can be specified when checking a file. Suppose we want to check some file <code>target.hs</code> that imports an external dependency <code>Data.Vector</code>. We can write specifications for <code>Data.Vector</code> inside <code>include/Data/Vector.spec</code> which contains:</p>
 <pre class="spec"><code>-- | Define the size
@@ -352,12 +364,12 @@ assume length :: x:Vector a -&gt; {v:Int | v = vlen x}
 assume (!) :: x:Vector a -&gt; {v:Nat | v &lt; vlen x} -&gt; a</code></pre>
 </div>
 <p>Using this new specification is now a simple matter of telling LiquidHaskell to include this file:</p>
-<pre class="sh"><code>$ liquid -i include/ target.hs</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">$ <span class="ex">liquid</span> -i include/ target.hs</a></code></pre></div>
 <p>LiquidHaskell ships with specifications for <code>Prelude</code>, <code>Data.List</code>, and <code>Data.Vector</code> which it includes by default.</p>
 <p><br />
 <strong>Measures</strong> are used to define <em>properties</em> of Haskell data values that are useful for specification and verification. Think of <code>vlen</code> as the <em>actual</em> size of a <code>Vector</code> regardless of how the size was computed.</p>
 <p><br />
-<strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don't have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is between <code>0</code> and the real size of the input vector <code>x</code>.</p>
+<strong>Assumes</strong> are used to <em>specify</em> types describing the semantics of functions that we cannot verify e.g. because we don’t have the code for them. Here, we are assuming that the library function <code>Data.Vector.length</code> indeed computes the size of the input vector. Furthermore, we are stipulating that the lookup function <code>(!)</code> requires an index that is between <code>0</code> and the real size of the input vector <code>x</code>.</p>
 <p><br />
 <strong>Dependent Refinements</strong> are used to describe relationships <em>between</em> the elements of a specification. For example, notice how the signature for <code>length</code> names the input with the binder <code>x</code> that then appears in the output type to constrain the output <code>Int</code>. Similarly, the signature for <code>(!)</code> names the input vector <code>x</code> so that the index can be constrained to be valid for <code>x</code>. Thus, dependency lets us write properties that connect <em>multiple</em> program values.</p>
 <p><br />
@@ -403,7 +415,7 @@ twoLangs     = fromList ["haskell", "javascript"]</div>
 </section>
 <section id="verification-vector-lookup" class="level2">
 <h2>Verification: Vector Lookup</h2>
-<p>Let's try write some functions to sanity check the specifications. First, find the starting element -- or <code>head</code> of a <code>Vector</code></p>
+<p>Let’s try write some functions to sanity check the specifications. First, find the starting element – or <code>head</code> of a <code>Vector</code></p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -428,14 +440,14 @@ head vec = vec ! 0</div>
          VV  : Int | VV == ?a &amp;&amp; VV == 0
          vec : Vector a | 0 &lt;= vlen vec
          ?a  : Int | ?a == (0  :  int)</code></pre>
-<p>LiquidHaskell is saying that <code>0</code> is <em>not</em> a valid index as it is not between <code>0</code> and <code>vlen vec</code>. Say what? Well, what if <code>vec</code> had <em>no</em> elements! A formal verifier doesn't make <em>off by one</em> errors.</p>
+<p>LiquidHaskell is saying that <code>0</code> is <em>not</em> a valid index as it is not between <code>0</code> and <code>vlen vec</code>. Say what? Well, what if <code>vec</code> had <em>no</em> elements! A formal verifier doesn’t make <em>off by one</em> errors.</p>
 <p><br />
 <strong>To Fix</strong> the problem we can do one of two things.</p>
 <ol type="1">
 <li><em>Require</em> that the input <code>vec</code> be non-empty, or</li>
 <li><em>Return</em> an output if <code>vec</code> is non-empty, or</li>
 </ol>
-<p>Here's an implementation of the first approach, where we define and use an alias <code>NEVector</code> for non-empty <code>Vector</code>s</p>
+<p>Here’s an implementation of the first approach, where we define and use an alias <code>NEVector</code> for non-empty <code>Vector</code>s</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -514,7 +526,7 @@ safeLookup x i
 </section>
 <section id="inference-our-first-recursive-function" class="level2">
 <h2>Inference: Our First Recursive Function</h2>
-<p>Ok, let's write some code! Let's start with a recursive function that adds up the values of the elements of an <code>Int</code> vector.</p>
+<p>Ok, let’s write some code! Let’s start with a recursive function that adds up the values of the elements of an <code>Int</code> vector.</p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -562,8 +574,8 @@ vectorSum vec     = go 0 0
 absoluteSum     = undefined</div>
 </div>
 
-<p><br />
-<strong>Inference</strong> LiquidHaskell verifies <code>vectorSum</code> -- or, to be precise, the safety of the vector accesses <code>vec ! i</code>. The verification works out because LiquidHaskell is able to <em>automatically infer</em> <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+
+<p>LiquidHaskell verifies <code>vectorSum</code> – or, to be precise, the safety of the vector accesses <code>vec ! i</code>. The verification works out because LiquidHaskell is able to <em>automatically infer</em> <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <pre class="spec"><code>go :: Int -&gt; {v:Int | 0 &lt;= v &amp;&amp; v &lt;= sz} -&gt; Int</code></pre>
 <p>which states that the second parameter <code>i</code> is between <code>0</code> and the length of <code>vec</code> (inclusive). LiquidHaskell uses this and the test that <code>i &lt; sz</code> to establish that <code>i</code> is between <code>0</code> and <code>(vlen vec)</code> to prove safety.</p>
 <div id="Off by one?" class="hwex">
@@ -576,7 +588,7 @@ absoluteSum     = undefined</div>
 </section>
 <section id="higher-order-functions-bottling-recursion-in-a-loop" class="level2">
 <h2>Higher-Order Functions: Bottling Recursion in a <code>loop</code></h2>
-<p>Let's refactor the above low-level recursive function into a generic higher-order <code>loop</code>.</p>
+<p>Let’s refactor the above low-level recursive function into a generic higher-order <code>loop</code>.</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -615,10 +627,10 @@ vectorSum' vec  = loop 0 n 0 body
 <p>In English, the above type states that</p>
 <ul>
 <li><code>lo</code> the loop <em>lower</em> bound is a non-negative integer</li>
-<li><code>hi</code> the loop <em>upper</em> bound is a greater than <code>lo</code>,</li>
+<li><code>hi</code> the loop <em>upper</em> bound is a greater then or equal to <code>lo</code>,</li>
 <li><code>f</code> the loop <em>body</em> is only called with integers between <code>lo</code> and <code>hi</code>.</li>
 </ul>
-<p>It can be tedious to have to keep typing things like the above. If we wanted to make <code>loop</code> a public or exported function, we could use the inferred type to generate an explicit signature.</p>
+<p> It can be tedious to have to keep typing things like the above. If we wanted to make <code>loop</code> a public or exported function, we could use the inferred type to generate an explicit signature.</p>
 <p>At the call <code>loop 0 n 0 body</code> the parameters <code>lo</code> and <code>hi</code> are instantiated with <code>0</code> and <code>n</code> respectively, which, by the way is where the inference engine deduces non-negativity. Thus LiquidHaskell concludes that <code>body</code> is only called with values of <code>i</code> that are <em>between</em> <code>0</code> and <code>(vlen vec)</code>, which verifies the safety of the call <code>vec ! i</code>.</p>
 <div id="Using Higher-Order Loops" class="hwex">
 <p><br />
@@ -640,8 +652,8 @@ vectorSum' vec  = loop 0 n 0 body
 {-@ absoluteSum' :: Vector Int -> Nat @-}
 absoluteSum' vec = loop 0 n 0 body
   where
-    n            = length vec
-    body i acc   = undefined</div>
+    body i acc   = undefined
+    n            = length vec</div>
 </div>
 
 <div id="Dot Product" class="hwex">
@@ -651,7 +663,6 @@ absoluteSum' vec = loop 0 n 0 body
 <br />
 
 </div>
-\vspace{1.0in}
 <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -665,8 +676,8 @@ absoluteSum' vec = loop 0 n 0 body
 {-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
 dotProduct x y = loop 0 sz 0 body
   where
-    sz         = length x
-    body i acc = acc + (x ! i)  *  (y ! i)</div>
+    body i acc = acc + (x ! i)  *  (y ! i)
+    sz         = length x</div>
 </div>
 
 </section>
@@ -686,9 +697,9 @@ dotProduct x y = loop 0 sz 0 body
 
 <p>Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> (or the equivalent value for the type <code>a</code>).</p>
 <p><br />
-<strong>The Alias</strong> <code>SparseN</code> is just a shorthand for the (longer) type on the right, it does not <em>define</em> a new type. If you are familiar with the <em>index-style</em> length encoding e.g. as found in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, then note that despite appearances, our <code>Sparse</code> definition is <em>not</em> indexed.</p>
-<p><br />
-<strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+<strong>The Alias</strong> <code>SparseN</code> is just a shorthand for the (longer) type on the right, it does not <em>define</em> a new type. If you are familiar with the <em>index-style</em> length encoding e.g. as found in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, then note that despite appearances, our <code>Sparse</code> definition is <em>not</em> indexed.</p>
+
+<p>Let’s write a function to compute a sparse product</p>
 <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -700,13 +711,13 @@ dotProduct x y = loop 0 sz 0 body
   <div id="program-17" class="programbox">{-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct x y   = go 0 y
   where
-    go n ((i,v):y') = go (n + (x!i) * v) y'
-    go n []         = n</div>
+    go n []         = n
+    go n ((i,v):y') = go (n + (x!i) * v) y'</div>
 </div>
 
 <p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
-<p><br />
-<strong>Folds</strong> The sharp reader will have undoubtedly noticed that the sparse product can be more cleanly expressed as a <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html">fold</a>:</p>
+
+<p>The sharp reader will have undoubtedly noticed that the sparse product can be more cleanly expressed as a <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html">fold</a>:</p>
 <pre class="spec"><code>foldl&#39; :: (a -&gt; b -&gt; a) -&gt; a -&gt; [b] -&gt; a</code></pre>
 <p>We can simply fold over the sparse vector, accumulating the <code>sum</code> as we go along</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
@@ -720,25 +731,25 @@ sparseProduct x y   = go 0 y
   <div id="program-18" class="programbox">{-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
 sparseProduct' x y  = foldl' body 0 y
   where
-    body sum (i, v) = sum + (x ! i)  * v</div>
+    body sum (i, v) = sum + (x ! i) * v</div>
 </div>
 
-<p>LiquidHaskell digests this without difficulty. The main trick is in how the polymorphism of <code>foldl'</code> is instantiated.</p>
+<p> LiquidHaskell digests this without difficulty. The main trick is in how the polymorphism of <code>foldl'</code> is instantiated.</p>
 <ol type="1">
 <li><p>GHC infers that at this site, the type variable <code>b</code> from the signature of <code>foldl'</code> is instantiated to the Haskell type <code>(Int, a)</code>.</p></li>
-<li><p>Correspondingly, LiquidHaskell infers that in fact <code>b</code> can be instantiated to the <em>refined</em> <code>(Btwn 0 v (vlen x), a)</code>.</p></li>
+<li><p>Correspondingly, LiquidHaskell infers that in fact <code>b</code> can be instantiated to the <em>refined</em> <code>(Btwn 0 (vlen x), a)</code>.</p></li>
 </ol>
 <p>Thus, the inference mechanism saves us a fair bit of typing and allows us to reuse existing polymorphic functions over containers and such without ceremony.</p>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>This chapter gave you an idea of how one can use refinements to verify size related properties, and more generally, to specify and verify properties of recursive and polymorphic functions. Next, let's see how we can use LiquidHaskell to prevent the creation of illegal values by refining data type definitions.</p>
+<p>This chapter gave you an idea of how one can use refinements to verify size related properties, and more generally, to specify and verify properties of recursive and polymorphic functions. Next, let’s see how we can use LiquidHaskell to prevent the creation of illegal values by refining data type definitions.</p>
 </section>
 </section>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>In your editor, click on <code>go</code> to see the inferred type.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>In your editor, click on <code>go</code> to see the inferred type.<a href="#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </section>
 

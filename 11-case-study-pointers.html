@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -299,7 +312,7 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 {-@ type TRUE = {v:Bool | v } @-}
 
 -- TODO: we really shouldn't need this...
-{-@ bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
+-- {- bLen :: b:ByteString -> {v:Nat | v = bLen b} @-}
 
 {-@ type StringN N = {v:String | len v = N} @-}
 {-@ type BNat N    = {v:Nat    | v <= N}    @-}
@@ -308,8 +321,8 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
 </div>
 
-<p>A large part of the allure of Haskell is its elegant, high-level ADTs that ensure that programs won't be plagued by problems like the infamous <a href="heartbleed.com">SSL heartbleed bug</a>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> However, another part of Haskell's charm is that when you really really need to, you can drop down to low-level pointer twiddling to squeeze the most performance out of your machine. But of course, that opens the door to the heartbleeds.</p>
-<p>Wouldn't it be nice to have our cake and eat it too? Wouldn't it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
+<p>A large part of the allure of Haskell is its elegant, high-level ADTs that ensure that programs won’t be plagued by problems like the infamous <a href="heartbleed.com">SSL heartbleed bug</a>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> However, another part of Haskell’s charm is that when you really really need to, you can drop down to low-level pointer twiddling to squeeze the most performance out of your machine. But of course, that opens the door to the heartbleeds.</p>
+<p>Wouldn’t it be nice to have our cake and eat it too? Wouldn’t it be great if we could twiddle pointers at a low-level and still get the nice safety assurances of high-level types? Lets see how LiquidHaskell lets us have our cake and eat it too.</p>
 <section id="heartbleeds-in-haskell" class="level2">
 <h2>HeartBleeds in Haskell</h2>
 <p><br />
@@ -346,7 +359,7 @@ chop' s n = s'
 
 
 <p><br />
-<strong>Types against Overflows</strong> Now that we have stared the problem straight in the eye, look at how we can use LiquidHaskell to prevent the above at compile time. To this end, we decompose the system into a hierarchy of levels (i.e. modules). Here, we have three levels:</p>
+<strong>Types against Overflows</strong> Now that we have stared the problem straight in the eye, look at how we can use LiquidHaskell to prevent the above at compile time. To this end, we decompose the system into a hierarchy of levels (i.e. modules). Here, we have three levels:</p>
 <ol type="1">
 <li><em>Machine</em> level <code>Pointers</code></li>
 <li><em>Library</em> level <code>ByteString</code></li>
@@ -375,9 +388,9 @@ data Ptr a</code></pre>
 <pre class="spec"><code>withForeignPtr :: ForeignPtr a     -- pointer
                -&gt; (Ptr a -&gt; IO b)  -- action
                -&gt; IO b             -- result</code></pre>
-<p>That is, <code>withForeignPtr fp act</code> lets us execute a action <code>act</code> on the actual <code>Ptr</code> wrapped within the <code>fp</code>. These actions are typically sequences of <em>dereferences</em>, i.e. reads or writes.</p>
+<p>That is, <code>withForeignPtr fp act</code> lets us execute a action <code>act</code> on the actual <code>Ptr</code> wrapped within the <code>fp</code>. These actions are typically sequences of <em>dereferences</em>, i.e. reads or writes.</p>
 <p><br />
-<strong>To Dereference</strong> a pointer, i.e. to read or update the contents at the corresponding memory location, we use <code>peek</code> and <code>poke</code> respectively. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<strong>To Dereference</strong> a pointer, i.e. to read or update the contents at the corresponding memory location, we use <code>peek</code> and <code>poke</code> respectively. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
 <pre class="spec"><code>peek :: Ptr a -&gt; IO a         -- Read
 poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
 <p><br />
@@ -427,14 +440,14 @@ poke :: Ptr a -&gt; a -&gt; IO ()   -- Write</code></pre>
 </section>
 <section id="a-refined-pointer-api" class="level2">
 <h2>A Refined Pointer API</h2>
-<p>Wouldn't it be great if we had an assistant to helpfully point out the error above as soon as we <em>wrote</em> it? <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> We will use the following strategy to turn LiquidHaskell into such an assistant:</p>
+<p>Wouldn’t it be great if we had an assistant to helpfully point out the error above as soon as we <em>wrote</em> it? <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> We will use the following strategy to turn LiquidHaskell into such an assistant:</p>
 <ol type="1">
 <li><em>Refine</em> pointers with allocated buffer size,</li>
 <li><em>Track</em> sizes in pointer operations,</li>
 <li><em>Enforce</em> pointer are valid at reads and writes.</li>
 </ol>
 <p><br />
-<strong>To Refine Pointers</strong> with the <em>size</em> of their associated buffers, we can use an <em>abstract measure</em>, i.e. a measure specification <em>without</em> any underlying implementation.</p>
+<strong>To Refine Pointers</strong> with the <em>size</em> of their associated buffers, we can use an <em>abstract measure</em>, i.e. a measure specification <em>without</em> any underlying implementation.</p>
 <pre class="spec"><code>-- | Size of `Ptr`
 measure plen  :: Ptr a -&gt; Int
 
@@ -444,7 +457,7 @@ measure fplen :: ForeignPtr a -&gt; Int</code></pre>
 <pre class="spec"><code>type PtrN a N        = {v:Ptr a        | plen v  = N}
 type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}</code></pre>
 <p><br />
-<strong>Abstract Measures</strong> are extremely useful when we don't have a concrete implementation of the underlying value, but we know that the value <em>exists</em>. Here, we don't have the value -- inside Haskell -- because the buffers are manipulated within C. However, this is no cause for alarm as we will simply use measures to refine the API, not to perform any computations. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<strong>Abstract Measures</strong> are extremely useful when we don’t have a concrete implementation of the underlying value, but we know that the value <em>exists</em>. Here, we don’t have the value – inside Haskell – because the buffers are manipulated within C. However, this is no cause for alarm as we will simply use measures to refine the API, not to perform any computations. <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <p><br />
 <strong>To Refine Allocation</strong> we stipulate that the size parameter be non-negative, and that the returned pointer indeed refers to a buffer with exactly <code>n</code> bytes:</p>
 <pre class="spec"><code>mallocForeignPtrBytes :: n:Nat -&gt; ForeignPtrN a n</code></pre>
@@ -480,11 +493,11 @@ type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N}</code></pre>
 poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
 <p>In essence the above type says that no matter how arithmetic was used to shift pointers around, when the actual dereference happens, the size <em>remaining</em> after the pointer must be non-negative, so that a byte can be safely read from or written to the underlying buffer.</p>
 <p><br />
-<strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<strong>To Refine the Shift</strong> operations, we simply check that the pointer <em>remains</em> within the bounds of the buffer, and update the <code>plen</code> to reflect the size remaining after the shift: <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
 <pre class="spec"><code>plusPtr :: p:Ptr a -&gt; off:BNat (plen p) -&gt; PtrN b (plen p - off)</code></pre>
 <p>using the alias <code>BNat</code>, defined as:</p>
 <pre class="spec"><code>type BNat N = {v:Nat | v &lt;= N}</code></pre>
-<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<p><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 <p><br />
 <strong>Types Prevent Overflows</strong> Lets revisit the zero-fill example from above to understand how the refinements help detect the error:</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
@@ -522,7 +535,7 @@ poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
      ?a   : {?a : Int | ?a == 5}
      ?c   : {?c : Int | ?c == 4}
      ?b   : {?b : Integer | ?b == 0}</code></pre>
-<p>The error says we're bumping <code>p</code> up by <code>VV == 5</code> using <code>plusPtr</code> but the latter <em>requires</em> that bump-offset be within the size of the buffer referred to by <code>p</code>, i.e. <code>VV &lt;= plen p</code>. Indeed, in this context, we have:</p>
+<p>The error says we’re bumping <code>p</code> up by <code>VV == 5</code> using <code>plusPtr</code> but the latter <em>requires</em> that bump-offset be within the size of the buffer referred to by <code>p</code>, i.e. <code>VV &lt;= plen p</code>. Indeed, in this context, we have:</p>
 <pre class="liquiderror"><code>     p    : {p : Ptr a | fplen fp == plen p &amp;&amp; ?c &lt;= plen p &amp;&amp; ?b &lt;= plen p &amp;&amp; zero &lt;= plen p}
      fp   : {fp : ForeignPtr a | fplen fp == ?c &amp;&amp; 0 &lt;= fplen fp}</code></pre>
 <p>that is, the size of <code>p</code>, namely <code>plen p</code> equals the size of <code>fp</code>, namely <code>fplen fp</code> (thanks to the <code>withForeignPtr</code> call). The latter equals to <code>?c</code> which is <code>4</code> bytes. Thus, since the offset <code>5</code> is not less than the buffer size <code>4</code>, LiquidHaskell cannot prove that the call to <code>plusPtr</code> is safe, hence the error.</p>
@@ -533,7 +546,7 @@ poke :: OkPtr a -&gt; a -&gt; IO ()</code></pre>
 <p><br />
 <strong>Frankly, we cannot</strong> as those functions are <em>externally</em> implemented (in this case, in <code>C</code>), and hence, invisible to the otherwise all-seeing eyes of LiquidHaskell. Thus, we are <em>assuming</em> or <em>trusting</em> that those functions behave according to their types. Put another way, the types for the low-level API are our <em>specification</em> for what low-level pointer safety. We shall now <em>guarantee</em> that the higher level modules that build upon this API in fact use the low-level function in a manner consistent with this specification.</p>
 <p><br />
-<strong>Assumptions are a Feature</strong> and not a bug, as they let us to verify systems that use some modules for which we do not have the code. Here, we can <em>assume</em> a boundary specification, and then <em>guarantee</em> that the rest of the system is safe with respect to that specification. <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<strong>Assumptions are a Feature</strong> and not a bug, as they let us to verify systems that use some modules for which we do not have the code. Here, we can <em>assume</em> a boundary specification, and then <em>guarantee</em> that the rest of the system is safe with respect to that specification. <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
 </section>
 <section id="bytestring-api" class="level2">
 <h2>ByteString API</h2>
@@ -630,7 +643,7 @@ good2 = do fp <- mallocForeignPtrBytes 5
 </div>
 
 <p><br />
-<strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>'s length is exceeds its buffer size, and is flagged as such:</p>
+<strong>Illegal Bytestrings</strong> are rejected by LiquidHaskell. For example, <code>bad1</code>’s length is exceeds its buffer size, and is flagged as such:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -718,7 +731,7 @@ create n fill = unsafePerformIO $ do
 
 <p><strong>Hint: </strong>The function writes into 3 slots starting at <code>p</code>. How big should <code>plen p</code> be to allow this? What type does LiquidHaskell infer for <code>p</code> above? Does it meet the requirement? Which part of the <em>specification</em> or <em>implementation</em> needs to be modified so that the relevant information about <code>p</code> becomes available within the <code>do</code>-block above? Make sure you figure out the above before proceeding.</p>
 <p><br />
-<strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
+<strong>To Pack</strong> a <code>String</code> into a <code>ByteString</code> we simply call <code>create</code> with the appropriate fill action:<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></p>
 <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -759,7 +772,7 @@ prop_pack_length xs   = bLen (pack xs) == length xs</div>
 <strong>The magic of inference</strong> ensures that <code>pack</code> just works. Notice there is a tricky little recursive loop <code>go</code> that is used to recursively fill in the <code>ByteString</code> and actually, it has a rather subtle type signature that LiquidHaskell is able to automatically infer.</p>
 <div id="Pack Invariant" class="hwex">
 <p><br />
-<strong>Exercise: (Pack Invariant): </strong>Still, we're here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)</p>
+<strong>Exercise: (Pack Invariant): </strong>Still, we’re here to learn, so can you <em>write down</em> the type signature for the loop so that the below variant of <code>pack</code> is accepted by LiquidHaskell (Do this <em>without</em> cheating by peeping at the type inferred for <code>go</code> above!)</p>
 <br />
 <br />
 
@@ -851,7 +864,7 @@ prop_unpack_length b   = bLen b == length (unpack b)</div>
 </section>
 <section id="application-api" class="level2">
 <h2>Application API</h2>
-<p>Finally, lets revisit our potentially &quot;bleeding&quot; <code>chop</code> function to see how the refined <code>ByteString</code> API can prevent errors. We require that the prefix size <code>n</code> be less than the size of the input string <code>s</code>:</p>
+<p>Finally, lets revisit our potentially “bleeding” <code>chop</code> function to see how the refined <code>ByteString</code> API can prevent errors. We require that the prefix size <code>n</code> be less than the size of the input string <code>s</code>:</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -869,7 +882,7 @@ chop s n = s'
 </div>
 
 <p><br />
-<strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
+<strong>Overflows are prevented</strong> by LiquidHaskell, as it rejects calls to <code>chop</code> where the prefix size is too large which is what led to the overflow that spilled the contents of memory after the string (cf. Figure <a href="#fig:overflow">11.1</a>). In the code below, the first use of <code>chop</code> which defines <code>ex6</code> is accepted as <code>6 &lt;= len ex</code> but the second call is rejected as <code>30 &gt; len ex</code>.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -903,7 +916,7 @@ prop_chop_length s n
 
 <div id="Checked Chop" class="hwex">
 <p><br />
-<strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:</p>
+<strong>Exercise: (Checked Chop): </strong>In the above, we know statically that the string is longer than the prefix, but what if the string and prefix are obtained <em>dynamically</em>, e.g. as inputs from the user? Fill in the implementation of <code>ok</code> below to ensure that <code>chop</code> is called safely with user specified values:</p>
 <br />
 <br />
 
@@ -935,7 +948,7 @@ queryAndChop  = do putStrLn "Give me a string:"
 </section>
 <section id="nested-bytestrings" class="level2">
 <h2>Nested ByteStrings</h2>
-<p>For a more in-depth example, let's take a look at <code>group</code>, which transforms strings like <code>&quot;foobaaar&quot;</code> into <em>lists</em> of strings like <code>[&quot;f&quot;,&quot;oo&quot;, &quot;b&quot;, &quot;aaa&quot;, &quot;r&quot;]</code>. The specification is that <code>group</code> should produce a</p>
+<p>For a more in-depth example, let’s take a look at <code>group</code>, which transforms strings like <code>&quot;foobaaar&quot;</code> into <em>lists</em> of strings like <code>[&quot;f&quot;,&quot;oo&quot;, &quot;b&quot;, &quot;aaa&quot;, &quot;r&quot;]</code>. The specification is that <code>group</code> should produce a</p>
 <ol type="1">
 <li>list of <em>non-empty</em> <code>ByteStrings</code>,</li>
 <li>the <em>sum of</em> whose lengths equals that of the input string.</li>
@@ -967,7 +980,7 @@ queryAndChop  = do putStrLn "Give me a string:"
 null (BS _ _ l) = l == 0</div>
 </div>
 
-<p>This check is used to determine if it is safe to extract the head and tail of the <code>ByteString</code>. we can use refinements to ensure the safety of the operations and also track the sizes. <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></p>
+<p>This check is used to determine if it is safe to extract the head and tail of the <code>ByteString</code>. we can use refinements to ensure the safety of the operations and also track the sizes. <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1029,13 +1042,13 @@ bsLen (b:bs) = bLen b + bsLen bs</div>
   </button>
  
   <div id="program-31" class="programbox">{-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
-spanByte c ps@(BS x s l)
+spanByte c ps@(BS x s ln)
   = unsafePerformIO
       $ withForeignPtr x $ \p ->
          go (p `plusPtr` s) 0
   where
     go p i
-      | i >= l    = return (ps, empty)
+      | i >= ln   = return (ps, empty)
       | otherwise = do c' <- peekByteOff p i
                        if c /= c'
                          then return $ splitAt i
@@ -1043,7 +1056,7 @@ spanByte c ps@(BS x s l)
     splitAt i     = (unsafeTake i ps, unsafeDrop i ps)</div>
 </div>
 
-<p>LiquidHaskell infers that <code>0 &lt;= i &lt;= l</code> and therefore that all of the memory accesses are safe. Furthermore, due to the precise specifications given to <code>unsafeTake</code> and <code>unsafeDrop</code>, it is able to prove that the output pair's lengths add up to the size of the input <code>ByteString</code>.</p>
+<p>LiquidHaskell infers that <code>0 &lt;= i &lt;= l</code> and therefore that all of the memory accesses are safe. Furthermore, due to the precise specifications given to <code>unsafeTake</code> and <code>unsafeDrop</code>, it is able to prove that the output pair’s lengths add up to the size of the input <code>ByteString</code>.</p>
 <div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1142,15 +1155,15 @@ create' n fill = unsafePerformIO $ do
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Assuming, of course, the absence of errors in the compiler and run-time...<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>We elide the <code>Storable</code> type class constraint to strip this presentation down to the absolute essentials.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>In Vim or Emacs or online, you'd see the error helpfully highlighted.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>This is another <em>ghost</em> specification.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>This signature precludes <em>left</em> or <em>backward</em> shifts; for that there is an analogous <code>minusPtr</code> which we elide for simplicity.<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>Did you notice that we have strengthened the type of <code>plusPtr</code> to prevent the pointer from wandering outside the boundary of the buffer? We could instead use a weaker requirement for <code>plusPtr</code> that omits this requirement, and instead have the error be flagged when the pointer was used to read or write memory.<a href="#fnref6">↩</a></p></li>
-<li id="fn7"><p>If we so desire, we can also <em>check</em> the boundary specifications at <a href="http://en.wikipedia.org/wiki/Design_by_contract">run-time</a>, but that is outside the scope of LiquidHaskell.<a href="#fnref7">↩</a></p></li>
-<li id="fn8"><p>The code uses <code>create'</code> which is just <code>create</code> with the <em>correct</em> signature in case you want to skip the previous exercise. (But don't!)<a href="#fnref8">↩</a></p></li>
-<li id="fn9"><p><code>peekByteOff p i</code> is equivalent to <code>peek (plusPtr p i)</code>.<a href="#fnref9">↩</a></p></li>
+<li id="fn1"><p>Assuming, of course, the absence of errors in the compiler and run-time…<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>We elide the <code>Storable</code> type class constraint to strip this presentation down to the absolute essentials.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>In Vim or Emacs or online, you’d see the error helpfully highlighted.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>This is another <em>ghost</em> specification.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>This signature precludes <em>left</em> or <em>backward</em> shifts; for that there is an analogous <code>minusPtr</code> which we elide for simplicity.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>Did you notice that we have strengthened the type of <code>plusPtr</code> to prevent the pointer from wandering outside the boundary of the buffer? We could instead use a weaker requirement for <code>plusPtr</code> that omits this requirement, and instead have the error be flagged when the pointer was used to read or write memory.<a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>If we so desire, we can also <em>check</em> the boundary specifications at <a href="http://en.wikipedia.org/wiki/Design_by_contract">run-time</a>, but that is outside the scope of LiquidHaskell.<a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>The code uses <code>create'</code> which is just <code>create</code> with the <em>correct</em> signature in case you want to skip the previous exercise. (But don’t!)<a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p><code>peekByteOff p i</code> is equivalent to <code>peek (plusPtr p i)</code>.<a href="#fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </section>
 

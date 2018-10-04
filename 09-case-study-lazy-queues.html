@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -262,8 +275,8 @@ MathJax.Hub.Config({
 <div id='page'>
 
 <section id="lazyqueue" class="level1">
-<h1>Case Study: Okasaki's Lazy Queues</h1>
-<p>Lets start with a case study that is simple enough to explain without pages of code, yet complex enough to show off whats cool about dependency: Chris Okasaki's beautiful <a href="http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf">Lazy Queues</a>. This structure leans heavily on an invariant to provide fast <em>insertion</em> and <em>deletion</em>. Let's see how to enforce that invariant with LiquidHaskell.</p>
+<h1>Case Study: Okasaki’s Lazy Queues</h1>
+<p>Lets start with a case study that is simple enough to explain without pages of code, yet complex enough to show off whats cool about dependency: Chris Okasaki’s beautiful <a href="http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf">Lazy Queues</a>. This structure leans heavily on an invariant to provide fast <em>insertion</em> and <em>deletion</em>. Let’s see how to enforce that invariant with LiquidHaskell.</p>
 <div class="hidden">
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
@@ -274,19 +287,15 @@ MathJax.Hub.Config({
   </button>
  
   <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--totality"       @-}
 {-@ LIQUID "--maxparams=3"    @-}
 
-module LazyQueue (Queue, insert, remove, emp) where
+module LazyQueue (Queue, insert, remove, emp, realSize) where
 
 import Prelude hiding (replicate, take, length)
 
 -- | Size function actually returns the size: (Duh!)
 
 {-@ size :: q:SList a -> {v:Nat | v = size q} @-}
-data Queue a = Q  { front :: SList a
-                  , back  :: SList a
-                  }
 
 {-@ die :: {v:String | false} -> a @-}
 die x = error x
@@ -315,9 +324,9 @@ replicate :: Int -> a -> Queue a
 
 
 <p><br />
-<strong>To efficiently implement</strong> a queue we need to have rapid access to both the front as well as the back because we <code>remove</code> elements from former and <code>insert</code> elements into the latter. This is quite straightforward with explicit pointers and mutation -- one uses an old school linked list and maintains pointers to the head and the tail. But can we implement the structure efficiently without having stoop so low?</p>
+<strong>To efficiently implement</strong> a queue we need to have rapid access to both the front as well as the back because we <code>remove</code> elements from former and <code>insert</code> elements into the latter. This is quite straightforward with explicit pointers and mutation – one uses an old school linked list and maintains pointers to the head and the tail. But can we implement the structure efficiently without having stoop so low?</p>
 <p><br />
-<strong>Chris Okasaki</strong> came up with a very cunning way to implement queues using a <em>pair</em> of lists -- let's call them <code>front</code> and <code>back</code> which represent the corresponding parts of the Queue.</p>
+<strong>Chris Okasaki</strong> came up with a very cunning way to implement queues using a <em>pair</em> of lists – let’s call them <code>front</code> and <code>back</code> which represent the corresponding parts of the Queue.</p>
 <ul>
 <li>To <code>insert</code> elements, we just <em>cons</em> them onto the <code>back</code> list,</li>
 <li>To <code>remove</code> elements, we just <em>un-cons</em> them from the <code>front</code> list.</li>
@@ -331,7 +340,7 @@ replicate :: Int -> a -> Queue a
 
 
 <p><br />
-<strong>The catch</strong> is that we need to shunt elements from the back to the front every so often, e.g. we can transfer the elements from the <code>back</code> to the <code>front</code>, when:</p>
+<strong>The catch</strong> is that we need to shunt elements from the back to the front every so often, e.g. we can transfer the elements from the <code>back</code> to the <code>front</code>, when:</p>
 <ol type="1">
 <li>a <code>remove</code> call is triggered, and</li>
 <li>the <code>front</code> list is empty.</li>
@@ -344,11 +353,11 @@ replicate :: Int -> a -> Queue a
 
 
 <p><br />
-<strong>Okasaki's first insight</strong> was to note that every element is only moved <em>once</em> from the front to the back; hence, the time for <code>insert</code> and <code>lookup</code> could be <code>O(1)</code> when <em>amortized</em> over all the operations. This is perfect, <em>except</em> that some set of unlucky <code>remove</code> calls (which occur when the <code>front</code> is empty) are stuck paying the bill. They have a rather high latency up to <code>O(n)</code> where <code>n</code> is the total number of operations.</p>
+<strong>Okasaki's first insight</strong> was to note that every element is only moved <em>once</em> from the back to the front; hence, the time for <code>insert</code> and <code>remove</code> could be <code>O(1)</code> when <em>amortized</em> over all the operations. This is perfect, <em>except</em> that some set of unlucky <code>remove</code> calls (which occur when the <code>front</code> is empty) are stuck paying the bill. They have a rather high latency up to <code>O(n)</code> where <code>n</code> is the total number of operations.</p>
 <p><br />
 <strong>Okasaki's second insight</strong> saves the day: he observed that all we need to do is to enforce a simple <em>balance invariant</em>:</p>
 <p><span class="math display">\[\mbox{Size of front} \geq \mbox{Size of back}\]</span></p>
-<p>If the lists are lazy i.e. only constructed as the head value is demanded, then a single <code>remove</code> needs only a tiny <code>O(log n)</code> in the worst case, and so no single <code>remove</code> is stuck paying the bill.</p>
+<p>If the lists are lazy i.e. only constructed as the head value is demanded, then a single <code>remove</code> needs only a tiny <code>O(log n)</code> in the worst case, and so no single <code>remove</code> is stuck paying the bill.</p>
 <p><br />
 <strong>Lets implement Queues</strong> and ensure the crucial invariant(s) with LiquidHaskell. What we need are the following ingredients:</p>
 <ol type="1">
@@ -359,7 +368,7 @@ replicate :: Int -> a -> Queue a
 </section>
 <section id="sized-lists" class="level2">
 <h2>Sized Lists</h2>
-<p>The first part is super easy. Let's define a type:</p>
+<p>The first part is super easy. Let’s define a type:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -368,11 +377,11 @@ replicate :: Int -> a -> Queue a
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">data SList a = SL { size :: Int, elems :: [a]}</div>
+  <div id="program-1" class="programbox">data SList a = SL { size :: Int, elems :: [a] }</div>
 </div>
 
-<p>We have a special field that saves the <code>size</code> because otherwise, we have a linear time computation that wrecks Okasaki's careful analysis. (Actually, he presents a variant which does <em>not</em> require saving the size as well, but that's for another day.)</p>
-<p>How can we be sure that <code>size</code> is indeed the <em>real size</em> of <code>elems</code>? Let's write a function to <em>measure</em> the real size:</p>
+<p>We have a special field that saves the <code>size</code> because otherwise, we have a linear time computation that wrecks Okasaki’s careful analysis. (Actually, he presents a variant which does <em>not</em> require saving the size as well, but that’s for another day.)</p>
+<p>How can we be sure that <code>size</code> is indeed the <em>real size</em> of <code>elems</code>? Let’s write a function to <em>measure</em> the real size:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -397,10 +406,10 @@ realSize (_:xs) = 1 + realSize xs</div>
   </button>
  
   <div id="program-3" class="programbox">{-@ data SList a = SL {
-       size  :: Nat
-     , elems :: {v:[a] | realSize v = size}
-     }
-  @-}</div>
+      size  :: Nat
+    , elems :: {v:[a] | realSize v = size}
+    }
+@-}</div>
 </div>
 
 <p>As a sanity check, consider this:</p>
@@ -430,7 +439,7 @@ badList = SL 1 []         -- rejected</div>
   <div id="program-5" class="programbox">{-@ type SListN a N = {v:SList a | size v = N} @-}</div>
 </div>
 
-<p>Finally, we can define a basic API for <code>SList</code>.</p>
+<p> Finally, we can define a basic API for <code>SList</code>.</p>
 <p><br />
 <strong>To Construct lists</strong>, we use <code>nil</code> and <code>cons</code>:</p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
@@ -481,7 +490,9 @@ hd _             = die "empty SList"</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">okHd  = hd okList       -- accepted
+  <div id="program-8" class="programbox">{-@ okList :: SListN String 1 @-}
+
+okHd  = hd okList       -- accepted
 
 badHd = hd (tl okList)  -- rejected</div>
 </div>
@@ -499,9 +510,14 @@ badHd = hd (tl okList)  -- rejected</div>
   </button>
  
   <div id="program-9" class="programbox">{-@ data Queue a = Q {
-       front :: SList a
-     , back  :: SListLE a (size front)
-     }                                    @-}</div>
+      front :: SList a
+    , back  :: SListLE a (size front)
+    }
+@-}
+data Queue a = Q
+  { front :: SList a
+  , back  :: SList a
+  }</div>
 </div>
 
 <p><br />
@@ -517,7 +533,7 @@ badHd = hd (tl okList)  -- rejected</div>
   <div id="program-10" class="programbox">{-@ type SListLE a N = {v:SList a | size v <= N} @-}</div>
 </div>
 
-<p>As a quick check, notice that we <em>cannot represent illegal Queues</em>:</p>
+<p> As a quick check, notice that we <em>cannot represent illegal Queues</em>:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -534,7 +550,7 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 </section>
 <section id="queue-operations" class="level2">
 <h2>Queue Operations</h2>
-<p>Almost there! Now all that remains is to define the <code>Queue</code> API. The code below is more or less identical to Okasaki's (I prefer <code>front</code> and <code>back</code> to his <code>left</code> and <code>right</code>.)</p>
+<p>Almost there! Now all that remains is to define the <code>Queue</code> API. The code below is more or less identical to Okasaki’s (I prefer <code>front</code> and <code>back</code> to his <code>left</code> and <code>right</code>.)</p>
 <p><br />
 <strong>The Empty Queue</strong> is simply one where both <code>front</code> and <code>back</code> are both empty:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
@@ -563,7 +579,7 @@ badQ = Q nil okList  -- rejected, |front| < |back|</div>
 
 <div id="Whither pattern matching?" class="hwex">
 <p><br />
-<strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn't use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?</p>
+<strong>Exercise: (Whither pattern matching?): </strong>Can you explain why we (or Okasaki) didn’t use pattern matching here, and have instead opted for the explicit <code>hd</code> and <code>tl</code>?</p>
 <br />
 <br />
 
@@ -619,7 +635,7 @@ example0Q = Q nil nil</div>
 
 <div id="Insert" class="hwex">
 <p><br />
-<strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>y3</code> are accepted by LiquidHaskell, but <code>y2</code> is rejected.</p>
+<strong>Exercise: (Insert): </strong>Write down a type for <code>insert</code> such that <code>replicate</code> and <code>okReplicate</code> are accepted by LiquidHaskell, but <code>badReplicate</code> is rejected.</p>
 <br />
 <br />
 
@@ -636,11 +652,11 @@ example0Q = Q nil nil</div>
 replicate 0 _ = emp
 replicate n x = insert x (replicate (n-1) x)
 
-{-@ y3 :: QueueN _ 3 @-}
-y3     = replicate 3 "Yeah!"
+{-@ okReplicate :: QueueN _ 3 @-}
+okReplicate = replicate 3 "Yeah!"  -- accept
 
-{-@ y2 :: QueueN _ 3 @-}
-y2     = replicate 1 "No!"</div>
+{-@ badReplicate :: QueueN _ 3 @-}
+badReplicate = replicate 1 "No!"   -- reject</div>
 </div>
 
 <p><br />
@@ -661,7 +677,7 @@ makeq f b
 
 <div id="Rotate" class="hwex">
 <p><br />
-<strong>Exercise: (Rotate): </strong>The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.</p>
+<strong>Exercise: (Rotate): </strong> The Rotate function <code>rot</code> is only called when the <code>back</code> is one larger than the <code>front</code> (we never let things drift beyond that). It is arranged so that it the <code>hd</code> is built up fast, before the entire computation finishes; which, combined with laziness provides the efficient worst-case guarantee. Write down a type for <code>rot</code> so that it typechecks and verifies the type for <code>makeq</code>.</p>
 <br />
 <br />
 
@@ -675,9 +691,9 @@ makeq f b
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">rot f b a
-  | size f == 0 = hd b `cons` a
-  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` a)</div>
+  <div id="program-18" class="programbox">rot f b acc
+  | size f == 0 = hd b `cons` acc
+  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` acc)</div>
 </div>
 
 <div id="Transfer" class="hwex">
@@ -713,7 +729,7 @@ exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp</div>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>Well there you have it; Okasaki's beautiful lazy Queue, with the invariants easily expressed and checked with LiquidHaskell. This example is particularly interesting because</p>
+<p>Well there you have it; Okasaki’s beautiful lazy Queue, with the invariants easily expressed and checked with LiquidHaskell. This example is particularly interesting because</p>
 <ol type="1">
 <li>The refinements express invariants that are critical for efficiency,</li>
 <li>The code introspects on the <code>size</code> to guarantee the invariants, and</li>

@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -296,7 +309,7 @@ flatten :: Int -> Int -> Vector (Vector a) -> Vector a
 
 <p>Many of the programs we have seen so far, for example those in <a href="#vectorbounds">here</a>, suffer from <em>indexitis</em>. This is a term coined by <a href="http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383">Richard Bird</a> which describes a tendency to perform low-level manipulations to iterate over the indices into a collection, opening the door to various off-by-one errors. Such errors can be eliminated by instead programming at a higher level, using a <a href="http://www.cs.ox.ac.uk/ralf.hinze/publications/ICFP09.pdf">wholemeal approach</a> where the emphasis is on using aggregate operations, like <code>map</code>, <code>fold</code> and <code>reduce</code>.</p>
 <p><br />
-<strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <section id="wholemeal-programming" class="level2">
 <h2>Wholemeal Programming</h2>
 <p>Indexitis begone! As an example of wholemeal programming, lets write a small library that represents vectors as lists and matrices as nested vectors:</p>
@@ -364,15 +377,15 @@ for (V n xs) f = V n (map f xs)</code></pre>
 <p><br />
 <strong>Wholemeal programming frees</strong> us from having to fret about low-level index range manipulation, but is hardly a panacea. Instead, we must now think carefully about the <em>compatibility</em> of the various aggregates. For example,</p>
 <ul>
-<li><p><code>dotProd</code> is only sensible on vectors of the same dimension; if one vector is shorter than another (i.e. has fewer elements) then we will won't get a run-time crash but instead will get some gibberish result that will be dreadfully hard to debug.</p></li>
-<li><p><code>matProd</code> is only well defined on matrices of compatible dimensions; the number of columns of <code>mx</code> must equal the number of rows of <code>my</code>. Otherwise, again, rather than an error, we will get the wrong output.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p></li>
+<li><p><code>dotProd</code> is only sensible on vectors of the same dimension; if one vector is shorter than another (i.e. has fewer elements) then we will won’t get a run-time crash but instead will get some gibberish result that will be dreadfully hard to debug.</p></li>
+<li><p><code>matProd</code> is only well defined on matrices of compatible dimensions; the number of columns of <code>mx</code> must equal the number of rows of <code>my</code>. Otherwise, again, rather than an error, we will get the wrong output.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p></li>
 </ul>
 </section>
 <section id="specifying-list-dimensions" class="level2">
 <h2>Specifying List Dimensions</h2>
-<p>In order to start reasoning about dimensions, we need a way to represent the <em>dimension</em> of a list inside the refinement logic. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<p>In order to start reasoning about dimensions, we need a way to represent the <em>dimension</em> of a list inside the refinement logic. <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <p><br />
-<strong>Measures</strong> are ideal for this task. <a href="#boolmeasures">Previously</a> we saw how we could lift Haskell functions up to the refinement logic. Lets write a measure to describe the length of a list: <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<strong>Measures</strong> are ideal for this task. <a href="#boolmeasures">Previously</a> we saw how we could lift Haskell functions up to the refinement logic. Lets write a measure to describe the length of a list: <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -382,13 +395,12 @@ for (V n xs) f = V n (map f xs)</code></pre>
   </button>
  
   <div id="program-4" class="programbox">{-@ measure size @-}
-{-@ size    :: xs:[a] -> {v:Nat | v = size xs} @-}
 size []     = 0
 size (_:rs) = 1 + size rs</div>
 </div>
 
-<p><br />
-<strong>Measures Refine Constructors</strong> As with <a href="#autosmart">refined data definitions</a>, the measures are translated into strengthened types for the type's constructors. For example, the <code>size</code> measure is translated into:</p>
+
+<p>As with <a href="#autosmart">refined data definitions</a>, the measures are translated into strengthened types for the type’s constructors. For example, the <code>size</code> measure is translated into:</p>
 <pre class="spec"><code>data [a] where
   []  :: {v: [a] | size v = 0}
   (:) :: a -&gt; xs:[a] -&gt; {v:[a]|size v = 1 + size xs}</code></pre>
@@ -408,14 +420,14 @@ notEmpty []    = False
 notEmpty (_:_) = True</div>
 </div>
 
-<p><br />
-<strong>We Compose Different Measures</strong> simply by <em>conjoining</em> the refinements in the strengthened constructors. For example, the two measures for lists end up yielding the constructors:</p>
+
+<p>simply by <em>conjoining</em> the refinements in the strengthened constructors. For example, the two measures for lists end up yielding the constructors:</p>
 <pre class="spec"><code>data [a] where
   []  :: {v: [a] | not (notEmpty v) &amp;&amp; size v = 0}
   (:) :: a
       -&gt; xs:[a]
       -&gt; {v:[a]| notEmpty v &amp;&amp; size v = 1 + size xs}</code></pre>
-<p>This is a very significant advantage of using measures instead of indices as in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, as <em>decouples property from structure</em>, which crucially enables the use of the same structure for many different purposes. That is, we need not know <em>a priori</em> what indices to bake into the structure, but can define a generic structure and refine it <em>a posteriori</em> as needed with new measures.</p>
+<p> This is a very significant advantage of using measures instead of indices as in <a href="http://www.cs.bu.edu/~hwxi/DML/DML.html">DML</a> or <a href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, as <em>decouples property from structure</em>, which crucially enables the use of the same structure for many different purposes. That is, we need not know <em>a priori</em> what indices to bake into the structure, but can define a generic structure and refine it <em>a posteriori</em> as needed with new measures.</p>
 <p>We are almost ready to begin creating a dimension aware API for lists; one last thing that is useful is a couple of aliases for describing lists of a given dimension.</p>
 <p><br />
 <strong>To make signatures symmetric</strong> lets define an alias for plain old (unrefined) lists:</p>
@@ -478,7 +490,7 @@ prop_map xs = size ys == size xs
 
 <div id="Reverse" class="hwex">
 <p><br />
-<strong>Exercise: (Reverse): </strong>We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.</p>
+<strong>Exercise: (Reverse): </strong> We can <code>reverse</code> the elements of a list as shown below, using the tail recursive function <code>go</code>. Fix the signature for <code>go</code> so that LiquidHaskell can prove the specification for <code>reverse</code>.</p>
 <br />
 <br />
 
@@ -500,7 +512,7 @@ reverse xs        = go [] xs
 </div>
 
 <p><br />
-<strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -519,7 +531,7 @@ zipWith _ _  _          = die "no other cases"</div>
 </div>
 
 <p><br />
-<strong>unsafeZip</strong> The signature for <code>zipWith</code> is quite severe -- it rules out the case where the zipping occurs only up to the shorter input. Here's a function that actually allows for that case, where the output type is the <em>shorter</em> of the two inputs:</p>
+<strong>unsafeZip</strong> The signature for <code>zipWith</code> is quite severe – it rules out the case where the zipping occurs only up to the shorter input. Here’s a function that actually allows for that case, where the output type is the <em>shorter</em> of the two inputs:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -534,7 +546,7 @@ zip [] _          = []
 zip _  []         = []</div>
 </div>
 
-<p>The output type uses the predicate <code>Tinier Xs Ys Zs</code> which defines the length of <code>Xs</code> to be the smaller of that of <code>Ys</code> and <code>Zs</code>.<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+<p>The output type uses the predicate <code>Tinier Xs Ys Zs</code> which defines the length of <code>Xs</code> to be the smaller of that of <code>Ys</code> and <code>Zs</code>.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -549,7 +561,7 @@ zip _  []         = []</div>
 
 <div id="Zip Unless Empty" class="hwex">
 <p><br />
-<strong>Exercise: (Zip Unless Empty): </strong>In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.</p>
+<strong>Exercise: (Zip Unless Empty): </strong> In my experience, <code>zip</code> as shown above is far too permissive and lets all sorts of bugs into my code. As middle ground, consider <code>zipOrNull</code> below. Write a specification for <code>zipOrNull</code> such that the code below is verified by LiquidHaskell.</p>
 <br />
 <br />
 
@@ -612,7 +624,7 @@ take' _ _      = die "won't  happen"</div>
 
 <div id="Drop" class="hwex">
 <p><br />
-<strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>'s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.</p>
+<strong>Exercise: (Drop): </strong><code>Drop</code> is the yang to <code>take</code>’s yin: it returns the remainder after extracting the first <code>k</code> elements. Write a suitable specification for it so that the below typechecks.</p>
 <br />
 <br />
 
@@ -676,7 +688,7 @@ partition f (x:xs)
     (ys, zs)       = partition f xs</div>
 </div>
 
-<p>We would like to specify that the <em>sum</em> of the output tuple's dimensions equal the input list's dimension. Lets write measures to access the elements of the output:</p>
+<p>We would like to specify that the <em>sum</em> of the output tuple’s dimensions equal the input list’s dimension. Lets write measures to access the elements of the output:</p>
 <pre class="spec"><code>{-@ measure fst @-}
 fst  (x, _) = x
 
@@ -762,7 +774,7 @@ test10 = quickSort test4</div>
   <div id="program-23" class="programbox">{-@ vDim :: x:_ -> {v: Nat | v = vDim x} @-}</div>
 </div>
 
-<p>The refined data type prevents the creation of illegal vectors:</p>
+<p> The refined data type prevents the creation of illegal vectors:</p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -776,7 +788,7 @@ test10 = quickSort test4</div>
 badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
 </div>
 
-<p>As usual, it will be handy to have a few aliases.</p>
+<p> As usual, it will be handy to have a few aliases.</p>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -846,7 +858,7 @@ for (V n xs) f = V n (map f xs)</div>
 </div>
 
 <p><br />
-<strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
+<strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1078,7 +1090,7 @@ mat23     = matFromList [ [1, 2]
 
 <p><strong>Hint: </strong>It is easy to specify the number of rows from <code>xss</code>. How will you figure out the number of columns? A measure may be useful.</p>
 <p><br />
-<strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You'd think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second -- after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
+<strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You’d think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second – after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
 <div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1118,7 +1130,7 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
 
 <div id="Matrix Transpose" class="hwex">
 <p><br />
-<strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don't.</p>
+<strong>Exercise: (Matrix Transpose): </strong>Use the <code>Vector</code> API to complete the implementation of <code>txgo</code>. For inspiration, you might look at the implementation of <code>Data.List.transpose</code> from the <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/src/Data-List.html#transpose">prelude</a>. Better still, don’t.</p>
 <br />
 <br />
 
@@ -1157,12 +1169,12 @@ txgo c r rows = undefined</div>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>In a <a href="#kmeans-case-study">later chapter</a> we will use this API to implement K-means clustering.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>In fact, while the implementation of <code>matProd</code> breezes past GHC it is quite wrong!<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>We could just use <code>vDim</code>, but that is a cheat as there is no guarantee that the field's value actually equals the size of the list!<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p><a href="#usingmeasures">Recall</a> that these must be inductively defined functions, with a single equation per data-constructor<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>As made explicit by the call to <code>die</code>, the input type <em>rules out</em> the case where one list is empty and the other is not, as in that case the former's length is zero while the latter's is not, and hence, different.<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>In logic, <code>if p then q else r</code> is the same as <code>p =&gt; q &amp;&amp; not p =&gt; r</code>.<a href="#fnref6">↩</a></p></li>
+<li id="fn1"><p>In a <a href="#kmeans-case-study">later chapter</a> we will use this API to implement K-means clustering.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>In fact, while the implementation of <code>matProd</code> breezes past GHC it is quite wrong!<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>We could just use <code>vDim</code>, but that is a cheat as there is no guarantee that the field’s value actually equals the size of the list!<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="#usingmeasures">Recall</a> that these must be inductively defined functions, with a single equation per data-constructor<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>As made explicit by the call to <code>die</code>, the input type <em>rules out</em> the case where one list is empty and the other is not, as in that case the former’s length is zero while the latter’s is not, and hence, different.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>In logic, <code>if p then q else r</code> is the same as <code>p =&gt; q &amp;&amp; not p =&gt; r</code>.<a href="#fnref6" class="footnote-back">↩</a></p></li>
 </ol>
 </section>
 

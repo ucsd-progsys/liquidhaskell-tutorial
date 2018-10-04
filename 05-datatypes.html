@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -326,7 +339,7 @@ die msg = error msg
 <p>So far, we have seen how to refine the types of <em>functions</em>, to specify, for example, pre-conditions on the inputs, or post-conditions on the outputs. Very often, we wish to define <em>datatypes</em> that satisfy certain invariants. In these cases, it is handy to be able to directly refine the <code>data</code> definition, making it impossible to create illegal inhabitants.</p>
 <section id="autosmart" class="level2">
 <h2>Sparse Vectors Revisited</h2>
-<p>As our first example of a refined datatype, let's revisit the sparse vector representation that we <a href="#sparsetype">saw earlier</a>. The <code>SparseN</code> type alias we used got the job done, but is not pleasant to work with because we have no way of determining the <em>dimension</em> of the sparse vector. Instead, let's create a new datatype to represent such vectors:</p>
+<p>As our first example of a refined datatype, let’s revisit the sparse vector representation that we <a href="#sparsetype">saw earlier</a>. The <code>SparseN</code> type alias we used got the job done, but is not pleasant to work with because we have no way of determining the <em>dimension</em> of the sparse vector. Instead, let’s create a new datatype to represent such vectors:</p>
 <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -339,9 +352,9 @@ die msg = error msg
                    , spElems :: [(Int, a)] }</div>
 </div>
 
-<p>Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
-<p><br />
-<strong>Legal</strong> <code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell's type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p> Thus, a sparse vector is a pair of a dimension and a list of index-value tuples. Implicitly, all indices <em>other</em> than those in the list have the value <code>0</code> or the equivalent value type <code>a</code>.</p>
+
+<p><code>Sparse</code> vectors satisfy two crucial properties. First, the dimension stored in <code>spDim</code> is non-negative. Second, every index in <code>spElems</code> must be valid, i.e. between <code>0</code> and the dimension. Unfortunately, Haskell’s type system does not make it easy to ensure that <em>illegal vectors are not representable</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p><br />
 <strong>Data Invariants</strong> LiquidHaskell lets us enforce these invariants with a refined data definition:</p>
 <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
@@ -405,7 +418,7 @@ badSP = SP 5 [ (0, "cat")
 </div>
 
 <p><br />
-<strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<strong>Field Measures</strong> It is convenient to write an alias for sparse vectors of a given size <code>N</code>. We can use the field name <code>spDim</code> as a <em>measure</em>, like <code>vlen</code>. That is, we can use <code>spDim</code> inside refinements<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -417,8 +430,8 @@ badSP = SP 5 [ (0, "cat")
   <div id="program-6" class="programbox">{-@ type SparseN a N = {v:Sparse a | spDim v == N} @-}</div>
 </div>
 
-<p><br />
-<strong>Sparse Products</strong> Let's write a function to compute a sparse product</p>
+
+<p>Let’s write a function to compute a sparse product</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -434,7 +447,7 @@ dotProd x (SP _ y) = go 0 y
     go sum []            = sum</div>
 </div>
 
-<p>LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
+<p> LiquidHaskell verifies the above by using the specification to conclude that for each tuple <code>(i, v)</code> in the list <code>y</code>, the value of <code>i</code> is within the bounds of the vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
 <p><br />
 <strong>Folded Product</strong> We can port the <code>fold</code>-based product to our new representation:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
@@ -454,7 +467,7 @@ dotProd' x (SP _ y) = foldl' body 0 y
 <p>As before, LiquidHaskell checks the above by <a href="#sparsetype">automatically instantiating refinements</a> for the type parameters of <code>foldl'</code>, saving us a fair bit of typing and enabling the use of the elegant polymorphic, higher-order combinators we know and love.</p>
 <div id="Sanitization" class="hwex">
 <p><br />
-<strong>Exercise: (Sanitization): </strong>Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the &quot;real world&quot;, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:</p>
+<strong>Exercise: (Sanitization): </strong> Invariants are all well and good for data computed <em>inside</em> our programs. The only way to ensure the legality of data coming from <em>outside</em>, i.e. from the “real world”, is to write a sanitizer that will check the appropriate invariants before constructing a <code>Sparse</code> vector. Write the specification and implementation of a sanitizer <code>fromList</code>, so that the following typechecks:</p>
 <br />
 <br />
 
@@ -503,7 +516,7 @@ test2    = plus vec1 vec2
 </section>
 <section id="orderedlists" class="level2">
 <h2>Ordered Lists</h2>
-<p>As a second example of refined data types, let's consider a different problem: representing <em>ordered</em> sequences. Here's a type for sequences that mimics the classical list:</p>
+<p>As a second example of refined data types, let’s consider a different problem: representing <em>ordered</em> sequences. Here’s a type for sequences that mimics the classical list:</p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -519,7 +532,7 @@ test2    = plus vec1 vec2
 infixr 9 :<</div>
 </div>
 
-<p>The Haskell type above does not state that the elements are in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
+<p> The Haskell type above does not state that the elements are in order of course, but we can specify that requirement by refining <em>every</em> element in <code>tl</code> to be <em>greater than</em> <code>hd</code>:</p>
 <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -534,7 +547,7 @@ infixr 9 :<</div>
 </div>
 
 <p><br />
-<strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a &quot;smart&quot; refined data constructor</p>
+<strong>Refined Data Constructors</strong> Once again, the refined data definition is internally converted into a “smart” refined data constructor</p>
 <pre class="spec"><code>-- Generated Internal representation
 data IncList a where
   Emp  :: IncList a
@@ -553,9 +566,9 @@ data IncList a where
 badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
 </div>
 
-<p>It's all very well to <em>specify</em> ordered lists. Next, lets see how it's equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
-<p><br />
-<strong>Insertion Sort</strong> First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<p> It’s all very well to <em>specify</em> ordered lists. Next, lets see how it’s equally easy to <em>establish</em> these invariants by implementing several textbook sorting routines.</p>
+
+<p>First, lets implement insertion sort, which converts an ordinary list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -624,7 +637,7 @@ split (x:y:zs) = (x:xs, y:ys)
 split xs       = (xs, [])</div>
 </div>
 
-<p>Second, we need a function that <em>combines</em> two ordered lists</p>
+<p> Second, we need a function that <em>combines</em> two ordered lists</p>
 <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -641,7 +654,7 @@ merge (x :< xs) (y :< ys)
   | otherwise = y :< merge (x :< xs) ys</div>
 </div>
 
-<p>Finally, we compose the above steps to divide (i.e. <code>split</code>) and conquer (<code>sort</code> and <code>merge</code>) the input list:</p>
+<p> Finally, we compose the above steps to divide (i.e. <code>split</code>) and conquer (<code>sort</code> and <code>merge</code>) the input list:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -660,7 +673,7 @@ mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
 
 <div id="QuickSort" class="hwex">
 <p><br />
-<strong>Exercise: (QuickSort): </strong>Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.</p>
+<strong>Exercise: (QuickSort): </strong> Why is the following implementation of <code>quickSort</code> rejected by LiquidHaskell? Modify it so it is accepted.</p>
 <br />
 <br />
 
@@ -707,8 +720,8 @@ append z (x :< xs) ys = x :< append z xs ys</div>
                   , right :: BST a }</div>
 </div>
 
-<p><br />
-<strong>Binary Search Trees</strong> enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
+
+<p>enjoy the <a href="http://en.wikipedia.org/wiki/Binary_search_tree">property</a> that each <code>root</code> lies (strictly) between the elements belonging in the <code>left</code> and <code>right</code> subtrees hanging off the root. The ordering invariant makes it easy to check whether a certain value occurs in the tree. If the tree is empty i.e. a <code>Leaf</code>, then the value does not occur in the tree. If the given value is at the root then the value does occur in the tree. If it is less than (respectively greater than) the root, we recursively check whether the value occurs in the left (respectively right) subtree.</p>
 <div id="fig:bst" style="align: left; text-align:center;">
   <img src="img/bst.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
   <div class="caption" style="text-align:center"><b>Figure 5.1:</b> A Binary Search Tree with values between 1 and 9.
@@ -738,7 +751,7 @@ okBST =  Node 6
 </div>
 
 <p><br />
-<strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<strong>Refined Data Type</strong> The Haskell type says nothing about the ordering invariant, and hence, cannot prevent us from creating illegal <code>BST</code> values that violate the invariant. We can remedy this with a refined data definition that captures the invariant. The aliases <code>BSTL</code> and <code>BSTR</code> denote <code>BST</code>s with values less than and greater than some <code>X</code>, respectively.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -788,8 +801,8 @@ okBST =  Node 6
 <br />
 
 </div>
-<p><br />
-<strong>Membership</strong> Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
+
+<p>Lets write some functions to create and manipulate these trees. First, a function to check whether a value is in a <code>BST</code>:</p>
 <div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -821,7 +834,7 @@ one x = Node x Leaf Leaf</div>
 </div>
 
 <p><br />
-<strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<strong>Insertion</strong> Lets write a function that adds an element to a <code>BST</code>.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -839,7 +852,7 @@ add k' t@(Node k l r)
 </div>
 
 <p><br />
-<strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs -- the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder's elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<strong>Minimum</strong> For our next trick, lets write a function to delete the <em>minimum</em> element from a <code>BST</code>. This function will return a <em>pair</em> of outputs – the smallest element and the remainder of the tree. We can say that the output element is indeed the smallest, by saying that the remainder’s elements exceed the element. To this end, lets define a helper type: <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -900,19 +913,15 @@ del k' t@(Node k l r) = undefined
 del _  Leaf           = Leaf</div>
 </div>
 
-\begin{comment}
-**FIXME** See issue about using RAW FIELDS vs PATTERN MATCHING.
-\end{comment}
+
 <div id="Safely Deleting Minimum" class="hwex">
 <p><br />
-<strong>Exercise: (Safely Deleting Minimum): </strong>The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.</p>
+<strong>Exercise: (Safely Deleting Minimum): </strong> The function <code>delMin</code> is only sensible for non-empty trees. <a href="#usingmeasures">Read ahead</a> to learn how to specify and verify that it is only called with such trees, and then apply that technique here to verify the call to <code>die</code> in <code>delMin</code>.</p>
 <br />
 <br />
 
 </div>
-\begin{comment}
-**FIXME**  I shouldn&#39;t have to read a future chapter to complete an exercise in this chapter.
-\end{comment}
+
 <div id="BST Sort" class="hwex">
 <p><br />
 <strong>Exercise: (BST Sort): </strong>Complete the implementation of <code>toIncList</code> to obtain a <code>BST</code> based sorting routine <code>bstSort</code>.</p>
@@ -943,7 +952,7 @@ toIncList Leaf         = undefined</div>
 </section>
 <section id="recap" class="level2">
 <h2>Recap</h2>
-<p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them &quot;smart&quot; in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
+<p>In this chapter we saw how LiquidHaskell lets you refine data type definitions to capture sophisticated invariants. These definitions are internally represented by refining the types of the data constructors, automatically making them “smart” in that they preclude the creation of illegal values that violate the invariants. We will see much more of this handy technique in future chapters.</p>
 <p>One recurring theme in this chapter was that we had to create new versions of standard datatypes, just in order to specify certain invariants. For example, we had to write a special list type, with its own <em>copies</em> of nil and cons. Similarly, to implement <code>delMin</code> we had to create our own pair type.</p>
 <p><br />
 <strong>This duplication</strong> of types is quite tedious. There should be a way to just slap the desired invariants on to <em>existing</em> types, thereby facilitating their reuse. In a few chapters, we will see how to achieve this reuse by <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstracting refinements</a> from the definitions of datatypes or functions in the same way we abstract the element type <code>a</code> from containers like <code>[a]</code> or <code>BST a</code>.</p>
@@ -952,11 +961,11 @@ toIncList Leaf         = undefined</div>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>The standard approach is to use abstract types and <a href="https://www.haskell.org/haskellwiki/Smart_constructors">smart constructors</a> but even then there is only the informal guarantee that the smart constructor establishes the right invariants.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Note that <em>inside</em> a refined <code>data</code> definition, a field name like <code>spDim</code> refers to the value of the field, but <em>outside</em> it refers to the field selector measure or function.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>We could also just <em>inline</em> the definitions of <code>BSTL</code> and <code>BSTR</code> into that of <code>BST</code> but they will be handy later.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>While writing this exercise I inadvertently swapped the <code>k</code> and <code>k'</code> which caused LiquidHaskell to protest.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>This helper type approach is rather verbose. We should be able to just use plain old pairs and specify the above requirement as a <em>dependency</em> between the pairs' elements. Later, we will see how to do so using <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstract refinements</a>.<a href="#fnref5">↩</a></p></li>
+<li id="fn1"><p>The standard approach is to use abstract types and <a href="https://www.haskell.org/haskellwiki/Smart_constructors">smart constructors</a> but even then there is only the informal guarantee that the smart constructor establishes the right invariants.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Note that <em>inside</em> a refined <code>data</code> definition, a field name like <code>spDim</code> refers to the value of the field, but <em>outside</em> it refers to the field selector measure or function.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>We could also just <em>inline</em> the definitions of <code>BSTL</code> and <code>BSTR</code> into that of <code>BST</code> but they will be handy later.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>While writing this exercise I inadvertently swapped the <code>k</code> and <code>k'</code> which caused LiquidHaskell to protest.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>This helper type approach is rather verbose. We should be able to just use plain old pairs and specify the above requirement as a <em>dependency</em> between the pairs’ elements. Later, we will see how to do so using <a href="http://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">abstract refinements</a>.<a href="#fnref5" class="footnote-back">↩</a></p></li>
 </ol>
 </section>
 

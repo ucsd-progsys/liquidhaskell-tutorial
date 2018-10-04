@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
@@ -114,113 +125,115 @@ MathJax.Hub.Config({
 
 <div id='toc' class='mobile-hidden'>
 <ul class='chapter'>
-<li><a href='01-intro.html'><b>1.</b>Introduction</a></li>
+<li><a href='01-intro.html'><b>1.</b>Introduction {#intro}</a></li>
 <ul class='section'>
-<li><a href='01-intro.html#gowrong'><b>1.1.</b> Well-Typed Programs Do Go Wrong</a></li>
-<li><a href='01-intro.html#refinement-types'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='01-intro.html#audience'><b>1.3.</b> Audience</a></li>
-<li><a href='01-intro.html#getting-started'><b>1.4.</b> Getting Started</a></li>
-<li><a href='01-intro.html#sample-code'><b>1.5.</b> Sample Code</a></li>
+<li><a href='01-intro.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='01-intro.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='01-intro.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='01-intro.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='01-intro.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='02-logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
-<li><a href='02-logic.html#syntax'><b>2.1.</b> Syntax</a></li>
-<li><a href='02-logic.html#semantics'><b>2.2.</b> Semantics</a></li>
-<li><a href='02-logic.html#verification-conditions'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='02-logic.html#examples-propositions'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='02-logic.html#examples-arithmetic'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='02-logic.html#examples-uninterpreted-function'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='02-logic.html#recap'><b>2.7.</b> Recap</a></li>
+<li><a href='02-logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='02-logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='02-logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='02-logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='02-logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='02-logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='02-logic.html#'><b>2.7.</b> Recap</a></li>
 </ul>
 <li><a href='03-basic.html'><b>3.</b>Refinement Types</a></li>
 <ul class='section'>
-<li><a href='03-basic.html#definetype'><b>3.1.</b> Defining Types</a></li>
-<li><a href='03-basic.html#errors'><b>3.2.</b> Errors</a></li>
-<li><a href='03-basic.html#subtyping'><b>3.3.</b> Subtyping</a></li>
-<li><a href='03-basic.html#writing-specifications'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='03-basic.html#refining-function-types-pre-conditions'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='03-basic.html#refining-function-types-post-conditions'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='03-basic.html#propositions'><b>3.7.</b> Testing Values: Booleans and Propositions</a></li>
-<li><a href='03-basic.html#putting-it-all-together'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='03-basic.html#recap'><b>3.9.</b> Recap</a></li>
+<li><a href='03-basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='03-basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='03-basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='03-basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='03-basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='03-basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='03-basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='03-basic.html#'><b>3.9.</b> Recap</a></li>
 </ul>
-<li><a href='04-poly.html'><b>4.</b>Polymorphism</a></li>
+<li><a href='04-poly.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
 <ul class='section'>
-<li><a href='04-poly.html#vectorbounds'><b>4.1.</b> Specification: Vector Bounds</a></li>
-<li><a href='04-poly.html#verification-vector-lookup'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='04-poly.html#inference-our-first-recursive-function'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='04-poly.html#higher-order-functions-bottling-recursion-in-a-loop'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='04-poly.html#sparsetype'><b>4.5.</b> Refinements and Polymorphism</a></li>
-<li><a href='04-poly.html#recap'><b>4.6.</b> Recap</a></li>
+<li><a href='04-poly.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='04-poly.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='04-poly.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='04-poly.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='04-poly.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='04-poly.html#'><b>4.6.</b> Recap</a></li>
 </ul>
-<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes</a></li>
+<li><a href='05-datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
 <ul class='section'>
-<li><a href='05-datatypes.html#autosmart'><b>5.1.</b> Sparse Vectors Revisited</a></li>
-<li><a href='05-datatypes.html#orderedlists'><b>5.2.</b> Ordered Lists</a></li>
-<li><a href='05-datatypes.html#binarysearchtree'><b>5.3.</b> Ordered Trees</a></li>
-<li><a href='05-datatypes.html#recap'><b>5.4.</b> Recap</a></li>
+<li><a href='05-datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='05-datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='05-datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='05-datatypes.html#'><b>5.4.</b> Recap</a></li>
 </ul>
-<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures</a></li>
+<li><a href='06-measure-bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
 <ul class='section'>
-<li><a href='06-measure-bool.html#partial-functions'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='06-measure-bool.html#usingmeasures'><b>6.2.</b> Lifting Functions to Measures</a></li>
-<li><a href='06-measure-bool.html#recap'><b>6.3.</b> Recap</a></li>
+<li><a href='06-measure-bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='06-measure-bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='06-measure-bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='06-measure-bool.html#'><b>6.4.</b> Recap</a></li>
 </ul>
-<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures</a></li>
+<li><a href='07-measure-int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
 <ul class='section'>
-<li><a href='07-measure-int.html#wholemeal-programming'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='07-measure-int.html#specifying-list-dimensions'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='07-measure-int.html#lists-size-preserving-api'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='07-measure-int.html#listreducing'><b>7.4.</b> Lists: Size Reducing API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-vector-api'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='07-measure-int.html#dimension-safe-matrix-api'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='07-measure-int.html#recap'><b>7.7.</b> Recap</a></li>
+<li><a href='07-measure-int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='07-measure-int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='07-measure-int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='07-measure-int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='07-measure-int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='07-measure-int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='07-measure-int.html#'><b>7.7.</b> Recap</a></li>
 </ul>
-<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures</a></li>
+<li><a href='08-measure-sets.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
 <ul class='section'>
-<li><a href='08-measure-sets.html#talking-about-sets'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='08-measure-sets.html#quickcheck'><b>8.2.</b> Proving QuickCheck Style Properties</a></li>
-<li><a href='08-measure-sets.html#listelems'><b>8.3.</b> Content-Aware List API</a></li>
-<li><a href='08-measure-sets.html#permutations'><b>8.4.</b> Permutations</a></li>
-<li><a href='08-measure-sets.html#uniqueness'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='08-measure-sets.html#unique-zippers'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='08-measure-sets.html#recap'><b>8.7.</b> Recap</a></li>
+<li><a href='08-measure-sets.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='08-measure-sets.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='08-measure-sets.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='08-measure-sets.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='08-measure-sets.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='08-measure-sets.html#'><b>8.7.</b> Recap</a></li>
 </ul>
-<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
 <ul class='section'>
-<li><a href='09-case-study-lazy-queues.html#queues'><b>9.1.</b> Queues</a></li>
-<li><a href='09-case-study-lazy-queues.html#sized-lists'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-type'><b>9.3.</b> Queue Type</a></li>
-<li><a href='09-case-study-lazy-queues.html#queue-operations'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='09-case-study-lazy-queues.html#recap'><b>9.5.</b> Recap</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='09-case-study-lazy-queues.html#'><b>9.5.</b> Recap</a></li>
 </ul>
 <li><a href='10-case-study-associative-maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
 <ul class='section'>
-<li><a href='10-case-study-associative-maps.html#mapapi'><b>10.1.</b> Specifying Maps</a></li>
-<li><a href='10-case-study-associative-maps.html#using-maps-well-scoped-expressions'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='10-case-study-associative-maps.html#lemmas'><b>10.3.</b> Implementing Maps: Binary Search Trees</a></li>
-<li><a href='10-case-study-associative-maps.html#recap'><b>10.4.</b> Recap</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='10-case-study-associative-maps.html#'><b>10.4.</b> Recap</a></li>
 </ul>
-<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes</a></li>
+<li><a href='11-case-study-pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
 <ul class='section'>
-<li><a href='11-case-study-pointers.html#heartbleeds-in-haskell'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='11-case-study-pointers.html#low-level-pointer-api'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#a-refined-pointer-api'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='11-case-study-pointers.html#assumptions-vs-guarantees'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='11-case-study-pointers.html#bytestring-api'><b>11.5.</b> ByteString API</a></li>
-<li><a href='11-case-study-pointers.html#application-api'><b>11.6.</b> Application API</a></li>
-<li><a href='11-case-study-pointers.html#recap-types-against-overflows'><b>11.7.</b> Recap: Types Against Overflows</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='11-case-study-pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
 </ul>
-<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
 <ul class='section'>
-<li><a href='12-case-study-AVL.html#avl-trees'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#specifying-avl-trees'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='12-case-study-AVL.html#smart-constructors'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='12-case-study-AVL.html#inserting-elements'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='12-case-study-AVL.html#rebalancing-trees'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='12-case-study-AVL.html#refactoring-rebalance'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='12-case-study-AVL.html#deleting-elements'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='12-case-study-AVL.html#functional-correctness'><b>12.8.</b> Functional Correctness</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='12-case-study-AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
 </ul>
 </ul>
 
@@ -263,66 +276,7 @@ MathJax.Hub.Config({
 
 <section id="case-study-associative-maps" class="level1">
 <h1>Case Study: Associative Maps</h1>
-<div class="hidden">
-<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-
-module AssocativeMap where
-
-import Data.Set hiding (elems)
--- | Boilerplate
-
-{-@ die :: {v:_ | false} -> a @-}
-die x   = error x
-
--- | Haskell Definitions
-
-data Map k v = Node { key   :: k
-                    , value :: v
-                    , left  :: Map k v
-                    , right :: Map k v }
-             | Tip
-
-lemma_notMem :: k -> Map k v -> Bool
-set    :: (Ord k) => k -> v -> Map k v -> Map k v
-get    :: (Ord k) => k -> Map k v -> v
-get'   :: (Ord k) => k -> Map k v -> v
-mem    :: (Ord k) => k -> Map k v -> Bool
-emp    :: Map k v
-elems  :: (Ord a) => [a] -> Set a
-fresh  :: [Int] -> Int
-
--- | Set Interface
-{-@ predicate In X Xs      = Set_mem X Xs               @-}
-{-@ predicate Subset X Y   = Set_sub X Y                @-}
-{-@ predicate Empty  X     = Set_emp X                  @-}
-{-@ predicate Union X Y Z  = X = Set_cup Y Z            @-}
-{-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z      @-}
-
--- | Predicate Aliases
-{-@ predicate NoKeys M     = Empty (keys M)             @-}
-{-@ predicate HasKey K M   = In K (keys M)              @-}
-{-@ predicate AddKey K M N = Union1 (keys N) K (keys M) @-}
-
-</div>
-</div>
-
-</div>
-
-\begin{comment}
-\begin{figure}[h]
-\includegraphics[height=1.0in]{img/piponi-tweet.png}
-\caption{Wouldn&#39;t it be nice to know that a key was in a map?}
-\label{fig:piponi-tweet}
-\end{figure}
-\end{comment}
 <p>Recall the following from the <a href="#intro">introduction</a>:</p>
 <pre class="ghci"><code>ghci&gt; :m +Data.Map
 ghci&gt; let m = fromList [ (&quot;haskell&quot;   , &quot;lazy&quot;)
@@ -333,8 +287,8 @@ ghci&gt; m ! &quot;haskell&quot;
 
 ghci&gt; m ! &quot;python&quot;
 &quot;*** Exception: key is not in the map</code></pre>
-<p>The problem illustrated above is quite a pervasive one; associative maps pop up everywhere. Failed lookups are the equivalent of <code>NullPointerDereference</code> exceptions in languages like Haskell. It is rather difficult to use Haskell's type system to precisely characterize the behavior of associative map APIs as ultimately, this requires tracking the <em>dynamic set of keys</em> in the map.</p>
-<p>In this case study, we'll see how to combine two techniques, <a href="#setmeasure">measures</a> and <a href="#refineddatatypes">refined data types</a>, to analyze programs that <em>implement</em> and <em>use</em> associative maps (e.g. <code>Data.Map</code> or <code>Data.HashMap</code>).</p>
+<p> The problem illustrated above is quite a pervasive one; associative maps pop up everywhere. Failed lookups are the equivalent of <code>NullPointerDereference</code> exceptions in languages like Haskell. It is rather difficult to use Haskell’s type system to precisely characterize the behavior of associative map APIs as ultimately, this requires tracking the <em>dynamic set of keys</em> in the map.</p>
+<p>In this case study, we’ll see how to combine two techniques, <a href="#setmeasure">measures</a> and <a href="#refineddatatypes">refined data types</a>, to analyze programs that <em>implement</em> and <em>use</em> associative maps (e.g. <code>Data.Map</code> or <code>Data.HashMap</code>).</p>
 <section id="mapapi" class="level2">
 <h2>Specifying Maps</h2>
 <p>Lets start by defining a <em>refined API</em> for Associative Maps that tracks the set of keys stored in the map, in order to statically ensure the safety of lookups.</p>
@@ -344,7 +298,7 @@ ghci&gt; m ! &quot;python&quot;
 <p><br />
 <strong>Keys</strong> To talk about the set of keys in a map, we will use a <em>measure</em></p>
 <pre class="spec"><code>measure keys :: Map k v -&gt; Set k</code></pre>
-<p>that associates each <code>Map</code> to the <code>Set</code> of its defined keys. Next, we use the above measure, and the usual <code>Set</code> operators to refine the types of the functions that <em>create</em>, <em>add</em> and <em>lookup</em> key-value bindings, in order to precisely track, within the type system, the <code>keys</code> that are dynamically defined within each <code>Map</code>. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>that associates each <code>Map</code> to the <code>Set</code> of its defined keys. Next, we use the above measure, and the usual <code>Set</code> operators to refine the types of the functions that <em>create</em>, <em>add</em> and <em>lookup</em> key-value bindings, in order to precisely track, within the type system, the <code>keys</code> that are dynamically defined within each <code>Map</code>. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p><br />
 <strong>Empty</strong> <code>Map</code>s have no keys in them. Hence, we type the empty <code>Map</code> as:</p>
 <pre class="spec"><code>emp :: {m:Map k v | Empty (keys m)}</code></pre>
@@ -367,8 +321,8 @@ get :: k:k -&gt; {m:Map k v | HasKey k m} -&gt; v</code></pre>
 <h2>Using Maps: Well Scoped Expressions</h2>
 <p>Rather than jumping into the <em>implementation</em> of the above <code>Map</code> API, lets write a <em>client</em> that uses <code>Map</code>s to implement an interpreter for a tiny language. In particular, we will use maps as an <em>environment</em> containing the values of <em>bound variables</em>, and we will use the refined API to ensure that <em>lookups never fail</em>, and hence, that well-scoped programs always reduce to a value.</p>
 <p><br />
-<strong>Expressions</strong> Lets work with a simple language with integer constants, variables, binding and arithmetic operators:<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
-<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+<strong>Expressions</strong> Lets work with a simple language with integer constants, variables, binding and arithmetic operators:<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -376,7 +330,7 @@ get :: k:k -&gt; {m:Map k v | HasKey k m} -&gt; v</code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">type Var  = String
+  <div id="program-0" class="programbox">type Var  = String
 
 data Expr = Const Int
           | Var   Var
@@ -386,7 +340,7 @@ data Expr = Const Int
 
 <p><br />
 <strong>Values</strong> We can use refinements to formally describe <em>values</em> as a subset of <code>Expr</code> allowing us to reuse a bunch of code. To this end, we simply define a (<code>measure</code>) predicate characterizing values:</p>
-<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -394,7 +348,7 @@ data Expr = Const Int
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">{-@ measure val @-}
+  <div id="program-1" class="programbox">{-@ measure val @-}
 val              :: Expr -> Bool
 val (Const _)    = True
 val (Var _)      = False
@@ -403,6 +357,18 @@ val (Let _ _ _ ) = False</div>
 </div>
 
 <p>and then we can use the lifted <code>measure</code> to define an alias for <code>Val</code> denoting values:</p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">{-@ type Val = {v:Expr | val v} @-}</div>
+</div>
+
+<p>we can use the above to write simple <em>operators</em> on <code>Val</code>, for example:</p>
 <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -411,10 +377,13 @@ val (Let _ _ _ ) = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">{-@ type Val = {v:Expr | val v} @-}</div>
+  <div id="program-3" class="programbox">{-@ plus                 :: Val -> Val -> Val @-}
+plus (Const i) (Const j) = Const (i+j)
+plus _         _         = die "Bad call to plus"</div>
 </div>
 
-<p>we can use the above to write simple <em>operators</em> on <code>Val</code>, for example:</p>
+<p><br />
+<strong>Environments</strong> let us save values for the local&quot; i.e. <em>let-bound</em> variables; when evaluating an expression <code>Var x</code> we simply look up the value of <code>x</code> in the environment. This is why <code>Map</code>s were invented! Lets define our environments as <code>Map</code>s from <code>Var</code>iables to <code>Val</code>ues:</p>
 <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -423,13 +392,12 @@ val (Let _ _ _ ) = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ plus                 :: Val -> Val -> Val @-}
-plus (Const i) (Const j) = Const (i+j)
-plus _         _         = die "Bad call to plus"</div>
+  <div id="program-4" class="programbox">{-@ type Env = Map Var Val @-}</div>
 </div>
 
+<p>The above definition essentially specifies, inside the types, an <em>eager</em> evaluation strategy: LiquidHaskell will prevent us from sticking unevaluated <code>Expr</code>s inside the environments.</p>
 <p><br />
-<strong>Environments</strong> let us save values for the local&quot; i.e. <em>let-bound</em> variables; when evaluating an expression <code>Var x</code> we simply look up the value of <code>x</code> in the environment. This is why <code>Map</code>s were invented! Lets define our environments as <code>Map</code>s from <code>Var</code>iables to <code>Val</code>ues:</p>
+<strong>Evaluation</strong> proceeds via a straightforward recursion over the structure of the expression. When we hit a <code>Var</code> we simply query its value from the environment. When we hit a <code>Let</code> we compute the bound expression and tuck its value into the environment before proceeding within.</p>
 <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -438,21 +406,7 @@ plus _         _         = die "Bad call to plus"</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-5" class="programbox">{-@ type Env = Map Var Val @-}</div>
-</div>
-
-<p>The above definition essentially specifies, inside the types, an <em>eager</em> evaluation strategy: LiquidHaskell will prevent us from sticking unevaluated <code>Expr</code>s inside the environments.</p>
-<p><br />
-<strong>Evaluation</strong> proceeds via a straightforward recursion over the structure of the expression. When we hit a <code>Var</code> we simply query its value from the environment. When we hit a <code>Let</code> we compute the bound expression and tuck its value into the environment before proceeding within.</p>
-<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-6" class="programbox">eval _ i@(Const _)   = i
+  <div id="program-5" class="programbox">eval _ i@(Const _)   = i
 eval g (Var x)       = get x g
 eval g (Plus e1 e2)  = plus  (eval g e1) (eval g e2)
 eval g (Let x e1 e2) = eval g' e2
@@ -463,10 +417,10 @@ eval g (Let x e1 e2) = eval g' e2
 
 <p>The above <code>eval</code> seems rather unsafe; whats the guarantee that <code>get x g</code> will succeed? For example, surely trying:</p>
 <pre class="ghci"><code>ghci&gt; eval emp (Var &quot;x&quot;)</code></pre>
-<p>will lead to some unpleasant crash. Shouldn't we <em>check</em> if the variables is present and if not, fail with some sort of <code>Variable Not Bound</code> error? We could, but we can do better: we can prove at compile time, that such errors will not occur.</p>
+<p>will lead to some unpleasant crash. Shouldn’t we <em>check</em> if the variables is present and if not, fail with some sort of <code>Variable Not Bound</code> error? We could, but we can do better: we can prove at compile time, that such errors will not occur.</p>
 <p><br />
 <strong>Free Variables</strong> are those whose values are <em>not</em> bound within an expression, that is, the set of variables that <em>appear</em> in the expression, but are not <em>bound</em> by a dominating <code>Let</code>. We can formalize this notion as a (lifted) function:</p>
-<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -474,7 +428,7 @@ eval g (Let x e1 e2) = eval g' e2
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">{-@ measure free @-}
+  <div id="program-6" class="programbox">{-@ measure free @-}
 free               :: Expr -> (Set Var)
 free (Const _)     = empty
 free (Var x)       = singleton x
@@ -490,7 +444,20 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
 </div>
 
 <p><br />
-<strong>An Expression is Closed</strong> with respect to an environment <code>G</code> if all the <em>free</em> variables in the expression appear in <code>G</code>, i.e. the environment contains bindings for all the variables in the expression that are <em>not</em> bound within the expression. As we've seen repeatedly, often a whole pile of informal hand-waving, can be succinctly captured by a type definition that says the <code>free</code> variables in the <code>Expr</code> must be contained in the <code>keys</code> of the environment <code>G</code>:</p>
+<strong>An Expression is Closed</strong> with respect to an environment <code>G</code> if all the <em>free</em> variables in the expression appear in <code>G</code>, i.e. the environment contains bindings for all the variables in the expression that are <em>not</em> bound within the expression. As we’ve seen repeatedly, often a whole pile of informal hand-waving, can be succinctly captured by a type definition that says the <code>free</code> variables in the <code>Expr</code> must be contained in the <code>keys</code> of the environment <code>G</code>:</p>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">{-@ type ClosedExpr G = {v:Expr | Subset (free v) (keys G)} @-}</div>
+</div>
+
+<p><br />
+<strong>Closed Evaluation</strong> never goes wrong, i.e. we can ensure that <code>eval</code> will not crash with unbound variables, as long as it is invoked with suitable environments:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -499,11 +466,10 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-8" class="programbox">{-@ type ClosedExpr G = {v:Expr | Subset (free v) (keys G)} @-}</div>
+  <div id="program-8" class="programbox">{-@ eval :: g:Env -> ClosedExpr g -> Val @-}</div>
 </div>
 
-<p><br />
-<strong>Closed Evaluation</strong> never goes wrong, i.e. we can ensure that <code>eval</code> will not crash with unbound variables, as long as it is invoked with suitable environments:</p>
+<p>We can be sure an <code>Expr</code> is well-scoped if it has <em>no</em> free variables.Lets use that to write a “top-level” evaluator:</p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -512,19 +478,7 @@ free (Let x e1 e2) = xs1 `union` (xs2 `difference` xs)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">{-@ eval :: g:Env -> ClosedExpr g -> Val @-}</div>
-</div>
-
-<p>We can be sure an <code>Expr</code> is well-scoped if it has <em>no</em> free variables.Lets use that to write a &quot;top-level&quot; evaluator:</p>
-<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-10" class="programbox">{-@ topEval :: {v:Expr | Empty (free v)} -> Val @-}
+  <div id="program-9" class="programbox">{-@ topEval :: {v:Expr | Empty (free v)} -> Val @-}
 topEval     = eval emp</div>
 </div>
 
@@ -535,7 +489,7 @@ topEval     = eval emp</div>
 <br />
 
 </div>
-<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -543,7 +497,7 @@ topEval     = eval emp</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-11" class="programbox">{-@ evalAny   :: Env -> Expr -> Maybe Val @-}
+  <div id="program-10" class="programbox">{-@ evalAny   :: Env -> Expr -> Maybe Val @-}
 evalAny g e
   | ok        = Just $ eval g e
   | otherwise = Nothing
@@ -552,7 +506,7 @@ evalAny g e
 </div>
 
 <p>Proof is all well and good, in the end, you need a few sanity tests to kick the tires. So:</p>
-<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -560,7 +514,7 @@ evalAny g e
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">tests   = [v1, v2]
+  <div id="program-11" class="programbox">tests   = [v1, v2]
   where
     v1  = topEval e1          -- Rejected by LH
     v2  = topEval e2          -- Accepted by LH
@@ -579,14 +533,14 @@ evalAny g e
 
 </div>
 <pre class="spec"><code>data Expr = ... | Fun Var Expr | App Expr Expr</code></pre>
-<p>Just focus on ensuring the safety of variable lookups; ensuring full type-safety (i.e. every application is to a function) is rather more complicated and beyond the scope of what we've seen so far.</p>
+<p>Just focus on ensuring the safety of variable lookups; ensuring full type-safety (i.e. every application is to a function) is rather more complicated and beyond the scope of what we’ve seen so far.</p>
 </section>
 <section id="lemmas" class="level2">
 <h2>Implementing Maps: Binary Search Trees</h2>
-<p>We just saw how easy it is to <em>use</em> the Associative Map <a href="#mapapi">API</a> to ensure the safety of lookups, even though the <code>Map</code> has a &quot;dynamically&quot; generated set of keys. Next, lets see how we can <em>implement</em> a <code>Map</code> library that respects the API using <a href="#binarysearchtree">Binary Search Trees</a></p>
+<p>We just saw how easy it is to <em>use</em> the Associative Map <a href="#mapapi">API</a> to ensure the safety of lookups, even though the <code>Map</code> has a “dynamically” generated set of keys. Next, lets see how we can <em>implement</em> a <code>Map</code> library that respects the API using <a href="#binarysearchtree">Binary Search Trees</a></p>
 <p><br />
 <strong>Data Type</strong> First, lets provide an implementation of the hitherto abstract data type for <code>Map</code>. We shall use Binary Search Trees, wherein, at each <code>Node</code>, the <code>left</code> (resp. <code>right</code>) subtree has keys that are less than (resp. greater than) the root <code>key</code>.</p>
-<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -594,7 +548,7 @@ evalAny g e
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-13" class="programbox">{-@ data Map k v = Node { key   :: k
+  <div id="program-12" class="programbox">{-@ data Map k v = Node { key   :: k
                         , value :: v
                         , left  :: Map {v:k | v < key} v
                         , right :: Map {v:k | key < v} v }
@@ -605,7 +559,7 @@ evalAny g e
 <p><a href="#binarysearchtree">Recall</a> that the above refined data definition yields strengthened data constructors that statically ensure that only legal, <em>binary-search ordered</em> trees are created in the program.</p>
 <p><br />
 <strong>Defined Keys</strong> Next, we must provide an implementation of the notion of the <code>keys</code> that are defined for a given <code>Map</code>. This is achieved via the lifted measure function:</p>
-<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -613,7 +567,7 @@ evalAny g e
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">{-@ measure keys @-}
+  <div id="program-13" class="programbox">{-@ measure keys @-}
 keys                :: (Ord k) => Map k v -> Set k
 keys Tip            = empty
 keys (Node k _ l r) = ks `union` kl `union` kr
@@ -631,7 +585,7 @@ keys (Node k _ l r) = ks `union` kl `union` kr
 <br />
 
 </div>
-<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -639,7 +593,7 @@ keys (Node k _ l r) = ks `union` kl `union` kr
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-15" class="programbox">{-@ emp :: {m:Map k v | Empty (keys m)} @-}
+  <div id="program-14" class="programbox">{-@ emp :: {m:Map k v | Empty (keys m)} @-}
 emp     = undefined</div>
 </div>
 
@@ -650,7 +604,7 @@ emp     = undefined</div>
 <br />
 
 </div>
-<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -658,7 +612,7 @@ emp     = undefined</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">{-@ set :: (Ord k) => k:k -> v -> m:Map k v
+  <div id="program-15" class="programbox">{-@ set :: (Ord k) => k:k -> v -> m:Map k v
                    -> {n: Map k v | AddKey k m n} @-}
 set k' v' (Node k v l r)
   | k' == k   = Node k v' l r
@@ -668,8 +622,8 @@ set k' v' Tip = Node k' v' Tip Tip</div>
 </div>
 
 <p><br />
-<strong>Lookup</strong> Next, lets write the <code>mem</code> function that returns the value associated with a key <code>k'</code>. To do so we just compare <code>k'</code> with the root key, if they are equal, we return the binding, and otherwise we go down the <code>left</code> (resp. <code>right</code>) subtree if sought for key is less (resp. greater) than the root <code>key</code>. Crucially, we want to check that lookup <em>never fails</em>, and hence, we implement the <code>Tip</code> (i.e. empty) case with <code>die</code> gets LiquidHaskell to prove that that case is indeed dead code, i.e. never happens at run-time.</p>
-<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+<strong>Lookup</strong> Next, lets write the <code>mem</code> function that returns the value associated with a key <code>k'</code>. To do so we just compare <code>k'</code> with the root key, if they are equal, we return the binding, and otherwise we go down the <code>left</code> (resp. <code>right</code>) subtree if sought for key is less (resp. greater) than the root <code>key</code>. Crucially, we want to check that lookup <em>never fails</em>, and hence, we implement the <code>Tip</code> (i.e. empty) case with <code>die</code> gets LiquidHaskell to prove that that case is indeed dead code, i.e. never happens at run-time.</p>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -677,7 +631,7 @@ set k' v' Tip = Node k' v' Tip Tip</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">{-@ get' :: (Ord k) =>  k:k -> m:{Map k v| HasKey k m} -> v @-}
+  <div id="program-16" class="programbox">{-@ get' :: (Ord k) =>  k:k -> m:{Map k v| HasKey k m} -> v @-}
 get' k' m@(Node k v l r)
   | k' == k   = v
   | k' <  k   = get' k' l
@@ -697,20 +651,20 @@ get'  _ Tip   = die  "Lookup Never Fails"</div>
      k  : a
      l  : Map a b
      k&#39; : a</code></pre>
-<p>LiquidHaskell is <em>unable</em> to deduce that the key <code>k'</code> definitely belongs in the <code>left</code> subtree <code>l</code>. Well, lets ask ourselves: <em>why</em> must <code>k'</code> belong in the left subtree? From the input, we know <code>HasKey k' m</code> i.e. that <code>k'</code> is <em>somewhere</em> in <code>m</code>. That is <em>one of</em> the following holds:</p>
+<p>LiquidHaskell is <em>unable</em> to deduce that the key <code>k'</code> definitely belongs in the <code>left</code> subtree <code>l</code>. Well, lets ask ourselves: <em>why</em> must <code>k'</code> belong in the left subtree? From the input, we know <code>HasKey k' m</code> i.e. that <code>k'</code> is <em>somewhere</em> in <code>m</code>. That is <em>one of</em> the following holds:</p>
 <ol type="1">
 <li><code>k' == k</code> or,</li>
 <li><code>HasKey k' l</code> or,</li>
 <li><code>HasKey k' r</code>.</li>
 </ol>
-<p>As the preceding guard <code>k' == k</code> fails, we (and LiquidHaskell) can rule out case (1). Now, what about the <code>Map</code> tells us that case (2) must hold, i.e. that case (3) cannot hold? The <em>BST invariant</em>, all keys in <code>r</code> exceed <code>k</code> which itself exceeds <code>k'</code>. That is, all nodes in <code>r</code> are <em>disequal</em> to <code>k'</code> and hence <code>k'</code> cannot be in <code>r</code>, ruling out case (3). Formally, we need the fact that: <span class="math display">\[\forall\ \vkey,\ \vt. \vt :: {\vMap\ \reft{\vkey&#39;}{k}{\vkey&#39; \not = \vkey}\ v}
+<p>As the preceding guard <code>k' == k</code> fails, we (and LiquidHaskell) can rule out case (1). Now, what about the <code>Map</code> tells us that case (2) must hold, i.e. that case (3) cannot hold? The <em>BST invariant</em>, all keys in <code>r</code> exceed <code>k</code> which itself exceeds <code>k'</code>. That is, all nodes in <code>r</code> are <em>disequal</em> to <code>k'</code> and hence <code>k'</code> cannot be in <code>r</code>, ruling out case (3). Formally, we need the fact that: <span class="math display">\[\forall\ \vkey,\ \vt. \vt :: {\vMap\ \reft{\vkey&#39;}{k}{\vkey&#39; \not = \vkey}\ v}
                         \ \Rightarrow\
                         \lnot (\vHasKey\ \vkey\ \vt)\]</span></p>
 <p><br />
-<strong>Conversion Lemmas</strong> Unfortunately, LiquidHaskell <em>cannot automatically</em> deduce facts like the above, as they relate refinements of a container's <em>type parameters</em> (here: <span class="math inline">\(\vkey&#39; \not = \vkey\)</span>, which refines the <code>Map</code>s first type parameter) with properties of the entire container (here: <span class="math inline">\(\vHasKey\ \vkey\ \vt\)</span>). Fortunately, it is easy to <em>state</em>, <em>prove</em> and <em>use</em> facts like the above, via <em>lemmas</em> which are just functions. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<strong>Conversion Lemmas</strong> Unfortunately, LiquidHaskell <em>cannot automatically</em> deduce facts like the above, as they relate refinements of a container’s <em>type parameters</em> (here: <span class="math inline">\(\vkey&#39; \not = \vkey\)</span>, which refines the <code>Map</code>s first type parameter) with properties of the entire container (here: <span class="math inline">\(\vHasKey\ \vkey\ \vt\)</span>). Fortunately, it is easy to <em>state</em>, <em>prove</em> and <em>use</em> facts like the above, via <em>lemmas</em> which are just functions. <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <p><br />
 <strong>Defining Lemmas</strong> To state a lemma, we need only convert it into a <a href="curry-howard">type</a> by viewing universal quantifiers as function parameters, and implications as function types:</p>
-<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -718,7 +672,7 @@ get'  _ Tip   = die  "Lookup Never Fails"</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-18" class="programbox">{-@ lemma_notMem :: key:k
+  <div id="program-17" class="programbox">{-@ lemma_notMem :: key:k
                  -> m:Map {k:k | k /= key} v
                  -> {v:Bool | not (HasKey key m)}
   @-}
@@ -728,10 +682,10 @@ lemma_notMem key (Node _ _ l r) = lemma_notMem key l &&
 </div>
 
 <p><br />
-<strong>Proving Lemmas</strong> Note how the signature for <code>lemma_notMem</code> corresponds exactly to the missing fact from above. The &quot;output&quot; type is a <code>Bool</code> refined with the proposition that we desire. We <em>prove</em> the lemma simply by <em>traversing</em> the tree which lets LiquidHaskell build up a proof for the output fact by inductively combining the proofs from the subtrees.</p>
+<strong>Proving Lemmas</strong> Note how the signature for <code>lemma_notMem</code> corresponds exactly to the missing fact from above. The “output” type is a <code>Bool</code> refined with the proposition that we desire. We <em>prove</em> the lemma simply by <em>traversing</em> the tree which lets LiquidHaskell build up a proof for the output fact by inductively combining the proofs from the subtrees.</p>
 <p><br />
-<strong>Using Lemmas</strong> To use a lemma, we need to <em>instantiate</em> it to the particular keys and trees we care about, by &quot;calling&quot; the lemma function, and forcing its result to be in the <em>environment</em> used to typecheck the expression where we want to use the lemma. Say what? Here's how to use lemmas to verify <code>get</code>:</p>
-<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
+<strong>Using Lemmas</strong> To use a lemma, we need to <em>instantiate</em> it to the particular keys and trees we care about, by “calling” the lemma function, and forcing its result to be in the <em>environment</em> used to typecheck the expression where we want to use the lemma. Say what? Here’s how to use lemmas to verify <code>get</code>:</p>
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -739,7 +693,7 @@ lemma_notMem key (Node _ _ l r) = lemma_notMem key l &&
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">{-@ get :: (Ord k) => k:k -> m:{Map k v | HasKey k m} -> v @-}
+  <div id="program-18" class="programbox">{-@ get :: (Ord k) => k:k -> m:{Map k v | HasKey k m} -> v @-}
 get k' (Node k v l r)
   | k' == k   = v
   | k' <  k   = assert (lemma_notMem k' r) $
@@ -750,7 +704,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
 </div>
 
 <p>By calling <code>lemma_notMem</code> we create a dummy <code>Bool</code> refined with the fact <code>not (HasKey k' r)</code> (resp. <code>not (HasKey k' l)</code>). We force the calls to <code>get k' l</code> (resp. <code>get k' r</code>) to be typechecked using the materialized refinement by wrapping the calls in <code>assert</code>:</p>
-<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -758,11 +712,11 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">assert _ x = x</div>
+  <div id="program-19" class="programbox">assert _ x = x</div>
 </div>
 
 <p><br />
-<strong>Ghost Values</strong> This technique of materializing auxiliary facts via <em>ghost values</em> is a well known idea in program verification. Usually, one has to take care to ensure that ghost computations do not interfere with the regular computations. If we had to actually <em>execute</em> <code>lemma_notMem</code> it would wreck the efficient logarithmic lookup time, assuming we kept the trees <a href="#avltrees">balanced</a>, as we would traverse the <em>entire</em> tree instead of just the short path to a node. <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<strong>Ghost Values</strong> This technique of materializing auxiliary facts via <em>ghost values</em> is a well known idea in program verification. Usually, one has to take care to ensure that ghost computations do not interfere with the regular computations. If we had to actually <em>execute</em> <code>lemma_notMem</code> it would wreck the efficient logarithmic lookup time, assuming we kept the trees <a href="#avltrees">balanced</a>, as we would traverse the <em>entire</em> tree instead of just the short path to a node. <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <p><br />
 <strong>Laziness</strong> comes to our rescue: as the ghost value is (trivially) not needed, it is never computed. In fact, it is straightforward to entirely <em>erase</em> the call in the compiled code, which lets us freely <code>assert</code> such <code>lemma</code>s to carry out proofs, without paying any runtime penalty. In an eager language we would have to do a bit of work to specifically mark the computation as a ghost or <a href="proof-irrelevance">irrelevant</a> but in the lazy setting we get this for free.</p>
 <div id="Membership Test" class="hwex">
@@ -772,7 +726,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
 <br />
 
 </div>
-<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -780,7 +734,7 @@ get _ Tip     = die "Lookup failed? Impossible."</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-21" class="programbox">{-@ mem :: (Ord k) => k:k -> m:Map k v
+  <div id="program-20" class="programbox">{-@ mem :: (Ord k) => k:k -> m:Map k v
                    -> {v:_ | v <=> HasKey k m} @-}
 mem k' (Node k _ l r)
   | k' == k   = True
@@ -796,6 +750,19 @@ mem _ Tip     = False</div>
 <br />
 
 </div>
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-21" class="programbox">{-@ fresh :: xs:[Int] -> {v:Int | not (Elem v xs)} @-}
+fresh = undefined</div>
+</div>
+
+<p>To refresh your memory, here are the definitions for <code>Elem</code> we <a href="#listelems">saw earlier</a></p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -804,20 +771,7 @@ mem _ Tip     = False</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-22" class="programbox">{-@ fresh :: xs:[Int] -> {v:Int | not (Elem v xs)} @-}
-fresh = undefined</div>
-</div>
-
-<p>To refresh your memory, here are the definitions for <code>Elem</code> we <a href="#listelems">saw earlier</a></p>
-<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-23" class="programbox">{-@ predicate Elem X Ys  = In X (elems Ys) @-}
+  <div id="program-22" class="programbox">{-@ predicate Elem X Ys  = In X (elems Ys) @-}
 {-@ measure elems @-}
 elems []     = empty
 elems (x:xs) = (singleton x) `union` (elems xs)</div>
@@ -837,10 +791,10 @@ elems (x:xs) = (singleton x) `union` (elems xs)</div>
 <section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Recall that <code>Empty</code>, <code>Union</code>, <code>In</code> and the other <code>Set</code> operators are described <a href="#listelems">here</a>.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Feel free to embellish the language with fancier features like functions, tuples etc.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>Why does LiquidHaskell not automatically deduce this information? This is tricky to describe. Intuitively, because there is no way of automatically connecting the <em>traversal</em> corresponding to <code>keys</code> with the type variable <code>k</code>. I wish I had a better way to explain this rather subtle point; suggestions welcome!<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>Which is what makes dynamic contract checking <a href="findler-contract">inefficient</a> for such invariants.<a href="#fnref4">↩</a></p></li>
+<li id="fn1"><p>Recall that <code>Empty</code>, <code>Union</code>, <code>In</code> and the other <code>Set</code> operators are described <a href="#listelems">here</a>.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Feel free to embellish the language with fancier features like functions, tuples etc.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>Why does LiquidHaskell not automatically deduce this information? This is tricky to describe. Intuitively, because there is no way of automatically connecting the <em>traversal</em> corresponding to <code>keys</code> with the type variable <code>k</code>. I wish I had a better way to explain this rather subtle point; suggestions welcome!<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>Which is what makes dynamic contract checking <a href="findler-contract">inefficient</a> for such invariants.<a href="#fnref4" class="footnote-back">↩</a></p></li>
 </ol>
 </section>
 
