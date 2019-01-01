@@ -254,7 +254,6 @@ divide _ 0 = die "divide by zero"
 divide n d = n `div` d
 \end{code}
 
-Note: If you copy this code
 \newthought{To Verify} that `divide` never calls `die`, LiquidHaskell infers
 that `"divide by zero"` is not merely of type `String`, but in fact
 has the the refined type `{v:String | false}` *in the context* in
