@@ -9,7 +9,6 @@ Refinement Types
 module Intro where
 
 import Prelude hiding (abs)
-divide     :: Int -> Int -> Int
 zero'''' :: Int
 die     :: String -> a
 \end{code}
@@ -249,6 +248,7 @@ that says that the second argument is non-zero:
 
 \begin{code}
 {-@ divide :: Int -> NonZero -> Int @-}
+divide :: Int -> Int -> Int
 divide _ 0 = die "divide by zero"
 divide n d = n `div` d
 \end{code}
