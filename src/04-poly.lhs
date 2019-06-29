@@ -296,8 +296,10 @@ absoluteSum     = undefined
 
 \newthought{Inference}
 LiquidHaskell verifies `vectorSum` -- or, to be precise,
-the safety of the vector accesses `vec ! i`. The verification
-works out because LiquidHaskell is able to
+the safety of the vector accesses `vec ! i`. 
+**Note** you need to run `liquid` with the option `--no-termination` or make 
+sure your source file has `{-@ LIQUID "--no-termination" @-}.
+The verification works out because LiquidHaskell is able to
 *automatically infer* ^[In your editor, click on `go` to see the inferred type.]
 
 ~~~~~{.spec}
