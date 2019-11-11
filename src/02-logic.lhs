@@ -282,7 +282,7 @@ predicate is indeed valid or not.
 valued expressions that *always* evaluate to `True`.
 Similarly, we can define `FALSE` for `Bool` valued
 expressions that *always* evaluate to `False`:^[This syntax will be discussed in
-greater detail in [soon](#propositions)]
+greater detail [soon](#propositions)]
 
 \begin{code}
 {-@ type TRUE  = {v:Bool | v    } @-}
@@ -460,7 +460,7 @@ inputs.
 Let us define an uninterpreted function from `Int` to `Int`:
 
 \begin{code}
-{- measure f :: Int -> Int @-}
+{-@ measure f :: Int -> Int @-}
 \end{code}
 
 \newthought{We Test the Axiom of Congruence} by checking that the
