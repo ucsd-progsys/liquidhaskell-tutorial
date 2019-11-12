@@ -177,7 +177,7 @@ between `Lo` and `Hi`:
 Verification: Vector Lookup
 ---------------------------
 
-Let's try write some functions to sanity check the specifications.
+Let's try to write some functions to sanity check the specifications.
 First, find the starting element -- or `head` of a `Vector`
 
 \begin{code}
