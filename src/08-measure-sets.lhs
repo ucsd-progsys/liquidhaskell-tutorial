@@ -453,7 +453,6 @@ unexpected signature for `mergeSort` below.
 \begin{code}
 {-@ mergeSort :: (Ord a) => xs:[a] -> ListEmp a @-}
 mergeSort []  = []
-mergeSort [x] = [x]
 mergeSort xs  = merge (mergeSort ys) (mergeSort zs)
   where
    (ys, zs)   = halve mid xs
