@@ -4,8 +4,9 @@ Logic & SMT
 
 \begin{comment}
 \begin{code}
-{-@ LIQUID "--short-names" @-}
-{-@ LIQUID "--higherorder" @-}
+{-@ LIQUID "--short-names"         @-}
+{-@ LIQUID "--no-termination"      @-}
+{-@ LIQUID "--reflection"          @-}
 
 module Logic where
 main :: IO ()
@@ -457,12 +458,6 @@ the only thing that the solver knows is the *axiom of congruence* which
 states that any function `f`, returns equal outputs when invoked on equal
 inputs.
 
-Let us define an uninterpreted function from `Int` to `Int`:
-
-\begin{code}
-{-@ measure f :: Int -> Int @-}
-\end{code}
-
 \newthought{We Test the Axiom of Congruence} by checking that the
 following predicate
 is valid:
@@ -493,6 +488,7 @@ lets write a function to compute the `size` of a list:
 
 \begin{code}
 {-@ measure size @-}
+{-@ size :: [a] -> Nat @-}
 size        :: [a] -> Int
 size []     = 0
 size (x:xs) = 1 + size xs
