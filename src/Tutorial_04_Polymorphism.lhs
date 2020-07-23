@@ -8,7 +8,7 @@ Polymorphism {#polymorphism}
 {-@ LIQUID "--no-termination"      @-}
 {-@ LIQUID "--scrape-used-imports" @-}
 
-module VectorBounds
+module Tutorial_04_Polymorphism
    ( safeLookup
    , unsafeLookup
    , vectorSum, vectorSum'
@@ -27,6 +27,12 @@ absoluteSum'     :: Vector Int -> Int
 dotProduct     :: Vector Int -> Vector Int -> Int
 absoluteSum     :: Vector Int -> Int
 sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
+
+{-@ fail eeks @-}
+{-@ fail head @-}
+{-@ fail unsafeLookup @-}
+{-@ fail dotProduct @-}
+
 \end{code}
 \end{comment}
 

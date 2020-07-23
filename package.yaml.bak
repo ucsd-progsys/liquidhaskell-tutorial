@@ -11,7 +11,6 @@ extra-source-files:
 - README.md
 dependencies:
 - liquid-base
-- liquid-vector
 - liquid-containers
 - liquid-bytestring
 - liquid-base
@@ -26,5 +25,3 @@ library:
   exposed-modules:
     - Tutorial_01_Introduction
     - Tutorial_02_Logic
-    - Tutorial_03_Basic
-    - Tutorial_04_Polymorphism

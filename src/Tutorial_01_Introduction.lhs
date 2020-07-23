@@ -3,8 +3,13 @@ Introduction {#intro}
 
 \begin{comment}
 \begin{code}
-module Introduction where
+{-# LANGUAGE CPP #-}
+
+module Tutorial_01_Introduction where
 main = putStrLn "Intro"
+
+{-@ ignore average @-}
+
 \end{code}
 \end{comment}
 
