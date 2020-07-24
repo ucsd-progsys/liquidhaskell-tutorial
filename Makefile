@@ -43,7 +43,7 @@ PANDOCHTML=$(PANDOC) \
   --mathjax \
   --toc \
   --section-divs \
-  --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
+  --filter filters/Codeblock.hs \
   --filter filters/Figures.hs \
   --filter filters/Html.hs \
   --variable=notitle \

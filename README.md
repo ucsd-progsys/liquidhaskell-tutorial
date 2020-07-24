@@ -2,7 +2,6 @@
 
 **TODO: UPDATE the website with the new code**
 
-
 **NOTE** The PDF/HTML are sometimes not up-to-date
 with the latest LiquidHaskell release. Please clone
 the github repository and run locally for best results.
@@ -68,10 +67,19 @@ $ git submodule update --recursive
 
 ### Deploy on Github
 
+**Step 1** 
+ 
+Do we really need to install `pandoc-citeproc`?
+
+```
+$ mv package.yaml.pandoc package.yaml
+$ stack install pandoc template
+$ make html
+```
+
 #### Dependencies
 
 ```bash
-$ stack install pandoc pandoc-citeproc template
 ```
 
 ##### Prerequisites
