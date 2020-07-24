@@ -27,9 +27,9 @@ hideIgnores = do
   return ()
 
 hideIgnore :: FilePath -> FilePath -> IO ()
-hideIgnore tmpDir f = do
-    let tmpFile = tmpDir </> f
-    str <- unlines . map hide . lines <$> readFile f
+hideIgnore tmpDir file = do
+    let tmpFile = tmpDir </> file
+    str <- unlines . map hide . lines <$> readFile file
     writeFile tmpFile str
     renameFile tmpFile file
 
