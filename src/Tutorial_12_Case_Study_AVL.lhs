@@ -53,6 +53,14 @@ insR :: a -> AVL a -> AVL a
 merge :: a -> AVL a -> AVL a -> AVL a
 member :: (Ord a) => a -> AVL a -> Bool
 -- FIXME bigHt l r t  = if (realHeight l >= realHeight r) then (eqOrUp l t) else (eqOrUp r t)
+
+
+{-@ ignore singleton @-}
+{-@ ignore mkNode @-}
+{-@ ignore insert0 @-}
+{-@ ignore insert @-}
+{-@ ignore insL @-}
+{-@ ignore insert' @-}
 \end{code}
 \end{comment}
 

@@ -460,7 +460,8 @@ We can use the dimension aware lists to create a safe vector API.
 
 \begin{code}
 {-@ data Vector a = V { vDim  :: Nat
-                       , vElts :: ListN a vDim }         @-}
+                      , vElts :: ListN a vDim }         
+  @-}
 \end{code}
 
 When `vDim` is used a selector function, it returns the `vDim` field of `x`.
