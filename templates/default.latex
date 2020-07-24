@@ -217,9 +217,9 @@ $endif$
 }
 
 
-%% $if(title)$
-%% \title{$title$$if(subtitle)$\\\vspace{0.5em}{\huge $subtitle$}$endif$}
-%% $endif$
+%% #if(title)#
+%% \title{#title##if(subtitle)#\\\vspace{0.5em}{\huge #subtitle#}#endif#}
+%% #endif#
 
 $if(author)$
 \author{$for(author)$$author$$sep$ \and $endfor$}

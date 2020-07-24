@@ -171,68 +171,75 @@ Do you
 
 Then this tutorial is for you!
 
-
 Getting Started
 ---------------
 
+As of July 2020, LiquidHaskell, version 0.8.10 onwards, is available
+as a [GHC plugin](https://downloads.haskell.org/~ghc/8.10.1/docs/html/users_guide/extending_ghc.html).
 
-First things first; lets see how to install and run LiquidHaskell.
+This means, roughly, that you need simply 
+
+1. Add LH to your project dependencies, after which 
+2. GHC produces LH type errors whenever you compile the code, so that you can
+3. View errors using your favorite editor's existing Haskell tooling.
 
 \newthought{LiquidHaskell Requires} (in addition to the cabal
-dependencies) binary for an `SMTLIB2` compatible
+dependencies) a binary for an `SMTLIB2` compatible
 solver, e.g. one of
 
-+ [Z3][z3]
++ [Z3][z3] (which we recommend)
 + [CVC4][cvc4]
 + [MathSat][mathsat]
    
-\newthought{To Install} LiquidHaskell, just do:
+\newthought{This Tutorial} is written in literate Haskell and
+the code for it is available [here][liquid-tutorial].
+Hence, we *strongly* recommend you grab the code, and follow
+along, and especially that you do the exercises, via two steps.
+
+**Step 1** Clone the code repository,
 
 ~~~~~{.sh}
-$ cabal install liquidhaskell
+git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 ~~~~~
 
-\newthought{Command Line} execution simply requires you type:
+**Step 2:** Iteratively edit-compile until the code in `src/` using
 
 ~~~~~{.sh}
-$ liquid /path/to/file.hs
+cabal v2-build
 ~~~~~
 
-You will see a report of `SAFE` or `UNSAFE` together with type errors at
-various points in the source.
+or 
 
-\newthought{Emacs and Vim} have LiquidHaskell plugins, which run `liquid`
-in the background as you edit any Haskell file, highlight errors, and
-display the inferred types, all of which we find to be extremely useful.
-Hence we **strongly recommend** these over the command line option.
+~~~~~{.sh}
+stack build --fast --file-watch
+~~~~~
 
-+ Emacs' `flycheck` plugin is described  [here][liquid-emacs]
-+ Vim's `syntastic` checker is described [here][liquid-vim]
-+ Spacemacs' `flycheck`  layer described [here][liquid-spacemacs]
+until it _builds_ without any liquid type errors.
+
+The above workflow will let you use whatever GHC/Haskell tooling you use for your 
+favorite editor, to automatically display LH errors as well.
 
 Sample Code
 -----------
 
 This tutorial is written in literate Haskell and
 the code for it is available [here][liquid-tutorial].
+
 We *strongly* recommend you grab the code, and follow
 along, and especially that you do the exercises.
 
-~~~~~{.sh}
-$ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
-$ cd liquidhaskell-tutorial/src
-~~~~~
+If you'd like to copy and paste code snippets into the 
+web demo, instead of cloning the repo, note that you may
+need to pass `--no-termination` to `liquid`, or equivalently,
+add the pragma `{-@ LIQUID "--no-termination" @-}` to the top 
+of the source file. (By default, `liquid` tries to ensure that 
+all code it examines will terminate. Some of the code in this 
+tutorial is written in such a way that termination is not 
+immediately obvious to LH.) 
 
-If you'd like to copy and paste code snippets instead of cloning the repo, 
-note that you may need to pass `--no-termination` to `liquid`, or equivalently,
-add the pragma `{-@ LIQUID "--no-termination" @-}` to the top of the source file. (By 
-default, `liquid` tries to ensure that all code it examines will terminate.
-Some of the code in this tutorial is written in such a way that termination
-is not immediately obvious to `liquid`.)
-
-**Note:** This tutorial is a *work in progress*, and we will be **very**
-grateful for feedback and suggestions, ideally via pull-requests on github.
-
+**Note:** This tutorial is a *work in progress*, and we will 
+be **very** grateful for feedback and suggestions, ideally 
+via pull-requests on github.
 
 \noindent Lets begin!
 
