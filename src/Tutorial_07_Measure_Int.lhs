@@ -20,27 +20,27 @@ size              :: [a] -> Int
 flatten :: Int -> Int -> Vector (Vector a) -> Vector a
 test4 :: [String]
 
-{-@ ignore dotProd @-}
-{-@ ignore matProd @-}
-{-@ ignore prop_map @-}
-{-@ ignore reverse @-}
-{-@ fail test1 @-}
-{-@ fail test2 @-}
-{-@ fail test3 @-}
-{-@ fail test4 @-}
-{-@ fail test5 @-}
-{-@ fail test6 @-}
-{-@ fail test10 @-}
-{-@ ignore drop @-}
-{-@ ignore zipOrNull @-}
-{-@ fail badVec @-}
-{-@ fail product @-}
-{-@ fail bad1 @-}
-{-@ fail bad2 @-}
-{-@ fail mat23 @-}
-{-@ fail matProduct @-}
+-- {-@ ignore dotProd @-}
+-- {-@ ignore matProd @-}
+-- {-@ ignore prop_map @-}
+-- {-@ ignore reverse @-}
+-- {-@ fail test1 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail test3 @-}
+-- {-@ fail test4 @-}
+-- {-@ fail test5 @-}
+-- {-@ fail test6 @-}
+-- {-@ fail test10 @-}
+-- {-@ ignore drop @-}
+-- {-@ ignore zipOrNull @-}
+-- {-@ fail badVec @-}
+-- {-@ fail product @-}
+-- {-@ fail bad1 @-}
+-- {-@ fail bad2 @-}
+-- {-@ fail mat23 @-}
+-- {-@ fail matProduct @-}
 
-{-@ ignore for @-}
+-- {-@ ignore for @-}
 \end{code}
 \end{comment}
 

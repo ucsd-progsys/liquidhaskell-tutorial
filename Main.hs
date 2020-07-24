@@ -21,17 +21,15 @@ main = hideIgnores -- return ()
 
 hideIgnores :: IO ()
 hideIgnores = do
-  tmpDir <- getTemporaryDirectory
   files <- filter (L.isSuffixOf ".lhs") <$> listDirectory "src/"
-  mapM (hideIgnore tmpDir . ("src" </>)) files
+  mapM hideIgnore files
   return ()
 
-hideIgnore :: FilePath -> FilePath -> IO ()
-hideIgnore tmpDir file = do
-    let tmpFile = tmpDir </> file
-    str <- unlines . map hide . lines <$> readFile file
-    writeFile tmpFile str
-    renameFile tmpFile file
+hideIgnore :: FilePath -> IO ()
+hideIgnore file = do
+  str <- unlines . map hide . lines <$> readFile ("src" </> file)
+  let tmpFile = "src/out" </> file
+  writeFile tmpFile str
 
 hide :: String -> String
 hide str 

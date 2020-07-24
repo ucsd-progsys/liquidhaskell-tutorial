@@ -29,11 +29,11 @@ infixr 9 ==>
 
 {-@ invariant {v:[a] | size v >= 0} @-}
 
-{-@ fail ex0' @-}
-{-@ fail ex3' @-}
-{-@ fail exDeMorgan2 @-}
-{-@ fail ax0' @-}
-{-@ fail ax6 @-}
+-- {-@ fail ex0' @-}
+-- {-@ fail ex3' @-}
+-- {-@ fail exDeMorgan2 @-}
+-- {-@ fail ax0' @-}
+-- {-@ fail ax6 @-}
 
 \end{code}
 \end{comment}

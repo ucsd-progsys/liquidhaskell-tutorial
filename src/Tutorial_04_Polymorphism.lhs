@@ -28,10 +28,10 @@ dotProduct     :: Vector Int -> Vector Int -> Int
 absoluteSum     :: Vector Int -> Int
 sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
 
-{-@ fail eeks @-}
-{-@ fail head @-}
-{-@ fail unsafeLookup @-}
-{-@ fail dotProduct @-}
+-- {-@ fail eeks @-}
+-- {-@ fail head @-}
+-- {-@ fail unsafeLookup @-}
+-- {-@ fail dotProduct @-}
 
 \end{code}
 \end{comment}

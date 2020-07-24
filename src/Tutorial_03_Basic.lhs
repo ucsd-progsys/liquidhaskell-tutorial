@@ -12,11 +12,11 @@ import Prelude hiding (abs)
 divide  :: Int -> Int -> Int
 die     :: String -> a
 
-{-@ fail nonsense  @-}
-{-@ fail canDie    @-}
-{-@ fail divide'   @-}
-{-@ fail avg       @-}
-{-@ ignore lAssert @-}
+-- {-@ fail nonsense  @-}
+-- {-@ fail canDie    @-}
+-- {-@ fail divide'   @-}
+-- {-@ fail avg       @-}
+-- {-@ ignore lAssert @-}
 
 \end{code}
 \end{comment}

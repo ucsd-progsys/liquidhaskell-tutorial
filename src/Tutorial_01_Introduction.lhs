@@ -8,7 +8,7 @@ Introduction {#intro}
 module Tutorial_01_Introduction where
 main = putStrLn "Intro"
 
-{-@ ignore average @-}
+-- {-@ ignore average @-}
 
 \end{code}
 \end{comment}

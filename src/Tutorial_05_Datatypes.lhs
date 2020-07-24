@@ -52,13 +52,13 @@ test2 :: Sparse Int
 {-@ die :: {v:_ | false} -> a @-}
 die msg = error msg
 
-{-@ fail badSP @-}
-{-@ fail test1 @-}
-{-@ fail test2 @-}
-{-@ fail badList @-}
-{-@ ignore append @-}
-{-@ fail badBST @-}
-{-@ ignore delMin @-}
+-- {-@ fail badSP @-}
+-- {-@ fail test1 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail badList @-}
+-- {-@ ignore append @-}
+-- {-@ fail badBST @-}
+-- {-@ ignore delMin @-}
 
 
 \end{code}

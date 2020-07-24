@@ -35,14 +35,14 @@ die msg = error msg
 divide     :: Int -> Int -> Int
 size1, size2 :: [a] -> Int
 
-{-@ ignore avgMany  @-}
-{-@ ignore average' @-}
-{-@ ignore size1    @-}
-{-@ ignore size2    @-}
-{-@ ignore safeHead @-}
-{-@ ignore sumBad   @-}
-{-@ ignore wtAverage @-}
-{-@ ignore risers    @-}
+-- {-@ ignore avgMany  @-}
+-- {-@ ignore average' @-}
+-- {-@ ignore size1    @-}
+-- {-@ ignore size2    @-}
+-- {-@ ignore safeHead @-}
+-- {-@ ignore sumBad   @-}
+-- {-@ ignore wtAverage @-}
+-- {-@ ignore risers    @-}
 
 \end{code}
 \end{comment}

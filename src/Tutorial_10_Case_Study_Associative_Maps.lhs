@@ -43,11 +43,11 @@ fresh  :: [Int] -> Int
 {-@ predicate HasKey K M   = In K (keys M)              @-}
 {-@ predicate AddKey K M N = Union1 (keys N) K (keys M) @-}
 
-{-@ ignore tests @-}
-{-@ ignore set   @-}
-{-@ ignore get   @-}
-{-@ ignore get'  @-}
-{-@ ignore mem   @-}
+-- {-@ ignore tests @-}
+-- {-@ ignore set   @-}
+-- {-@ ignore get   @-}
+-- {-@ ignore get'  @-}
+-- {-@ ignore mem   @-}
 
 \end{code}
 \end{comment}

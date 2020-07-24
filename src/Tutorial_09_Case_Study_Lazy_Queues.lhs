@@ -35,10 +35,10 @@ die x = error x
 replicate :: Int -> a -> Queue a
 
 
-{-@ ignore badList @-}
-{-@ ignore hd   @-}
-{-@ ignore tl   @-}
-{-@ ignore badQ @-}
+-- {-@ ignore badList @-}
+-- {-@ ignore hd   @-}
+-- {-@ ignore tl   @-}
+-- {-@ ignore badQ @-}
 
 \end{code}
 \end{comment}

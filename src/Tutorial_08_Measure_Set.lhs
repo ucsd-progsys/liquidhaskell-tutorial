@@ -31,21 +31,21 @@ range :: Int -> Int -> [Int]
 {-@ predicate Disjoint X Y = Inter (Set_empty 0) X Y @-}
 type List a = [a]
 
-{-@ fail prop_x_y_200 @-}
-{-@ fail prop_cup_dif_bad @-}
-{-@ fail reverse' @-}
-{-@ fail prop_halve_append @-}
-{-@ fail test1 @-}
-{-@ fail test2 @-}
-{-@ fail test2 @-}
-{-@ fail test3 @-}
-{-@ fail prop_merge_app @-}
-{-@ ignore mergeSort @-}
-{-@ fail isNotUnique @-}
-{-@ ignore append @-}
-{-@ ignore range @-}
-{-@ ignore integrate @-}
-{-@ ignore focusLeft @-}
+-- {-@ fail prop_x_y_200 @-}
+-- {-@ fail prop_cup_dif_bad @-}
+-- {-@ fail reverse' @-}
+-- {-@ fail prop_halve_append @-}
+-- {-@ fail test1 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail test3 @-}
+-- {-@ fail prop_merge_app @-}
+-- {-@ ignore mergeSort @-}
+-- {-@ fail isNotUnique @-}
+-- {-@ ignore append @-}
+-- {-@ ignore range @-}
+-- {-@ ignore integrate @-}
+-- {-@ ignore focusLeft @-}
 
 
 \end{code}

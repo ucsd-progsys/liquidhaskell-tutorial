@@ -37,20 +37,20 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 {-@ type BNat N    = {v:Nat    | v <= N}    @-}
 
 {- ignore spanByte @-}
-{-@ ignore chop' @-}
-{-@ fail zero4' @-}
-{-@ fail exBad @-}
-{-@ fail bad1 @-}
-{-@ fail bad2 @-}
-{-@ fail bsGHC @-}
-{-@ fail prop_pack_length @-}
-{-@ fail prop_unpack_length @-}
-{-@ fail prop_chop_length @-}
-{-@ fail demo @-}
-{-@ ignore pLoop @-}
-{-@ ignore safeChop @-}
-{-@ ignore unsafeTake @-}
-{-@ ignore unsafeDrop @-}
+-- {-@ ignore chop' @-}
+-- {-@ fail zero4' @-}
+-- {-@ fail exBad @-}
+-- {-@ fail bad1 @-}
+-- {-@ fail bad2 @-}
+-- {-@ fail bsGHC @-}
+-- {-@ fail prop_pack_length @-}
+-- {-@ fail prop_unpack_length @-}
+-- {-@ fail prop_chop_length @-}
+-- {-@ fail demo @-}
+-- {-@ ignore pLoop @-}
+-- {-@ ignore safeChop @-}
+-- {-@ ignore unsafeTake @-}
+-- {-@ ignore unsafeDrop @-}
 
 
 \end{code}
