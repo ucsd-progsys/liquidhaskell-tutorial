@@ -830,7 +830,8 @@ bsLen (b:bs) = bLen b + bsLen bs
 \newthought{SpanByte} does a lot of the heavy lifting. It uses low-level pointer
 arithmetic to find the *first* position in the `ByteString` that is different from
 the input character `c` and then splits the `ByteString` into a pair comprising the
-prefix and suffix at that point.
+prefix and suffix at that point. (If you filled in the relevant type signatures above,
+the below code should typecheck even after you _delete_ the `assume` from the specification.)
 
 \begin{code}
 {-@ assume spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
