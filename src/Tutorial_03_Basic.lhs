@@ -6,11 +6,18 @@ Refinement Types
 \begin{code}
 {-@ LIQUID "--short-names" @-}
 {-@ LIQUID "--no-termination" @-}
-module Intro where
+module Tutorial_03_Basic where
 
 import Prelude hiding (abs)
-divide     :: Int -> Int -> Int
+divide  :: Int -> Int -> Int
 die     :: String -> a
+
+-- {-@ fail nonsense  @-}
+-- {-@ fail canDie    @-}
+-- {-@ fail divide'   @-}
+-- {-@ fail avg       @-}
+-- {-@ ignore lAssert @-}
+
 \end{code}
 \end{comment}
 
@@ -65,10 +72,11 @@ Errors
 If we try to say nonsensical things like:
 
 \begin{code}
+nonsense :: Int
 nonsense = one'
   where
   {-@ one' :: Zero @-}
-  one' = 1 :: Int
+  one' = 1 
 \end{code}
 
 \noindent

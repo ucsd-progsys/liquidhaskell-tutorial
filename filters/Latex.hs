@@ -11,7 +11,8 @@ import Data.List
 import Data.Monoid (mempty)
 import Debug.Trace
 import Text.Printf (printf)
-import Data.Text (Text, unpack)
+import Data.Text (Text, unpack, pack)
+import qualified Data.Text as T
 import Data.Either (either)
 
 main :: IO ()
@@ -23,27 +24,26 @@ main = toJSONFilter readFootnotes
 
 readFootnotes :: Block -> Block
 readFootnotes (Div (id, [cls], _) bs)
-  | cls `elem` mydivs                 = RawBlock (Format "tex") $ toLaTeX cls id bs
+  | cls `elem` mydivs                 = RawBlock (Format "tex") (toLaTeX cls id bs)
 readFootnotes i                       = i
 
-toLaTeX :: String -> String -> [Block] -> String
-toLaTeX cls id                        = wrapLatex cls id . either errHandler unpack . runPure . writeLaTeX def . Pandoc mempty
-  where errHandler = error $ mconcat ["toLaTex: ", cls, " ", id]
+toLaTeX :: Text -> Text -> [Block] -> Text
+toLaTeX cls id                        = wrapLatex cls id . either errHandler (\x -> x) . runPure . writeLaTeX def . Pandoc mempty
+  where errHandler = error $ unpack $ mconcat ["toLaTex: ", cls, " ", id]
 
-wrapLatex :: String -> String -> String -> String
-wrapLatex "footnotetext" _ str        = printf "\\footnotetext{%s}" str
-wrapLatex "hwex" name str             = printf "\\begin{hwex}[%s]\n%s\n\\end{hwex}" name str
+wrapLatex :: Text -> Text -> Text -> Text 
+wrapLatex "footnotetext" _ str        = T.pack $ printf "\\footnotetext{%s}" (T.unpack str)
+wrapLatex "hwex" name str             = T.pack $ printf "\\begin{hwex}[%s]\n%s\n\\end{hwex}" (T.unpack name) (T.unpack str)
 wrapLatex cls name str                = error $ printf "WrapLatex: %s %s" cls name
 
-mydivs :: [String]
+mydivs :: [Text]
 mydivs = ["footnotetext", "hwex"]
 
-
--- fnString = "\\footnotetext{"
--- footnoteText :: Inline -> Maybe String
+-- fnText = "\\footnotetext{"
+-- footnoteText :: Inline -> Maybe Text
 -- footnoteText (RawInline (Format "tex") s) =
---   if fnString `isPrefixOf` s
---     then Just . safeInit . drop (length fnString) $ s -- Remove closing brace
+--   if fnText `isPrefixOf` s
+--     then Just . safeInit . drop (length fnText) $ s -- Remove closing brace
 --     else Nothing
 --
 -- footnoteText x = Nothing
@@ -75,26 +75,27 @@ txBlock _ cb@(CodeBlock _ _) = expandCodeBlock cb
 txBlock _ b                  = [b]
 
 expandCodeBlock :: Block -> [Block]
-expandCodeBlock (CodeBlock a s) = CodeBlock a `fmap` words s
+expandCodeBlock (CodeBlock a s) = CodeBlock a `fmap` tWords s
+  where 
+    tWords = fmap pack . words . unpack
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+data Token = Word Text | WhiteSpace Text deriving (Eq, Ord, Show)
 
--------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------
-data Token = Word String | WhiteSpace String deriving (Eq, Ord, Show)
-
-stringTokens   :: String -> [Token]
+stringTokens   :: Text -> [Token]
 stringTokens s = go [] s
   where
     go acc ""  = reverse acc
-    go acc s   = let (w, s')   = span (not . isSpace) s
-                     (sp, s'') = span (isSpace) s'
+    go acc s   = let (w, s')   = T.span (not . isSpace) s
+                     (sp, s'') = T.span (isSpace) s'
                  in
                      go ((WhiteSpace sp) : (Word w) : acc) s''
 
-tokensString :: [Token] -> String
-tokensString = concat . map tokenString
+tokensText :: [Token] -> Text
+tokensText = mconcat . map tokenText
 
-tokenString :: Token -> String
-tokenString (Word s)       = s
-tokenString (WhiteSpace s) = s
+tokenText :: Token -> Text
+tokenText (Word s)       = s
+tokenText (WhiteSpace s) = s
 

@@ -8,7 +8,7 @@ Elemental Measures {#setmeasure}
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 
-module Sets where
+module Tutorial_08_Measure_Set where
 import Data.Set hiding (insert, partition, filter, split, elems)
 import Prelude  hiding (elem, reverse, filter)
 
@@ -30,6 +30,24 @@ range :: Int -> Int -> [Int]
 {-@ predicate Union1 X Y Z = Union X (Set_sng Y) Z   @-}
 {-@ predicate Disjoint X Y = Inter (Set_empty 0) X Y @-}
 type List a = [a]
+
+-- {-@ fail prop_x_y_200 @-}
+-- {-@ fail prop_cup_dif_bad @-}
+-- {-@ fail reverse' @-}
+-- {-@ fail prop_halve_append @-}
+-- {-@ fail test1 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail test3 @-}
+-- {-@ fail prop_merge_app @-}
+-- {-@ ignore mergeSort @-}
+-- {-@ fail isNotUnique @-}
+-- {-@ ignore append @-}
+-- {-@ ignore range @-}
+-- {-@ ignore integrate @-}
+-- {-@ ignore focusLeft @-}
+
+
 \end{code}
 \end{comment}
 
@@ -542,11 +560,14 @@ test4     = filter' (> 3) [3,1,2,3]
 \singlestar When we `reverse` their order, the set of elements
 is unchanged, and hence unique (if the input was unique).
 Why does LiquidHaskell reject the below? Can you fix things
-so that we can prove that the output is a `UList a`?
+so that we can prove that the output is a `UList a`? (When you are done,
+you should be able to remove the `assume` from the signature below,
+and still have LH verify the code.)
 </div>
 
 \begin{code}
-{-@ reverse    :: xs:UList a -> UList a    @-}
+{-@ assume reverse    :: xs:UList a -> UList a    @-}
+reverse :: [a] -> [a]
 reverse         = go []
   where
     {-@ go     :: acc:[a] -> xs:[a] -> [a] @-}

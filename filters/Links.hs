@@ -47,9 +47,9 @@ txLink _ i               = i
 
 reLink m l = case M.lookup l m of
                   Nothing -> l
-                  Just f  -> f ++ "#" ++ l
+                  Just f  -> T.pack f <> "#" <> l
 
-type LinkMap = M.Map String FilePath
+type LinkMap = M.Map T.Text FilePath
 
 linkMap   :: FilePath -> IO LinkMap
 linkMap _ = return M.empty -- undefined

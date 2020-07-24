@@ -17,8 +17,10 @@ LINKS=dist/links.txt
 INDEX=dist/index.lhs
 
 # bin
+## INDEXER=stack exec -- runghc filters/Toc.hs
+## PANDOC=pandoc
+INDEXER=stack run
 PANDOC=stack exec -- pandoc
-INDEXER=stack exec -- runghc filters/Toc.hs
 
 
 ##############################################
@@ -41,7 +43,7 @@ PANDOCHTML=$(PANDOC) \
   --mathjax \
   --toc \
   --section-divs \
-  --filter $(LIQUIDCLIENT)/templates/codeblock.hs \
+  --filter filters/Codeblock.hs \
   --filter filters/Figures.hs \
   --filter filters/Html.hs \
   --variable=notitle \
@@ -83,6 +85,12 @@ $(INDEX):
 
 src/%.html: src/%.lhs
 	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
+
+check:
+	stack build --fast --flag liquidhaskell-tutorial:build
+
+check-cabal:
+	cabal v2-build
 
 clean:
 	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html

@@ -8,12 +8,9 @@ Logic & SMT
 {-@ LIQUID "--no-termination"      @-}
 {-@ LIQUID "--reflection"          @-}
 
-module Logic where
-main :: IO ()
-main = return ()
+module Tutorial_02_Logic where
 
-
-{-@ size  :: xs:[a] -> {v:Int | v = size xs} @-}
+{- size  :: xs:[a] -> {v:Int | v = size xs} @-}
 
 ax1 :: Int -> Bool
 ax2 :: Int -> Bool
@@ -31,6 +28,13 @@ ex3, ex3', ex4, ex6, ex7, exDeMorgan1, exDeMorgan2 :: Bool -> Bool -> Bool
 infixr 9 ==>
 
 {-@ invariant {v:[a] | size v >= 0} @-}
+
+-- {-@ fail ex0' @-}
+-- {-@ fail ex3' @-}
+-- {-@ fail exDeMorgan2 @-}
+-- {-@ fail ax0' @-}
+-- {-@ fail ax6 @-}
+
 \end{code}
 \end{comment}
 

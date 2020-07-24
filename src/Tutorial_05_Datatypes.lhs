@@ -8,7 +8,7 @@ Refined Datatypes {#refineddatatypes}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}
 
-module RefinedDatatypes
+module Tutorial_05_Datatypes
        (
          -- * Sparse: Data
          Sparse (..)
@@ -51,6 +51,16 @@ test2 :: Sparse Int
 
 {-@ die :: {v:_ | false} -> a @-}
 die msg = error msg
+
+-- {-@ fail badSP @-}
+-- {-@ fail test1 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail badList @-}
+-- {-@ ignore append @-}
+-- {-@ fail badBST @-}
+-- {-@ ignore delMin @-}
+
+
 \end{code}
 \end{comment}
 

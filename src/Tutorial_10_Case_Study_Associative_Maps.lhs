@@ -6,7 +6,7 @@ Case Study: Associative Maps
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 
-module AssocativeMap where
+module Tutorial_10_Case_Study_Associative_Maps where
 
 import Data.Set hiding (elems)
 -- | Boilerplate
@@ -42,6 +42,12 @@ fresh  :: [Int] -> Int
 {-@ predicate NoKeys M     = Empty (keys M)             @-}
 {-@ predicate HasKey K M   = In K (keys M)              @-}
 {-@ predicate AddKey K M N = Union1 (keys N) K (keys M) @-}
+
+-- {-@ ignore tests @-}
+-- {-@ ignore set   @-}
+-- {-@ ignore get   @-}
+-- {-@ ignore get'  @-}
+-- {-@ ignore mem   @-}
 
 \end{code}
 \end{comment}

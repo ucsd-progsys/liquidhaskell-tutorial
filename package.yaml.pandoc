@@ -21,7 +21,6 @@ dependencies:
 - pandoc-types
 - pandoc
 - filepath
-- unix
 
 executables:
   filters-toc:
@@ -38,7 +37,4 @@ executables:
     ghc-options: -threaded
   filters-figures:
     main: filters/Figures.hs
-    ghc-options: -threaded
-  filters-codeblock:
-    main: filters/Codeblock.hs
     ghc-options: -threaded

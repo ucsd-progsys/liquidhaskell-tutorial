@@ -10,7 +10,7 @@ Case Study: Pointers & Bytes {#case-study-pointers}
 
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module Memory where
+module Tutorial_11_Case_Study_Pointers where
 
 import Prelude hiding (null)
 
@@ -21,7 +21,7 @@ import Foreign.Ptr
 import Foreign.Storable
 import System.IO.Unsafe
 import Data.ByteString.Internal (c2w, w2c)
-import Language.Haskell.Liquid.Prelude
+-- import Language.Haskell.Liquid.Prelude
 
 spanByte         :: Word8 -> ByteString -> (ByteString, ByteString)
 unsafeHead       :: ByteString -> Word8
@@ -35,6 +35,24 @@ create, create'  :: Int -> (Ptr Word8 -> IO ()) -> ByteString
 
 {-@ type StringN N = {v:String | len v = N} @-}
 {-@ type BNat N    = {v:Nat    | v <= N}    @-}
+
+{- ignore spanByte @-}
+-- {-@ ignore chop' @-}
+-- {-@ fail zero4' @-}
+-- {-@ fail exBad @-}
+-- {-@ fail bad1 @-}
+-- {-@ fail bad2 @-}
+-- {-@ fail bsGHC @-}
+-- {-@ fail prop_pack_length @-}
+-- {-@ fail prop_unpack_length @-}
+-- {-@ fail prop_chop_length @-}
+-- {-@ fail demo @-}
+-- {-@ ignore pLoop @-}
+-- {-@ ignore safeChop @-}
+-- {-@ ignore unsafeTake @-}
+-- {-@ ignore unsafeDrop @-}
+
+
 \end{code}
 \end{comment}
 
@@ -610,7 +628,7 @@ LiquidHaskell is able to automatically infer.
 
 <div class="hwex" id="Pack Invariant">
 \exercise \singlestar Still, we're here to learn, so can you
-*write down* the type signature for the loop so that the below
+*write down* the type signature for the `pLoop` so that the below
 variant of `pack` is accepted by LiquidHaskell (Do this *without*
 cheating by peeping at the type inferred for `go` above!)
 </div>
@@ -812,10 +830,11 @@ bsLen (b:bs) = bLen b + bsLen bs
 \newthought{SpanByte} does a lot of the heavy lifting. It uses low-level pointer
 arithmetic to find the *first* position in the `ByteString` that is different from
 the input character `c` and then splits the `ByteString` into a pair comprising the
-prefix and suffix at that point.
+prefix and suffix at that point. (If you filled in the relevant type signatures above,
+the below code should typecheck even after you _delete_ the `assume` from the specification.)
 
 \begin{code}
-{-@ spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
+{-@ assume spanByte :: Word8 -> b:ByteString -> ByteString2 b @-}
 spanByte c ps@(BS x s ln)
   = unsafePerformIO
       $ withForeignPtr x $ \p ->
@@ -825,7 +844,7 @@ spanByte c ps@(BS x s ln)
       | i >= ln   = return (ps, empty)
       | otherwise = do c' <- peekByteOff p i
                        if c /= c'
-                         then return $ splitAt i
+                         then return (splitAt i)
                          else go p (i+1)
     splitAt i     = (unsafeTake i ps, unsafeDrop i ps)
 \end{code}
