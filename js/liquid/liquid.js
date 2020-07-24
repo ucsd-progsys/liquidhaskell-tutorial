@@ -426,10 +426,11 @@ function LiquidDemoCtrl($scope, $http, $location) {
 
   $scope.verifySource   = function(){ verifyQuery(getCheckQuery($scope));   };
 
-  // $scope.reVerifySource = function(){ verifyQuery(getRecheckQuery($scope)); };
-  $scope.jumpToProgPane = function(err) {  
-    var slideNum = progPaneSlide(err.data);
-    gotoSlide(slideNum);
+  $scope.jumpToProgPane = function(err) {
+    var slideNum = 1 + progPaneSlide(err.data);
+    console.log("jumping to slide: " + slideNum);
+    debugZ = slideNum;
+    moveTo(".main", slideNum);
   };
 }
 
