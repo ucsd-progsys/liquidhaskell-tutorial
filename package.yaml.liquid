@@ -1,0 +1,37 @@
+name: liquidhaskell-tutorial
+version: '0.2.0.0'
+synopsis: Source for "Programming with Refinement Types"
+category: Web
+author: Ranjit Jhala
+maintainer: jhala@cs.ucsd.edu
+copyright: Ranjit Jhala
+license: MIT
+homepage: https://github.com/ucsd-progsys/liquidhaskell-tutorial
+extra-source-files:
+- README.md
+dependencies:
+- liquid-base
+- liquid-vector
+- liquid-containers
+- liquid-bytestring
+- liquidhaskell
+
+library:
+  ghc-options: -fdefer-type-errors -fplugin=LiquidHaskell
+
+  source-dirs:
+    - src
+
+  exposed-modules:
+    - Tutorial_01_Introduction
+    - Tutorial_02_Logic
+    - Tutorial_03_Basic
+    - Tutorial_04_Polymorphism
+    - Tutorial_05_Datatypes
+    - Tutorial_06_Measure_Bool
+    - Tutorial_07_Measure_Int
+    - Tutorial_08_Measure_Set
+    - Tutorial_09_Case_Study_Lazy_Queues
+    - Tutorial_10_Case_Study_Associative_Maps
+    - Tutorial_11_Case_Study_Pointers
+    - Tutorial_12_Case_Study_AVL

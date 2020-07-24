@@ -14,8 +14,6 @@ import Debug.Trace
 import Text.Printf (printf)
 
 import System.FilePath (takeFileName, takeExtension)
--- import Data.Monoid (mempty)
--- import System.Environment (getEnv)
 
 import System.Directory
 import System.IO
@@ -83,9 +81,11 @@ tx tgt prefix t r b0
 txLink r = walkM (reLink r)
 
 reLink   :: IORef Info -> Inline -> IO Inline
-reLink r (Link attr [Str "auto"] tgt@('#':id,_))
-  = do n <- getCount r id
-       return $ Link attr [Str (show n)] tgt
+-- reLink r (Link attr [Str "auto"] tgt@('#':id,_))
+reLink r i@(Link attr [Str "auto"] tgt@(pid,_)) = case T.unpack pid of
+  '#':id -> do n <- getCount r (T.pack id)
+               return $ Link attr [Str (T.pack $ show n)] tgt
+  _      -> return i
 
 reLink _ i
   = return i
@@ -103,21 +103,22 @@ txBlock _ _ _ _ z
 isFigure s    = s `elem` ["figure", "marginfigure"]
 
 makeFigure tgt prefix t r id cls kvs
-  = RawBlock (Format $ show tgt) . pad prefix t id cls kvs <$> getCount r id
+  = RawBlock (Format tgtTxt) . pad prefix t id cls kvs <$> getCount r id
+    where tgtTxt = T.pack $ show tgt 
 
+-- pad :: Text -> _ -> _ -> _ -> [(Text, Text)]
 pad prefix tplt id cls kvs n
   = {- trace ("PAD" ++ show res) $ -} res
   where
-    res = L.unpack $ substitute tplt ctx
+    res = L.toStrict $ substitute tplt ctx
     ctx          :: T.Text -> T.Text
-    ctx "class"  = T.pack cls
-    ctx "label"  = T.pack id
+    ctx "class"  = cls
+    ctx "label"  = id
     ctx "number" = T.pack $ show n
     ctx "file"   = T.append prefix  (get "file" kvs)
-    ctx str      = get (T.unpack str) kvs
+    ctx str      = get str kvs
 
-get k kvs = T.pack
-            $ fromMaybe (error $ "Cannot find: " ++ k )
+get k kvs = fromMaybe (error $ T.unpack $ "Cannot find: " <> k )
             $ lookup k kvs
 
 ----------------------------------------------
@@ -138,13 +139,14 @@ emptyInfo
 
 getCount r id
   = do info <- readIORef r
+       let idS = T.unpack id 
        let m  = label info
        let c  = chapter info
        let i  = count info
-       let n  = M.findWithDefault i id m
+       let n  = M.findWithDefault i idS m
        let i' = if i == n then i + 1 else i
        let l  = Ref c n
-       writeIORef r (info {count = i', label = M.insert id n m})
+       writeIORef r (info {count = i', label = M.insert idS n m})
        return l -- $ trace ("GETCOUNT: " ++ show l) l
 
 newChapter r

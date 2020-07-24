@@ -52,7 +52,7 @@ plug tplt toc = L.unpack $ substitute tplt ctx
 newtype TOC = TOC [(Int, FilePath, [(Ref, Info)])]
               deriving (Show)
 
-type Ref  = String
+type Ref  = T.Text -- String
 
 data Info = Info { i_file  :: FilePath
                  , i_level :: Int
@@ -136,7 +136,7 @@ subsecHtml cNum (sNum, r, i)
     sLink = makeLink (i_file i) r
     sName = i_name i
 
-makeLink file ref = htmlFile file ++ "#" ++ ref
+makeLink file ref = htmlFile file ++ "#" ++ T.unpack ref
 
 htmlFile file = (takeFileName file) `replaceExtension` ".html"
 
