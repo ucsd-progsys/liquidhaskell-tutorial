@@ -14,7 +14,9 @@ invariant with LiquidHaskell.
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--maxparams=3"    @-}
 
-module LazyQueue (Queue, insert, remove, emp, realSize) where
+module Tutorial_09_Case_Study_Lazy_Queues 
+  (Queue, insert, remove, emp, realSize) 
+  where
 
 import Prelude hiding (replicate, take, length)
 
@@ -31,6 +33,13 @@ die x = error x
 -- http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
 
 replicate :: Int -> a -> Queue a
+
+
+{-@ ignore badList @-}
+{-@ ignore hd   @-}
+{-@ ignore tl   @-}
+{-@ ignore badQ @-}
+
 \end{code}
 \end{comment}
 

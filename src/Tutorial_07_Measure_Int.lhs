@@ -6,7 +6,7 @@ Numeric Measures {#numericmeasure}
 {-@ LIQUID "--short-names"    @-}
 {-@ LIQUID "--no-termination" @-}
 
-module NumericMeasures where
+module Tutorial_07_Measure_Int where
 import Prelude  hiding  (map, zipWith, zip, take, drop, reverse)
 
 {-@ type TRUE = {v:Bool | v} @-}
@@ -18,8 +18,29 @@ txgo              :: Int -> Int -> Vector (Vector a) -> Vector (Vector a)
 quickSort         :: (Ord a) => [a] -> [a]
 size              :: [a] -> Int
 flatten :: Int -> Int -> Vector (Vector a) -> Vector a
+test4 :: [String]
 
-{-@ invariant {v:[a] | 0 <= size v} @-}
+{-@ ignore dotProd @-}
+{-@ ignore matProd @-}
+{-@ ignore prop_map @-}
+{-@ ignore reverse @-}
+{-@ fail test1 @-}
+{-@ fail test2 @-}
+{-@ fail test3 @-}
+{-@ fail test4 @-}
+{-@ fail test5 @-}
+{-@ fail test6 @-}
+{-@ fail test10 @-}
+{-@ ignore drop @-}
+{-@ ignore zipOrNull @-}
+{-@ fail badVec @-}
+{-@ fail product @-}
+{-@ fail bad1 @-}
+{-@ fail bad2 @-}
+{-@ fail mat23 @-}
+{-@ fail matProduct @-}
+
+{-@ ignore for @-}
 \end{code}
 \end{comment}
 
@@ -82,11 +103,13 @@ manipulations in favor of a high-level *iterator* over the `Matrix` elements:
 \begin{code}
 matProd       :: (Num a) => Matrix a -> Matrix a -> Matrix a
 matProd (M rx _ xs) (M _ cy ys)
-                 = M rx cy elts
+              = M rx cy elts
   where
-    elts         = for xs $ \xi ->
-                     for ys $ \yj ->
-                       dotProd xi yj
+    elts      = for xs (\xi ->
+                  for ys (\yj ->
+                    dotProd xi yj
+                  )
+                )
 \end{code}
 
 \newthought{The Iteration} embodied by the `for` combinator, is simply
@@ -132,6 +155,7 @@ equation per data-constructor]
 
 \begin{code}
 {-@ measure size @-}
+{-@ size :: [a] -> Nat @-}
 size []     = 0
 size (_:rs) = 1 + size rs
 \end{code}
@@ -422,7 +446,7 @@ quickSort []     = []
 quickSort (x:xs) = undefined
 
 {-@ test10 :: ListN String 2 @-}
-test10 = quickSort test4
+test10 = quickSort (drop 1 ["cat", "dog", "mouse"])
 \end{code}
 
 
@@ -436,7 +460,7 @@ We can use the dimension aware lists to create a safe vector API.
 
 \begin{code}
 {-@ data Vector a = V { vDim  :: Nat
-                      , vElts :: ListN a vDim }         @-}
+                       , vElts :: ListN a vDim }         @-}
 \end{code}
 
 When `vDim` is used a selector function, it returns the `vDim` field of `x`.
@@ -676,9 +700,11 @@ first matrix with the columns of the second.
 matProduct (M rx _ xs) my@(M _ cy _)
                  = M rx cy elts
   where
-    elts         = for xs $ \xi ->
-                     for ys' $ \yj ->
+    elts         = for xs (\xi ->
+                     for ys' (\yj ->
                        dotProduct xi yj
+                     )
+                   )
     M _ _ ys'    = transpose my
 \end{code}
 

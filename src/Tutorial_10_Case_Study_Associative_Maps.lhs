@@ -6,7 +6,7 @@ Case Study: Associative Maps
 \begin{code}
 {-@ LIQUID "--no-termination" @-}
 
-module AssocativeMap where
+module Tutorial_10_Case_Study_Associative_Maps where
 
 import Data.Set hiding (elems)
 -- | Boilerplate

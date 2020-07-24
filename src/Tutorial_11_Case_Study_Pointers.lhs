@@ -10,7 +10,7 @@ Case Study: Pointers & Bytes {#case-study-pointers}
 
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module Memory where
+module Tutorial_11_Case_Study_Pointers where
 
 import Prelude hiding (null)
 

@@ -16,7 +16,7 @@ such structures.
 {-@ LIQUID "--short-names"    @-}
 
 
-module Measures where
+module Tutorial_06_Measure_Bool where
 
 import Prelude hiding(foldl, foldl1, map, sum, head, tail, null)
 
@@ -34,6 +34,16 @@ die msg = error msg
 -- Type Definitions
 divide     :: Int -> Int -> Int
 size1, size2 :: [a] -> Int
+
+{-@ ignore avgMany  @-}
+{-@ ignore average' @-}
+{-@ ignore size1    @-}
+{-@ ignore size2    @-}
+{-@ ignore safeHead @-}
+{-@ ignore sumBad   @-}
+{-@ ignore wtAverage @-}
+{-@ ignore risers    @-}
+
 \end{code}
 \end{comment}
 

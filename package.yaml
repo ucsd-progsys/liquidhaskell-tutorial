@@ -28,3 +28,11 @@ library:
     - Tutorial_02_Logic
     - Tutorial_03_Basic
     - Tutorial_04_Polymorphism
+    - Tutorial_05_Datatypes
+    - Tutorial_06_Measure_Bool
+    - Tutorial_07_Measure_Int
+    - Tutorial_08_Measure_Set
+    - Tutorial_09_Case_Study_Lazy_Queues
+    - Tutorial_10_Case_Study_Associative_Maps
+    - Tutorial_11_Case_Study_Pointers
+    - Tutorial_12_Case_Study_AVL

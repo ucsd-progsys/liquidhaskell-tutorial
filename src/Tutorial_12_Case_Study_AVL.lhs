@@ -8,7 +8,7 @@ Case Study: AVL Trees {#case-study-avltree}
 
 {-@ LIQUID "--no-termination" @-}
 
-module AVL
+module Tutorial_12_Case_Study_AVL
   ( -- * Main datatype
     AVL
     -- * Key operations
