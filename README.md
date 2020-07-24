@@ -75,12 +75,10 @@ Do we really need to install `pandoc-citeproc`?
 $ mv package.yaml.pandoc package.yaml
 $ stack install pandoc template
 $ make html
+$ make pdf
+$ make upload 
 ```
 
-#### Dependencies
-
-```bash
-```
 
 ##### Prerequisites
 
@@ -88,19 +86,6 @@ $ make html
 $ cd ../ && git clone https://github.com/ucsd-progsys/liquid-client.git
 ```
 
-##### Actual deployment
-
-```bash
-$ git checkout master
-$ make html
-$ cp -r _site ~/tmp/
-$ git checkout gh-pages
-$ cp -r ~/tmp/* .
-$ git commit -a
-$ git push origin gh-pages
-```
-
-### Compiling .pdf
 
 #### Dependencies
 
@@ -114,12 +99,6 @@ $ stack install pandoc pandoc-citeproc template
   * [Texlive](https://www.tug.org/texlive/)
   * texlive-latex-extra
   * texlive-fonts-extra
-
-To install LaTeX dependencies on `Ubuntu 17.10`, following them:
-
-```bash
-$ sudo apt install -y texlive-latex-base texlive-latex-extra texlive-fonts-extra
-```
 
 #### Producing .pdf Book
 

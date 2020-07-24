@@ -95,11 +95,11 @@ check-cabal:
 clean:
 	rm -rf dist/* && rm -rf _site/* && rm -rf src/*.tex && rm -rf src/.liquid && rm -rf src/*.html
 
-upload: html
-	git checkout master
-	make html
+upload: pdf html
+	cp dist/pbook.pdf _site/book.pdf
 	cp -r _site $(TMPDIR)
 	git checkout gh-pages
 	cp -r $(TMPDIR)/_site/* .
 	git commit -a
 	git push origin gh-pages
+	git checkout main
