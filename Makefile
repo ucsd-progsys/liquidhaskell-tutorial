@@ -100,6 +100,6 @@ upload: pdf html
 	cp -r _site $(TMPDIR)
 	git checkout gh-pages
 	cp -r $(TMPDIR)/_site/* .
-	git commit -a
+	git commit -a -m "updating GH-PAGES"
 	git push origin gh-pages
 	git checkout main

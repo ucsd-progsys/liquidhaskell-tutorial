@@ -18,6 +18,7 @@ import Text.Pandoc.Walk (query)
 import Control.Monad
 import Control.Applicative ((<$>))
 
+import qualified Data.List as L
 import qualified Data.Map as M
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as L
@@ -70,7 +71,7 @@ data Chapter = Ch { c_num  :: Int
 
 makeToc :: FilePath -> IO TOC
 makeToc dir = do
-  files  <- dirLhs dir
+  files  <- L.sort <$> dirLhs dir
   refs   <- mapM fileTOC [dir </> f | f <- files]
   return  $ TOC $ zip3 [1..] files refs -- M.fromList $ concat refs
 
