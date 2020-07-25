@@ -37,7 +37,7 @@ templateFile = do
 
 txBlock :: T.Text -> IORef Int -> Block -> IO Block
 
-txBlock t r z@(RawBlock (Format "latex") str)
+txBlock t r z@(RawBlock (Format "tex") str)
   | Just contents <- isSpecCode str
   = return $ CodeBlock ("", ["spec"], []) (T.pack contents)
 
@@ -45,7 +45,7 @@ txBlock t r z@(CodeBlock (id, classes, namevals) contents)
   | isCode classes
   = makeHtml t r False contents
 
-txBlock t r (RawBlock (Format "latex") str)
+txBlock t r (RawBlock (Format "tex") str)
   | Just contents <- isCommentCode str
   = makeHtml t r True (T.pack contents)
 
