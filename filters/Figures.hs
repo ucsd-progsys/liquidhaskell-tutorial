@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-@ LIQUID "--no-termination" @-}
 
-module Main (main) where
+module Figures (main) where
 
 import Data.IORef
 import Text.Pandoc.JSON

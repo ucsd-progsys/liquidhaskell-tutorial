@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-@ LIQUID "--no-termination" @-}
 
-module Main (main) where
+module Links (main) where
 
 -- import Data.Char (isSpace)
 -- import Data.Monoid (mempty)

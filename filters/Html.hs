@@ -2,7 +2,7 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main (main) where
+module Html (main) where
 
 import Data.Maybe
 import Text.Pandoc.JSON

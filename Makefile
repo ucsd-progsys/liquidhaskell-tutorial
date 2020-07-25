@@ -2,7 +2,7 @@ RSYNC=$(shell pwd)/sync.sh
 remoteuser=rjhala
 remotedir=/home/rjhala/public_html/liquid/book
 remotehost=goto.ucsd.edu
-TMPDIR=~/tmp/
+TMPDIR=/home/rjhala/tmp
 
 LIQUIDCLIENT=../liquid-client
 
@@ -19,7 +19,7 @@ INDEX=dist/index.lhs
 # bin
 ## INDEXER=stack exec -- runghc filters/Toc.hs
 ## PANDOC=pandoc
-INDEXER=stack run
+INDEXER=stack run filters-toc
 PANDOC=stack exec -- pandoc
 
 

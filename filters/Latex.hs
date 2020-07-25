@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-@ LIQUID "--no-termination" @-}
 
-module Main (main) where
+module Latex (main) where
 
 import Text.Pandoc.JSON
 import Text.Pandoc

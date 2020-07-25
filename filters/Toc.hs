@@ -1,10 +1,8 @@
-#!/usr/bin/env runhaskell
-
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections     #-}
 {-@ LIQUID "--diff" @-}
 
-module Main (main) where
+module Toc (main) where
 
 import Data.Monoid (mempty)
 import Debug.Trace
@@ -71,9 +69,10 @@ data Chapter = Ch { c_num  :: Int
 
 makeToc :: FilePath -> IO TOC
 makeToc dir = do
-  files  <- L.sort <$> dirLhs dir
+  rawFiles  <- dirLhs dir
+  let files = L.sort rawFiles
   refs   <- mapM fileTOC [dir </> f | f <- files]
-  return  $ TOC $ zip3 [1..] files refs -- M.fromList $ concat refs
+  return  $ TOC $ zip3 [1..] files refs
 
 dirLhs dir = do
   fs <- getDirectoryContents dir

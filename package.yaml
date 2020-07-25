@@ -26,21 +26,21 @@ dependencies:
 executables:
   filters-toc:
     main: filters/Toc.hs
-    ghc-options: -threaded
+    ghc-options: -main-is Toc -threaded
   filters-links:
     main: filters/Links.hs
-    ghc-options: -threaded
+    ghc-options: -main-is Links -threaded
   filters-latex:
     main: filters/Latex.hs
-    ghc-options: -threaded
+    ghc-options: -main-is Latex -threaded
   filters-html:
     main: filters/Html.hs
-    ghc-options: -threaded
+    ghc-options: -main-is Html -threaded
   filters-figures:
     main: filters/Figures.hs
-    ghc-options: -threaded
+    ghc-options: -main-is Figures -threaded
   filters-codeblock:
     main: filters/Codeblock.hs
-    ghc-options: -threaded
+    ghc-options: -main-is Codeblock -threaded
   toplevel: 
     main: Main.hs
