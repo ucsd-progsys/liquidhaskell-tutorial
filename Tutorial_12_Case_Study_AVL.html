@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Programming with Refinement Types</title>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="./css/editor.css">
+
+   
+    <style type="text/css">code{white-space: pre;}
+
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+
+
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./js/angular/angular.js"></script>
+<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+
+<!-- MATHJAX TEMPLATES GO HERE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    extensions: ["color.js"],
+    Macros: {
+      True: "\\mathit{True}",
+      RR:   "{\\bf R}",
+      Int:  "\\mathtt{Int}",
+      Nat:  "\\mathtt{Nat}",
+      Zero: "\\mathtt{Zero}",
+      foo:   ["{\\bf Jhala FOO #1}", 1],
+      kvar:  ["{\\color[rgb]{1,0,0}{K_{#1}({#2})}}", 2],
+      bindx: ["{{#1}\\!:\\!{#2}}", 2],
+      reft:  ["\\{\\bindx{#1}{#2} \\mid {#3}\\}", 3],
+      ereft: ["\\bindx{#1}{\\{#2 \\mid #3\\}}", 3],
+      reftx: ["\\{{#1}\\mid{#2}\\}", 2],
+      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3],
+      tcap:  ["(\\mathtt{intersection}\\ #1\\ #2)", 2],
+      tcup:  ["(\\mathtt{union}\\ #1\\ #2)", 2],
+      tsng:  ["(\\mathtt{singleton}\\ #1)", 1]
+  }
+  }
+});
+</script>
+
+<!-- GITHUB -->
+<script
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+  
+<!-- LOCAL 
+
+  <script src="js/MathJax-2.6.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    type="text/javascript"></script>
+    
+  -->
+  
+
+
+
+
+
+
+
+</head>
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
+
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
+
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.5.</b> Sample Code</a></li>
+</ul>
+<li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
+<ul class='section'>
+<li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
+<ul class='section'>
+<li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
+<ul class='section'>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
+</ul>
+<li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
+</ul>
+</ul>
+
+</div>
+      
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+        
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <div class="dropdown" ng-show="isBad">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+               </li>
+             </ul>
+         </div>
+       </div>
+       
+
+<div id='page-wrapper'>
+<div id='page'>
+
+<section id="case-study-avltree" class="level1">
+<h1>Case Study: AVL Trees</h1>
+<p>One of the most fundamental abstractions in computing is that of a <em>collection</em> of values – names, numbers, records – into which we can rapidly <code>insert</code>, <code>delete</code> and check for <code>member</code>ship.</p>
+<p><br />
+<strong>Trees</strong> offer an attractive means of implementing collections in the immutable setting. We can <em>order</em> the values to ensure that each operation takes time proportional to the <em>path</em> from the root to the datum being operated upon. If we additionally keep the tree <em>balanced</em> then each path is small (relative to the size of the collection), thereby giving us an efficient implementation for collections.</p>
+<p>maintaining order and balance is rather easier said than done. Often we must go through rather sophisticated gymnastics to ensure everything is in its right place. Fortunately, LiquidHaskell can help. Lets see a concrete example, that should be familiar from your introductory data structures class: the Georgy Adelson-Velsky and Landis’ or <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL Tree</a>.</p>
+<section id="avl-trees" class="level2">
+<h2>AVL Trees</h2>
+<p>An <code>AVL</code> tree is defined by the following Haskell datatype:<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">data AVL a =
+    Leaf
+  | Node { key :: a      -- value
+         , l   :: AVL a  -- left subtree
+         , r   :: AVL a  -- right subtree
+         , ah  :: Int    -- height
+         }
+    deriving (Show)</div>
+</div>
+
+<p>While the Haskell type signature describes any old binary tree, an <code>AVL</code> tree like that shown in Figure <a href="#fig:avl">1.1</a> actually satisfies two crucial invariants: it should be binary search ordered and balanced.</p>
+<div id="fig:avl" style="align: left; text-align:center;">
+  <img src="img/avl.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> An AVL tree is an ordered, height-balanced tree. </div>
+</div>
+<br>
+
+
+<p><br />
+<strong>A Binary Search Ordered</strong> tree is one where at <em>each</em> <code>Node</code>, the values of the <code>left</code> and <code>right</code> subtrees are strictly less and greater than the values at the <code>Node</code>. In the tree in Figure <a href="#fig:avl">1.1</a> the root has value <code>50</code> while its left and right subtrees have values in the range <code>9-23</code> and <code>54-76</code> respectively. This holds at all nodes, not just the root. For example, the node <code>12</code> has left and right children strictly less and greater than <code>12</code>.</p>
+<p><br />
+<strong>A Balanced</strong> tree is one where at <em>each</em> node, the <em>heights</em> of the left and right subtrees differ by at most <code>1</code>. In Figure <a href="#fig:avl">1.1</a>, at the root, the heights of the left and right subtrees are the same, but at the node <code>72</code> the left subtree has height <code>2</code> which is one more then the right subtree.</p>
+<p>Order ensures that there is at most a single path of <code>left</code> and <code>right</code> moves from the root at which an element can be found; balance ensures that each such path in the tree is of size <span class="math inline">\(O(\log\ n)\)</span> where <span class="math inline">\(n\)</span> is the numbers of nodes. Thus, together they ensure that the collection operations are efficient: they take time logarithmic in the size of the collection.</p>
+</section>
+<section id="specifying-avl-trees" class="level2">
+<h2>Specifying AVL Trees</h2>
+<p>The tricky bit is to ensure order and balance. Before we can ensure anything, lets tell LiquidHaskell what we mean by these terms, by defining legal or valid AVL trees.</p>
+<p><br />
+<strong>To Specify Order</strong> we just define two aliases <code>AVLL</code> and <code>AVLR</code> – read <em>AVL-left</em> and <em>AVL-right</em> – for trees whose values are strictly less than and greater than some value <code>X</code>:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">-- | Trees with value less than X
+{-@ type AVLL a X = AVL {v:a | v < X}  @-}
+
+-- | Trees with value greater than X
+{-@ type AVLR a X = AVL {v:a | X < v}  @-}</div>
+</div>
+
+<p><br />
+<strong>The Real Height</strong> of a tree is defined recursively as <code>0</code> for <code>Leaf</code>s and one more than the larger of left and right subtrees for <code>Node</code>s. Note that we cannot simply use the <code>ah</code> field because that’s just some arbitrary <code>Int</code> – there is nothing to prevent a buggy implementation from just filling that field with <code>0</code> everywhere. In short, we need the ground truth: a measure that computes the <em>actual</em> height of a tree. <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">{-@ measure realHeight @-}
+realHeight                :: AVL a -> Int
+realHeight Leaf           = 0
+realHeight (Node _ l r _) = nodeHeight l r
+
+{-@ inline nodeHeight @-}
+nodeHeight l r = 1 + max hl hr
+  where
+    hl         = realHeight l
+    hr         = realHeight r
+
+{-@ inline max @-}
+max :: Int -> Int -> Int
+max x y = if x > y then x else y</div>
+</div>
+
+<p><br />
+<strong>A Reality Check</strong> predicate ensures that a value <code>v</code> is indeed the <em>real</em> height of a node with subtrees <code>l</code> and <code>r</code>:</p>
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-3" class="programbox">{-@ inline isReal @-}
+isReal v l r = v == nodeHeight l r</div>
+</div>
+
+<p><br />
+<strong>A Node is $n$-Balanced</strong> if its left and right subtrees have a (real) height difference of at most <span class="math inline">\(n\)</span>. We can specify this requirement as a predicate <code>isBal l r n</code></p>
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-4" class="programbox">{-@ inline isBal @-}
+isBal l r n = 0 - n <= d && d <= n
+  where
+    d       = realHeight l - realHeight r</div>
+</div>
+
+<p><br />
+<strong>A Legal AVL Tree</strong> can now be defined via the following <a href="#refineddatatypes">refined data type</a>, which states that each <code>Node</code> is <span class="math inline">\(1\)</span>-balanced, and that the saved height field is indeed the <em>real</em> height:</p>
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-5" class="programbox">{-@ data AVL a = Leaf
+               | Node { key :: a
+                      , l   :: AVLL a key
+                      , r   :: {v:AVLR a key | isBal l v 1}
+                      , ah  :: {v:Nat        | isReal v l r}
+                      }                                  @-}</div>
+</div>
+
+</section>
+<section id="smart-constructors" class="level2">
+<h2>Smart Constructors</h2>
+<p>Lets use the type to construct a few small trees which will also be handy in a general collection API. First, lets write an alias for trees of a given height:</p>
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-6" class="programbox">-- | Trees of height N
+{-@ type AVLN a N = {v: AVL a | realHeight v = N} @-}
+
+-- | Trees of height equal to that of another T
+{-@ type AVLT a T = AVLN a {realHeight T} @-}</div>
+</div>
+
+<p><br />
+<strong>An Empty</strong> collection is represented by a <code>Leaf</code>, which has height <code>0</code>:</p>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">{-@ empty :: AVLN a 0 @-}
+empty = Leaf</div>
+</div>
+
+<div id="Singleton" class="hwex">
+<p><br />
+<strong>Exercise: (Singleton): </strong>Consider the function <code>singleton</code> that builds an <code>AVL</code> tree from a single element. Fix the code below so that it is accepted by LiquidHaskell.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-8" class="programbox">{-@ singleton :: a -> AVLN a 1 @-}
+singleton x =  Node x empty empty 0</div>
+</div>
+
+<p>As you can imagine, it can be quite tedious to keep the saved height field <code>ah</code> <em>in sync</em> with the <em>real</em> height. In general in such situations, which arose also with <a href="#lazyqueue">lazy queues</a>, the right move is to eschew the data constructor and instead use a <em>smart constructor</em> that will fill in the appropriate values correctly. <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p><br />
+<strong>The Smart Constructor</strong> <code>node</code> takes as input the node’s value <code>x</code>, left and right subtrees <code>l</code> and <code>r</code> and returns a tree by filling in the right value for the height field.</p>
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-9" class="programbox">{-@ mkNode :: a -> l:AVL a -> r:AVL a
+           -> AVLN a {nodeHeight l r}
+  @-}
+mkNode v l r = Node v l r h
+ where
+   h       = 1 + max hl hr
+   hl      = getHeight l
+   hr      = getHeight r</div>
+</div>
+
+<div id="Constructor" class="hwex">
+<p><br />
+<strong>Exercise: (Constructor): </strong>Unfortunately, LiquidHaskell rejects the above smart constructor <code>node</code>. Can you explain why? Can you fix the code (implementation or specification) so that the function is accepted?</p>
+<br />
+<br />
+
+</div>
+<p><strong>Hint: </strong>Think about the (refined) type of the actual constructor <code>Node</code>, and the properties it requires and ensures.</p>
+</section>
+<section id="inserting-elements" class="level2">
+<h2>Inserting Elements</h2>
+<p>Next, lets turn our attention to the problem of <em>adding</em> elements to an <code>AVL</code> tree. The basic strategy is this:</p>
+<ol type="1">
+<li><em>Find</em> the appropriate location (per ordering) to add the value,</li>
+<li><em>Replace</em> the <code>Leaf</code> at that location with the singleton value.</li>
+</ol>
+<p>If you prefer the spare precision of code to the informality of English, here is a first stab at implementing insertion: <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-10" class="programbox">{-@ insert0    :: (Ord a) => a -> AVL a -> AVL a @-}
+insert0 y t@(Node x l r _)
+  | y < x      = node x (insert0 y l) r
+  | x < y      = node x l (insert0 y r)
+  | otherwise  = t
+insert0 y Leaf = singleton y</div>
+</div>
+
+<p><br />
+<strong>Unfortunately</strong> <code>insert0</code> does not work. If you did the exercise above, you can replace it with <code>mkNode</code> and you will see that the above function is rejected by LiquidHaskell. The error message would essentially say that at the calls to the smart constructor, the arguments violate the balance requirement.</p>
+<p><br />
+<strong>Insertion Increases The Height</strong> of a sub-tree, making it <em>too large</em> relative to its sibling. For example, consider the tree <code>t0</code> defined as:</p>
+<pre class="ghci"><code>ghci&gt; let t0 = Node { key = &#39;a&#39;
+                    , l   = Leaf
+                    , r   = Node {key = &#39;d&#39;
+                                 , l  = Leaf
+                                 , r  = Leaf
+                                 , ah = 1 }
+                    , ah = 2}</code></pre>
+<p>If we use <code>insert0</code> to add the key <code>'e'</code> (which goes after <code>'d'</code>) then we end up with the result:</p>
+<pre class="ghci"><code>ghci&gt; insert0 &#39;e&#39; t0
+  Node { key = &#39;a&#39;
+       , l   = Leaf
+       , r   = Node { key = &#39;d&#39;
+                    , l   = Leaf
+                    , r   = Node { key = &#39;e&#39;
+                                 , l   = Leaf
+                                 , r   = Leaf
+                                 , ah  = 1   }
+                    , ah = 2                 }
+       , ah = 3}</code></pre>
+<div id="fig:avl-insert0" style="align: left; text-align:center;">
+  <img src="img/avl-insert0.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.2:</b> Naive insertion breaks balancedness </div>
+</div>
+<br>
+
+
+<p>In the above, illustrated in Figure <a href="#fig:avl-insert0">1.2</a> the value <code>'e'</code> is inserted into the valid tree <code>t0</code>; it is inserted using <code>insR0</code>, into the <em>right</em> subtree of <code>t0</code> which already has height <code>1</code> and causes its height to go up to <code>2</code> which is too large relative to the empty left subtree of height <code>0</code>.</p>
+<p><br />
+<strong>LiquidHaskell catches the imbalance</strong> by rejecting <code>insert0</code>. The new value <code>y</code> is inserted into the right subtree <code>r</code>, which (may already be bigger than the left by a factor of <code>1</code>). As insert can return a tree with arbitrary height, possibly much larger than <code>l</code> and hence, LiquidHaskell rejects the call to the constructor <code>node</code> as the balance requirement does not hold.</p>
+<p><br />
+<strong>Two lessons</strong> can be drawn from the above exercise. First, <code>insert</code> may <em>increase</em> the height of a tree by at most <code>1</code>. So, second, we need a way to <em>rebalance</em> sibling trees where one has height <code>2</code> more than the other.</p>
+</section>
+<section id="rebalancing-trees" class="level2">
+<h2>Rebalancing Trees</h2>
+<p>The brilliant insight of Adelson-Velsky and Landis was that we can, in fact, perform such a rebalancing with a clever bit of gardening. Suppose we have inserted a value into the <em>left</em> subtree <code>l</code> to obtain a new tree <code>l'</code> (the right case is symmetric.)</p>
+<p><br />
+<strong>The relative heights</strong> of <code>l'</code> and <code>r</code> fall under one of three cases:</p>
+<ul>
+<li><em>(RightBig)</em> <code>r</code> is two more than <code>l'</code>,</li>
+<li><em>(LeftBig)</em> <code>l'</code> is two more than <code>r</code>, and otherwise</li>
+<li><em>(NoBig)</em> <code>l'</code> and <code>r</code> are within a factor of <code>1</code>,</li>
+</ul>
+<p><br />
+<strong>We can specify</strong> these cases as follows.</p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">{-@ inline leftBig @-}
+leftBig l r = diff l r == 2
+
+{-@ inline rightBig @-}
+rightBig l r = diff r l == 2
+
+{-@ inline diff @-}
+diff s t = getHeight s - getHeight t</div>
+</div>
+
+<p>the function <code>getHeight</code> accesses the saved height field.</p>
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-12" class="programbox">{-@ measure getHeight @-}
+getHeight Leaf           = 0
+getHeight (Node _ _ _ n) = n</div>
+</div>
+
+<p>In <code>insL</code>, the <em>RightBig</em> case cannot arise as <code>l'</code> is at least as big as <code>l</code>, which was within a factor of <code>1</code> of <code>r</code> in the valid input tree <code>t</code>. In <em>NoBig</em>, we can safely link <code>l'</code> and <code>r</code> with the smart constructor as they satisfy the balance requirements. The <em>LeftBig</em> case is the tricky one: we need a way to shuffle elements from the left subtree over to the right side.</p>
+<p><br />
+<strong>What is a LeftBig tree?</strong> Lets split into the possible cases for <code>l'</code>, immediately ruling out the <em>empty</em> tree because its height is <code>0</code> which cannot be <code>2</code> larger than any other tree.</p>
+<ul>
+<li><em>(NoHeavy)</em> the left and right subtrees of <code>l'</code> have the same height,</li>
+<li><em>(LeftHeavy)</em> the left subtree of <code>l'</code> is bigger than the right,</li>
+<li><em>(RightHeavy)</em> the right subtree of <code>l'</code> is bigger than the left.</li>
+</ul>
+<p><br />
+<strong>The Balance Factor</strong> of a tree can be used to make the above cases precise. Note that while the <code>getHeight</code> function returns the saved height (for efficiency), thanks to the invariants, we know it is in fact equal to the <code>realHeight</code> of the given tree.</p>
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-13" class="programbox">{-@ measure balFac @-}
+balFac Leaf           = 0
+balFac (Node _ l r _) = getHeight l - getHeight r</div>
+</div>
+
+<p><br />
+<strong>Heaviness</strong> can be encoded by testing the balance factor:</p>
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-14" class="programbox">{-@ inline leftHeavy @-}
+leftHeavy  t = balFac t > 0
+
+{-@ inline rightHeavy @-}
+rightHeavy t = balFac t < 0
+
+{-@ inline noHeavy @-}
+noHeavy    t = balFac t == 0</div>
+</div>
+
+<p>Adelson-Velsky and Landis observed that once you’ve drilled down into these three cases, the shuffling suggests itself.</p>
+<div id="fig:avl-balL0" style="align: left; text-align:center;">
+  <img src="img/avl-balL0.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.3:</b> Rotating when in the LeftBig, NoHeavy case. </div>
+</div>
+<br>
+
+
+<p><br />
+<strong>In the NoHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balL0">1.3</a>, the subtrees <code>ll</code> and <code>lr</code> have the same height which is one more than that of <code>r</code>. Hence, we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. Here’s how you would implement the rotation. Note how the preconditions capture the exact case we’re in: the left subtree is <em>NoHeavy</em> and the right subtree is smaller than the left by <code>2</code>. Finally, the output type captures the exact height of the result, relative to the input subtrees.</p>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">{-@ balL0 :: x:a
+          -> l:{AVLL a x | noHeavy l}
+          -> r:{AVLR a x | leftBig l r}
+          -> AVLN a {realHeight l + 1 }
+  @-}
+balL0 v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
+</div>
+
+<div id="fig:avl-balLL" style="align: left; text-align:center;">
+  <img src="img/avl-balLL.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.4:</b> Rotating when in the LeftBig, LeftHeavy case. </div>
+</div>
+<br>
+
+
+<p><br />
+<strong>In the LeftHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLL">1.4</a>, the subtree <code>ll</code> is larger than <code>lr</code>; hence <code>lr</code> has the same height as <code>r</code>, and again we can link up <code>lr</code> and <code>r</code> and link the result with <code>l</code>. As in the <em>NoHeavy</em> case, the input types capture the exact case, and the output the height of the resulting tree.</p>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">{-@ balLL :: x:a
+          -> l:{AVLL a x | leftHeavy l}
+          -> r:{AVLR a x | leftBig l r}
+          -> AVLT a l
+  @-}
+balLL v (Node lv ll lr _) r = node lv ll (node v lr r)</div>
+</div>
+
+<div id="fig:avl-balLR" style="align: left; text-align:center;">
+  <img src="img/avl-balLR.png" height="150px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.5:</b> Rotating when in the LeftBig, RightHeavy case. </div>
+</div>
+<br>
+
+
+<p><br />
+<strong>In the RightHeavy</strong> case, illustrated in Figure <a href="#fig:avl-balLR">1.5</a>, the subtree <code>lr</code> is larger than <code>ll</code>. We cannot directly link it with <code>r</code> as the result would again be too large. Hence, we split it further into its own subtrees <code>lrl</code> and <code>lrr</code> and link the latter with <code>r</code>. Again, the types capture the requirements and guarantees of the rotation.</p>
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-17" class="programbox">{-@ balLR :: x:a
+          -> l:{AVLL a x | rightHeavy l}
+          -> r:{AVLR a x | leftBig l r}
+          -> AVLT a l
+  @-}
+balLR v (Node lv ll (Node lrv lrl lrr _) _) r
+  = node lrv (node lv ll lrl) (node v lrr r)</div>
+</div>
+
+<p>The <em>RightBig</em> cases are symmetric to the above cases where the left subtree is the larger one.</p>
+<div id="RightBig, NoHeavy" class="hwex">
+<p><br />
+<strong>Exercise: (RightBig, NoHeavy): </strong>Fix the implementation of <code>balR0</code> so that it implements the given type.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-18" class="programbox">{-@ balR0 :: x:a
+          -> l: AVLL a x
+          -> r: {AVLR a x | rightBig l r && noHeavy r}
+          -> AVLN a {realHeight r + 1}
+  @-}
+balR0 v l r = undefined</div>
+</div>
+
+<div id="RightBig, RightHeavy" class="hwex">
+<p><br />
+<strong>Exercise: (RightBig, RightHeavy): </strong>Fix the implementation of <code>balRR</code> so that it implements the given type.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-19" class="programbox">{-@ balRR :: x:a
+          -> l: AVLL a x
+          -> r:{AVLR a x | rightBig l r && rightHeavy r}
+          -> AVLT a r
+  @-}
+balRR v l r = undefined</div>
+</div>
+
+<div id="RightBig, LeftHeavy" class="hwex">
+<p><br />
+<strong>Exercise: (RightBig, LeftHeavy): </strong>Fix the implementation of <code>balRL</code> so that it implements the given type.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-20" class="programbox">{-@ balRL :: x:a
+          -> l: AVLL a x
+          -> r:{AVLR a x | rightBig l r && leftHeavy r}
+          -> AVLT a r
+  @-}
+balRL v l r = undefined</div>
+</div>
+
+<p><br />
+<strong>To Correctly Insert</strong> an element, we recursively add it to the left or right subtree as appropriate and then determine which of the above cases hold in order to call the corresponding <em>rebalance</em> function which restores the invariants.</p>
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-21" class="programbox">{-@ insert :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
+insert y Leaf = singleton y
+insert y t@(Node x _ _ _)
+  | y < x     = insL y t
+  | y > x     = insR y t
+  | otherwise = t</div>
+</div>
+
+<p>The refinement, <code>eqOrUp</code> says that the height of <code>t</code> is the same as <code>s</code> or goes <em>up</em> by at most <code>1</code>.</p>
+<div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-22" class="programbox">{-@ inline eqOrUp @-}
+eqOrUp s t = d == 0 || d == 1
+  where
+    d      = diff t s</div>
+</div>
+
+<p><br />
+<strong>The hard work</strong> happens inside <code>insL</code> and <code>insR</code>. Here’s the first; it simply inserts into the left subtree to get <code>l'</code> and then determines which rotation to apply.</p>
+<div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-23" class="programbox">{-@ insL :: x:a
+         -> t:{AVL a | x < key t && 0 < realHeight t}
+         -> {v: AVL a | eqOrUp t v}
+  @-}
+insL a (Node v l r _)
+  | isLeftBig && leftHeavy l'  = balLL v l' r
+  | isLeftBig && rightHeavy l' = balLR v l' r
+  | isLeftBig                  = balL0 v l' r
+  | otherwise                  = node  v l' r
+  where
+    isLeftBig                  = leftBig l' r
+    l'                         = insert a l</div>
+</div>
+
+<div id="InsertRight" class="hwex">
+<p><br />
+<strong>Exercise: (InsertRight): </strong> The code for <code>insR</code> is symmetric. To make sure you’re following along, why don’t you fill it in?</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-24" class="programbox">{-@ insR :: x:a
+         -> t:{AVL a  | key t < x && 0 < realHeight t }
+         -> {v: AVL a | eqOrUp t v}
+  @-}
+insR = undefined</div>
+</div>
+
+</section>
+<section id="refactoring-rebalance" class="level2">
+<h2>Refactoring Rebalance</h2>
+<p>Next, lets write a function to <code>delete</code> an element from a tree. In general, we can apply the same strategy as <code>insert</code>:</p>
+<ol type="1">
+<li>remove the element without worrying about heights,</li>
+<li>observe that deleting can <em>decrease</em> the height by at most <code>1</code>,</li>
+<li>perform a rotation to fix the imbalance caused by the decrease.</li>
+</ol>
+<p><br />
+<strong>We painted ourselves into a corner</strong> with <code>insert</code>: the code for actually inserting an element is intermingled with the code for determining and performing the rotation. That is, see how the code that determines which rotation to apply – <code>leftBig</code>, <code>leftHeavy</code>, etc. – is <em>inside</em> the <code>insL</code> which does the insertion as well. This is correct, but it means we would have to <em>repeat</em> the case analysis when deleting a value, which is unfortunate.</p>
+<p><br />
+<strong>Instead lets refactor</strong> the rebalancing code into a separate function, that can be used by <em>both</em> <code>insert</code> and <code>delete</code>. It looks like this:</p>
+<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-25" class="programbox">{-@ bal :: x:a
+        -> l:AVLL a x
+        -> r:{AVLR a x | isBal l r 2}
+        -> {t:AVL a | reBal l r t}
+  @-}
+bal v l r
+  | isLeftBig  && leftHeavy l  = balLL v l r
+  | isLeftBig  && rightHeavy l = balLR v l r
+  | isLeftBig                  = balL0 v l r
+  | isRightBig && leftHeavy r  = balRL v l r
+  | isRightBig && rightHeavy r = balRR v l r
+  | isRightBig                 = balR0 v l r
+  | otherwise                  = node  v l r
+  where
+    isLeftBig                  = leftBig l r
+    isRightBig                 = rightBig l r</div>
+</div>
+
+<p>The <code>bal</code> function is a combination of the case-splits and rotation calls made by <code>insL</code> (and ahem, <code>insR</code>); it takes as input a value <code>x</code> and valid left and right subtrees for <code>x</code> whose heights are off by at most <code>2</code> because as we will have created them by inserting or deleting a value from a sibling whose height was at most <code>1</code> away. The <code>bal</code> function returns a valid <code>AVL</code> tree, whose height is constrained to satisfy the predicate <code>reBal l r t</code>, which says:</p>
+<ul>
+<li>(<code>bigHt</code>) The height of <code>t</code> is the same or one bigger than the larger of <code>l</code> and <code>r</code>, and</li>
+<li>(<code>balHt</code>) If <code>l</code> and <code>r</code> were already balanced (i.e. within <code>1</code>) then the height of <code>t</code> is exactly equal to that of a tree built by directly linking <code>l</code> and <code>r</code>.</li>
+</ul>
+<div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-26" class="programbox">{-@ inline reBal @-}
+reBal l r t = bigHt l r t && balHt l r t
+
+{-@ inline balHt @-}
+balHt l r t = not (isBal l r 1) || isReal (realHeight t) l r
+
+{-@ inline bigHt @-}
+bigHt l r t = lBig && rBig
+  where
+    lBig    = not (hl >= hr) || (eqOrUp l t)
+    rBig    = (hl >= hr)     || (eqOrUp r t)
+    hl      = realHeight l
+    hr      = realHeight r</div>
+</div>
+
+<p><br />
+<strong>Insert</strong> can now be written very simply as the following function that recursively inserts into the appropriate subtree and then calls <code>bal</code> to fix any imbalance:</p>
+<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-27" class="programbox">{-@ insert' :: a -> s:AVL a -> {t: AVL a | eqOrUp s t} @-}
+insert' a t@(Node v l r n)
+  | a < v      = bal v (insert' a l) r
+  | a > v      = bal v l (insert' a r)
+  | otherwise  = t
+insert' a Leaf = singleton a</div>
+</div>
+
+</section>
+<section id="deleting-elements" class="level2">
+<h2>Deleting Elements</h2>
+<p>Now we can write the <code>delete</code> function in a manner similar to <code>insert</code>: the easy cases are the recursive ones; here we just delete from the subtree and summon <code>bal</code> to clean up. Notice that the height of the output <code>t</code> is at most <code>1</code> <em>less</em> than that of the input <code>s</code>.</p>
+<div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-28" class="programbox">{-@ delete    :: a -> s:AVL a -> {t:AVL a | eqOrDn s t} @-}
+delete y (Node x l r _)
+  | y < x     = bal x (delete y l) r
+  | x < y     = bal x l (delete y r)
+  | otherwise = merge x l r
+delete _ Leaf = Leaf
+
+{-@ inline eqOrDn @-}
+eqOrDn s t = eqOrUp t s</div>
+</div>
+
+<p><br />
+<strong>The tricky case</strong> is when we actually <em>find</em> the element that is to be removed. Here, we call <code>merge</code> to link up the two subtrees <code>l</code> and <code>r</code> after hoisting the smallest element from the right tree <code>r</code> as the new root which replaces the deleted element <code>x</code>.</p>
+<div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-29" class="programbox">{-@ merge :: x:a -> l:AVLL a x -> r:{AVLR a x | isBal l r 1}
+          -> {t:AVL a | bigHt l r t}
+  @-}
+merge _ Leaf r = r
+merge _ l Leaf = l
+merge x l r    = bal y l r'
+  where
+   (y, r')     = getMin r</div>
+</div>
+
+<p><code>getMin</code> recursively finds the smallest (i.e. leftmost) value in a tree, and returns the value and the remainder tree. The height of each remainder <code>l'</code> may be lower than <code>l</code> (by at most <code>1</code>.) Hence, we use <code>bal</code> to restore the invariants when linking against the corresponding right subtree <code>r</code>.</p>
+<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-30" class="programbox">getMin (Node x Leaf r _) = (x, r)
+getMin (Node x l r _)    = (x', bal x l' r)
+  where
+    (x', l')             = getMin l</div>
+</div>
+
+</section>
+<section id="functional-correctness" class="level2">
+<h2>Functional Correctness</h2>
+<p>We just saw how to implement some tricky data structure gymnastics. Fortunately, with LiquidHaskell as a safety net we can be sure to have gotten all the rotation cases right and to have preserved the invariants crucial for efficiency and correctness. However, there is nothing in the types above that captures “functional correctness”, which, in this case, means that the operations actually implement a collection or set API, for example, as described <a href="#mapapi">here</a>. Lets use the techniques from that chapter to precisely specify and verify that our AVL operations indeed implement sets correctly, by:</p>
+<ol type="1">
+<li><em>Defining</em> the set of elements in a tree,</li>
+<li><em>Specifying</em> the desired semantics of operations via types,</li>
+<li><em>Verifying</em> the implementation. <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
+</ol>
+<p>We’ve done this <a href="#lemmas">once before</a> already, so this is a good exercise to solidify your understanding of that material.</p>
+<p><br />
+<strong>The Elements</strong> of an <code>AVL</code> tree can be described via a measure defined as follows:</p>
+<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-31" class="programbox">{-@ measure elems @-}
+elems                :: (Ord a) => AVL a -> S.Set a
+elems (Node x l r _) = (S.singleton x) `S.union`
+                       (elems l)       `S.union`
+                       (elems r)
+elems Leaf           = S.empty</div>
+</div>
+
+<p>Let us use the above <code>measure</code> to specify and verify that our <code>AVL</code> library actually implements a <code>Set</code> or collection API.</p>
+<div id="Membership" class="hwex">
+<p><br />
+<strong>Exercise: (Membership): </strong>Complete the implementation of the implementation of <code>member</code> that checks if an element is in an <code>AVL</code> tree:</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-32" class="programbox">-- FIXME https://github.com/ucsd-progsys/liquidhaskell/issues/332
+{-@ member :: (Ord a) => x:a -> t:AVL a -> {v: Bool | v <=> hasElem x t} @-}
+member x t = undefined
+
+{-@ type BoolP P = {v:Bool | v <=> P} @-}
+
+{-@ inline hasElem @-}
+hasElem x t = True
+-- FIXME hasElem x t = S.member x (elems t)</div>
+</div>
+
+<div id="Insertion" class="hwex">
+<p><br />
+<strong>Exercise: (Insertion): </strong>Modify <code>insert'</code> to obtain a function <code>insertAPI</code> that states that the output tree contains the newly inserted element (in addition to the old elements):</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-33" class="programbox">{-@ insertAPI :: (Ord a) => a -> s:AVL a -> {t:AVL a | addElem x s t} @-}
+insertAPI x s = insert' x s
+
+{-@ inline addElem @-}
+addElem       :: Ord a => a -> AVL a -> AVL a -> Bool
+addElem x s t = True
+-- FIXME addElem x s t = (elems t) == (elems s) `S.union` (S.singleton x)</div>
+</div>
+
+<div id="Insertion" class="hwex">
+<p><br />
+<strong>Exercise: (Insertion): </strong>Modify <code>delete</code> to obtain a function <code>deleteAPI</code> that states that the output tree contains the old elements minus the removed element:</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-34" class="programbox">{-@ deleteAPI :: (Ord a) => a -> s:AVL a -> {t: AVL a | delElem x s t} @-}
+deleteAPI x s = delete x s
+
+{-@ inline delElem @-}
+delElem       :: Ord a => a -> AVL a -> AVL a -> Bool
+delElem x s t = True
+-- FIXME delElem x s t = (elems t) == (elems s) `S.difference` (S.singleton x)</div>
+</div>
+
+</section>
+</section>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This chapter is based on code by Michael Beaumont.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><strong>FIXME</strong> The <code>inline</code> pragma indicates that the Haskell functions can be directly lifted into and used inside the refinement logic and measures.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Why bother to save the height anyway? Why not just recompute it instead?<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p><code>node</code> is a fixed variant of the smart constructor <code>mkNode</code>. Do the exercise <em>without</em> looking at it.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>By adding <a href="#lemmas">ghost operations</a>, if needed.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</div>
+</div>
+
+<div class="hidden">
+<!--Site Meter -->
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <noscript>
+    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
+      target="_top">
+      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
+      alt="Site Meter" border="0"/></a>
+  </noscript>
+  <!-- Copyright (c)2009 Site Meter -->
+</div>
+
+
+
+
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script> 
+  <script src="./js/liquid/annot.js"></script> 
+  <script src="./js/liquid/config.js"></script> 
+  <script src="./js/liquid/liquid.js"></script>
+
+  <script type="text/javascript">
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+  </script>
+  
+  <!-- rust nav JS --> 
+  <script type="text/javascript">
+    window.playgroundUrl = "";
+  </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
+  function toggleNav() {
+    var toc         = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    var status      = document.getElementById("checker-status");
+
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
+
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
+
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+       el.className = classes.join(' ');
+     }
+  }
+});
+</script>
+</body>
+</html>

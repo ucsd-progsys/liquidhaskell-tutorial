@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Programming with Refinement Types</title>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="./css/editor.css">
+
+   
+    <style type="text/css">code{white-space: pre;}
+
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+
+
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./js/angular/angular.js"></script>
+<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+
+<!-- MATHJAX TEMPLATES GO HERE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    extensions: ["color.js"],
+    Macros: {
+      True: "\\mathit{True}",
+      RR:   "{\\bf R}",
+      Int:  "\\mathtt{Int}",
+      Nat:  "\\mathtt{Nat}",
+      Zero: "\\mathtt{Zero}",
+      foo:   ["{\\bf Jhala FOO #1}", 1],
+      kvar:  ["{\\color[rgb]{1,0,0}{K_{#1}({#2})}}", 2],
+      bindx: ["{{#1}\\!:\\!{#2}}", 2],
+      reft:  ["\\{\\bindx{#1}{#2} \\mid {#3}\\}", 3],
+      ereft: ["\\bindx{#1}{\\{#2 \\mid #3\\}}", 3],
+      reftx: ["\\{{#1}\\mid{#2}\\}", 2],
+      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3],
+      tcap:  ["(\\mathtt{intersection}\\ #1\\ #2)", 2],
+      tcup:  ["(\\mathtt{union}\\ #1\\ #2)", 2],
+      tsng:  ["(\\mathtt{singleton}\\ #1)", 1]
+  }
+  }
+});
+</script>
+
+<!-- GITHUB -->
+<script
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+  
+<!-- LOCAL 
+
+  <script src="js/MathJax-2.6.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    type="text/javascript"></script>
+    
+  -->
+  
+
+
+
+
+
+
+
+</head>
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
+
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
+
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.5.</b> Sample Code</a></li>
+</ul>
+<li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
+<ul class='section'>
+<li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
+<ul class='section'>
+<li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
+<ul class='section'>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
+</ul>
+<li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
+</ul>
+</ul>
+
+</div>
+      
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+        
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <div class="dropdown" ng-show="isBad">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+               </li>
+             </ul>
+         </div>
+       </div>
+       
+
+<div id='page-wrapper'>
+<div id='page'>
+
+<section id="intro" class="level1">
+<h1>Introduction</h1>
+<p>One of the great things about Haskell is its brainy type system that allows one to enforce a variety of invariants at compile time, thereby nipping in the bud a large swathe of run-time <a href="#getting-started">errors</a>.</p>
+<section id="gowrong" class="level2">
+<h2>Well-Typed Programs Do Go Wrong</h2>
+<p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
+<p><br />
+<strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">average    :: [Int] -> Int
+average xs = sum xs `div` length xs</div>
+</div>
+
+<p>We get the desired result on a non-empty list of numbers:</p>
+<pre class="ghci"><code>ghci&gt; average [10, 20, 30, 40]
+25</code></pre>
+<p>However, if we call it with an empty list, we get a rather unpleasant crash: <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<pre class="ghci"><code>ghci&gt; average []
+*** Exception: divide by zero</code></pre>
+<p>Associative key-value maps are the new lists; they come “built-in” with modern languages like Go, Python, JavaScript and Lua; and of course, they’re widely used in Haskell too.</p>
+<pre class="ghci"><code>ghci&gt; :m +Data.Map 
+ghci&gt; let m = fromList [ (&quot;haskell&quot;, &quot;lazy&quot;)
+                       , (&quot;ocaml&quot;  , &quot;eager&quot;)]
+
+ghci&gt; m ! &quot;haskell&quot;
+&quot;lazy&quot;</code></pre>
+<p>Alas, maps are another source of vexing errors that are tickled when we try to find the value of an absent key: <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<pre class="ghci"><code>ghci&gt; m ! &quot;javascript&quot;
+&quot;*** Exception: key is not in the map</code></pre>
+<p>Say what? How can one possibly get a segmentation fault with a <em>safe</em> language like Haskell. Well, here’s the thing: every safe language is built on a foundation of machine code, or at the very least, <code>C</code>. Consider the ubiquitous <code>vector</code> library:</p>
+<pre class="ghci"><code>ghci&gt; :m +Data.Vector 
+ghci&gt; let v = fromList [&quot;haskell&quot;, &quot;ocaml&quot;]
+ghci&gt; unsafeIndex v 0
+&quot;haskell&quot;</code></pre>
+<p>However, invalid inputs at the safe upper levels can percolate all the way down and stir a mutiny down below: <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<pre class="ghci"><code>ghci&gt; unsafeIndex v 3
+&#39;ghci&#39; terminated by signal SIGSEGV ...</code></pre>
+<p>Finally, for certain kinds of programs, there is a fate worse than death. <code>text</code> is a high-performance string processing library for Haskell, that is used, for example, to build web services.</p>
+<pre class="ghci"><code>ghci&gt; :m +Data.Text Data.Text.Unsafe 
+ghci&gt; let t = pack &quot;Voltage&quot;
+ghci&gt; takeWord16 5 t
+&quot;Volta&quot;</code></pre>
+<p>A cunning adversary can use invalid, or rather, <em>well-crafted</em>, inputs that go well outside the size of the given <code>text</code> to read extra bytes and thus <em>extract secrets</em> without anyone being any the wiser.</p>
+<pre class="ghci"><code>ghci&gt; takeWord16 20 t
+&quot;Voltage\1912\3148\SOH\NUL\15928\2486\SOH\NUL&quot;</code></pre>
+<p>The above call returns the bytes residing in memory <em>immediately after</em> the string <code>Voltage</code>. These bytes could be junk, or could be either the name of your favorite TV show, or, more worryingly, your bank account password.</p>
+</section>
+<section id="refinement-types" class="level2">
+<h2>Refinement Types</h2>
+<p>Refinement types allow us to enrich Haskell’s type system with <em>predicates</em> that precisely describe the sets of <em>valid</em> inputs and outputs of functions, values held inside containers, and so on. These predicates are drawn from special <em>logics</em> for which there are fast <em>decision procedures</em> called SMT solvers.</p>
+<p><br />
+<strong>By combining types with predicates</strong> you can specify <em>contracts</em> which describe valid inputs and outputs of functions. The refinement type system <em>guarantees at compile-time</em> that functions adhere to their contracts. That is, you can rest assured that the above calamities <em>cannot occur at run-time</em>.</p>
+<p><br />
+<strong>LiquidHaskell</strong> is a Refinement Type Checker for Haskell, and in this tutorial we’ll describe how you can use it to make programs better and programming even more fun. <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+</section>
+<section id="audience" class="level2">
+<h2>Audience</h2>
+<p>Do you</p>
+<ul>
+<li>know a bit of basic arithmetic and logic?</li>
+<li>know the difference between a <code>nand</code> and an <code>xor</code>?</li>
+<li>know any typed languages e.g. ML, Haskell, Scala, F# or (Typed) Racket?</li>
+<li>know what <code>forall a. a -&gt; a</code> means?</li>
+<li>like it when your code editor politely points out infinite loops?</li>
+<li>like your programs to not have bugs?</li>
+</ul>
+<p>Then this tutorial is for you!</p>
+</section>
+<section id="getting-started" class="level2">
+<h2>Getting Started</h2>
+<p>As of July 2020, LiquidHaskell, version 0.8.10 onwards, is available as a <a href="https://downloads.haskell.org/~ghc/8.10.1/docs/html/users_guide/extending_ghc.html">GHC plugin</a>.</p>
+<p>This means, roughly, that you need simply</p>
+<ol type="1">
+<li>Add LH to your project dependencies, after which</li>
+<li>GHC produces LH type errors whenever you compile the code, so that you can</li>
+<li>View errors using your favorite editor’s existing Haskell tooling.</li>
+</ol>
+<p><br />
+<strong>LiquidHaskell Requires</strong> (in addition to the cabal dependencies) a binary for an <code>SMTLIB2</code> compatible solver, e.g. one of</p>
+<ul>
+<li><a href="https://github.com/Z3Prover/z3">Z3</a> (which we recommend)</li>
+<li><a href="http://cvc4.cs.nyu.edu/">CVC4</a></li>
+<li><a href="http://mathsat.fbk.eu/download.html">MathSat</a></li>
+</ul>
+<p><br />
+<strong>This Tutorial</strong> is written in literate Haskell and the code for it is available <a href="http://github.com/ucsd-progsys/liquidhaskell-tutorial.git">here</a>. Hence, we <em>strongly</em> recommend you grab the code, and follow along, and especially that you do the exercises, via two steps.</p>
+<p><strong>Step 1</strong> Clone the code repository,</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="fu">git</span> clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git</span></code></pre></div>
+<p><strong>Step 2:</strong> Iteratively edit-compile until the code in <code>src/</code> using</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="ex">cabal</span> v2-build</span></code></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="ex">stack</span> build --fast --file-watch</span></code></pre></div>
+<p>until it <em>builds</em> without any liquid type errors.</p>
+<p>The above workflow will let you use whatever GHC/Haskell tooling you use for your favorite editor, to automatically display LH errors as well.</p>
+</section>
+<section id="sample-code" class="level2">
+<h2>Sample Code</h2>
+<p>This tutorial is written in literate Haskell and the code for it is available <a href="http://github.com/ucsd-progsys/liquidhaskell-tutorial.git">here</a>.</p>
+<p>We <em>strongly</em> recommend you grab the code, and follow along, and especially that you do the exercises.</p>
+<p>If you’d like to copy and paste code snippets into the web demo, instead of cloning the repo, note that you may need to pass <code>--no-termination</code> to <code>liquid</code>, or equivalently, add the pragma <code>{-@ LIQUID "--no-termination" @-}</code> to the top of the source file. (By default, <code>liquid</code> tries to ensure that all code it examines will terminate. Some of the code in this tutorial is written in such a way that termination is not immediately obvious to LH.)</p>
+<p><strong>Note:</strong> This tutorial is a <em>work in progress</em>, and we will be <strong>very</strong> grateful for feedback and suggestions, ideally via pull-requests on github.</p>
+<p>Lets begin!</p>
+</section>
+</section>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>We could write <code>average</code> more <em>defensively</em>, returning a <code>Maybe</code> or <code>Either</code> value. However, this merely kicks the can down the road. Ultimately, we will want to extract the <code>Int</code> from the <code>Maybe</code> and if the inputs were invalid to start with, then at that point we’d be stuck.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Again, one could use a <code>Maybe</code> but it’s just deferring the inevitable.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Why use a function marked <code>unsafe</code>? Because it’s very fast! Furthermore, even if we used the safe variant, we’d get a <em>run-time</em> exception which is only marginally better. Finally, we should remember to thank the developers for carefully marking it unsafe, because in general, given the many layers of abstraction, it is hard to know which functions are indeed safe.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>If you are familiar with the notion of Dependent Types, for example, as in the Coq proof assistant, then Refinement Types can be thought of as restricted class of the former where the logic is restricted, at the cost of expressiveness, but with the reward of a considerable amount of automation.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</div>
+</div>
+
+<div class="hidden">
+<!--Site Meter -->
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <noscript>
+    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
+      target="_top">
+      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
+      alt="Site Meter" border="0"/></a>
+  </noscript>
+  <!-- Copyright (c)2009 Site Meter -->
+</div>
+
+
+
+
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script> 
+  <script src="./js/liquid/annot.js"></script> 
+  <script src="./js/liquid/config.js"></script> 
+  <script src="./js/liquid/liquid.js"></script>
+
+  <script type="text/javascript">
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+  </script>
+  
+  <!-- rust nav JS --> 
+  <script type="text/javascript">
+    window.playgroundUrl = "";
+  </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
+  function toggleNav() {
+    var toc         = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    var status      = document.getElementById("checker-status");
+
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
+
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
+
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+       el.className = classes.join(' ');
+     }
+  }
+});
+</script>
+</body>
+</html>
