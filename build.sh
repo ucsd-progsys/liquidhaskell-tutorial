@@ -44,8 +44,8 @@ mkGITHUB() {
   git checkout main
 }
 
-# mkdir -p dist
-# mkLHS
-# mkPDF
-# mkWEB
+mkdir -p dist
+mkLHS
+mkPDF
+mkWEB
 mkGITHUB
