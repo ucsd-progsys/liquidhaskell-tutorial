@@ -276,12 +276,7 @@ MathJax.Hub.Config({
 
 <section id="intro" class="level1">
 <h1>Introduction</h1>
-<p>One of the great things about Haskell is its brainy type system that allows one to enforce a variety of invariants at compile time, thereby nipping in the bud a large swathe of run-time <a href="#getting-started">errors</a>.</p>
-<section id="gowrong" class="level2">
-<h2>Well-Typed Programs Do Go Wrong</h2>
-<p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
-<p><br />
-<strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
+<div class="hidden">
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -290,7 +285,33 @@ MathJax.Hub.Config({
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">average    :: [Int] -> Int
+  <div id="program-0" class="programbox">{-# LANGUAGE CPP #-}
+
+module Tutorial_01_Introduction where
+main = putStrLn "ThisIsTheIntro"
+
+-- {-@ ignore average @-}
+
+</div>
+</div>
+
+</div>
+
+<p>One of the great things about Haskell is its brainy type system that allows one to enforce a variety of invariants at compile time, thereby nipping in the bud a large swathe of run-time <a href="#getting-started">errors</a>.</p>
+<section id="gowrong" class="level2">
+<h2>Well-Typed Programs Do Go Wrong</h2>
+<p>Alas, well-typed programs <em>do</em> go quite wrong, in a variety of ways.</p>
+<p><br />
+<strong>Division by Zero</strong> This innocuous function computes the average of a list of integers:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">average    :: [Int] -> Int
 average xs = sum xs `div` length xs</div>
 </div>
 

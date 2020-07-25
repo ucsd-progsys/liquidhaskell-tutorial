@@ -276,12 +276,7 @@ MathJax.Hub.Config({
 
 <section id="numericmeasure" class="level1">
 <h1>Numeric Measures</h1>
-<p>Many of the programs we have seen so far, for example those in <a href="#vectorbounds">here</a>, suffer from <em>indexitis</em>. This is a term coined by <a href="http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383">Richard Bird</a> which describes a tendency to perform low-level manipulations to iterate over the indices into a collection, opening the door to various off-by-one errors. Such errors can be eliminated by instead programming at a higher level, using a <a href="http://www.cs.ox.ac.uk/ralf.hinze/publications/ICFP09.pdf">wholemeal approach</a> where the emphasis is on using aggregate operations, like <code>map</code>, <code>fold</code> and <code>reduce</code>.</p>
-<p><br />
-<strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<section id="wholemeal-programming" class="level2">
-<h2>Wholemeal Programming</h2>
-<p>Indexitis begone! As an example of wholemeal programming, lets write a small library that represents vectors as lists and matrices as nested vectors:</p>
+<div class="hidden">
 <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -290,7 +285,64 @@ MathJax.Hub.Config({
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-0" class="programbox">data Vector a = V { vDim  :: Int
+  <div id="program-0" class="programbox">{-@ LIQUID "--short-names"    @-}
+{-@ LIQUID "--no-termination" @-}
+
+module Tutorial_07_Measure_Int where
+import Prelude  hiding  (map, zipWith, zip, take, drop, reverse)
+
+{-@ type TRUE = {v:Bool | v} @-}
+
+{-@ die :: {v:_ | false} -> a @-}
+die msg = error msg
+take, drop, take' :: Int -> [a] -> [a]
+txgo              :: Int -> Int -> Vector (Vector a) -> Vector (Vector a)
+quickSort         :: (Ord a) => [a] -> [a]
+size              :: [a] -> Int
+flatten :: Int -> Int -> Vector (Vector a) -> Vector a
+test4 :: [String]
+
+-- {-@ ignore dotProd @-}
+-- {-@ ignore matProd @-}
+-- {-@ ignore prop_map @-}
+-- {-@ ignore reverse @-}
+-- {-@ fail test1 @-}
+-- {-@ fail test2 @-}
+-- {-@ fail test3 @-}
+-- {-@ fail test4 @-}
+-- {-@ fail test5 @-}
+-- {-@ fail test6 @-}
+-- {-@ fail test10 @-}
+-- {-@ ignore drop @-}
+-- {-@ ignore zipOrNull @-}
+-- {-@ fail badVec @-}
+-- {-@ fail product @-}
+-- {-@ fail bad1 @-}
+-- {-@ fail bad2 @-}
+-- {-@ fail mat23 @-}
+-- {-@ fail matProduct @-}
+
+-- {-@ ignore for @-}
+</div>
+</div>
+
+</div>
+
+<p>Many of the programs we have seen so far, for example those in <a href="#vectorbounds">here</a>, suffer from <em>indexitis</em>. This is a term coined by <a href="http://www.amazon.com/Pearls-Functional-Algorithm-Design-Richard/dp/0521513383">Richard Bird</a> which describes a tendency to perform low-level manipulations to iterate over the indices into a collection, opening the door to various off-by-one errors. Such errors can be eliminated by instead programming at a higher level, using a <a href="http://www.cs.ox.ac.uk/ralf.hinze/publications/ICFP09.pdf">wholemeal approach</a> where the emphasis is on using aggregate operations, like <code>map</code>, <code>fold</code> and <code>reduce</code>.</p>
+<p><br />
+<strong>Wholemeal programming is no panacea</strong> as it still requires us to take care when operating on <em>different</em> collections; if these collections are <em>incompatible</em>, e.g. have the wrong dimensions, then we end up with a fate worse than a crash, a possibly meaningless result. Fortunately, LiquidHaskell can help. Lets see how we can use measures to specify dimensions and create a dimension-aware API for lists which can be used to implement wholemeal dimension-safe APIs.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<section id="wholemeal-programming" class="level2">
+<h2>Wholemeal Programming</h2>
+<p>Indexitis begone! As an example of wholemeal programming, lets write a small library that represents vectors as lists and matrices as nested vectors:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">data Vector a = V { vDim  :: Int
                   , vElts :: [a]
                   }
               deriving (Eq)
@@ -304,7 +356,7 @@ data Matrix a = M { mRow  :: Int
 
 <p><br />
 <strong>The Dot Product</strong> of two <code>Vector</code>s can be easily computed using a fold:</p>
-<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -312,7 +364,7 @@ data Matrix a = M { mRow  :: Int
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-1" class="programbox">dotProd       :: (Num a) => Vector a -> Vector a -> a
+  <div id="program-2" class="programbox">dotProd       :: (Num a) => Vector a -> Vector a -> a
 dotProd vx vy = sum (prod xs ys)
   where
     prod      = zipWith (\x y -> x * y)
@@ -322,7 +374,7 @@ dotProd vx vy = sum (prod xs ys)
 
 <p><br />
 <strong>Matrix Multiplication</strong> can similarly be expressed in a high-level, wholemeal fashion, by eschewing low level index manipulations in favor of a high-level <em>iterator</em> over the <code>Matrix</code> elements:</p>
-<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -330,7 +382,7 @@ dotProd vx vy = sum (prod xs ys)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-2" class="programbox">matProd       :: (Num a) => Matrix a -> Matrix a -> Matrix a
+  <div id="program-3" class="programbox">matProd       :: (Num a) => Matrix a -> Matrix a -> Matrix a
 matProd (M rx _ xs) (M _ cy ys)
               = M rx cy elts
   where
@@ -357,7 +409,7 @@ for (V n xs) f = V n (map f xs)</code></pre>
 <p>In order to start reasoning about dimensions, we need a way to represent the <em>dimension</em> of a list inside the refinement logic. <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <p><br />
 <strong>Measures</strong> are ideal for this task. <a href="#boolmeasures">Previously</a> we saw how we could lift Haskell functions up to the refinement logic. Lets write a measure to describe the length of a list: <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
-<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -365,7 +417,7 @@ for (V n xs) f = V n (map f xs)</code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-3" class="programbox">{-@ measure size @-}
+  <div id="program-4" class="programbox">{-@ measure size @-}
 {-@ size :: [a] -> Nat @-}
 size []     = 0
 size (_:rs) = 1 + size rs</div>
@@ -377,7 +429,7 @@ size (_:rs) = 1 + size rs</div>
   (:) :: a -&gt; xs:[a] -&gt; {v:[a]|size v = 1 + size xs}</code></pre>
 <p><br />
 <strong>Multiple Measures</strong> may be defined for the same data type. For example, in addition to the <code>size</code> measure, we can define a <code>notEmpty</code> measure for the list type:</p>
-<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -385,7 +437,7 @@ size (_:rs) = 1 + size rs</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-4" class="programbox">{-@ measure notEmpty @-}
+  <div id="program-5" class="programbox">{-@ measure notEmpty @-}
 notEmpty       :: [a] -> Bool
 notEmpty []    = False
 notEmpty (_:_) = True</div>
@@ -401,21 +453,6 @@ notEmpty (_:_) = True</div>
 <p>We are almost ready to begin creating a dimension aware API for lists; one last thing that is useful is a couple of aliases for describing lists of a given dimension.</p>
 <p><br />
 <strong>To make signatures symmetric</strong> lets define an alias for plain old (unrefined) lists:</p>
-<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-5" class="programbox">type List a = [a]</div>
-</div>
-
-<div class="toolinfo">
-<p><br />
-<strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.</p>
-</div>
 <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -424,7 +461,22 @@ notEmpty (_:_) = True</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-6" class="programbox">{-@ type ListN a N = {v:List a | size v = N} @-}
+  <div id="program-6" class="programbox">type List a = [a]</div>
+</div>
+
+<div class="toolinfo">
+<p><br />
+<strong>A ListN</strong> is a list with exactly <code>N</code> elements, and a <code>ListX</code> is a list whose size is the same as another list <code>X</code>. Note that when defining refinement type aliases, we use uppercase variables like <code>N</code> and <code>X</code> to distinguish <em>value</em> parameters from the lowercase <em>type</em> parameters like <code>a</code>.</p>
+</div>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">{-@ type ListN a N = {v:List a | size v = N} @-}
 {-@ type ListX a X = ListN a {size X}        @-}</div>
 </div>
 
@@ -440,7 +492,7 @@ notEmpty (_:_) = True</div>
 <br />
 
 </div>
-<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -448,7 +500,7 @@ notEmpty (_:_) = True</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-7" class="programbox">{-@ map      :: (a -> b) -> xs:List a -> List b @-}
+  <div id="program-8" class="programbox">{-@ map      :: (a -> b) -> xs:List a -> List b @-}
 map _ []     = []
 map f (x:xs) = f x : map f xs
 
@@ -466,23 +518,6 @@ prop_map xs = size ys == size xs
 
 </div>
 <p><strong>Hint: </strong>How big is the list returned by <code>go</code>?</p>
-<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-8" class="programbox">{-@ reverse       :: xs:List a -> ListX a xs @-}
-reverse xs        = go [] xs
-  where
-    go acc []     = acc
-    go acc (x:xs) = go (x:acc) xs</div>
-</div>
-
-<p><br />
-<strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -491,7 +526,24 @@ reverse xs        = go [] xs
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-9" class="programbox">{-@ zipWith :: (a -> b -> c) -> xs:List a
+  <div id="program-9" class="programbox">{-@ reverse       :: xs:List a -> ListX a xs @-}
+reverse xs        = go [] xs
+  where
+    go acc []     = acc
+    go acc (x:xs) = go (x:acc) xs</div>
+</div>
+
+<p><br />
+<strong>zipWith</strong> requires both lists to have the <em>same</em> size, and produces a list with that same size. <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-10" class="programbox">{-@ zipWith :: (a -> b -> c) -> xs:List a
                              -> ListX b xs
                              -> ListX c xs
   @-}
@@ -502,21 +554,6 @@ zipWith _ _  _          = die "no other cases"</div>
 
 <p><br />
 <strong>unsafeZip</strong> The signature for <code>zipWith</code> is quite severe – it rules out the case where the zipping occurs only up to the shorter input. Here’s a function that actually allows for that case, where the output type is the <em>shorter</em> of the two inputs:</p>
-<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-10" class="programbox">{-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Tinier v as bs} @-}
-zip (a:as) (b:bs) = (a, b) : zip as bs
-zip [] _          = []
-zip _  []         = []</div>
-</div>
-
-<p>The output type uses the predicate <code>Tinier Xs Ys Zs</code> which defines the length of <code>Xs</code> to be the smaller of that of <code>Ys</code> and <code>Zs</code>.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -525,7 +562,22 @@ zip _  []         = []</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-11" class="programbox">{-@ predicate Tinier X Y Z = Min (size X) (size Y) (size Z) @-}
+  <div id="program-11" class="programbox">{-@ zip :: as:[a] -> bs:[b] -> {v:[(a,b)] | Tinier v as bs} @-}
+zip (a:as) (b:bs) = (a, b) : zip as bs
+zip [] _          = []
+zip _  []         = []</div>
+</div>
+
+<p>The output type uses the predicate <code>Tinier Xs Ys Zs</code> which defines the length of <code>Xs</code> to be the smaller of that of <code>Ys</code> and <code>Zs</code>.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-12" class="programbox">{-@ predicate Tinier X Y Z = Min (size X) (size Y) (size Z) @-}
 {-@ predicate Min X Y Z = (if Y < Z then X = Y else X = Z)  @-}</div>
 </div>
 
@@ -536,7 +588,7 @@ zip _  []         = []</div>
 <br />
 
 </div>
-<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -544,7 +596,7 @@ zip _  []         = []</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-12" class="programbox">zipOrNull       :: [a] -> [b] -> [(a, b)]
+  <div id="program-13" class="programbox">zipOrNull       :: [a] -> [b] -> [(a, b)]
 zipOrNull [] _  = []
 zipOrNull _ []  = []
 zipOrNull xs ys = zipWith (,) xs ys
@@ -566,21 +618,6 @@ test3     = zipOrNull ["cat", "dog"] []</div>
 <p>Next, lets look at some functions that truncate lists, in one way or another.</p>
 <p><br />
 <strong>Take</strong> lets us grab the first <code>k</code> elements from a list:</p>
-<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-13" class="programbox">{-@ take'     :: n:Nat -> ListGE a n -> ListN a n @-}
-take' 0 _      = []
-take' n (x:xs) = x : take' (n-1) xs
-take' _ _      = die "won't  happen"</div>
-</div>
-
-<p>The alias <code>ListGE a n</code> denotes lists whose length is at least <code>n</code>:</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -589,7 +626,22 @@ take' _ _      = die "won't  happen"</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-14" class="programbox">{-@ type ListGE a N = {v:List a | N <= size v} @-}</div>
+  <div id="program-14" class="programbox">{-@ take'     :: n:Nat -> ListGE a n -> ListN a n @-}
+take' 0 _      = []
+take' n (x:xs) = x : take' (n-1) xs
+take' _ _      = die "won't  happen"</div>
+</div>
+
+<p>The alias <code>ListGE a n</code> denotes lists whose length is at least <code>n</code>:</p>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">{-@ type ListGE a N = {v:List a | N <= size v} @-}</div>
 </div>
 
 <div id="Drop" class="hwex">
@@ -599,7 +651,7 @@ take' _ _      = die "won't  happen"</div>
 <br />
 
 </div>
-<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -607,7 +659,7 @@ take' _ _      = die "won't  happen"</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-15" class="programbox">drop 0 xs     = xs
+  <div id="program-16" class="programbox">drop 0 xs     = xs
 drop n (_:xs) = drop (n-1) xs
 drop _ _      = die "won't happen"
 
@@ -622,7 +674,7 @@ test4 = drop 1 ["cat", "dog", "mouse"]</div>
 <br />
 
 </div>
-<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -630,7 +682,7 @@ test4 = drop 1 ["cat", "dog", "mouse"]</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-16" class="programbox">take 0 _       = []
+  <div id="program-17" class="programbox">take 0 _       = []
 take _ []      = []
 take n (x:xs)  = x : take (n-1) xs
 
@@ -641,7 +693,7 @@ test5 = [ take 2  ["cat", "dog", "mouse"]
 
 <p><br />
 <strong>The Partition</strong> function breaks a list into two sub-lists of elements that either satisfy or fail a user supplied predicate.</p>
-<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -649,7 +701,7 @@ test5 = [ take 2  ["cat", "dog", "mouse"]
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-17" class="programbox">partition          :: (a -> Bool) -> [a] -> ([a], [a])
+  <div id="program-18" class="programbox">partition          :: (a -> Bool) -> [a] -> ([a], [a])
 partition _ []     = ([], [])
 partition f (x:xs)
   | f x            = (x:ys, zs)
@@ -665,18 +717,6 @@ fst  (x, _) = x
 {-@ measure snd @-}
 snd (_, y) = y</code></pre>
 <p>We can now refine the type of <code>partition</code> as:</p>
-<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-18" class="programbox">{-@ partition :: _ -> xs:_ -> {v:_ | Sum2 v (size xs)} @-}</div>
-</div>
-
-<p>where <code>Sum2 V N</code> holds for a pair of lists dimensions add to <code>N</code>:</p>
 <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -685,7 +725,19 @@ snd (_, y) = y</code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-19" class="programbox">{-@ predicate Sum2 X N = size (fst X) + size (snd X) = N @-}</div>
+  <div id="program-19" class="programbox">{-@ partition :: _ -> xs:_ -> {v:_ | Sum2 v (size xs)} @-}</div>
+</div>
+
+<p>where <code>Sum2 V N</code> holds for a pair of lists dimensions add to <code>N</code>:</p>
+<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-20" class="programbox">{-@ predicate Sum2 X N = size (fst X) + size (snd X) = N @-}</div>
 </div>
 
 <div id="QuickSort" class="hwex">
@@ -695,7 +747,7 @@ snd (_, y) = y</code></pre>
 <br />
 
 </div>
-<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -703,7 +755,7 @@ snd (_, y) = y</code></pre>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-20" class="programbox">-- >> quickSort [1,4,3,2]
+  <div id="program-21" class="programbox">-- >> quickSort [1,4,3,2]
 -- [1,2,3,4]
 
 {-@ quickSort    :: (Ord a) => xs:List a -> ListX a xs @-}
@@ -720,20 +772,6 @@ test10 = quickSort (drop 1 ["cat", "dog", "mouse"])</div>
 <p>We can use the dimension aware lists to create a safe vector API.</p>
 <p><br />
 <strong>Legal Vectors</strong> are those whose <code>vDim</code> field actually equals the size of the underlying list:</p>
-<div id="program-pane-21" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-21" class="programbox">{-@ data Vector a = V { vDim  :: Nat
-                      , vElts :: ListN a vDim }         
-  @-}</div>
-</div>
-
-<p>When <code>vDim</code> is used a selector function, it returns the <code>vDim</code> field of <code>x</code>.</p>
 <div id="program-pane-22" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -742,10 +780,12 @@ test10 = quickSort (drop 1 ["cat", "dog", "mouse"])</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-22" class="programbox">{-@ vDim :: x:_ -> {v: Nat | v = vDim x} @-}</div>
+  <div id="program-22" class="programbox">{-@ data Vector a = V { vDim  :: Nat
+                      , vElts :: ListN a vDim }         
+  @-}</div>
 </div>
 
-<p> The refined data type prevents the creation of illegal vectors:</p>
+<p>When <code>vDim</code> is used a selector function, it returns the <code>vDim</code> field of <code>x</code>.</p>
 <div id="program-pane-23" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -754,12 +794,10 @@ test10 = quickSort (drop 1 ["cat", "dog", "mouse"])</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-23" class="programbox">okVec  = V 2 [10, 20]       -- accepted by LH
-
-badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
+  <div id="program-23" class="programbox">{-@ vDim :: x:_ -> {v: Nat | v = vDim x} @-}</div>
 </div>
 
-<p> As usual, it will be handy to have a few aliases.</p>
+<p> The refined data type prevents the creation of illegal vectors:</p>
 <div id="program-pane-24" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -768,7 +806,21 @@ badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-24" class="programbox">-- | Non Empty Vectors
+  <div id="program-24" class="programbox">okVec  = V 2 [10, 20]       -- accepted by LH
+
+badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
+</div>
+
+<p> As usual, it will be handy to have a few aliases.</p>
+<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-25" class="programbox">-- | Non Empty Vectors
 {-@ type VectorNE a  = {v:Vector a | vDim v > 0} @-}
 
 -- | Vectors of size N
@@ -780,23 +832,6 @@ badVec = V 2 [10, 20, 30]   -- rejected by LH</div>
 
 <p><br />
 <strong>To Create</strong> a <code>Vector</code> safely, we can start with the empty vector <code>vEmp</code> and then add elements one-by-one with <code>vCons</code>:</p>
-<div id="program-pane-25" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-25" class="programbox">{-@ vEmp :: VectorN a 0 @-}
-vEmp = V 0 []
-
-{-@ vCons :: a -> x:Vector a -> VectorN a {vDim x + 1} @-}
-vCons x (V n xs) = V (n+1) (x:xs)</div>
-</div>
-
-<p><br />
-<strong>To Access</strong> vectors at a low-level, we can use equivalents of <em>head</em> and <em>tail</em>, which only work on non-empty <code>Vector</code>s:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -805,7 +840,24 @@ vCons x (V n xs) = V (n+1) (x:xs)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-26" class="programbox">{-@ vHd :: VectorNE a -> a @-}
+  <div id="program-26" class="programbox">{-@ vEmp :: VectorN a 0 @-}
+vEmp = V 0 []
+
+{-@ vCons :: a -> x:Vector a -> VectorN a {vDim x + 1} @-}
+vCons x (V n xs) = V (n+1) (x:xs)</div>
+</div>
+
+<p><br />
+<strong>To Access</strong> vectors at a low-level, we can use equivalents of <em>head</em> and <em>tail</em>, which only work on non-empty <code>Vector</code>s:</p>
+<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-27" class="programbox">{-@ vHd :: VectorNE a -> a @-}
 vHd (V _ (x:_))  = x
 vHd _            = die "nope"
 
@@ -816,20 +868,6 @@ vTl _            = die "nope"</div>
 
 <p><br />
 <strong>To Iterate</strong> over a vector we can use the <code>for</code> combinator:</p>
-<div id="program-pane-27" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-27" class="programbox">{-@ for        :: x:Vector a -> (a -> b) -> VectorX b x @-}
-for (V n xs) f = V n (map f xs)</div>
-</div>
-
-<p><br />
-<strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -838,15 +876,12 @@ for (V n xs) f = V n (map f xs)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-28" class="programbox">{-@ vBin :: (a -> b -> c) -> x:Vector a
-                          -> VectorX b x
-                          -> VectorX c x
-  @-}
-vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)</div>
+  <div id="program-28" class="programbox">{-@ for        :: x:Vector a -> (a -> b) -> VectorX b x @-}
+for (V n xs) f = V n (map f xs)</div>
 </div>
 
 <p><br />
-<strong>The Dot Product</strong> of two <code>Vector</code>s can be now implemented in a wholemeal <em>and</em> dimension safe manner, as:</p>
+<strong>Binary Pointwise Operations</strong> should only be applied to <em>compatible</em> vectors, i.e. vectors with equal dimensions. We can write a generic binary pointwise operator:</p>
 <div id="program-pane-29" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -855,7 +890,24 @@ vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-29" class="programbox">{-@ dotProduct :: (Num a) => x:Vector a -> VectorX a x -> a @-}
+  <div id="program-29" class="programbox">{-@ vBin :: (a -> b -> c) -> x:Vector a
+                          -> VectorX b x
+                          -> VectorX c x
+  @-}
+vBin op (V n xs) (V _ ys) = V n (zipWith op xs ys)</div>
+</div>
+
+<p><br />
+<strong>The Dot Product</strong> of two <code>Vector</code>s can be now implemented in a wholemeal <em>and</em> dimension safe manner, as:</p>
+<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-30" class="programbox">{-@ dotProduct :: (Num a) => x:Vector a -> VectorX a x -> a @-}
 dotProduct x y = sum $ vElts $ vBin (*) x y</div>
 </div>
 
@@ -866,7 +918,7 @@ dotProduct x y = sum $ vElts $ vBin (*) x y</div>
 <br />
 
 </div>
-<div id="program-pane-30" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -874,7 +926,7 @@ dotProduct x y = sum $ vElts $ vBin (*) x y</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-30" class="programbox">vecFromList     :: [a] -> Vector a
+  <div id="program-31" class="programbox">vecFromList     :: [a] -> Vector a
 vecFromList xs  =  undefined
 
 test6  = dotProduct vx vy    -- should be accepted by LH
@@ -890,7 +942,7 @@ test6  = dotProduct vx vy    -- should be accepted by LH
 <br />
 
 </div>
-<div id="program-pane-31" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -898,7 +950,7 @@ test6  = dotProduct vx vy    -- should be accepted by LH
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-31" class="programbox">{-@ flatten :: n:Nat
+  <div id="program-32" class="programbox">{-@ flatten :: n:Nat
             -> m:Nat
             -> VectorN (VectorN a m) n
             -> VectorN a {m * n}
@@ -908,7 +960,7 @@ flatten = undefined</div>
 
 <p><br />
 <strong>The Cross Product</strong> of two vectors can now be computed in a nice wholemeal style, by a nested iteration followed by a <code>flatten</code>.</p>
-<div id="program-pane-32" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -916,7 +968,7 @@ flatten = undefined</div>
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-32" class="programbox">{-@ product   :: xs:Vector _
+  <div id="program-33" class="programbox">{-@ product   :: xs:Vector _
               -> ys:Vector _
               -> VectorN _ {vDim xs * vDim ys}
   @-}
@@ -933,23 +985,6 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
 <p>The same methods let us create a dimension safe Matrix API which ensures that only legal matrices are created and that operations are performed on compatible matrices.</p>
 <p><br />
 <strong>Legal Matrices</strong> are those where the dimension of the outer vector equals the number of rows <code>mRow</code> and the dimension of each inner vector is <code>mCol</code>. We can specify legality in a refined data definition:</p>
-<div id="program-pane-33" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-33" class="programbox">{-@ data Matrix a =
-      M { mRow  :: Pos
-        , mCol  :: Pos
-        , mElts :: VectorN (VectorN a mCol) mRow
-        }
-  @-}</div>
-</div>
-
-<p>Notice that we avoid disallow degenerate matrices by requiring the dimensions to be positive.</p>
 <div id="program-pane-34" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -958,10 +993,15 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-34" class="programbox">{-@ type Pos = {v:Int | 0 < v} @-}</div>
+  <div id="program-34" class="programbox">{-@ data Matrix a =
+      M { mRow  :: Pos
+        , mCol  :: Pos
+        , mElts :: VectorN (VectorN a mCol) mRow
+        }
+  @-}</div>
 </div>
 
-<p>It is convenient to have an alias for matrices of a given size:</p>
+<p>Notice that we avoid disallow degenerate matrices by requiring the dimensions to be positive.</p>
 <div id="program-pane-35" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -970,11 +1010,10 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-35" class="programbox">{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C } @-}
-{-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}</div>
+  <div id="program-35" class="programbox">{-@ type Pos = {v:Int | 0 < v} @-}</div>
 </div>
 
-<p>For example, we can use the above to write type:</p>
+<p>It is convenient to have an alias for matrices of a given size:</p>
 <div id="program-pane-36" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -983,7 +1022,20 @@ product xs ys = flatten (vDim ys) (vDim xs) xys
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-36" class="programbox">{-@ ok23 :: MatrixN _ 2 3 @-}
+  <div id="program-36" class="programbox">{-@ type MatrixN a R C   = {v:Matrix a | Dims v R C } @-}
+{-@ predicate Dims M R C = mRow M = R && mCol M = C   @-}</div>
+</div>
+
+<p>For example, we can use the above to write type:</p>
+<div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-37" class="programbox">{-@ ok23 :: MatrixN _ 2 3 @-}
 ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
                       , V 3 [4, 5, 6] ])</div>
 </div>
@@ -995,7 +1047,7 @@ ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
 <br />
 
 </div>
-<div id="program-pane-37" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1003,7 +1055,7 @@ ok23     = M 2 3 (V 2 [ V 3 [1, 2, 3]
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-37" class="programbox">bad1 :: Matrix Int
+  <div id="program-38" class="programbox">bad1 :: Matrix Int
 bad1 = M 2 3 (V 2 [ V 3 [1, 2   ]
                   , V 3 [4, 5, 6]])
 
@@ -1019,7 +1071,7 @@ bad2 = M 2 3 (V 2 [ V 2 [1, 2]
 <br />
 
 </div>
-<div id="program-pane-38" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1027,7 +1079,7 @@ bad2 = M 2 3 (V 2 [ V 2 [1, 2]
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-38" class="programbox">matFromList      :: [[a]] -> Maybe (Matrix a)
+  <div id="program-39" class="programbox">matFromList      :: [[a]] -> Maybe (Matrix a)
 matFromList []   = Nothing
 matFromList xss@(xs:_)
   | ok           = Just (M r c vs)
@@ -1046,22 +1098,6 @@ matFromList xss@(xs:_)
 <br />
 
 </div>
-<div id="program-pane-39" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-39" class="programbox">{-@ mat23 :: Maybe (MatrixN Integer 2 2) @-}
-mat23     = matFromList [ [1, 2]
-                        , [3, 4] ]</div>
-</div>
-
-<p><strong>Hint: </strong>It is easy to specify the number of rows from <code>xss</code>. How will you figure out the number of columns? A measure may be useful.</p>
-<p><br />
-<strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You’d think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second – after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
 <div id="program-pane-40" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -1070,7 +1106,23 @@ mat23     = matFromList [ [1, 2]
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-40" class="programbox">{-@ matProduct :: (Num a) => x:Matrix a
+  <div id="program-40" class="programbox">{-@ mat23 :: Maybe (MatrixN Integer 2 2) @-}
+mat23     = matFromList [ [1, 2]
+                        , [3, 4] ]</div>
+</div>
+
+<p><strong>Hint: </strong>It is easy to specify the number of rows from <code>xss</code>. How will you figure out the number of columns? A measure may be useful.</p>
+<p><br />
+<strong>Matrix Multiplication</strong> Finally, lets implement matrix multiplication. You’d think we did it already, but in fact the implementation at the top of this chapter is all wrong (run it and see!) We cannot just multiply any two matrices: the number of <em>columns</em> of the first must equal to the <em>rows</em> of the second – after which point the result comprises the <code>dotProduct</code> of the rows of the first matrix with the columns of the second.</p>
+<div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-41" class="programbox">{-@ matProduct :: (Num a) => x:Matrix a
                           -> y:{Matrix a  | mCol x = mRow y}
                           -> MatrixN a (mRow x) (mCol y)
   @-}
@@ -1086,7 +1138,7 @@ matProduct (M rx _ xs) my@(M _ cy _)
 </div>
 
 <p>To iterate over the <em>columns</em> of the matrix <code>my</code> we just <code>transpose</code> it so the columns become rows.</p>
-<div id="program-pane-41" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-42" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1094,7 +1146,7 @@ matProduct (M rx _ xs) my@(M _ cy _)
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-41" class="programbox">-- >>> ok32 == transpose ok23
+  <div id="program-42" class="programbox">-- >>> ok32 == transpose ok23
 -- True
 ok32 = M 3 2 (V 3 [ V 2 [1, 4]
                   , V 2 [2, 5]
@@ -1108,7 +1160,7 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
 <br />
 
 </div>
-<div id="program-pane-42" class="welleditor" style="background:#fff; position:relative">
+<div id="program-pane-43" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
   <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
@@ -1116,7 +1168,7 @@ ok32 = M 3 2 (V 3 [ V 2 [1, 4]
     <span class="glyphicon glyphicon-play"></span>
   </button>
  
-  <div id="program-42" class="programbox">{-@ transpose :: m:Matrix a -> MatrixN a (mCol m) (mRow m) @-}
+  <div id="program-43" class="programbox">{-@ transpose :: m:Matrix a -> MatrixN a (mCol m) (mRow m) @-}
 transpose (M r c rows) = M c r $ txgo c r rows
 
 {-@ txgo      :: c:Nat -> r:Nat
