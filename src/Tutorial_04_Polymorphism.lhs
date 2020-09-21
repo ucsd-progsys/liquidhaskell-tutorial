@@ -303,8 +303,6 @@ absoluteSum     = undefined
 \newthought{Inference}
 LiquidHaskell verifies `vectorSum` -- or, to be precise,
 the safety of the vector accesses `vec ! i`. 
-**Note** you need to run `liquid` with the option `--no-termination` or make 
-sure your source file has `{-@ LIQUID "--no-termination" @-}.
 The verification works out because LiquidHaskell is able to
 *automatically infer* ^[In your editor, click on `go` to see the inferred type.]
 
@@ -316,6 +314,12 @@ go :: Int -> {v:Int | 0 <= v && v <= sz} -> Int
 between `0` and the length of `vec` (inclusive). LiquidHaskell
 uses this and the test that `i < sz` to establish that `i` is
 between `0` and `(vlen vec)` to prove safety.
+
+**Note** you need to run `liquid` with the option `--no-termination` 
+or make sure your source file has `{-@ LIQUID "--no-termination" @-}, 
+otherwise the code for `go` fails the now default termination check.
+We will come back to this example later to see how to verify termination
+using metrics.
 
 <div class="hwex" id="Off by one?">
 Why does the type of `go` have `v <= sz` and not `v < sz` ?
