@@ -202,7 +202,7 @@ along, and especially that you do the exercises, via two steps.
 git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 ~~~~~
 
-**Step 2:** Iteratively edit-compile until the code in `src/` using
+**Step 2:** Try building the code using
 
 ~~~~~{.sh}
 cabal v2-build
@@ -213,6 +213,29 @@ or
 ~~~~~{.sh}
 stack build --fast --file-watch
 ~~~~~
+
+If your environment is set up correctly,
+compilation will stop with a Liquid type error:
+
+~~~~~{.spec}
+src/Tutorial_01_Introduction.lhs:30:27: error:
+    Liquid Type Mismatch              
+    .                                 
+    The inferred type                 
+      VV : {v : GHC.Types.Int | v >= 0
+                                && v == len xs}
+    .                                 
+    is not a subtype of the required type
+      VV : {VV : GHC.Types.Int | VV /= 0}
+    .                                 
+    in the context                    
+      xs : {v : [GHC.Types.Int] | len v >= 0}
+   |                                  
+30 | average xs = sum xs `div` length xs
+   |                           ^^^^^^^^^
+~~~~~
+
+**Step 3:** Iteratively edit-compile until the code in `src/`
 
 until it _builds_ without any liquid type errors.
 
