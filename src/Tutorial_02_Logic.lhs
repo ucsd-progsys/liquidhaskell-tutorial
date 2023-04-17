@@ -274,7 +274,7 @@ sophisticated abstractions.]
 Examples: Propositions
 ----------------------
 
-Finally, lets conclude this quick overview with some
+Finally, let's conclude this quick overview with some
 examples of predicates, in order to build up our own
 intuition about logic and validity.
 Each of the below is a predicate from our refinement
@@ -390,7 +390,7 @@ exDeMorgan2 a b = not (a && b) <=> (not a && not b)
 Examples: Arithmetic
 --------------------
 
-Next, lets look at some predicates involving arithmetic.
+Next, let's look at some predicates involving arithmetic.
 The simplest ones don't have any variables, for example:
 
 \begin{code}
@@ -487,8 +487,8 @@ fx1 f x =   (x == f (f (f x)))
         ==> (x == f x)
 \end{code}
 
-To get a taste of why uninterpreted functions will prove useful
-lets write a function to compute the `size` of a list:
+To get a taste of why uninterpreted functions will prove useful,
+let's write a function to compute the `size` of a list:
 
 \begin{code}
 {-@ measure size @-}
@@ -546,5 +546,5 @@ mean by the term *logical predicate*.
    and evaluating the predicates (which would take forever!) but instead
    by using clever symbolic algorithms.
 
-Next, lets see how we can use logical predicates to *specify* and
+Next, let's see how we can use logical predicates to *specify* and
 *verify* properties of real programs.

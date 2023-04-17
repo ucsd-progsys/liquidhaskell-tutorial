@@ -95,7 +95,7 @@ that tracks the set of keys stored in the map, in order to
 statically ensure the safety of lookups.
 
 \newthought{Types} First, we need a type for `Map`s. As usual,
-lets parameterize the type with `k` for the type of keys and
+let's parameterize the type with `k` for the type of keys and
 `v` for the type of values:
 
 ~~~~~{.spec}
@@ -160,7 +160,7 @@ Using Maps: Well Scoped Expressions
 -----------------------------------
 
 Rather than jumping into the *implementation* of the above `Map` API,
-lets write a *client* that uses `Map`s to implement an interpreter for
+let's write a *client* that uses `Map`s to implement an interpreter for
 a tiny language. In particular, we will use maps as an *environment*
 containing the values of *bound variables*, and we will use the refined
 API to ensure that *lookups never fail*, and hence, that well-scoped
@@ -351,11 +351,11 @@ Implementing Maps: Binary Search Trees {#lemmas}
 We just saw how easy it is to *use* the Associative
 Map [API](#mapapi) to ensure the safety of lookups,
 even though the `Map` has a "dynamically" generated
-set of keys. Next, lets see how we can *implement*
+set of keys. Next, let's see how we can *implement*
 a `Map` library that respects the API using
 [Binary Search Trees](#binarysearchtree)
 
-\newthought{Data Type} First, lets provide an
+\newthought{Data Type} First, let's provide an
 implementation of the hitherto abstract data
 type for `Map`. We shall use Binary Search Trees,
 wherein, at each `Node`, the `left` (resp. `right`)
@@ -424,7 +424,7 @@ set k' v' (Node k v l r)
 set k' v' Tip = Node k' v' Tip Tip
 \end{code}
 
-\newthought{Lookup} Next, lets write the `mem` function that returns
+\newthought{Lookup} Next, let's write the `mem` function that returns
 the value associated with a key `k'`. To do so we just compare `k'`
 with the root key, if they are equal, we return the binding, and
 otherwise we go down the `left` (resp. `right`) subtree if sought for
@@ -445,7 +445,7 @@ get'  _ Tip   = die  "Lookup Never Fails"
 \newthought{Unfortunately} the function above is *rejected*
 by LiquidHaskell. This is a puzzler (and a bummer!) because
 in fact it *is* correct. So what gives?
-Well, lets look at the error for the call `get' k' l`
+Well, let's look at the error for the call `get' k' l`
 
 ~~~~~{.liquiderror}
  src/07-case-study-associative-maps.lhs:411:25: Error: Liquid Type Mismatch
@@ -461,7 +461,7 @@ Well, lets look at the error for the call `get' k' l`
 ~~~~~
 
 \noindent LiquidHaskell is *unable* to deduce that the key `k'`
-definitely belongs in the `left` subtree `l`. Well, lets ask ourselves:
+definitely belongs in the `left` subtree `l`. Well, let's ask ourselves:
 *why* must `k'` belong in the left subtree? From the input, we know
 `HasKey k' m` i.e. that `k'` is *somewhere* in `m`.
 That is *one of* the following holds:

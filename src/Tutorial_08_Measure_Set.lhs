@@ -70,7 +70,7 @@ Examples of this abound: for example, we'd like to know that:
 \newthought{SMT Solvers} support very expressive logics.
 In addition to linear arithmetic and uninterpreted functions,
 they can [efficiently decide][smt-set] formulas over sets.
-Next, lets see how LiquidHaskell lets us exploit this fact
+Next, let's see how LiquidHaskell lets us exploit this fact
 to develop types and interfaces that guarantee invariants
 over the set of elements of a structures.
 
@@ -78,7 +78,7 @@ Talking about Sets
 ------------------
 
 First, we need a way to talk about sets in the refinement logic. We could
-roll our own special Haskell type but for now, lets just use the `Set a`
+roll our own special Haskell type but for now, let's just use the `Set a`
 type from the prelude's `Data.Set`.^[See [this](https://ucsd-progsys.github.io/liquidhaskell-blog/2013/03/26/talking-about-sets.lhs/)
 for a brief description of how to work directly with the set operators natively
 supported by LiquidHaskell.]
@@ -114,7 +114,7 @@ to learn how modern SMT solvers prove equalities like the above.]
 Proving QuickCheck Style Properties {#quickcheck}
 -----------------------------------
 
-To get the hang of whats going on, lets do a few warm up exercises,
+To get the hang of whats going on, let's do a few warm up exercises,
 using LiquidHaskell to prove various simple theorems about sets
 and operations over them.
 
@@ -206,7 +206,7 @@ prop_union_assoc x y z
 
 \newthought{The Distributivity Laws} for Boolean Algebra can
 be verified by writing properties over the relevant operators.
-For example, we lets check that `intersection` distributes over `union`:
+For example, let's check that `intersection` distributes over `union`:
 
 \begin{code}
 {-@ prop_intersection_dist :: _ -> _ -> _ -> True @-}
@@ -398,10 +398,10 @@ test2      = elem 2 [1, 3]
 Permutations
 ------------
 
-Next, lets use the refined list API to prove that
+Next, let's use the refined list API to prove that
 various sorting routines return *permutations*
 of their inputs, that is, return output lists whose
-elements are the *same as* those of the input lists.^[Since we are focusing on the elements, lets not
+elements are the *same as* those of the input lists.^[Since we are focusing on the elements, let's not
 distract ourselves with the [ordering invariant](#orderedlists)
 and reuse plain old lists. See [this](http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/07/29/putting-things-in-order.lhs/)
 for how to specify and verify order with plain old lists.]
@@ -486,7 +486,7 @@ handles or system resources can create unpleasant leaks.
 For example, the [xmonad][xmonad] window manager creates a
 sophisticated *zipper* data structure to hold the list of
 active user windows and carefully maintains the invariant
-that that the zipper contains no duplicates. Next, lets see how to
+that that the zipper contains no duplicates. Next, let's see how to
 specify and verify this invariant using LiquidHaskell, first for
 lists, and then for a simplified zipper.
 

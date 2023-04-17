@@ -139,7 +139,7 @@ Specifying AVL Trees
 --------------------
 
 The tricky bit is to ensure order and balance. Before we can ensure
-anything, lets tell LiquidHaskell what we mean by these terms, by
+anything, let's tell LiquidHaskell what we mean by these terms, by
 defining legal or valid AVL trees.
 
 \newthought{To Specify Order} we just define two aliases `AVLL` and `AVLR`
@@ -218,7 +218,7 @@ Smart Constructors
 ------------------
 
 Lets use the type to construct a few small trees which will
-also be handy in a general collection API. First, lets write
+also be handy in a general collection API. First, let's write
 an alias for trees of a given height:
 
 \begin{code}
@@ -282,7 +282,7 @@ the properties it requires and ensures.
 Inserting Elements
 ------------------
 
-Next, lets turn our attention to the problem of *adding* elements to
+Next, let's turn our attention to the problem of *adding* elements to
 an `AVL` tree. The basic strategy is this:
 
 1. *Find* the appropriate location (per ordering) to add the value,
@@ -624,7 +624,7 @@ insR = undefined
 Refactoring Rebalance
 ---------------------
 
-Next, lets write a function to `delete` an element from a tree.
+Next, let's write a function to `delete` an element from a tree.
 In general, we can apply the same strategy as `insert`:
 
 1. remove the element without worrying about heights,
@@ -639,7 +639,7 @@ is *inside* the `insL` which does the insertion as well.
 This is correct, but it means we would have to *repeat* the case
 analysis when deleting a value, which is unfortunate.
 
-\newthought{Instead lets refactor} the rebalancing code into a
+\newthought{Instead let's refactor} the rebalancing code into a
 separate function, that can be used by *both* `insert` and `delete`.
 It looks like this:
 

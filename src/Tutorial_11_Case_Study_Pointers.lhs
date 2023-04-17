@@ -77,7 +77,7 @@ HeartBleeds in Haskell
 \newthought{Modern Languages} like Haskell are ultimately built upon the
 foundation of `C`. Thus, implementation errors could open up unpleasant
 vulnerabilities that could easily slither past the type system and even
-code inspection. As a concrete example, lets look at a function that
+code inspection. As a concrete example, let's look at a function that
 uses the `ByteString` library to truncate strings:
 
 \begin{code}
@@ -134,14 +134,14 @@ a hierarchy of levels (i.e. modules). Here, we have three levels:
 
 \noindent Our strategy, as before, is to develop an *refined API* for
 each level such that errors at each level are prevented by using the typed
-interfaces for the lower levels. Next, lets see how this strategy lets us
+interfaces for the lower levels. Next, let's see how this strategy lets us
 safely manipulate pointers.
 
 Low-level Pointer API
 ---------------------
 
-To get started, lets look at the low-level pointer API that is
-offered by GHC and the run-time. First, lets see who the
+To get started, let's look at the low-level pointer API that is
+offered by GHC and the run-time. First, let's see who the
 *dramatis personae* are and how they might let heartbleeds in.
 Then we will see how to batten down the hatches with LiquidHaskell.
 
@@ -203,7 +203,7 @@ operation `plusPtr p off` which takes a pointer `p` an integer
 plusPtr :: Ptr a -> Int -> Ptr b
 ~~~~~
 
-\newthought{Example} That was rather dry; lets look at a concrete
+\newthought{Example} That was rather dry; let's look at a concrete
 example of how one might use the low-level API. The following
 function allocates a block of 4 bytes and fills it with zeros:
 
@@ -437,7 +437,7 @@ but that is outside the scope of LiquidHaskell.]
 ByteString API
 --------------
 
-Next, lets see how the low-level API can be used to implement
+Next, let's see how the low-level API can be used to implement
 to implement [ByteStrings][bytestring], in a way that lets us
 perform fast string operations without opening the door to
 overflows.
@@ -490,7 +490,7 @@ to the legality requirements that the start and end of the `ByteString`
 be *within* the block of memory referred to by `bPtr`.
 
 
-\newthought{For brevity} lets define an alias for `ByteString`s of
+\newthought{For brevity} let's define an alias for `ByteString`s of
 a given size:
 
 \begin{code}
@@ -700,7 +700,7 @@ How *big* is the output list in terms of `p`, `n` and `acc`.
 Application API
 ---------------
 
-Finally, lets revisit our potentially "bleeding" `chop` function to
+Finally, let's revisit our potentially "bleeding" `chop` function to
 see how the refined `ByteString` API can prevent errors.  We require
 that the prefix size `n` be less than the size of the input string `s`:
 
