@@ -1,11 +1,12 @@
-resolver: nightly-2020-06-25
+resolver: lts-19.33
 packages:
   - .
 extra-deps:
   - Diff-0.3.4
   - text-format-0.3.2
+  - rest-rewrite-0.4.1
   - git: https://github.com/ucsd-progsys/liquidhaskell
-    commit: 269dd34ad90699f5d09752c8aa3a99d589f8668b
+    commit: 7daeb7c7ece7eb1f9eb595f254bc8d965872bf85
     subdirs:
       - .
       - liquid-base
@@ -14,5 +15,5 @@ extra-deps:
       - liquid-containers
       - liquid-ghc-prim 
   - git: https://github.com/ucsd-progsys/liquid-fixpoint
-    commit: d0a6619f97aa605b4b57e3bc8d261186182ebf84
+    commit: a45f8fe9f6ac2533228f9149926bf884a3525945
 
