@@ -1,6 +1,3 @@
 [submodule "web"]
 	path = web
 	url = https://github.com/ucsd-progsys/liquid-client.git
-[submodule "liquidhaskell"]
-	path = liquidhaskell
-	url = https://github.com/ucsd-progsys/liquidhaskell.git
