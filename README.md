@@ -15,7 +15,7 @@ Thus, **the best way** to do this tutorial is to
 **Step 1** Clone this repository,
 
 ```bash
-$ git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
+$ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 ```
 
 **Step 2:** Iteratively edit-compile until it _builds_ without any liquid type errors
