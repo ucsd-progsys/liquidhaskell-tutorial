@@ -10,10 +10,10 @@ homepage: https://github.com/ucsd-progsys/liquidhaskell-tutorial
 extra-source-files:
 - README.md
 dependencies:
-- liquid-base
+- base
+- liquidhaskell-boot
+- liquid-prelude
 - liquid-vector
-- liquid-containers
-- liquid-bytestring
 - liquidhaskell
 
 library:

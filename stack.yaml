@@ -1,19 +1,20 @@
-resolver: lts-19.33
+resolver: lts-20.1
 packages:
   - .
 extra-deps:
-  - Diff-0.3.4
-  - text-format-0.3.2
+  # - Diff-0.3.4
+  # - text-format-0.3.2
   - rest-rewrite-0.4.1
+  - smtlib-backends-0.3
+  - smtlib-backends-process-0.3
   - git: https://github.com/ucsd-progsys/liquidhaskell
-    commit: 7daeb7c7ece7eb1f9eb595f254bc8d965872bf85
+    commit: 89d4ec273372510c9092a06b7b21b671c5733731
     subdirs:
       - .
-      - liquid-base
+      - liquidhaskell-boot
+      - liquid-prelude
       - liquid-vector
-      - liquid-bytestring
-      - liquid-containers
-      - liquid-ghc-prim 
   - git: https://github.com/ucsd-progsys/liquid-fixpoint
-    commit: a45f8fe9f6ac2533228f9149926bf884a3525945
+    commit: 1aab5d84e3dd96f3052dd27b92316cbb5254def1
+
 
