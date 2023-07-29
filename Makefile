@@ -1,7 +1,5 @@
 RSYNC=$(shell pwd)/sync.sh
 
-LIQUIDCLIENT=../liquid-client
-
 METATEMPLATE=templates/pagemeta.template
 INDEXTEMPLATE=templates/index.template
 PREAMBLE=templates/preamble.lhs
@@ -65,9 +63,9 @@ dist/pbook.lhs: $(lhsObjects)
 html: indexhtml $(htmlObjects)
 	mv src/*.html      _site/
 	cp -r img          _site/
-	cp -r $(LIQUIDCLIENT)/fonts _site/
-	cp -r $(LIQUIDCLIENT)/css   _site/
-	cp -r $(LIQUIDCLIENT)/js    _site/
+	cp -r fonts _site/
+	cp -r css   _site/
+	cp -r js    _site/
 
 thing: dist/index.lhs src/00-temp.html
 	mv src/00-*.html _site/
@@ -79,7 +77,7 @@ $(INDEX):
 	$(INDEXER) src/ $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS)
 
 src/%.html: src/%.lhs
-	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
+	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
 
 check:
 	stack build --fast --flag liquidhaskell-tutorial:build
