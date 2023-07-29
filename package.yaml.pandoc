@@ -42,5 +42,5 @@ executables:
   filters-codeblock:
     main: filters/Codeblock.hs
     ghc-options: -main-is Codeblock -threaded
-  toplevel: 
+  toplevel:
     main: Main.hs
