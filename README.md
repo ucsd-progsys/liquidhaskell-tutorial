@@ -67,31 +67,16 @@ $ git submodule update --recursive
 
 ### Deploy on Github
 
-**Step 1** 
- 
-Do we really need to install `pandoc-citeproc`?
-
 ```
 $ cp package.yaml.pandoc package.yaml
 $ mkdir _site dist
-$ stack install pandoc template
+$ stack install pandoc
 $ make html
 $ make pdf
-$ make upload 
-```
-
-
-##### Prerequisites
-
-```bash
-$ cd ../ && git clone https://github.com/ucsd-progsys/liquid-client.git
-```
-
-
-#### Dependencies
-
-```bash
-$ stack install pandoc pandoc-citeproc template
+$ cp dist/pbook.pdf _site/book.pdf
+$ git add _site
+$ git commit -a -m "updating GH-PAGES"
+$ git push --force-with-lease origin HEAD:gh-pages
 ```
 
 #### Prerequisites
