@@ -235,8 +235,7 @@ src/Tutorial_01_Introduction.lhs:30:27: error:
    |                           ^^^^^^^^^
 ~~~~~
 
-**Step 3:** Iteratively edit-compile until the code in `src/`
-
+**Step 3:** Iteratively edit-compile the code in `src/`
 until it _builds_ without any liquid type errors.
 
 The above workflow will let you use whatever GHC/Haskell tooling you use for your
