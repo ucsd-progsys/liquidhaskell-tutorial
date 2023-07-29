@@ -369,7 +369,7 @@ ex7 a b = a ==> (a ==> b) ==> b
 Recall that `p <=> q` (read `p` if and only if `q`) evaluates to `True`
 exactly when `p` and `q` evaluate to the *same* values (`True` or `False`).
 It is used to encode *equalities* between predicates. For example, we can
-write down [De Morgan's laws](http://en.wikipedia.org/wiki/De_Morgan's_laws)
+write down [De Morgan's laws](http://en.wikipedia.org/wiki/De_Morgan%27s_laws)
 as the valid predicates:
 
 \begin{code}
