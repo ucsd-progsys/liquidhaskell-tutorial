@@ -241,15 +241,6 @@ until it _builds_ without any liquid type errors.
 The above workflow will let you use whatever GHC/Haskell tooling you use for your
 favorite editor, to automatically display LH errors as well.
 
-Sample Code
------------
-
-This tutorial is written in literate Haskell and
-the code for it is available [here][liquid-tutorial].
-
-We *strongly* recommend you grab the code, and follow
-along, and especially that you do the exercises.
-
 If you'd like to copy and paste code snippets into the
 web demo, instead of cloning the repo, note that you may
 need to pass `--no-termination` to `liquid`, or equivalently,
