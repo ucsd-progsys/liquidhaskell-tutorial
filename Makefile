@@ -13,8 +13,13 @@ INDEX=dist/index.lhs
 # bin
 ## INDEXER=stack exec -- runghc filters/Toc.hs
 ## PANDOC=pandoc
+ifdef NO_STACK
+INDEXER=filters-toc
+PANDOC=pandoc
+else
 INDEXER=stack $(STACK_FLAGS) run filters-toc
 PANDOC=stack $(STACK_FLAGS) exec -- pandoc
+endif
 
 ##############################################
 
