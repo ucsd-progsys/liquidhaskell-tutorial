@@ -80,7 +80,7 @@ built on a foundation of machine code, or at the very least, `C`.
 Consider the ubiquitous `vector` library:
 
 ~~~~~{.ghci}
-ghci> :m +Data.Vector 
+ghci> :m +Data.Vector
 ghci> let v = fromList ["haskell", "ocaml"]
 ghci> unsafeIndex v 0
 "haskell"
@@ -110,7 +110,7 @@ Finally, for certain kinds of programs, there is a fate worse than death.
 is used, for example, to build web services.
 
 ~~~~~{.ghci}
-ghci> :m +Data.Text Data.Text.Unsafe 
+ghci> :m +Data.Text Data.Text.Unsafe
 ghci> let t = pack "Voltage"
 ghci> takeWord16 5 t
 "Volta"
@@ -144,7 +144,7 @@ there are fast *decision procedures* called SMT solvers.
 \newthought{By combining types with predicates} you can specify *contracts*
 which describe valid inputs and outputs of functions. The refinement
 type system *guarantees at compile-time* that functions adhere to
-their contracts. That is, you can rest assured that 
+their contracts. That is, you can rest assured that
 the above calamities *cannot occur at run-time*.
 
 \newthought{LiquidHaskell} is a Refinement Type Checker for Haskell, and in
@@ -190,7 +190,7 @@ solver, e.g. one of
 + [Z3][z3] (which we recommend)
 + [CVC4][cvc4]
 + [MathSat][mathsat]
-   
+
 \newthought{This Tutorial} is written in literate Haskell and
 the code for it is available [here][liquid-tutorial].
 Hence, we *strongly* recommend you grab the code, and follow
@@ -208,7 +208,7 @@ git clone --recursive https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 cabal v2-build
 ~~~~~
 
-or 
+or
 
 ~~~~~{.sh}
 stack build --fast --file-watch
@@ -219,18 +219,18 @@ compilation will stop with a Liquid type error:
 
 ~~~~~{.spec}
 src/Tutorial_01_Introduction.lhs:30:27: error:
-    Liquid Type Mismatch              
-    .                                 
-    The inferred type                 
+    Liquid Type Mismatch
+    .
+    The inferred type
       VV : {v : GHC.Types.Int | v >= 0
                                 && v == len xs}
-    .                                 
+    .
     is not a subtype of the required type
       VV : {VV : GHC.Types.Int | VV /= 0}
-    .                                 
-    in the context                    
+    .
+    in the context
       xs : {v : [GHC.Types.Int] | len v >= 0}
-   |                                  
+   |
 30 | average xs = sum xs `div` length xs
    |                           ^^^^^^^^^
 ~~~~~
@@ -239,7 +239,7 @@ src/Tutorial_01_Introduction.lhs:30:27: error:
 
 until it _builds_ without any liquid type errors.
 
-The above workflow will let you use whatever GHC/Haskell tooling you use for your 
+The above workflow will let you use whatever GHC/Haskell tooling you use for your
 favorite editor, to automatically display LH errors as well.
 
 Sample Code
@@ -251,17 +251,17 @@ the code for it is available [here][liquid-tutorial].
 We *strongly* recommend you grab the code, and follow
 along, and especially that you do the exercises.
 
-If you'd like to copy and paste code snippets into the 
+If you'd like to copy and paste code snippets into the
 web demo, instead of cloning the repo, note that you may
 need to pass `--no-termination` to `liquid`, or equivalently,
-add the pragma `{-@ LIQUID "--no-termination" @-}` to the top 
-of the source file. (By default, `liquid` tries to ensure that 
-all code it examines will terminate. Some of the code in this 
-tutorial is written in such a way that termination is not 
-immediately obvious to LH.) 
+add the pragma `{-@ LIQUID "--no-termination" @-}` to the top
+of the source file. (By default, `liquid` tries to ensure that
+all code it examines will terminate. Some of the code in this
+tutorial is written in such a way that termination is not
+immediately obvious to LH.)
 
-**Note:** This tutorial is a *work in progress*, and we will 
-be **very** grateful for feedback and suggestions, ideally 
+**Note:** This tutorial is a *work in progress*, and we will
+be **very** grateful for feedback and suggestions, ideally
 via pull-requests on github.
 
 \noindent Lets begin!
