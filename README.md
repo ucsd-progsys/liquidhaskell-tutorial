@@ -72,7 +72,8 @@ $ git submodule update --recursive
 Do we really need to install `pandoc-citeproc`?
 
 ```
-$ mv package.yaml.pandoc package.yaml
+$ cp package.yaml.pandoc package.yaml
+$ mkdir _site dist
 $ stack install pandoc template
 $ make html
 $ make pdf

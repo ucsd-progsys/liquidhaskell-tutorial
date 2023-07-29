@@ -1,8 +1,4 @@
 RSYNC=$(shell pwd)/sync.sh
-remoteuser=rjhala
-remotedir=/home/rjhala/public_html/liquid/book
-remotehost=goto.ucsd.edu
-TMPDIR=/home/rjhala/tmp
 
 LIQUIDCLIENT=../liquid-client
 
