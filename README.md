@@ -117,6 +117,12 @@ $ make pdf
 $ evince dist/pbook.pdf
 ```
 
+#### Producing html
+
+```bash
+$ make html
+```
+
 ## Solutions to Exercises
 
 Solutions are in *separate* [private repo](https://github.com/ucsd-progsys/liquidhaskell-tutorial-solutions)
