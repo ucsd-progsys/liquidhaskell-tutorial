@@ -235,7 +235,7 @@ only invoke the respective functions with non-empty lists.
 Write down a specification for `null` such that `safeHead`
 is verified. Do *not* force `null` to only take non-empty inputs,
 that defeats the purpose. Instead, its type should say that it
-works on *all* lists and returns `True` *if and only if* the input
+works on *all* lists and returns `False` *if and only if* the input
 is non-empty.
 </div>
 
