@@ -1,10 +1,4 @@
 RSYNC=$(shell pwd)/sync.sh
-remoteuser=rjhala
-remotedir=/home/rjhala/public_html/liquid/book
-remotehost=goto.ucsd.edu
-TMPDIR=/home/rjhala/tmp
-
-LIQUIDCLIENT=../liquid-client
 
 METATEMPLATE=templates/pagemeta.template
 INDEXTEMPLATE=templates/index.template
@@ -19,9 +13,13 @@ INDEX=dist/index.lhs
 # bin
 ## INDEXER=stack exec -- runghc filters/Toc.hs
 ## PANDOC=pandoc
-INDEXER=stack run filters-toc
-PANDOC=stack exec -- pandoc
-
+ifdef NO_STACK
+INDEXER=filters-toc
+PANDOC=pandoc
+else
+INDEXER=stack $(STACK_FLAGS) run filters-toc
+PANDOC=stack $(STACK_FLAGS) exec -- pandoc
+endif
 
 ##############################################
 
@@ -70,9 +68,9 @@ dist/pbook.lhs: $(lhsObjects)
 html: indexhtml $(htmlObjects)
 	mv src/*.html      _site/
 	cp -r img          _site/
-	cp -r $(LIQUIDCLIENT)/fonts _site/
-	cp -r $(LIQUIDCLIENT)/css   _site/
-	cp -r $(LIQUIDCLIENT)/js    _site/
+	cp -r fonts _site/
+	cp -r css   _site/
+	cp -r js    _site/
 
 thing: dist/index.lhs src/00-temp.html
 	mv src/00-*.html _site/
@@ -84,7 +82,7 @@ $(INDEX):
 	$(INDEXER) src/ $(METATEMPLATE) $(INDEXTEMPLATE) $(PAGETEMPLATE) $(INDEX) $(LINKS)
 
 src/%.html: src/%.lhs
-	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=$(LIQUIDCLIENT)/templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
+	PANDOC_TARGET=$@ PANDOC_CODETEMPLATE=templates/code.template $(PANDOCHTML) --template=$(PAGETEMPLATE) $(PREAMBLE) $? templates/bib.lhs -o $@
 
 check:
 	stack build --fast --flag liquidhaskell-tutorial:build
