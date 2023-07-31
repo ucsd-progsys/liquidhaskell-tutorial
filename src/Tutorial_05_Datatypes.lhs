@@ -288,12 +288,12 @@ badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH
 
 \noindent
 It's all very well to *specify* ordered lists.
-Next, lets see how it's equally easy to *establish*
+Next, let's see how it's equally easy to *establish*
 these invariants by implementing several textbook
 sorting routines.
 
 \newthought{Insertion Sort}
-First, lets implement insertion sort, which converts an ordinary
+First, let's implement insertion sort, which converts an ordinary
 list `[a]` into an ordered list `IncList a`.
 
 \begin{code}
@@ -527,11 +527,11 @@ add k' t@(Node k l r)
   | otherwise        = t
 \end{code}
 
-\newthought{Minimum} For our next trick, lets write a function to delete the *minimum*
-element from a `BST`. This function will return a *pair* of outputs --
-the smallest element and the remainder of the tree. We can say that the
+\newthought{Minimum} For our next trick, let's write a function to delete the
+*minimum* element from a `BST`. This function will return a *pair* of outputs
+-- the smallest element and the remainder of the tree. We can say that the
 output element is indeed the smallest, by saying that the remainder's
-elements exceed the element. To this end, lets define a helper type:
+elements exceed the element. To this end, let's define a helper type:
 ^[This helper type approach is rather verbose.
 We should be able to just use plain old pairs
 and specify the above requirement as a *dependency*

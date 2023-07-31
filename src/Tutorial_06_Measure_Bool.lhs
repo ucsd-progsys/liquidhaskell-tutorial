@@ -5,7 +5,7 @@ Boolean Measures {#boolmeasures}
 
 In the last two chapters, we saw how refinements could be used to
 reason about the properties of basic `Int` values like vector
-indices, or the elements of a list. Next, lets see how we can
+indices, or the elements of a list. Next, let's see how we can
 describe properties of aggregate structures like lists and trees,
 and use these properties to improve the APIs for operating over
 such structures.
@@ -74,7 +74,7 @@ avg3 x y z = divide (x + y + z) 3
 \end{code}
 
 \noindent However, it can be more of a challenge when the divisor
-is obtained *dynamically*. For example, lets write a function to
+is obtained *dynamically*. For example, let's write a function to
 find the number of elements in a list
 
 \begin{code}
@@ -117,7 +117,7 @@ Lifting Functions to Measures {#usingmeasures}
 
 \newthought{How} shall we tell LiquidHaskell that a list is *non-empty*?
 Recall the notion of `measure` previously [introduced](#vectorbounds)
-to describe the size of a `Data.Vector`. In that spirit, lets write
+to describe the size of a `Data.Vector`. In that spirit, let's write
 a function that computes whether a list is not empty:
 
 \begin{code}
@@ -387,7 +387,7 @@ In this chapter we saw how LiquidHaskell lets you
    often clutter implementations and specifications.
 
 \noindent
-Of course, we can do a lot more with measures, so lets press on!
+Of course, we can do a lot more with measures, so let's press on!
 
 
 

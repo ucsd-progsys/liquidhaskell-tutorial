@@ -68,7 +68,7 @@ we will use this API to implement K-means clustering.]
 Wholemeal Programming
 ---------------------
 
-Indexitis begone! As an example of wholemeal programming, lets
+Indexitis begone! As an example of wholemeal programming, let's
 write a small library that represents vectors as lists and
 matrices as nested vectors:
 
@@ -211,7 +211,7 @@ We are almost ready to begin creating a dimension aware API
 for lists; one last thing that is useful is a couple of aliases
 for describing lists of a given dimension.
 
-\newthought{To make signatures symmetric} lets define an alias for
+\newthought{To make signatures symmetric} let's define an alias for
 plain old (unrefined) lists:
 
 \begin{code}
@@ -345,7 +345,7 @@ test3     = zipOrNull ["cat", "dog"] []
 Lists: Size Reducing API {#listreducing}
 ------------------------
 
-Next, lets look at some functions that truncate lists, in one way or another.
+Next, let's look at some functions that truncate lists, in one way or another.
 
 \newthought{Take} lets us grab the first `k` elements from a list:
 
@@ -685,7 +685,7 @@ mat23     = matFromList [ [1, 2]
 How will you figure out the number of columns? A measure
 may be useful.
 
-\newthought{Matrix Multiplication} Finally, lets implement matrix
+\newthought{Matrix Multiplication} Finally, let's implement matrix
 multiplication. You'd think we did it already, but in fact the
 implementation at the top of this chapter is all wrong (run it and
 see!) We cannot just multiply any two matrices: the number of
