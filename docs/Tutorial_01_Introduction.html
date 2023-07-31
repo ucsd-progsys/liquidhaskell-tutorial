@@ -131,7 +131,6 @@ MathJax.Hub.Config({
 <li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
 <li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
 <li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
-<li><a href='Tutorial_01_Introduction.html#'><b>1.5.</b> Sample Code</a></li>
 </ul>
 <li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
 <ul class='section'>
@@ -346,7 +345,7 @@ class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <em>safe</em> language like Haskell. Well, here’s the thing: every safe
 language is built on a foundation of machine code, or at the very least,
 <code>C</code>. Consider the ubiquitous <code>vector</code> library:</p>
-<pre class="ghci"><code>ghci&gt; :m +Data.Vector 
+<pre class="ghci"><code>ghci&gt; :m +Data.Vector
 ghci&gt; let v = fromList [&quot;haskell&quot;, &quot;ocaml&quot;]
 ghci&gt; unsafeIndex v 0
 &quot;haskell&quot;</code></pre>
@@ -358,7 +357,7 @@ class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <p>Finally, for certain kinds of programs, there is a fate worse than
 death. <code>text</code> is a high-performance string processing library
 for Haskell, that is used, for example, to build web services.</p>
-<pre class="ghci"><code>ghci&gt; :m +Data.Text Data.Text.Unsafe 
+<pre class="ghci"><code>ghci&gt; :m +Data.Text Data.Text.Unsafe
 ghci&gt; let t = pack &quot;Voltage&quot;
 ghci&gt; takeWord16 5 t
 &quot;Volta&quot;</code></pre>
@@ -449,34 +448,26 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#
 <p>If your environment is set up correctly, compilation will stop with a
 Liquid type error:</p>
 <pre class="spec"><code>src/Tutorial_01_Introduction.lhs:30:27: error:
-    Liquid Type Mismatch              
-    .                                 
-    The inferred type                 
+    Liquid Type Mismatch
+    .
+    The inferred type
       VV : {v : GHC.Types.Int | v &gt;= 0
                                 &amp;&amp; v == len xs}
-    .                                 
+    .
     is not a subtype of the required type
       VV : {VV : GHC.Types.Int | VV /= 0}
-    .                                 
-    in the context                    
+    .
+    in the context
       xs : {v : [GHC.Types.Int] | len v &gt;= 0}
-   |                                  
+   |
 30 | average xs = sum xs `div` length xs
    |                           ^^^^^^^^^</code></pre>
-<p><strong>Step 3:</strong> Iteratively edit-compile until the code in
-<code>src/</code></p>
-<p>until it <em>builds</em> without any liquid type errors.</p>
+<p><strong>Step 3:</strong> Iteratively edit-compile the code in
+<code>src/</code> until it <em>builds</em> without any liquid type
+errors.</p>
 <p>The above workflow will let you use whatever GHC/Haskell tooling you
 use for your favorite editor, to automatically display LH errors as
 well.</p>
-</section>
-<section id="sample-code" class="level2">
-<h2>Sample Code</h2>
-<p>This tutorial is written in literate Haskell and the code for it is
-available <a
-href="http://github.com/ucsd-progsys/liquidhaskell-tutorial.git">here</a>.</p>
-<p>We <em>strongly</em> recommend you grab the code, and follow along,
-and especially that you do the exercises.</p>
 <p>If you’d like to copy and paste code snippets into the web demo,
 instead of cloning the repo, note that you may need to pass
 <code>--no-termination</code> to <code>liquid</code>, or equivalently,
