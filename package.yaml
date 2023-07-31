@@ -17,7 +17,7 @@ dependencies:
 - liquidhaskell
 
 library:
-  ghc-options: -fdefer-type-errors -fplugin=LiquidHaskell
+  ghc-options: -fplugin=LiquidHaskell
 
   source-dirs:
     - src
