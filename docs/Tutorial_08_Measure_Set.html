@@ -351,13 +351,13 @@ variables previously defined.</p></li>
 <strong>SMT Solvers</strong> support very expressive logics. In addition
 to linear arithmetic and uninterpreted functions, they can <a
 href="http://www.kroening.com/smt-lib-lsm.pdf">efficiently decide</a>
-formulas over sets. Next, lets see how LiquidHaskell lets us exploit
+formulas over sets. Next, let’s see how LiquidHaskell lets us exploit
 this fact to develop types and interfaces that guarantee invariants over
 the set of elements of a structures.</p>
 <section id="talking-about-sets" class="level2">
 <h2>Talking about Sets</h2>
 <p>First, we need a way to talk about sets in the refinement logic. We
-could roll our own special Haskell type but for now, lets just use the
+could roll our own special Haskell type but for now, let’s just use the
 <code>Set a</code> type from the prelude’s <code>Data.Set</code>.<a
 href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a></p>
@@ -386,7 +386,7 @@ role="doc-noteref"><sup>2</sup></a></p>
 </section>
 <section id="quickcheck" class="level2">
 <h2>Proving QuickCheck Style Properties</h2>
-<p>To get the hang of whats going on, lets do a few warm up exercises,
+<p>To get the hang of whats going on, let’s do a few warm up exercises,
 using LiquidHaskell to prove various simple theorems about sets and
 operations over them.</p>
 <p><br />
@@ -529,7 +529,7 @@ prop_union_assoc x y z
 <p><br />
 <strong>The Distributivity Laws</strong> for Boolean Algebra can be
 verified by writing properties over the relevant operators. For example,
-we lets check that <code>intersection</code> distributes over
+let’s check that <code>intersection</code> distributes over
 <code>union</code>:</p>
 <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
@@ -811,7 +811,7 @@ test2      = elem 2 [1, 3]</div>
 </section>
 <section id="permutations" class="level2">
 <h2>Permutations</h2>
-<p>Next, lets use the refined list API to prove that various sorting
+<p>Next, let’s use the refined list API to prove that various sorting
 routines return <em>permutations</em> of their inputs, that is, return
 output lists whose elements are the <em>same as</em> those of the input
 lists.<a href="#fn4" class="footnote-ref" id="fnref4"
@@ -935,7 +935,7 @@ file handles or system resources can create unpleasant leaks. For
 example, the <a href="http://xmonad.org/">xmonad</a> window manager
 creates a sophisticated <em>zipper</em> data structure to hold the list
 of active user windows and carefully maintains the invariant that that
-the zipper contains no duplicates. Next, lets see how to specify and
+the zipper contains no duplicates. Next, let’s see how to specify and
 verify this invariant using LiquidHaskell, first for lists, and then for
 a simplified zipper.</p>
 <p><br />
@@ -1366,9 +1366,9 @@ and <a href="http://lara.epfl.ch/w/leon">Leon</a> projects describe a
 different DSL based approach for using SMT solvers from Haskell and
 Scala respectively.<a href="#fnref3" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>Since we are focusing on the elements, lets not distract
-ourselves with the <a href="#orderedlists">ordering invariant</a> and
-reuse plain old lists. See <a
+<li id="fn4"><p>Since we are focusing on the elements, let’s not
+distract ourselves with the <a href="#orderedlists">ordering
+invariant</a> and reuse plain old lists. See <a
 href="http://goto.ucsd.edu/~rjhala/liquid/haskell/blog/blog/2013/07/29/putting-things-in-order.lhs/">this</a>
 for how to specify and verify order with plain old lists.<a
 href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

@@ -427,7 +427,7 @@ logarithmic in the size of the collection.</p>
 <section id="specifying-avl-trees" class="level2">
 <h2>Specifying AVL Trees</h2>
 <p>The tricky bit is to ensure order and balance. Before we can ensure
-anything, lets tell LiquidHaskell what we mean by these terms, by
+anything, let’s tell LiquidHaskell what we mean by these terms, by
 defining legal or valid AVL trees.</p>
 <p><br />
 <strong>To Specify Order</strong> we just define two aliases
@@ -544,7 +544,7 @@ field is indeed the <em>real</em> height:</p>
 <section id="smart-constructors" class="level2">
 <h2>Smart Constructors</h2>
 <p>Lets use the type to construct a few small trees which will also be
-handy in a general collection API. First, lets write an alias for trees
+handy in a general collection API. First, let’s write an alias for trees
 of a given height:</p>
 <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
@@ -644,7 +644,7 @@ ensures.</p>
 </section>
 <section id="inserting-elements" class="level2">
 <h2>Inserting Elements</h2>
-<p>Next, lets turn our attention to the problem of <em>adding</em>
+<p>Next, let’s turn our attention to the problem of <em>adding</em>
 elements to an <code>AVL</code> tree. The basic strategy is this:</p>
 <ol type="1">
 <li><em>Find</em> the appropriate location (per ordering) to add the
@@ -1110,7 +1110,7 @@ insR = undefined</div>
 </section>
 <section id="refactoring-rebalance" class="level2">
 <h2>Refactoring Rebalance</h2>
-<p>Next, lets write a function to <code>delete</code> an element from a
+<p>Next, let’s write a function to <code>delete</code> an element from a
 tree. In general, we can apply the same strategy as
 <code>insert</code>:</p>
 <ol type="1">
@@ -1129,7 +1129,7 @@ the <code>insL</code> which does the insertion as well. This is correct,
 but it means we would have to <em>repeat</em> the case analysis when
 deleting a value, which is unfortunate.</p>
 <p><br />
-<strong>Instead lets refactor</strong> the rebalancing code into a
+<strong>Instead let's refactor</strong> the rebalancing code into a
 separate function, that can be used by <em>both</em> <code>insert</code>
 and <code>delete</code>. It looks like this:</p>
 <div id="program-pane-26" class="welleditor" style="background:#fff; position:relative">

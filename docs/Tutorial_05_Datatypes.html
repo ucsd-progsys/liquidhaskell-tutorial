@@ -632,11 +632,11 @@ data IncList a where
 badList = 2 :< 1 :< 3 :< Emp      -- rejected by LH</div>
 </div>
 
-<p> It’s all very well to <em>specify</em> ordered lists. Next, lets see
-how it’s equally easy to <em>establish</em> these invariants by
+<p> It’s all very well to <em>specify</em> ordered lists. Next, let’s
+see how it’s equally easy to <em>establish</em> these invariants by
 implementing several textbook sorting routines.</p>
-<p>First, lets implement insertion sort, which converts an ordinary list
-<code>[a]</code> into an ordered list <code>IncList a</code>.</p>
+<p>First, let’s implement insertion sort, which converts an ordinary
+list <code>[a]</code> into an ordered list <code>IncList a</code>.</p>
 <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
   <!-- Verify Source -->
@@ -964,12 +964,12 @@ add k' t@(Node k l r)
 </div>
 
 <p><br />
-<strong>Minimum</strong> For our next trick, lets write a function to
+<strong>Minimum</strong> For our next trick, let’s write a function to
 delete the <em>minimum</em> element from a <code>BST</code>. This
 function will return a <em>pair</em> of outputs – the smallest element
 and the remainder of the tree. We can say that the output element is
 indeed the smallest, by saying that the remainder’s elements exceed the
-element. To this end, lets define a helper type: <a href="#fn5"
+element. To this end, let’s define a helper type: <a href="#fn5"
 class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <div id="program-pane-28" class="welleditor" style="background:#fff; position:relative">
 

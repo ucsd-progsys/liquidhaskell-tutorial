@@ -364,7 +364,7 @@ that tracks the set of keys stored in the map, in order to statically
 ensure the safety of lookups.</p>
 <p><br />
 <strong>Types</strong> First, we need a type for <code>Map</code>s. As
-usual, lets parameterize the type with <code>k</code> for the type of
+usual, let’s parameterize the type with <code>k</code> for the type of
 keys and <code>v</code> for the type of values:</p>
 <pre class="spec"><code>data Map k v    -- Currently left abstract</code></pre>
 <p><br />
@@ -411,7 +411,7 @@ get :: k:k -&gt; {m:Map k v | HasKey k m} -&gt; v</code></pre>
 <section id="using-maps-well-scoped-expressions" class="level2">
 <h2>Using Maps: Well Scoped Expressions</h2>
 <p>Rather than jumping into the <em>implementation</em> of the above
-<code>Map</code> API, lets write a <em>client</em> that uses
+<code>Map</code> API, let’s write a <em>client</em> that uses
 <code>Map</code>s to implement an interpreter for a tiny language. In
 particular, we will use maps as an <em>environment</em> containing the
 values of <em>bound variables</em>, and we will use the refined API to
@@ -682,12 +682,12 @@ complicated and beyond the scope of what we’ve seen so far.</p>
 <h2>Implementing Maps: Binary Search Trees</h2>
 <p>We just saw how easy it is to <em>use</em> the Associative Map <a
 href="#mapapi">API</a> to ensure the safety of lookups, even though the
-<code>Map</code> has a “dynamically” generated set of keys. Next, lets
+<code>Map</code> has a “dynamically” generated set of keys. Next, let’s
 see how we can <em>implement</em> a <code>Map</code> library that
 respects the API using <a href="#binarysearchtree">Binary Search
 Trees</a></p>
 <p><br />
-<strong>Data Type</strong> First, lets provide an implementation of the
+<strong>Data Type</strong> First, let’s provide an implementation of the
 hitherto abstract data type for <code>Map</code>. We shall use Binary
 Search Trees, wherein, at each <code>Node</code>, the <code>left</code>
 (resp. <code>right</code>) subtree has keys that are less than (resp.
@@ -787,7 +787,7 @@ set k' v' Tip = Node k' v' Tip Tip</div>
 </div>
 
 <p><br />
-<strong>Lookup</strong> Next, lets write the <code>mem</code> function
+<strong>Lookup</strong> Next, let’s write the <code>mem</code> function
 that returns the value associated with a key <code>k'</code>. To do so
 we just compare <code>k'</code> with the root key, if they are equal, we
 return the binding, and otherwise we go down the <code>left</code>
@@ -816,8 +816,8 @@ get'  _ Tip   = die  "Lookup Never Fails"</div>
 <p><br />
 <strong>Unfortunately</strong> the function above is <em>rejected</em>
 by LiquidHaskell. This is a puzzler (and a bummer!) because in fact it
-<em>is</em> correct. So what gives? Well, lets look at the error for the
-call <code>get' k' l</code></p>
+<em>is</em> correct. So what gives? Well, let’s look at the error for
+the call <code>get' k' l</code></p>
 <pre class="liquiderror"><code> src/07-case-study-associative-maps.lhs:411:25: Error: Liquid Type Mismatch
    Inferred type
      VV : Map a b | VV == l
@@ -830,7 +830,7 @@ call <code>get' k' l</code></p>
      k&#39; : a</code></pre>
 <p>LiquidHaskell is <em>unable</em> to deduce that the key
 <code>k'</code> definitely belongs in the <code>left</code> subtree
-<code>l</code>. Well, lets ask ourselves: <em>why</em> must
+<code>l</code>. Well, let’s ask ourselves: <em>why</em> must
 <code>k'</code> belong in the left subtree? From the input, we know
 <code>HasKey k' m</code> i.e. that <code>k'</code> is <em>somewhere</em>
 in <code>m</code>. That is <em>one of</em> the following holds:</p>
