@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106754474-1');
+</script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Programming with Refinement Types</title>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="./css/editor.css">
+
+   
+    <style type="text/css">code{white-space: pre;}
+
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+
+
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./js/angular/angular.js"></script>
+<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+
+<!-- MATHJAX TEMPLATES GO HERE -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    extensions: ["color.js"],
+    Macros: {
+      True: "\\mathit{True}",
+      RR:   "{\\bf R}",
+      Int:  "\\mathtt{Int}",
+      Nat:  "\\mathtt{Nat}",
+      Zero: "\\mathtt{Zero}",
+      foo:   ["{\\bf Jhala FOO #1}", 1],
+      kvar:  ["{\\color[rgb]{1,0,0}{K_{#1}({#2})}}", 2],
+      bindx: ["{{#1}\\!:\\!{#2}}", 2],
+      reft:  ["\\{\\bindx{#1}{#2} \\mid {#3}\\}", 3],
+      ereft: ["\\bindx{#1}{\\{#2 \\mid #3\\}}", 3],
+      reftx: ["\\{{#1}\\mid{#2}\\}", 2],
+      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3],
+      tcap:  ["(\\mathtt{intersection}\\ #1\\ #2)", 2],
+      tcup:  ["(\\mathtt{union}\\ #1\\ #2)", 2],
+      tsng:  ["(\\mathtt{singleton}\\ #1)", 1]
+  }
+  }
+});
+</script>
+
+<!-- GITHUB -->
+<script
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+  
+<!-- LOCAL 
+
+  <script src="js/MathJax-2.6.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    type="text/javascript"></script>
+    
+  -->
+  
+
+
+
+
+
+
+
+</head>
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
+
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
+
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.5.</b> Sample Code</a></li>
+</ul>
+<li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
+<ul class='section'>
+<li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
+<ul class='section'>
+<li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
+<ul class='section'>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
+</ul>
+<li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
+</ul>
+</ul>
+
+</div>
+      
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+        
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <div class="dropdown" ng-show="isBad">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+               </li>
+             </ul>
+         </div>
+       </div>
+       
+
+<div id='page-wrapper'>
+<div id='page'>
+
+<section id="polymorphism" class="level1">
+<h1>Polymorphism</h1>
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--short-names"         @-}
+{-@ LIQUID "--no-termination"      @-}
+{-@ LIQUID "--scrape-used-imports" @-}
+
+module Tutorial_04_Polymorphism
+   ( safeLookup
+   , unsafeLookup
+   , vectorSum, vectorSum'
+   , absoluteSum, absoluteSum'
+   , dotProduct
+   , sparseProduct, sparseProduct'
+   , eeks
+   , head, head', head''
+   ) where
+
+import Prelude      hiding (head, abs, length)
+import Data.List    (foldl')
+import Data.Vector  hiding (head, foldl')
+
+absoluteSum'     :: Vector Int -> Int
+dotProduct     :: Vector Int -> Vector Int -> Int
+absoluteSum     :: Vector Int -> Int
+sparseProduct, sparseProduct'  :: Vector Int -> [(Int, Int)] -> Int
+
+-- {-@ fail eeks @-}
+-- {-@ fail head @-}
+-- {-@ fail unsafeLookup @-}
+-- {-@ fail dotProduct @-}
+
+</div>
+</div>
+
+</div>
+
+<p>Refinement types shine when we want to establish properties of
+<em>polymorphic</em> datatypes and higher-order functions. Rather than
+be abstract, let’s illustrate this with a <a
+href="https://www.cs.cmu.edu/~fp/papers/pldi98dml.pdf">classic</a>
+use-case.</p>
+<p><br />
+<strong>Array Bounds Verification</strong> aims to ensure that the
+indices used to retrieve values from an array are indeed <em>valid</em>
+for the array, i.e. are between <code>0</code> and the <em>size</em> of
+the array. For example, suppose we create an <code>array</code> with two
+elements:</p>
+<pre class="spec"><code>twoLangs  = fromList [&quot;haskell&quot;, &quot;javascript&quot;]</code></pre>
+<p>Lets attempt to look it up at various indices:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">eeks      = [ok, yup, nono]
+  where
+    ok    = twoLangs ! 0
+    yup   = twoLangs ! 1
+    nono  = twoLangs ! 3</div>
+</div>
+
+<p>If we try to <em>run</em> the above, we get a nasty shock: an
+exception that says we’re trying to look up <code>twoLangs</code> at
+index <code>3</code> whereas the size of <code>twoLangs</code> is just
+<code>2</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Prelude</span><span class="op">&gt;</span> :l 03-poly.lhs</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[1</span> of 1] Compiling VectorBounds     <span class="er">(</span> <span class="ex">03-poly.lhs,</span> interpreted <span class="kw">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Ok,</span> modules loaded: VectorBounds.</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">*VectorBounds</span><span class="op">&gt;</span> eeks</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Loading</span> package ... done.</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;*** Exception: ./Data/Vector/Generic.hs:249 ((!)): index out of bounds (3,2)</span></span></code></pre></div>
+<p><br />
+<strong>In a suitable Editor</strong> e.g. Vim or Emacs, or if you push
+the “play” button in the online demo, you will literally see the error
+<em>without</em> running the code. Lets see how LiquidHaskell checks
+<code>ok</code> and <code>yup</code> but flags <code>nono</code>, and
+along the way, learn how it reasons about <em>recursion</em>,
+<em>higher-order functions</em>, <em>data types</em> and
+<em>polymorphism</em>.</p>
+<section id="vectorbounds" class="level2">
+<h2>Specification: Vector Bounds</h2>
+<p>First, let’s see how to <em>specify</em> array bounds safety by
+<em>refining</em> the types for the <a
+href="https://github.com/ucsd-progsys/liquidhaskell/blob/91e1074575ca102df810ea399c5a13063e8c8011/include/Data/Vector.spec">key
+functions</a> exported by <code>Data.Vector</code>, i.e. how to</p>
+<ol type="1">
+<li><em>define</em> the size of a <code>Vector</code></li>
+<li><em>compute</em> the size of a <code>Vector</code></li>
+<li><em>restrict</em> the indices to those that are valid for a given
+size.</li>
+</ol>
+<div class="toolinfo">
+<p>We can write specifications for imported modules – for which we
+<em>lack</em> the code – either directly in the client’s source file or
+better, in <code>.spec</code> files which can be reused across multiple
+client modules.</p>
+<p><br />
+<strong>Include</strong> directories can be specified when checking a
+file. Suppose we want to check some file <code>target.hs</code> that
+imports an external dependency <code>Data.Vector</code>. We can write
+specifications for <code>Data.Vector</code> inside
+<code>include/Data/Vector.spec</code> which contains:</p>
+<pre class="spec"><code>-- | Define the size
+measure vlen :: Vector a -&gt; Int
+
+-- | Compute the size
+assume length :: x:Vector a -&gt; {v:Int | v = vlen x}
+
+-- | Lookup at an index
+assume (!) :: x:Vector a -&gt; {v:Nat | v &lt; vlen x} -&gt; a</code></pre>
+</div>
+<p>Using this new specification is now a simple matter of telling
+LiquidHaskell to include this file:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> liquid <span class="at">-i</span> include/ target.hs</span></code></pre></div>
+<p>LiquidHaskell ships with specifications for <code>Prelude</code>,
+<code>Data.List</code>, and <code>Data.Vector</code> which it includes
+by default.</p>
+<p><br />
+<strong>Measures</strong> are used to define <em>properties</em> of
+Haskell data values that are useful for specification and verification.
+Think of <code>vlen</code> as the <em>actual</em> size of a
+<code>Vector</code> regardless of how the size was computed.</p>
+<p><br />
+<strong>Assumes</strong> are used to <em>specify</em> types describing
+the semantics of functions that we cannot verify e.g. because we don’t
+have the code for them. Here, we are assuming that the library function
+<code>Data.Vector.length</code> indeed computes the size of the input
+vector. Furthermore, we are stipulating that the lookup function
+<code>(!)</code> requires an index that is between <code>0</code> and
+the real size of the input vector <code>x</code>.</p>
+<p><br />
+<strong>Dependent Refinements</strong> are used to describe
+relationships <em>between</em> the elements of a specification. For
+example, notice how the signature for <code>length</code> names the
+input with the binder <code>x</code> that then appears in the output
+type to constrain the output <code>Int</code>. Similarly, the signature
+for <code>(!)</code> names the input vector <code>x</code> so that the
+index can be constrained to be valid for <code>x</code>. Thus,
+dependency lets us write properties that connect <em>multiple</em>
+program values.</p>
+<p><br />
+<strong>Aliases</strong> are extremely useful for defining
+<em>abbreviations</em> for commonly occurring types. Just as we enjoy
+abstractions when programming, we will find it handy to have
+abstractions in the specification mechanism. To this end, LiquidHaskell
+supports <em>type aliases</em>. For example, we can define
+<code>Vector</code>s of a given size <code>N</code> as:</p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">{-@ type VectorN a N = {v:Vector a | vlen v == N} @-}</div>
+</div>
+
+<p>and now use this to type <code>twoLangs</code> above as:</p>
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-3" class="programbox">{-@ twoLangs :: VectorN String 2 @-}
+twoLangs     = fromList ["haskell", "javascript"]</div>
+</div>
+
+<p>Similarly, we can define an alias for <code>Int</code> values between
+<code>Lo</code> and <code>Hi</code>:</p>
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-4" class="programbox">{-@ type Btwn Lo Hi = {v:Int | Lo <= v && v < Hi} @-}</div>
+</div>
+
+<p>after which we can specify <code>(!)</code> as:</p>
+<pre class="spec"><code>(!) :: x:Vector a -&gt; Btwn 0 (vlen x) -&gt; a</code></pre>
+</section>
+<section id="verification-vector-lookup" class="level2">
+<h2>Verification: Vector Lookup</h2>
+<p>Let’s try to write some functions to sanity check the specifications.
+First, find the starting element – or <code>head</code> of a
+<code>Vector</code></p>
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-5" class="programbox">head     :: Vector a -> a
+head vec = vec ! 0</div>
+</div>
+
+<p>When we check the above, we get an error:</p>
+<pre class="liquiderror"><code>     src/03-poly.lhs:127:23: Error: Liquid Type Mismatch
+       Inferred type
+         VV : Int | VV == ?a &amp;&amp; VV == 0
+
+       not a subtype of Required type
+         VV : Int | VV &gt;= 0 &amp;&amp; VV &lt; vlen vec
+
+       In Context
+         VV  : Int | VV == ?a &amp;&amp; VV == 0
+         vec : Vector a | 0 &lt;= vlen vec
+         ?a  : Int | ?a == (0  :  int)</code></pre>
+<p>LiquidHaskell is saying that <code>0</code> is <em>not</em> a valid
+index as it is not between <code>0</code> and <code>vlen vec</code>. Say
+what? Well, what if <code>vec</code> had <em>no</em> elements! A formal
+verifier doesn’t make <em>off by one</em> errors.</p>
+<p><br />
+<strong>To Fix</strong> the problem we can do one of two things.</p>
+<ol type="1">
+<li><em>Require</em> that the input <code>vec</code> be non-empty,
+or</li>
+<li><em>Return</em> an output if <code>vec</code> is non-empty, or</li>
+</ol>
+<p>Here’s an implementation of the first approach, where we define and
+use an alias <code>NEVector</code> for non-empty
+<code>Vector</code>s</p>
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-6" class="programbox">{-@ type NEVector a = {v:Vector a | 0 < vlen v} @-}
+
+{-@ head' :: NEVector a -> a @-}
+head' vec = vec ! 0</div>
+</div>
+
+<div id="Vector Head" class="hwex">
+<p><br />
+<strong>Exercise: (Vector Head): </strong>Replace the
+<code>undefined</code> with an <em>implementation</em> of
+<code>head''</code> which accepts <em>all</em> <code>Vector</code>s but
+returns a value only when the input <code>vec</code> is not empty.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">head''     :: Vector a -> Maybe a
+head'' vec = undefined</div>
+</div>
+
+<div id="Unsafe Lookup" class="hwex">
+<p><br />
+<strong>Exercise: (Unsafe Lookup): </strong>The function
+<code>unsafeLookup</code> is a wrapper around the <code>(!)</code> with
+the arguments flipped. Modify the specification for
+<code>unsafeLookup</code> so that the <em>implementation</em> is
+accepted by LiquidHaskell.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-8" class="programbox">{-@ unsafeLookup :: Int -> Vector a -> a @-}
+unsafeLookup index vec = vec ! index</div>
+</div>
+
+<div id="Safe Lookup" class="hwex">
+<p><br />
+<strong>Exercise: (Safe Lookup): </strong>Complete the implementation of
+<code>safeLookup</code> by filling in the implementation of
+<code>ok</code> so that it performs a bounds check before the
+access.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-9" class="programbox">{-@ safeLookup :: Vector a -> Int -> Maybe a @-}
+safeLookup x i
+  | ok        = Just (x ! i)
+  | otherwise = Nothing
+  where
+    ok        = undefined</div>
+</div>
+
+</section>
+<section id="inference-our-first-recursive-function" class="level2">
+<h2>Inference: Our First Recursive Function</h2>
+<p>Ok, let’s write some code! Let’s start with a recursive function that
+adds up the values of the elements of an <code>Int</code> vector.</p>
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-10" class="programbox">-- >>> vectorSum (fromList [1, -2, 3])
+-- 2
+vectorSum         :: Vector Int -> Int
+vectorSum vec     = go 0 0
+  where
+    go acc i
+      | i < sz    = go (acc + (vec ! i)) (i + 1)
+      | otherwise = acc
+    sz            = length vec</div>
+</div>
+
+<div id="Guards" class="hwex">
+<p><br />
+<strong>Exercise: (Guards): </strong>What happens if you
+<em>replace</em> the guard with <code>i &lt;= sz</code>?</p>
+<br />
+<br />
+
+</div>
+<div id="Absolute Sum" class="hwex">
+<p><br />
+<strong>Exercise: (Absolute Sum): </strong>Write a variant of the above
+function that computes the <code>absoluteSum</code> of the elements of
+the vector.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">-- >>> absoluteSum (fromList [1, -2, 3])
+-- 6
+{-@ absoluteSum :: Vector Int -> Nat @-}
+absoluteSum     = undefined</div>
+</div>
+
+<p>LiquidHaskell verifies <code>vectorSum</code> – or, to be precise,
+the safety of the vector accesses <code>vec ! i</code>. The verification
+works out because LiquidHaskell is able to <em>automatically infer</em>
+<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<pre class="spec"><code>go :: Int -&gt; {v:Int | 0 &lt;= v &amp;&amp; v &lt;= sz} -&gt; Int</code></pre>
+<p>which states that the second parameter <code>i</code> is between
+<code>0</code> and the length of <code>vec</code> (inclusive).
+LiquidHaskell uses this and the test that <code>i &lt; sz</code> to
+establish that <code>i</code> is between <code>0</code> and
+<code>(vlen vec)</code> to prove safety.</p>
+<p><strong>Note</strong> you need to run <code>liquid</code> with the
+option <code>--no-termination</code> or make sure your source file has
+<code>{-@ LIQUID "--no-termination" @-},  otherwise the code for</code>go`
+fails the now default termination check. We will come back to this
+example later to see how to verify termination using metrics.</p>
+<div id="Off by one?" class="hwex">
+<p><br />
+<strong>Exercise: (Off by one?): </strong>Why does the type of
+<code>go</code> have <code>v &lt;= sz</code> and not
+<code>v &lt; sz</code> ?</p>
+<br />
+<br />
+
+</div>
+</section>
+<section id="higher-order-functions-bottling-recursion-in-a-loop"
+class="level2">
+<h2>Higher-Order Functions: Bottling Recursion in a
+<code>loop</code></h2>
+<p>Let’s refactor the above low-level recursive function into a generic
+higher-order <code>loop</code>.</p>
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-12" class="programbox">loop :: Int -> Int -> a -> (Int -> a -> a) -> a
+loop lo hi base f =  go base lo
+  where
+    go acc i
+      | i < hi    = go (f i acc) (i + 1)
+      | otherwise = acc</div>
+</div>
+
+<p>We can now use <code>loop</code> to implement
+<code>vectorSum</code>:</p>
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-13" class="programbox">vectorSum'      :: Vector Int -> Int
+vectorSum' vec  = loop 0 n 0 body
+  where
+    body i acc  = acc + (vec ! i)
+    n           = length vec</div>
+</div>
+
+<p><br />
+<strong>Inference</strong> is a convenient option. LiquidHaskell
+finds:</p>
+<pre class="spec"><code>loop :: lo:Nat -&gt; hi:{Nat|lo &lt;= hi} -&gt; a -&gt; (Btwn lo hi -&gt; a -&gt; a) -&gt; a</code></pre>
+<p>In English, the above type states that</p>
+<ul>
+<li><code>lo</code> the loop <em>lower</em> bound is a non-negative
+integer</li>
+<li><code>hi</code> the loop <em>upper</em> bound is a greater then or
+equal to <code>lo</code>,</li>
+<li><code>f</code> the loop <em>body</em> is only called with integers
+between <code>lo</code> and <code>hi</code>.</li>
+</ul>
+<p> It can be tedious to have to keep typing things like the above. If
+we wanted to make <code>loop</code> a public or exported function, we
+could use the inferred type to generate an explicit signature.</p>
+<p>At the call <code>loop 0 n 0 body</code> the parameters
+<code>lo</code> and <code>hi</code> are instantiated with <code>0</code>
+and <code>n</code> respectively, which, by the way is where the
+inference engine deduces non-negativity. Thus LiquidHaskell concludes
+that <code>body</code> is only called with values of <code>i</code> that
+are <em>between</em> <code>0</code> and <code>(vlen vec)</code>, which
+verifies the safety of the call <code>vec ! i</code>.</p>
+<div id="Using Higher-Order Loops" class="hwex">
+<p><br />
+<strong>Exercise: (Using Higher-Order Loops): </strong>Complete the
+implementation of <code>absoluteSum'</code> below. When you are done,
+what is the type that is inferred for <code>body</code>?</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-14" class="programbox">-- >>> absoluteSum' (fromList [1, -2, 3])
+-- 6
+{-@ absoluteSum' :: Vector Int -> Nat @-}
+absoluteSum' vec = loop 0 n 0 body
+  where
+    body i acc   = undefined
+    n            = length vec</div>
+</div>
+
+<div id="Dot Product" class="hwex">
+<br />
+<strong>Exercise: (Dot Product): </strong>The following uses
+<code>loop</code> to compute <code>dotProduct</code>s. Why does
+LiquidHaskell flag an error? Fix the code or specification so that
+LiquidHaskell accepts it.
+<br />
+<br />
+
+</div>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">-- >>> dotProduct (fromList [1,2,3]) (fromList [4,5,6])
+-- 32
+{-@ dotProduct :: x:Vector Int -> y:Vector Int -> Int @-}
+dotProduct x y = loop 0 sz 0 body
+  where
+    body i acc = acc + (x ! i)  *  (y ! i)
+    sz         = length x</div>
+</div>
+
+</section>
+<section id="sparsetype" class="level2">
+<h2>Refinements and Polymorphism</h2>
+<p>While the standard <code>Vector</code> is great for <em>dense</em>
+arrays, often we have to manipulate <em>sparse</em> vectors where most
+elements are just <code>0</code>. We might represent such vectors as a
+list of index-value tuples:</p>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">{-@ type SparseN a N = [(Btwn 0 N, a)] @-}</div>
+</div>
+
+<p>Implicitly, all indices <em>other</em> than those in the list have
+the value <code>0</code> (or the equivalent value for the type
+<code>a</code>).</p>
+<p><br />
+<strong>The Alias</strong> <code>SparseN</code> is just a shorthand for
+the (longer) type on the right, it does not <em>define</em> a new type.
+If you are familiar with the <em>index-style</em> length encoding
+e.g. as found in <a
+href="https://en.wikipedia.org/wiki/Dependent_ML">DML</a> or <a
+href="http://code.haskell.org/Agda/examples/Vec.agda">Agda</a>, then
+note that despite appearances, our <code>Sparse</code> definition is
+<em>not</em> indexed.</p>
+<p>Let’s write a function to compute a sparse product</p>
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-17" class="programbox">{-@ sparseProduct  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+sparseProduct x y   = go 0 y
+  where
+    go n []         = n
+    go n ((i,v):y') = go (n + (x!i) * v) y'</div>
+</div>
+
+<p>LiquidHaskell verifies the above by using the specification to
+conclude that for each tuple <code>(i, v)</code> in the list
+<code>y</code>, the value of <code>i</code> is within the bounds of the
+vector <code>x</code>, thereby proving <code>x ! i</code> safe.</p>
+<p>The sharp reader will have undoubtedly noticed that the sparse
+product can be more cleanly expressed as a <a
+href="https://hackage.haskell.org/package/base-4.18.0.0/docs/Data-List.html#v:foldl">fold</a>:</p>
+<pre class="spec"><code>foldl&#39; :: (a -&gt; b -&gt; a) -&gt; a -&gt; [b] -&gt; a</code></pre>
+<p>We can simply fold over the sparse vector, accumulating the
+<code>sum</code> as we go along</p>
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-18" class="programbox">{-@ sparseProduct'  :: x:Vector _ -> SparseN _ (vlen x) -> _ @-}
+sparseProduct' x y  = foldl' body 0 y
+  where
+    body sum (i, v) = sum + (x ! i) * v</div>
+</div>
+
+<p> LiquidHaskell digests this without difficulty. The main trick is in
+how the polymorphism of <code>foldl'</code> is instantiated.</p>
+<ol type="1">
+<li><p>GHC infers that at this site, the type variable <code>b</code>
+from the signature of <code>foldl'</code> is instantiated to the Haskell
+type <code>(Int, a)</code>.</p></li>
+<li><p>Correspondingly, LiquidHaskell infers that in fact <code>b</code>
+can be instantiated to the <em>refined</em>
+<code>(Btwn 0 (vlen x), a)</code>.</p></li>
+</ol>
+<p>Thus, the inference mechanism saves us a fair bit of typing and
+allows us to reuse existing polymorphic functions over containers and
+such without ceremony.</p>
+</section>
+<section id="recap" class="level2">
+<h2>Recap</h2>
+<p>This chapter gave you an idea of how one can use refinements to
+verify size related properties, and more generally, to specify and
+verify properties of recursive and polymorphic functions. Next, let’s
+see how we can use LiquidHaskell to prevent the creation of illegal
+values by refining data type definitions.</p>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>In your editor, click on <code>go</code> to see the
+inferred type.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</div>
+</div>
+
+<div class="hidden">
+<!--Site Meter -->
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <noscript>
+    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
+      target="_top">
+      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
+      alt="Site Meter" border="0"/></a>
+  </noscript>
+  <!-- Copyright (c)2009 Site Meter -->
+</div>
+
+
+
+
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script> 
+  <script src="./js/liquid/annot.js"></script> 
+  <script src="./js/liquid/config.js"></script> 
+  <script src="./js/liquid/liquid.js"></script>
+
+  <script type="text/javascript">
+    var queryServerURL = "https://liquid-demo.programming.systems/" ;
+  </script>
+  
+  <!-- rust nav JS --> 
+  <script type="text/javascript">
+    window.playgroundUrl = "";
+  </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
+  function toggleNav() {
+    var toc         = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    var status      = document.getElementById("checker-status");
+
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
+
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
+
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+       el.className = classes.join(' ');
+     }
+  }
+});
+</script>
+</body>
+</html>
