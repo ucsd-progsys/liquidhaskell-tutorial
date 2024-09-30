@@ -1,138 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
-  <!-- Global Site Tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments) };
-    gtag('js', new Date());
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
 
-    gtag('config', 'UA-106754474-1');
-  </script>
+  gtag('config', 'UA-106754474-1');
+</script>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="generator" content="rustdoc">
-  <title>Programming with Refinement Types</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Programming with Refinement Types</title>
 
-  <link href="./css/bootstrap.css" rel="stylesheet">
-  <link href="./css/bootstrap-theme.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
-  <link rel="stylesheet" type="text/css" href="./css/editor.css">
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
+    <link rel="stylesheet" type="text/css" href="./css/editor.css">
 
+   
+    <style type="text/css">code{white-space: pre;}
 
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
   <style type="text/css">
-    code {
-      white-space: pre;
-    }
-
-    .dropdown-menu {
-      min-width: 0px;
-    }
-
-    #checker-status {
-      width: 30;
-      height: 20;
-      padding-top: 2px;
-      padding-right: 10px;
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 99;
-    }
-  </style>
-  <style type="text/css">
-    table.sourceCode,
-    tr.sourceCode,
-    td.lineNumbers,
-    td.sourceCode {
-      margin: 0;
-      padding: 0;
-      vertical-align: baseline;
-      border: none;
-    }
-
-    table.sourceCode {
-      width: 100%;
-      line-height: 100%;
-    }
-
-    td.lineNumbers {
-      text-align: right;
-      padding-right: 4px;
-      padding-left: 4px;
-      color: #aaaaaa;
-      border-right: 1px solid #aaaaaa;
-    }
-
-    td.sourceCode {
-      padding-left: 5px;
-    }
-
-    code>span.kw {
-      color: #007020;
-      font-weight: bold;
-    }
-
-    code>span.dt {
-      color: #902000;
-    }
-
-    code>span.dv {
-      color: #40a070;
-    }
-
-    code>span.bn {
-      color: #40a070;
-    }
-
-    code>span.fl {
-      color: #40a070;
-    }
-
-    code>span.ch {
-      color: #4070a0;
-    }
-
-    code>span.st {
-      color: #4070a0;
-    }
-
-    code>span.co {
-      color: #60a0b0;
-      font-style: italic;
-    }
-
-    code>span.ot {
-      color: #007020;
-    }
-
-    code>span.al {
-      color: #ff0000;
-      font-weight: bold;
-    }
-
-    code>span.fu {
-      color: #06287e;
-    }
-
-    code>span.er {
-      color: #ff0000;
-      font-weight: bold;
-    }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
   </style>
 
 
-  <!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
-  <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
-  <script type="text/javascript" src="./js/angular/angular.js"></script>
-  <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./js/angular/angular.js"></script>
+<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 
-  <!-- MATHJAX TEMPLATES GO HERE -->
-  <script type="text/x-mathjax-config">
+<!-- MATHJAX TEMPLATES GO HERE -->
+<script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: {
     extensions: ["color.js"],
@@ -157,17 +92,18 @@ MathJax.Hub.Config({
 });
 </script>
 
-  <!-- GITHUB -->
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    type="text/javascript"></script>
-
-  <!-- LOCAL
+<!-- GITHUB -->
+<script
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+  
+<!-- LOCAL 
 
   <script src="js/MathJax-2.6.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     type="text/javascript"></script>
-
+    
   -->
-
+  
 
 
 
@@ -176,860 +112,815 @@ MathJax.Hub.Config({
 
 
 </head>
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
-<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo"
-  ng-controller="LiquidDemoCtrl">
-
-  <div id="nav">
-    <button id="toggle-nav" class="toggle-nav">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
-  </div>
-
-  <div id='toc' class='mobile-hidden'>
-    <ul class='chapter'>
-      <li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
-        <li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
-        <li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
-        <li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
-      </ul>
-      <li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-        <li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a>
-        </li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
-        <li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
-        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
-        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a
-            <code>loop</code></a></li>
-        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
-        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
-        <li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
-        <li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
-        <li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
-        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
-        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
-        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a>
-        </li>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
-        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a>
-      </li>
-      <ul class='section'>
-        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
-        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
-        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
-        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
-        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
-        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a>
-        </li>
-        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees
-            {#lemmas}</a></li>
-        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
-      </ul>
-      <li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes
-          {#case-study-pointers}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
-        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
-      </ul>
-      <li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
-      <ul class='section'>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
-        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
-      </ul>
-    </ul>
-
-  </div>
-
-  <div id="checker-status">
-    <!-- Verifying ... -->
-    <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1" ng-show="isChecking"
-      ng-click="verifySource()">
-      <span class="glyphicon glyphicon-hourglass"></span>
-    </button>
-
-
-    <!-- Safe -->
-    <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
-      ng-show="isSafe">
-      <span class="glyphicon glyphicon-ok"></span>
-    </button>
-
-    <div class="dropdown" ng-show="isBad">
-      <button class="btn btn-xs btn-link dropdown-toggle" type="button" id="errorblockdropdown" data-toggle="dropdown"
-        style="font-size:30px; color:red; z-index:1">
-        <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span>
-        <font size="4">{{errorBlocks.length}}</font>
-        </span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-        <li ng-repeat="err in errorBlocks">
-          <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
-        </li>
-      </ul>
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
     </div>
-  </div>
+
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
+<li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
+</ul>
+<li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
+<ul class='section'>
+<li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+<li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
+<ul class='section'>
+<li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+<li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+<li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+<li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
+<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+<li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
+<li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
+<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
+<ul class='section'>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
+<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
+</ul>
+<li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
+</ul>
+<li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
+<ul class='section'>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
+</ul>
+</ul>
+
+</div>
+      
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+        
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <div class="dropdown" ng-show="isBad">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+               </li>
+             </ul>
+         </div>
+       </div>
+       
+
+<div id='page-wrapper'>
+<div id='page'>
+
+<section id="lazyqueue" class="level1">
+<h1>Case Study: Okasaki’s Lazy Queues</h1>
+<p>Lets start with a case study that is simple enough to explain without
+pages of code, yet complex enough to show off whats cool about
+dependency: Chris Okasaki’s beautiful <a
+href="http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf">Lazy
+Queues</a>. This structure leans heavily on an invariant to provide fast
+<em>insertion</em> and <em>deletion</em>. Let’s see how to enforce that
+invariant with LiquidHaskell.</p>
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
+{-@ LIQUID "--maxparams=3"    @-}
+
+module Tutorial_09_Case_Study_Lazy_Queues 
+  (Queue, insert, remove, emp, realSize) 
+  where
+
+import Prelude hiding (replicate, take, length)
+
+-- | Size function actually returns the size: (Duh!)
+
+{-@ size :: q:SList a -> {v:Nat | v = size q} @-}
+
+{-@ die :: {v:String | false} -> a @-}
+die x = error x
+
+{-@ invariant {v:SList a | size v >= 0} @-}
+
+-- Source: Okasaki, JFP 1995
+-- http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
+
+replicate :: Int -> a -> Queue a
 
 
-  <div id='page-wrapper'>
-    <div id='page'>
+-- {-@ ignore badList @-}
+-- {-@ ignore hd   @-}
+-- {-@ ignore tl   @-}
+-- {-@ ignore badQ @-}
 
-      <section id="lazyqueue" class="level1">
-        <h1>Case Study: Okasaki’s Lazy Queues</h1>
-        <p>Lets start with a case study that is simple enough to explain without
-          pages of code, yet complex enough to show off whats cool about
-          dependency: Chris Okasaki’s beautiful <a
-            href="http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf">Lazy
-            Queues</a>. This structure leans heavily on an invariant to provide fast
-          <em>insertion</em> and <em>deletion</em>. Let’s see how to enforce that
-          invariant with LiquidHaskell.
-        </p>
-        <div class="hidden">
-          <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+</div>
+</div>
 
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
+</div>
 
-            <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-              {-@ LIQUID "--maxparams=3" @-}
-
-              module Tutorial_09_Case_Study_Lazy_Queues
-              (Queue, insert, remove, emp, realSize)
-              where
-
-              import Prelude hiding (replicate, take, length)
-
-              -- | Size function actually returns the size: (Duh!)
-
-              {-@ size :: q:SList a -> {v:Nat | v = size q} @-}
-
-              {-@ die :: {v:String | false} -> a @-}
-              die x = error x
-
-              {-@ invariant {v:SList a | size v >= 0} @-}
-
-              -- Source: Okasaki, JFP 1995
-              --
-              http://www.westpoint.edu/eecs/SiteAssets/SitePages/Faculty%20Publication%20Documents/Okasaki/jfp95queue.pdf
-
-              replicate :: Int -> a -> Queue a
+<section id="queues" class="level2">
+<h2>Queues</h2>
+<p>A <a
+href="http://en.wikipedia.org/wiki/Queue_%28abstract_data_type%29">queue</a>
+is a structure into which we can <code>insert</code> and
+<code>remove</code> data such that the order in which the data is
+removed is the same as the order in which it was inserted.</p>
+<div id="fig:queue" style="align: left; text-align:center;">
+  <img src="img/queue.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Queue is a structure into which we can insert
+           and remove elements. The order in which the elements are
+           removed is the same as the order in which they were inserted. </div>
+</div>
+<br>
 
 
-              -- {-@ ignore badList @-}
-              -- {-@ ignore hd @-}
-              -- {-@ ignore tl @-}
-              -- {-@ ignore badQ @-}
-
-            </div>
-          </div>
-
-        </div>
-
-        <section id="queues" class="level2">
-          <h2>Queues</h2>
-          <p>A <a href="http://en.wikipedia.org/wiki/Queue_%28abstract_data_type%29">queue</a>
-            is a structure into which we can <code>insert</code> and
-            <code>remove</code> data such that the order in which the data is
-            removed is the same as the order in which it was inserted.
-          </p>
-          <div id="fig:queue" style="align: left; text-align:center;">
-            <img src="img/queue.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-            <div class="caption" style="text-align:center"><b>Figure 1.1:</b> A Queue is a structure into which we can
-              insert
-              and remove elements. The order in which the elements are
-              removed is the same as the order in which they were inserted. </div>
-          </div>
-          <br>
-
-
-          <p><br />
-            <strong>To efficiently implement</strong> a queue we need to have rapid
-            access to both the front as well as the back because we
-            <code>remove</code> elements from former and <code>insert</code>
-            elements into the latter. This is quite straightforward with explicit
-            pointers and mutation – one uses an old school linked list and maintains
-            pointers to the head and the tail. But can we implement the structure
-            efficiently without having stoop so low?
-          </p>
-          <p><br />
-            <strong>Chris Okasaki</strong> came up with a very cunning way to
-            implement queues using a <em>pair</em> of lists – let’s call them
-            <code>front</code> and <code>back</code> which represent the
-            corresponding parts of the Queue.
-          </p>
-          <ul>
-            <li>To <code>insert</code> elements, we just <em>cons</em> them onto the
-              <code>back</code> list,
-            </li>
-            <li>To <code>remove</code> elements, we just <em>un-cons</em> them from
-              the <code>front</code> list.</li>
-          </ul>
-          <div id="fig:queue-pair" style="align: left; text-align:center;">
-            <img src="img/queue-lists.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-            <div class="caption" style="text-align:center"><b>Figure 1.2:</b> We can implement a Queue with a pair of
-              lists;
+<p><br />
+<strong>To efficiently implement</strong> a queue we need to have rapid
+access to both the front as well as the back because we
+<code>remove</code> elements from former and <code>insert</code>
+elements into the latter. This is quite straightforward with explicit
+pointers and mutation – one uses an old school linked list and maintains
+pointers to the head and the tail. But can we implement the structure
+efficiently without having stoop so low?</p>
+<p><br />
+<strong>Chris Okasaki</strong> came up with a very cunning way to
+implement queues using a <em>pair</em> of lists – let’s call them
+<code>front</code> and <code>back</code> which represent the
+corresponding parts of the Queue.</p>
+<ul>
+<li>To <code>insert</code> elements, we just <em>cons</em> them onto the
+<code>back</code> list,</li>
+<li>To <code>remove</code> elements, we just <em>un-cons</em> them from
+the <code>front</code> list.</li>
+</ul>
+<div id="fig:queue-pair" style="align: left; text-align:center;">
+  <img src="img/queue-lists.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.2:</b> We can implement a Queue with a pair of lists;
               respectively representing the front and back. </div>
-          </div>
-          <br>
-
-
-          <p><br />
-            <strong>The catch</strong> is that we need to shunt elements from the
-            back to the front every so often, e.g. we can transfer the elements from
-            the <code>back</code> to the <code>front</code>, when:
-          </p>
-          <ol type="1">
-            <li>a <code>remove</code> call is triggered, and</li>
-            <li>the <code>front</code> list is empty.</li>
-          </ol>
-          <div id="fig:queue-transfer" style="align: left; text-align:center;">
-            <img src="img/queue-rotate.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
-            <div class="caption" style="text-align:center"><b>Figure 1.3:</b> Transferring Elements from back to front.
-            </div>
-          </div>
-          <br>
-
-
-          <p><br />
-            <strong>Okasaki's first insight</strong> was to note that every element
-            is only moved <em>once</em> from the back to the front; hence, the time
-            for <code>insert</code> and <code>remove</code> could be
-            <code>O(1)</code> when <em>amortized</em> over all the operations. This
-            is perfect, <em>except</em> that some set of unlucky <code>remove</code>
-            calls (which occur when the <code>front</code> is empty) are stuck
-            paying the bill. They have a rather high latency up to <code>O(n)</code>
-            where <code>n</code> is the total number of operations.
-          </p>
-          <p><br />
-            <strong>Okasaki's second insight</strong> saves the day: he observed
-            that all we need to do is to enforce a simple <em>balance
-              invariant</em>:
-          </p>
-          <p><span class="math display">\[\mbox{Size of front} \geq \mbox{Size of
-              back}\]</span></p>
-          <p>If the lists are lazy i.e. only constructed as the head value is
-            demanded, then a single <code>remove</code> needs only a tiny
-            <code>O(log n)</code> in the worst case, and so no single
-            <code>remove</code> is stuck paying the bill.
-          </p>
-          <p><br />
-            <strong>Lets implement Queues</strong> and ensure the crucial
-            invariant(s) with LiquidHaskell. What we need are the following
-            ingredients:
-          </p>
-          <ol type="1">
-            <li>
-              <p>A type for <code>List</code>s, and a way to track their
-                <code>size</code>,
-              </p>
-            </li>
-            <li>
-              <p>A type for <code>Queue</code>s which encodes the balance
-                invariant</p>
-            </li>
-            <li>
-              <p>A way to implement the <code>insert</code>, <code>remove</code>
-                and <code>transfer</code> operations.</p>
-            </li>
-          </ol>
-        </section>
-        <section id="sized-lists" class="level2">
-          <h2>Sized Lists</h2>
-          <p>The first part is super easy. Let’s define a type:</p>
-          <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-1" class="programbox">data SList a = SL { size :: Int, elems :: [a] }</div>
-          </div>
-
-          <p>We have a special field that saves the <code>size</code> because
-            otherwise, we have a linear time computation that wrecks Okasaki’s
-            careful analysis. (Actually, he presents a variant which does
-            <em>not</em> require saving the size as well, but that’s for another
-            day.)
-          </p>
-          <p>How can we be sure that <code>size</code> is indeed the <em>real
-              size</em> of <code>elems</code>? Let’s write a function to
-            <em>measure</em> the real size:
-          </p>
-          <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-2" class="programbox">{-@ measure realSize @-}
-              realSize :: [a] -> Int
-              realSize [] = 0
-              realSize (_:xs) = 1 + realSize xs</div>
-          </div>
-
-          <p>Now, we can simply specify a <em>refined</em> type for
-            <code>SList</code> that ensures that the <em>real</em> size is saved in
-            the <code>size</code> field:
-          </p>
-          <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-3" class="programbox">{-@ data SList a = SL {
-              size :: Nat
-              , elems :: {v:[a] | realSize v = size}
-              }
-              @-}</div>
-          </div>
-
-          <p>As a sanity check, consider this:</p>
-          <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-4" class="programbox">okList = SL 1 ["cat"] -- accepted
-
-              badList = SL 1 [] -- rejected</div>
-          </div>
-
-          <p><br />
-            <strong>Lets define an alias</strong> for lists of a given size
-            <code>N</code>:
-          </p>
-          <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-5" class="programbox">{-@ type SListN a N = {v:SList a | size v = N} @-}</div>
-          </div>
-
-          <p> Finally, we can define a basic API for <code>SList</code>.</p>
-          <p><br />
-            <strong>To Construct lists</strong>, we use <code>nil</code> and
-            <code>cons</code>:
-          </p>
-          <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-6" class="programbox">{-@ nil :: SListN a 0 @-}
-              nil = SL 0 []
-
-              {-@ cons :: a -> xs:SList a -> SListN a {size xs + 1} @-}
-              cons x (SL n xs) = SL (n+1) (x:xs)</div>
-          </div>
-
-          <div id="Destructing Lists" class="hwex">
-            <p><br />
-              <strong>Exercise: (Destructing Lists): </strong>We can destruct lists by
-              writing a <code>hd</code> and <code>tl</code> function as shown below.
-              Fix the specification or implementation such that the definitions
-              typecheck.
-            </p>
-            <br />
-            <br />
-
-          </div>
-          <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-7" class="programbox">{-@ tl :: xs:SList a -> SListN a {size xs - 1} @-}
-              tl (SL n (_:xs)) = SL (n-1) xs
-              tl _ = die "empty SList"
-
-              {-@ hd :: xs:SList a -> a @-}
-              hd (SL _ (x:_)) = x
-              hd _ = die "empty SList"</div>
-          </div>
-
-          <p><strong>Hint: </strong>When you are done, <code>okHd</code> should be
-            verified, but <code>badHd</code> should be rejected.</p>
-          <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-8" class="programbox">{-@ okList :: SListN String 1 @-}
-
-              okHd = hd okList -- accepted
-
-              badHd = hd (tl okList) -- rejected</div>
-          </div>
-
-        </section>
-        <section id="queue-type" class="level2">
-          <h2>Queue Type</h2>
-          <p>It is quite straightforward to define the <code>Queue</code> type, as
-            a pair of lists, <code>front</code> and <code>back</code>, such that the
-            latter is always smaller than the former:</p>
-          <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-9" class="programbox">{-@ data Queue a = Q {
-              front :: SList a
-              , back :: SListLE a (size front)
-              }
-              @-}
-              data Queue a = Q
-              { front :: SList a
-              , back :: SList a
-              }</div>
-          </div>
-
-          <p><br />
-            <strong>The alias</strong> <code>SListLE a L</code> corresponds to lists
-            with at most <code>N</code> elements:
-          </p>
-          <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-10" class="programbox">{-@ type SListLE a N = {v:SList a | size v <= N} @-}</div>
-            </div>
-
-            <p> As a quick check, notice that we <em>cannot represent illegal
-                Queues</em>:</p>
-            <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
-
-              <!-- Verify Source -->
-              <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-                ng-click="verifySource()">
-                <span class="glyphicon glyphicon-play"></span>
-              </button>
-
-              <div id="program-11" class="programbox">okQ = Q okList nil -- accepted, |front| > |back|
-
-                badQ = Q nil okList -- rejected, |front| < |back|</div>
-              </div>
-
-        </section>
-        <section id="queue-operations" class="level2">
-          <h2>Queue Operations</h2>
-          <p>Almost there! Now all that remains is to define the
-            <code>Queue</code> API. The code below is more or less identical to
-            Okasaki’s (I prefer <code>front</code> and <code>back</code> to his
-            <code>left</code> and <code>right</code>.)
-          </p>
-          <p><br />
-            <strong>The Empty Queue</strong> is simply one where both
-            <code>front</code> and <code>back</code> are both empty:
-          </p>
-          <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-12" class="programbox">emp = Q nil nil</div>
-          </div>
-
-          <p><br />
-            <strong>To Remove</strong> an element we pop it off the
-            <code>front</code> by using <code>hd</code> and <code>tl</code>. Notice
-            that the <code>remove</code> is only called on non-empty
-            <code>Queue</code>s, which together with the key balance invariant,
-            ensures that the calls to <code>hd</code> and <code>tl</code> are
-            safe.
-          </p>
-          <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-13" class="programbox">remove (Q f b) = (hd f, makeq (tl f) b)</div>
-          </div>
-
-          <div id="Whither pattern matching?" class="hwex">
-            <p><br />
-              <strong>Exercise: (Whither pattern matching?): </strong>Can you explain
-              why we (or Okasaki) didn’t use pattern matching here, and have instead
-              opted for the explicit <code>hd</code> and <code>tl</code>?
-            </p>
-            <br />
-            <br />
-
-          </div>
-          <div id="Queue Sizes" class="hwex">
-            <p><br />
-              <strong>Exercise: (Queue Sizes): </strong>If you did the <em>List
-                Destructing</em> exercise above, then you will notice that the code for
-              <code>remove</code> has a type error: namely, the calls to
-              <code>hd</code> and <code>tl</code> may fail if the <code>f</code> list
-              is empty.
-            </p>
-            <ol type="1">
-              <li>Write a <em>measure</em> to describe the queue size,</li>
-              <li>Use it to complete the definition of <code>QueueN</code> below,
-                and</li>
-              <li>Use it to give <code>remove</code> a type that verifies the safety
-                of the calls made to <code>hd</code> and <code>tl</code>.</li>
-            </ol>
-            <br />
-            <br />
-
-          </div>
-          <p><strong>Hint: </strong>When you are done, <code>okRemove</code>
-            should be accepted, <code>badRemove</code> should be rejected, and
-            <code>emp</code> should have the type shown below:
-          </p>
-          <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-14" class="programbox">-- | Queues of size `N`
-              {-@ type QueueN a N = {v:Queue a | true} @-}
-
-              okRemove = remove example2Q -- accept
-              badRemove = remove example0Q -- reject
-
-              {-@ emp :: QueueN _ 0 @-}
-
-              {-@ example2Q :: QueueN _ 2 @-}
-              example2Q = Q (1 `cons` (2 `cons` nil)) nil
-
-              {-@ example0Q :: QueueN _ 0 @-}
-              example0Q = Q nil nil</div>
-          </div>
-
-          <p><br />
-            <strong>To Insert</strong> an element we just <code>cons</code> it to
-            the <code>back</code> list, and call the <em>smart constructor</em>
-            <code>makeq</code> to ensure that the balance invariant holds:
-          </p>
-          <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-15" class="programbox">insert e (Q f b) = makeq f (e `cons` b)</div>
-          </div>
-
-          <div id="Insert" class="hwex">
-            <p><br />
-              <strong>Exercise: (Insert): </strong>Write down a type for
-              <code>insert</code> such that <code>replicate</code> and
-              <code>okReplicate</code> are accepted by LiquidHaskell, but
-              <code>badReplicate</code> is rejected.
-            </p>
-            <br />
-            <br />
-
-          </div>
-          <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-16" class="programbox">{-@ replicate :: n:Nat -> a -> QueueN a n @-}
-              replicate 0 _ = emp
-              replicate n x = insert x (replicate (n-1) x)
-
-              {-@ okReplicate :: QueueN _ 3 @-}
-              okReplicate = replicate 3 "Yeah!" -- accept
-
-              {-@ badReplicate :: QueueN _ 3 @-}
-              badReplicate = replicate 1 "No!" -- reject</div>
-          </div>
-
-          <p><br />
-            <strong>To Ensure the Invariant</strong> we use the smart constructor
-            <code>makeq</code>, which is where the heavy lifting happens. The
-            constructor takes two lists, the front <code>f</code> and back
-            <code>b</code> and if they are balanced, directly returns the
-            <code>Queue</code>, and otherwise transfers the elements from
-            <code>b</code> over using the rotate function <code>rot</code> described
-            next.
-          </p>
-          <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
-
-            <!-- Verify Source -->
-            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-              ng-click="verifySource()">
-              <span class="glyphicon glyphicon-play"></span>
-            </button>
-
-            <div id="program-17" class="programbox">{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b}
-              @-}
-              makeq f b
-              | size b <= size f=Q f b | otherwise=Q (rot f b nil) nil</div>
-            </div>
-
-            <div id="Rotate" class="hwex">
-              <p><br />
-                <strong>Exercise: (Rotate): </strong> The Rotate function
-                <code>rot</code> is only called when the <code>back</code> is one larger
-                than the <code>front</code> (we never let things drift beyond that). It
-                is arranged so that it the <code>hd</code> is built up fast, before the
-                entire computation finishes; which, combined with laziness provides the
-                efficient worst-case guarantee. Write down a type for <code>rot</code>
-                so that it typechecks and verifies the type for <code>makeq</code>.
-              </p>
-              <br />
-              <br />
-
-            </div>
-            <p><strong>Hint: </strong>You may have to modify a precondition in
-              <code>makeq</code> to capture the relationship between <code>f</code>
-              and <code>b</code>.
-            </p>
-            <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
-
-              <!-- Verify Source -->
-              <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-                ng-click="verifySource()">
-                <span class="glyphicon glyphicon-play"></span>
-              </button>
-
-              <div id="program-18" class="programbox">rot f b acc
-                | size f == 0 = hd b `cons` acc
-                | otherwise = hd f `cons` rot (tl f) (tl b) (hd b `cons` acc)</div>
-            </div>
-
-            <div id="Transfer" class="hwex">
-              <p><br />
-                <strong>Exercise: (Transfer): </strong>Write down a signature for
-                <code>take</code> which extracts <code>n</code> elements from its input
-                <code>q</code> and puts them into a new output Queue. When you are done,
-                <code>okTake</code> should be accepted, but <code>badTake</code> should
-                be rejected.
-              </p>
-              <br />
-              <br />
-
-            </div>
-            <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
-
-              <!-- Verify Source -->
-              <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
-                ng-click="verifySource()">
-                <span class="glyphicon glyphicon-play"></span>
-              </button>
-
-              <div id="program-19" class="programbox">take :: Int -> Queue a -> (Queue a, Queue a)
-                take 0 q = (emp , q)
-                take n q = (insert x out , q'')
-                where
-                (x , q') = remove q
-                (out, q'') = take (n-1) q'
-
-                {-@ okTake :: (QueueN _ 2, QueueN _ 1) @-}
-                okTake = take 2 exampleQ -- accept
-
-                badTake = take 10 exampleQ -- reject
-
-                exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp</div>
-            </div>
-
-        </section>
-        <section id="recap" class="level2">
-          <h2>Recap</h2>
-          <p>Well there you have it; Okasaki’s beautiful lazy Queue, with the
-            invariants easily expressed and checked with LiquidHaskell. This example
-            is particularly interesting because</p>
-          <ol type="1">
-            <li>The refinements express invariants that are critical for
-              efficiency,</li>
-            <li>The code introspects on the <code>size</code> to guarantee the
-              invariants, and</li>
-            <li>The code is quite simple and we hope, easy to follow!</li>
-          </ol>
-        </section>
-      </section>
-
-    </div>
-  </div>
-
-  <div class="hidden">
-    <!--Site Meter -->
-    <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
-    <noscript>
-      <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" target="_top">
-        <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" alt="Site Meter" border="0" /></a>
-    </noscript>
-    <!-- Copyright (c)2009 Site Meter -->
-  </div>
-
-
-
-
-
-  <!-- JavaScript below! ============================================== -->
-
-  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+</div>
+<br>
+
+
+<p><br />
+<strong>The catch</strong> is that we need to shunt elements from the
+back to the front every so often, e.g. we can transfer the elements from
+the <code>back</code> to the <code>front</code>, when:</p>
+<ol type="1">
+<li>a <code>remove</code> call is triggered, and</li>
+<li>the <code>front</code> list is empty.</li>
+</ol>
+<div id="fig:queue-transfer" style="align: left; text-align:center;">
+  <img src="img/queue-rotate.png" height="200px" style="display:block;  margin-left:auto; margin-right:auto">
+  <div class="caption" style="text-align:center"><b>Figure 1.3:</b> Transferring Elements from back to front. </div>
+</div>
+<br>
+
+
+<p><br />
+<strong>Okasaki's first insight</strong> was to note that every element
+is only moved <em>once</em> from the back to the front; hence, the time
+for <code>insert</code> and <code>remove</code> could be
+<code>O(1)</code> when <em>amortized</em> over all the operations. This
+is perfect, <em>except</em> that some set of unlucky <code>remove</code>
+calls (which occur when the <code>front</code> is empty) are stuck
+paying the bill. They have a rather high latency up to <code>O(n)</code>
+where <code>n</code> is the total number of operations.</p>
+<p><br />
+<strong>Okasaki's second insight</strong> saves the day: he observed
+that all we need to do is to enforce a simple <em>balance
+invariant</em>:</p>
+<p><span class="math display">\[\mbox{Size of front} \geq \mbox{Size of
+back}\]</span></p>
+<p>If the lists are lazy i.e. only constructed as the head value is
+demanded, then a single <code>remove</code> needs only a tiny
+<code>O(log n)</code> in the worst case, and so no single
+<code>remove</code> is stuck paying the bill.</p>
+<p><br />
+<strong>Lets implement Queues</strong> and ensure the crucial
+invariant(s) with LiquidHaskell. What we need are the following
+ingredients:</p>
+<ol type="1">
+<li><p>A type for <code>List</code>s, and a way to track their
+<code>size</code>,</p></li>
+<li><p>A type for <code>Queue</code>s which encodes the balance
+invariant</p></li>
+<li><p>A way to implement the <code>insert</code>, <code>remove</code>
+and <code>transfer</code> operations.</p></li>
+</ol>
+</section>
+<section id="sized-lists" class="level2">
+<h2>Sized Lists</h2>
+<p>The first part is super easy. Let’s define a type:</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">data SList a = SL { size :: Int, elems :: [a] }</div>
+</div>
+
+<p>We have a special field that saves the <code>size</code> because
+otherwise, we have a linear time computation that wrecks Okasaki’s
+careful analysis. (Actually, he presents a variant which does
+<em>not</em> require saving the size as well, but that’s for another
+day.)</p>
+<p>How can we be sure that <code>size</code> is indeed the <em>real
+size</em> of <code>elems</code>? Let’s write a function to
+<em>measure</em> the real size:</p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">{-@ measure realSize @-}
+realSize      :: [a] -> Int
+realSize []     = 0
+realSize (_:xs) = 1 + realSize xs</div>
+</div>
+
+<p>Now, we can simply specify a <em>refined</em> type for
+<code>SList</code> that ensures that the <em>real</em> size is saved in
+the <code>size</code> field:</p>
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-3" class="programbox">{-@ data SList a = SL {
+      size  :: Nat
+    , elems :: {v:[a] | realSize v = size}
+    }
+@-}</div>
+</div>
+
+<p>As a sanity check, consider this:</p>
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-4" class="programbox">okList  = SL 1 ["cat"]    -- accepted
+
+badList = SL 1 []         -- rejected</div>
+</div>
+
+<p><br />
+<strong>Lets define an alias</strong> for lists of a given size
+<code>N</code>:</p>
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-5" class="programbox">{-@ type SListN a N = {v:SList a | size v = N} @-}</div>
+</div>
+
+<p> Finally, we can define a basic API for <code>SList</code>.</p>
+<p><br />
+<strong>To Construct lists</strong>, we use <code>nil</code> and
+<code>cons</code>:</p>
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-6" class="programbox">{-@ nil :: SListN a 0 @-}
+nil = SL 0 []
+
+{-@ cons :: a -> xs:SList a -> SListN a {size xs + 1} @-}
+cons x (SL n xs) = SL (n+1) (x:xs)</div>
+</div>
+
+<div id="Destructing Lists" class="hwex">
+<p><br />
+<strong>Exercise: (Destructing Lists): </strong>We can destruct lists by
+writing a <code>hd</code> and <code>tl</code> function as shown below.
+Fix the specification or implementation such that the definitions
+typecheck.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">{-@ tl           :: xs:SList a -> SListN a {size xs - 1}  @-}
+tl (SL n (_:xs)) = SL (n-1) xs
+tl _             = die "empty SList"
+
+{-@ hd           :: xs:SList a -> a @-}
+hd (SL _ (x:_))  = x
+hd _             = die "empty SList"</div>
+</div>
+
+<p><strong>Hint: </strong>When you are done, <code>okHd</code> should be
+verified, but <code>badHd</code> should be rejected.</p>
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-8" class="programbox">{-@ okList :: SListN String 1 @-}
+
+okHd  = hd okList       -- accepted
+
+badHd = hd (tl okList)  -- rejected</div>
+</div>
+
+</section>
+<section id="queue-type" class="level2">
+<h2>Queue Type</h2>
+<p>It is quite straightforward to define the <code>Queue</code> type, as
+a pair of lists, <code>front</code> and <code>back</code>, such that the
+latter is always smaller than the former:</p>
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-9" class="programbox">{-@ data Queue a = Q {
+      front :: SList a
+    , back  :: SListLE a (size front)
+    }
+@-}
+data Queue a = Q
+  { front :: SList a
+  , back  :: SList a
+  }</div>
+</div>
+
+<p><br />
+<strong>The alias</strong> <code>SListLE a L</code> corresponds to lists
+with at most <code>N</code> elements:</p>
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-10" class="programbox">{-@ type SListLE a N = {v:SList a | size v <= N} @-}</div>
+</div>
+
+<p> As a quick check, notice that we <em>cannot represent illegal
+Queues</em>:</p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">okQ  = Q okList nil  -- accepted, |front| > |back|
+
+badQ = Q nil okList  -- rejected, |front| < |back|</div>
+</div>
+
+</section>
+<section id="queue-operations" class="level2">
+<h2>Queue Operations</h2>
+<p>Almost there! Now all that remains is to define the
+<code>Queue</code> API. The code below is more or less identical to
+Okasaki’s (I prefer <code>front</code> and <code>back</code> to his
+<code>left</code> and <code>right</code>.)</p>
+<p><br />
+<strong>The Empty Queue</strong> is simply one where both
+<code>front</code> and <code>back</code> are both empty:</p>
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-12" class="programbox">emp = Q nil nil</div>
+</div>
+
+<p><br />
+<strong>To Remove</strong> an element we pop it off the
+<code>front</code> by using <code>hd</code> and <code>tl</code>. Notice
+that the <code>remove</code> is only called on non-empty
+<code>Queue</code>s, which together with the key balance invariant,
+ensures that the calls to <code>hd</code> and <code>tl</code> are
+safe.</p>
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-13" class="programbox">remove (Q f b)   = (hd f, makeq (tl f) b)</div>
+</div>
+
+<div id="Whither pattern matching?" class="hwex">
+<p><br />
+<strong>Exercise: (Whither pattern matching?): </strong>Can you explain
+why we (or Okasaki) didn’t use pattern matching here, and have instead
+opted for the explicit <code>hd</code> and <code>tl</code>?</p>
+<br />
+<br />
+
+</div>
+<div id="Queue Sizes" class="hwex">
+<p><br />
+<strong>Exercise: (Queue Sizes): </strong>If you did the <em>List
+Destructing</em> exercise above, then you will notice that the code for
+<code>remove</code> has a type error: namely, the calls to
+<code>hd</code> and <code>tl</code> may fail if the <code>f</code> list
+is empty.</p>
+<ol type="1">
+<li>Write a <em>measure</em> to describe the queue size,</li>
+<li>Use it to complete the definition of <code>QueueN</code> below,
+and</li>
+<li>Use it to give <code>remove</code> a type that verifies the safety
+of the calls made to <code>hd</code> and <code>tl</code>.</li>
+</ol>
+<br />
+<br />
+
+</div>
+<p><strong>Hint: </strong>When you are done, <code>okRemove</code>
+should be accepted, <code>badRemove</code> should be rejected, and
+<code>emp</code> should have the type shown below:</p>
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-14" class="programbox">-- | Queues of size `N`
+{-@ type QueueN a N = {v:Queue a | true} @-}
+
+okRemove  = remove example2Q   -- accept
+badRemove = remove example0Q   -- reject
+
+{-@ emp :: QueueN _ 0 @-}
+
+{-@ example2Q :: QueueN _ 2 @-}
+example2Q = Q (1 `cons` (2 `cons` nil)) nil
+
+{-@ example0Q :: QueueN _ 0 @-}
+example0Q = Q nil nil</div>
+</div>
+
+<p><br />
+<strong>To Insert</strong> an element we just <code>cons</code> it to
+the <code>back</code> list, and call the <em>smart constructor</em>
+<code>makeq</code> to ensure that the balance invariant holds:</p>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">insert e (Q f b) = makeq f (e `cons` b)</div>
+</div>
+
+<div id="Insert" class="hwex">
+<p><br />
+<strong>Exercise: (Insert): </strong>Write down a type for
+<code>insert</code> such that <code>replicate</code> and
+<code>okReplicate</code> are accepted by LiquidHaskell, but
+<code>badReplicate</code> is rejected.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">{-@ replicate :: n:Nat -> a -> QueueN a n @-}
+replicate 0 _ = emp
+replicate n x = insert x (replicate (n-1) x)
+
+{-@ okReplicate :: QueueN _ 3 @-}
+okReplicate = replicate 3 "Yeah!"  -- accept
+
+{-@ badReplicate :: QueueN _ 3 @-}
+badReplicate = replicate 1 "No!"   -- reject</div>
+</div>
+
+<p><br />
+<strong>To Ensure the Invariant</strong> we use the smart constructor
+<code>makeq</code>, which is where the heavy lifting happens. The
+constructor takes two lists, the front <code>f</code> and back
+<code>b</code> and if they are balanced, directly returns the
+<code>Queue</code>, and otherwise transfers the elements from
+<code>b</code> over using the rotate function <code>rot</code> described
+next.</p>
+<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-17" class="programbox">{-@ makeq :: f:SList a -> b:SList a -> QueueN a {size f + size b} @-}
+makeq f b
+  | size b <= size f = Q f b
+  | otherwise        = Q (rot f b nil) nil</div>
+</div>
+
+<div id="Rotate" class="hwex">
+<p><br />
+<strong>Exercise: (Rotate): </strong> The Rotate function
+<code>rot</code> is only called when the <code>back</code> is one larger
+than the <code>front</code> (we never let things drift beyond that). It
+is arranged so that it the <code>hd</code> is built up fast, before the
+entire computation finishes; which, combined with laziness provides the
+efficient worst-case guarantee. Write down a type for <code>rot</code>
+so that it typechecks and verifies the type for <code>makeq</code>.</p>
+<br />
+<br />
+
+</div>
+<p><strong>Hint: </strong>You may have to modify a precondition in
+<code>makeq</code> to capture the relationship between <code>f</code>
+and <code>b</code>.</p>
+<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-18" class="programbox">rot f b acc
+  | size f == 0 = hd b `cons` acc
+  | otherwise   = hd f `cons` rot (tl f) (tl b) (hd b `cons` acc)</div>
+</div>
+
+<div id="Transfer" class="hwex">
+<p><br />
+<strong>Exercise: (Transfer): </strong>Write down a signature for
+<code>take</code> which extracts <code>n</code> elements from its input
+<code>q</code> and puts them into a new output Queue. When you are done,
+<code>okTake</code> should be accepted, but <code>badTake</code> should
+be rejected.</p>
+<br />
+<br />
+
+</div>
+<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-19" class="programbox">take           :: Int -> Queue a -> (Queue a, Queue a)
+take 0 q       = (emp          , q)
+take n q       = (insert x out , q'')
+  where
+    (x  , q')  = remove q
+    (out, q'') = take (n-1) q'
+
+{-@ okTake :: (QueueN _ 2, QueueN _ 1) @-}
+okTake   = take 2 exampleQ  -- accept
+
+badTake  = take 10 exampleQ -- reject
+
+exampleQ = insert "nal" $ insert "bob" $ insert "alice" $ emp</div>
+</div>
+
+</section>
+<section id="recap" class="level2">
+<h2>Recap</h2>
+<p>Well there you have it; Okasaki’s beautiful lazy Queue, with the
+invariants easily expressed and checked with LiquidHaskell. This example
+is particularly interesting because</p>
+<ol type="1">
+<li>The refinements express invariants that are critical for
+efficiency,</li>
+<li>The code introspects on the <code>size</code> to guarantee the
+invariants, and</li>
+<li>The code is quite simple and we hope, easy to follow!</li>
+</ol>
+</section>
+</section>
+
+</div>
+</div>
+
+<div class="hidden">
+<!--Site Meter -->
+  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <noscript>
+    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
+      target="_top">
+      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
+      alt="Site Meter" border="0"/></a>
+  </noscript>
+  <!-- Copyright (c)2009 Site Meter -->
+</div>
+
+
+
+
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
   <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
-  <script src="./js/ace/mode-haskell.js" type="text/javascript" charset="utf-8"></script>
-  <script src="./js/liquid/tooltip.js"></script>
-  <script src="./js/liquid/annot.js"></script>
-  <script src="./js/liquid/config.js"></script>
+  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script> 
+  <script src="./js/liquid/annot.js"></script> 
+  <script src="./js/liquid/config.js"></script> 
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "https://liquidhaskell.goto.ucsd.edu/";
+    var queryServerURL = "https://liquidhaskell.goto.ucsd.edu/" ;
   </script>
-
-  <!-- rust nav JS -->
+  
+  <!-- rust nav JS --> 
   <script type="text/javascript">
     window.playgroundUrl = "";
   </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
 
-  <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function (event) {
+ document.getElementById("toggle-nav").onclick = toggleNav;
 
-      document.getElementById("toggle-nav").onclick = toggleNav;
+  function toggleNav() {
+    var toc         = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    var status      = document.getElementById("checker-status");
 
-      function toggleNav() {
-        var toc = document.getElementById("toc");
-        var pagewrapper = document.getElementById("page-wrapper");
-        var status = document.getElementById("checker-status");
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
 
-        toggleClass(toc, "mobile-hidden");
-        // toggleClass(status,      "mobile-hidden");
-        toggleClass(pagewrapper, "mobile-hidden");
-      };
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
 
-      function toggleClass(el, className) {
-        // from http://youmightnotneedjquery.com/
-        if (el.classList) {
-          el.classList.toggle(className);
-        } else {
-          var classes = el.className.split(' ');
-          var existingIndex = classes.indexOf(className);
-
-          if (existingIndex >= 0) {
-            classes.splice(existingIndex, 1);
-          } else {
-            classes.push(className);
-          }
-          el.className = classes.join(' ');
-        }
-      }
-    });
-  </script>
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+       el.className = classes.join(' ');
+     }
+  }
+});
+</script>
 </body>
-
 </html>
