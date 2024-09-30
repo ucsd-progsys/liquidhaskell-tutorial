@@ -1,73 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-<!-- Global Site Tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments)};
-  gtag('js', new Date());
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106754474-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments) };
+    gtag('js', new Date());
 
-  gtag('config', 'UA-106754474-1');
-</script>
+    gtag('config', 'UA-106754474-1');
+  </script>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <title>Programming with Refinement Types</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="rustdoc">
+  <title>Programming with Refinement Types</title>
 
-    <link href="./css/bootstrap.css" rel="stylesheet">
-    <link href="./css/bootstrap-theme.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
-    <link rel="stylesheet" type="text/css" href="./css/editor.css">
+  <link href="./css/bootstrap.css" rel="stylesheet">
+  <link href="./css/bootstrap-theme.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./css/rust-book.css">
+  <link rel="stylesheet" type="text/css" href="./css/editor.css">
 
-   
-    <style type="text/css">code{white-space: pre;}
 
-      .dropdown-menu {
-          min-width: 0px;
-      }
-      
-      #checker-status {
-          width: 30;
-          height: 20;
-          padding-top: 2px;
-          padding-right: 10px;
-          position: absolute;
-          top: 0;
-          right: 0;
-          z-index:99;
-      }
-    </style>
   <style type="text/css">
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
+    code {
+      white-space: pre;
+    }
+
+    .dropdown-menu {
+      min-width: 0px;
+    }
+
+    #checker-status {
+      width: 30;
+      height: 20;
+      padding-top: 2px;
+      padding-right: 10px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 99;
+    }
+  </style>
+  <style type="text/css">
+    table.sourceCode,
+    tr.sourceCode,
+    td.lineNumbers,
+    td.sourceCode {
+      margin: 0;
+      padding: 0;
+      vertical-align: baseline;
+      border: none;
+    }
+
+    table.sourceCode {
+      width: 100%;
+      line-height: 100%;
+    }
+
+    td.lineNumbers {
+      text-align: right;
+      padding-right: 4px;
+      padding-left: 4px;
+      color: #aaaaaa;
+      border-right: 1px solid #aaaaaa;
+    }
+
+    td.sourceCode {
+      padding-left: 5px;
+    }
+
+    code>span.kw {
+      color: #007020;
+      font-weight: bold;
+    }
+
+    code>span.dt {
+      color: #902000;
+    }
+
+    code>span.dv {
+      color: #40a070;
+    }
+
+    code>span.bn {
+      color: #40a070;
+    }
+
+    code>span.fl {
+      color: #40a070;
+    }
+
+    code>span.ch {
+      color: #4070a0;
+    }
+
+    code>span.st {
+      color: #4070a0;
+    }
+
+    code>span.co {
+      color: #60a0b0;
+      font-style: italic;
+    }
+
+    code>span.ot {
+      color: #007020;
+    }
+
+    code>span.al {
+      color: #ff0000;
+      font-weight: bold;
+    }
+
+    code>span.fu {
+      color: #06287e;
+    }
+
+    code>span.er {
+      color: #ff0000;
+      font-weight: bold;
+    }
   </style>
 
 
-<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
-<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
-<script type="text/javascript" src="./js/angular/angular.js"></script>
-<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+  <!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+  <script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="./js/angular/angular.js"></script>
+  <script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
 
-<!-- MATHJAX TEMPLATES GO HERE -->
-<script type="text/x-mathjax-config">
+  <!-- MATHJAX TEMPLATES GO HERE -->
+  <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: {
     extensions: ["color.js"],
@@ -92,18 +157,17 @@ MathJax.Hub.Config({
 });
 </script>
 
-<!-- GITHUB -->
-<script
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-  type="text/javascript"></script>
-  
-<!-- LOCAL 
+  <!-- GITHUB -->
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    type="text/javascript"></script>
+
+  <!-- LOCAL
 
   <script src="js/MathJax-2.6.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     type="text/javascript"></script>
-    
+
   -->
-  
+
 
 
 
@@ -112,291 +176,297 @@ MathJax.Hub.Config({
 
 
 </head>
-<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
 
-    <div id="nav">
-       <button id="toggle-nav" class="toggle-nav">
-         <span class="sr-only">Toggle navigation</span>
-         <span class="bar"></span>
-         <span class="bar"></span>
-         <span class="bar"></span>
-       </button>
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo"
+  ng-controller="LiquidDemoCtrl">
+
+  <div id="nav">
+    <button id="toggle-nav" class="toggle-nav">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </div>
+
+  <div id='toc' class='mobile-hidden'>
+    <ul class='chapter'>
+      <li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
+        <li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
+        <li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
+        <li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
+      </ul>
+      <li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
+        <li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a>
+        </li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
+        <li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
+        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
+        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
+        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a
+            <code>loop</code></a></li>
+        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
+        <li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
+        <li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
+        <li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
+        <li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
+        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
+        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
+        <li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
+        <li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a>
+        </li>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
+        <li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a>
+      </li>
+      <ul class='section'>
+        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
+        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
+        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
+        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
+        <li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
+        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a>
+        </li>
+        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees
+            {#lemmas}</a></li>
+        <li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
+      </ul>
+      <li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes
+          {#case-study-pointers}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
+        <li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
+      </ul>
+      <li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
+      <ul class='section'>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
+        <li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
+      </ul>
+    </ul>
+
+  </div>
+
+  <div id="checker-status">
+    <!-- Verifying ... -->
+    <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1" ng-show="isChecking"
+      ng-click="verifySource()">
+      <span class="glyphicon glyphicon-hourglass"></span>
+    </button>
+
+
+    <!-- Safe -->
+    <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+      ng-show="isSafe">
+      <span class="glyphicon glyphicon-ok"></span>
+    </button>
+
+    <div class="dropdown" ng-show="isBad">
+      <button class="btn btn-xs btn-link dropdown-toggle" type="button" id="errorblockdropdown" data-toggle="dropdown"
+        style="font-size:30px; color:red; z-index:1">
+        <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span>
+        <font size="4">{{errorBlocks.length}}</font>
+        </span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+        <li ng-repeat="err in errorBlocks">
+          <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+        </li>
+      </ul>
     </div>
-
-<div id='toc' class='mobile-hidden'>
-<ul class='chapter'>
-<li><a href='Tutorial_01_Introduction.html'><b>1.</b>Introduction {#intro}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_01_Introduction.html#'><b>1.1.</b> Well-Typed Programs Do Go Wrong {#gowrong}</a></li>
-<li><a href='Tutorial_01_Introduction.html#'><b>1.2.</b> Refinement Types</a></li>
-<li><a href='Tutorial_01_Introduction.html#'><b>1.3.</b> Audience</a></li>
-<li><a href='Tutorial_01_Introduction.html#'><b>1.4.</b> Getting Started</a></li>
-</ul>
-<li><a href='Tutorial_02_Logic.html'><b>2.</b>Logic &amp; SMT</a></li>
-<ul class='section'>
-<li><a href='Tutorial_02_Logic.html#'><b>2.1.</b> Syntax</a></li>
-<li><a href='Tutorial_02_Logic.html#'><b>2.2.</b> Semantics {#semantics}</a></li>
-<li><a href='Tutorial_02_Logic.html#'><b>2.3.</b> Verification Conditions</a></li>
-<li><a href='Tutorial_02_Logic.html#'><b>2.4.</b> Examples: Propositions</a></li>
-<li><a href='Tutorial_02_Logic.html#'><b>2.5.</b> Examples: Arithmetic</a></li>
-<li><a href='Tutorial_02_Logic.html#'><b>2.6.</b> Examples: Uninterpreted Function</a></li>
-<li><a href='Tutorial_02_Logic.html#'><b>2.7.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_03_Basic.html'><b>3.</b>Refinement Types</a></li>
-<ul class='section'>
-<li><a href='Tutorial_03_Basic.html#'><b>3.1.</b> Defining Types {#definetype}</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.2.</b> Errors</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.3.</b> Subtyping</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.4.</b> Writing Specifications</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.5.</b> Refining Function Types: Pre-conditions</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.6.</b> Refining Function Types: Post-conditions</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.7.</b> Testing Values: Booleans and Propositions {#propositions}</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.8.</b> Putting It All Together</a></li>
-<li><a href='Tutorial_03_Basic.html#'><b>3.9.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_04_Polymorphism.html'><b>4.</b>Polymorphism {#polymorphism}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_04_Polymorphism.html#'><b>4.1.</b> Specification: Vector Bounds {#vectorbounds}</a></li>
-<li><a href='Tutorial_04_Polymorphism.html#'><b>4.2.</b> Verification: Vector Lookup</a></li>
-<li><a href='Tutorial_04_Polymorphism.html#'><b>4.3.</b> Inference: Our First Recursive Function</a></li>
-<li><a href='Tutorial_04_Polymorphism.html#'><b>4.4.</b> Higher-Order Functions: Bottling Recursion in a <code>loop</code></a></li>
-<li><a href='Tutorial_04_Polymorphism.html#'><b>4.5.</b> Refinements and Polymorphism {#sparsetype}</a></li>
-<li><a href='Tutorial_04_Polymorphism.html#'><b>4.6.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_05_Datatypes.html'><b>5.</b>Refined Datatypes {#refineddatatypes}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_05_Datatypes.html#'><b>5.1.</b> Sparse Vectors Revisited {#autosmart}</a></li>
-<li><a href='Tutorial_05_Datatypes.html#'><b>5.2.</b> Ordered Lists {#orderedlists}</a></li>
-<li><a href='Tutorial_05_Datatypes.html#'><b>5.3.</b> Ordered Trees {#binarysearchtree}</a></li>
-<li><a href='Tutorial_05_Datatypes.html#'><b>5.4.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_06_Measure_Bool.html'><b>6.</b>Boolean Measures {#boolmeasures}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.1.</b> Partial Functions</a></li>
-<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.2.</b> Lifting Functions to Measures {#usingmeasures}</a></li>
-<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.3.</b> A Safe List API</a></li>
-<li><a href='Tutorial_06_Measure_Bool.html#'><b>6.4.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_07_Measure_Int.html'><b>7.</b>Numeric Measures {#numericmeasure}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.1.</b> Wholemeal Programming</a></li>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.2.</b> Specifying List Dimensions</a></li>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.3.</b> Lists: Size Preserving API</a></li>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.4.</b> Lists: Size Reducing API {#listreducing}</a></li>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.5.</b> Dimension Safe Vector API</a></li>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.6.</b> Dimension Safe Matrix API</a></li>
-<li><a href='Tutorial_07_Measure_Int.html#'><b>7.7.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_08_Measure_Set.html'><b>8.</b>Elemental Measures {#setmeasure}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.1.</b> Talking about Sets</a></li>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.2.</b> Proving QuickCheck Style Properties {#quickcheck}</a></li>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.3.</b> Content-Aware List API {#listelems}</a></li>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.4.</b> Permutations</a></li>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.5.</b> Uniqueness</a></li>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.6.</b> Unique Zippers</a></li>
-<li><a href='Tutorial_08_Measure_Set.html#'><b>8.7.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html'><b>9.</b>Case Study: Okasaki's Lazy Queues {#lazyqueue}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.1.</b> Queues</a></li>
-<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.2.</b> Sized Lists</a></li>
-<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.3.</b> Queue Type</a></li>
-<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.4.</b> Queue Operations</a></li>
-<li><a href='Tutorial_09_Case_Study_Lazy_Queues.html#'><b>9.5.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_10_Case_Study_Associative_Maps.html'><b>10.</b>Case Study: Associative Maps</a></li>
-<ul class='section'>
-<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.1.</b> Specifying Maps {#mapapi}</a></li>
-<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.2.</b> Using Maps: Well Scoped Expressions</a></li>
-<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.3.</b> Implementing Maps: Binary Search Trees {#lemmas}</a></li>
-<li><a href='Tutorial_10_Case_Study_Associative_Maps.html#'><b>10.4.</b> Recap</a></li>
-</ul>
-<li><a href='Tutorial_11_Case_Study_Pointers.html'><b>11.</b>Case Study: Pointers &amp; Bytes {#case-study-pointers}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.1.</b> HeartBleeds in Haskell</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.2.</b> Low-level Pointer API</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.3.</b> A Refined Pointer API</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.4.</b> Assumptions vs Guarantees</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.5.</b> ByteString API</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.6.</b> Application API</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.7.</b> Nested ByteStrings</a></li>
-<li><a href='Tutorial_11_Case_Study_Pointers.html#'><b>11.8.</b> Recap: Types Against Overflows</a></li>
-</ul>
-<li><a href='Tutorial_12_Case_Study_AVL.html'><b>12.</b>Case Study: AVL Trees {#case-study-avltree}</a></li>
-<ul class='section'>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.1.</b> AVL Trees</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.2.</b> Specifying AVL Trees</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.3.</b> Smart Constructors</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.4.</b> Inserting Elements</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.5.</b> Rebalancing Trees</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.6.</b> Refactoring Rebalance</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.7.</b> Deleting Elements</a></li>
-<li><a href='Tutorial_12_Case_Study_AVL.html#'><b>12.8.</b> Functional Correctness</a></li>
-</ul>
-</ul>
-
-</div>
-      
-       <div id="checker-status">
-         <!-- Verifying ... -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
-                ng-show="isChecking" ng-click="verifySource()">
-          <span class="glyphicon glyphicon-hourglass"></span>
-         </button>
-
-        
-         <!-- Safe -->
-         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
-                 ng-show="isSafe">
-           <span class="glyphicon glyphicon-ok"></span>
-         </button>
-
-         <div class="dropdown" ng-show="isBad">
-             <button class="btn btn-xs btn-link dropdown-toggle"
-                     type="button"
-                     id="errorblockdropdown"
-                     data-toggle="dropdown"
-                     style="font-size:30px; color:red; z-index:1">
-               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
-               </span>
-             </button>
-             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-               <li ng-repeat="err in errorBlocks">
-                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
-               </li>
-             </ul>
-         </div>
-       </div>
-       
-
-<div id='page-wrapper'>
-<div id='page'>
-
-<section id="boolmeasures" class="level1">
-<h1>Boolean Measures</h1>
-<p>In the last two chapters, we saw how refinements could be used to
-reason about the properties of basic <code>Int</code> values like vector
-indices, or the elements of a list. Next, let’s see how we can describe
-properties of aggregate structures like lists and trees, and use these
-properties to improve the APIs for operating over such structures.</p>
-<div class="hidden">
-<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
-
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
-{-@ LIQUID "--short-names"    @-}
+  </div>
 
 
-module Tutorial_06_Measure_Bool where
+  <div id='page-wrapper'>
+    <div id='page'>
 
-import Prelude hiding(foldl, foldl1, map, sum, head, tail, null)
+      <section id="boolmeasures" class="level1">
+        <h1>Boolean Measures</h1>
+        <p>In the last two chapters, we saw how refinements could be used to
+          reason about the properties of basic <code>Int</code> values like vector
+          indices, or the elements of a list. Next, let’s see how we can describe
+          properties of aggregate structures like lists and trees, and use these
+          properties to improve the APIs for operating over such structures.</p>
+        <div class="hidden">
+          <div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
 
-main = putStrLn "Hello"
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
--- | Old Definitions
+            <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
+              {-@ LIQUID "--short-names" @-}
 
-{-@ type Nat     = {v:Int | 0 <= v} @-}
-{-@ type Pos     = {v:Int | 0 <  v} @-}
-{-@ type NonZero = {v:Int | 0 /= v} @-}
 
-{-@ die :: {v:_ | false} -> a @-}
-die msg = error msg
+              module Tutorial_06_Measure_Bool where
 
--- Type Definitions
-divide     :: Int -> Int -> Int
-size1, size2 :: [a] -> Int
+              import Prelude hiding(foldl, foldl1, map, sum, head, tail, null)
 
--- {-@ ignore avgMany  @-}
--- {-@ ignore average' @-}
--- {-@ ignore size1    @-}
--- {-@ ignore size2    @-}
--- {-@ ignore safeHead @-}
--- {-@ ignore sumBad   @-}
--- {-@ ignore wtAverage @-}
--- {-@ ignore risers    @-}
+              main = putStrLn "Hello"
 
-</div>
-</div>
+              -- | Old Definitions
 
-</div>
+              {-@ type Nat = {v:Int | 0 <= v} @-} {-@ type Pos={v:Int | 0 < v} @-} {-@ type NonZero={v:Int | 0 /=v} @-}
+                {-@ die :: {v:_ | false} -> a @-}
+                die msg = error msg
 
-<section id="partial-functions" class="level2">
-<h2>Partial Functions</h2>
-<p>As a motivating example, let us return to the problem of ensuring the
-safety of division. Recall that we wrote:</p>
-<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+                -- Type Definitions
+                divide :: Int -> Int -> Int
+                size1, size2 :: [a] -> Int
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-1" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
-divide _ 0 = die "divide-by-zero"
-divide x n = x `div` n</div>
-</div>
+                -- {-@ ignore avgMany @-}
+                -- {-@ ignore average' @-}
+                -- {-@ ignore size1 @-}
+                -- {-@ ignore size2 @-}
+                -- {-@ ignore safeHead @-}
+                -- {-@ ignore sumBad @-}
+                -- {-@ ignore wtAverage @-}
+                -- {-@ ignore risers @-}
 
-<p><br />
-<strong>The Precondition</strong> asserted by the input type
-<code>NonZero</code> allows LiquidHaskell to prove that the
-<code>die</code> is <em>never</em> executed at run-time, but
-consequently, requires us to establish that wherever <code>divide</code>
-is <em>used</em>, the second parameter be provably non-zero. This
-requirement is not onerous when we know what the divisor is
-<em>statically</em></p>
-<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+            </div>
+          </div>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-2" class="programbox">avg2 x y   = divide (x + y)     2
+        </div>
 
-avg3 x y z = divide (x + y + z) 3</div>
-</div>
+        <section id="partial-functions" class="level2">
+          <h2>Partial Functions</h2>
+          <p>As a motivating example, let us return to the problem of ensuring the
+            safety of division. Recall that we wrote:</p>
+          <div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
 
-<p>However, it can be more of a challenge when the divisor is obtained
-<em>dynamically</em>. For example, let’s write a function to find the
-number of elements in a list</p>
-<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-3" class="programbox">size        :: [a] -> Int
-size []     =  0
-size (_:xs) =  1 + size xs</div>
-</div>
+            <div id="program-1" class="programbox">{-@ divide :: Int -> NonZero -> Int @-}
+              divide _ 0 = die "divide-by-zero"
+              divide x n = x `div` n</div>
+          </div>
 
-<p>and use it to compute the average value of a list:</p>
-<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+          <p><br />
+            <strong>The Precondition</strong> asserted by the input type
+            <code>NonZero</code> allows LiquidHaskell to prove that the
+            <code>die</code> is <em>never</em> executed at run-time, but
+            consequently, requires us to establish that wherever <code>divide</code>
+            is <em>used</em>, the second parameter be provably non-zero. This
+            requirement is not onerous when we know what the divisor is
+            <em>statically</em>
+          </p>
+          <div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-4" class="programbox">avgMany xs = divide total elems
-  where
-    total  = sum  xs
-    elems  = size xs</div>
-</div>
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-<p>Uh oh. LiquidHaskell wags its finger at us!</p>
-<pre class="liquiderror"><code>     src/04-measure.lhs:77:27-31: Error: Liquid Type Mismatch
+            <div id="program-2" class="programbox">avg2 x y = divide (x + y) 2
+
+              avg3 x y z = divide (x + y + z) 3</div>
+          </div>
+
+          <p>However, it can be more of a challenge when the divisor is obtained
+            <em>dynamically</em>. For example, let’s write a function to find the
+            number of elements in a list
+          </p>
+          <div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
+
+            <div id="program-3" class="programbox">size :: [a] -> Int
+              size [] = 0
+              size (_:xs) = 1 + size xs</div>
+          </div>
+
+          <p>and use it to compute the average value of a list:</p>
+          <div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
+
+            <div id="program-4" class="programbox">avgMany xs = divide total elems
+              where
+              total = sum xs
+              elems = size xs</div>
+          </div>
+
+          <p>Uh oh. LiquidHaskell wags its finger at us!</p>
+          <pre class="liquiderror"><code>     src/04-measure.lhs:77:27-31: Error: Liquid Type Mismatch
        Inferred type
          VV : Int | VV == elems
 
@@ -406,485 +476,503 @@ size (_:xs) =  1 + size xs</div>
        In Context
          VV    : Int | VV == elems
          elems : Int</code></pre>
-<p><br />
-<strong>We cannot prove</strong> that the divisor is
-<code>NonZero</code>, because it <em>can be</em> <code>0</code> – when
-the list is <em>empty</em>. Thus, we need a way of specifying that the
-input to <code>avgMany</code> is indeed non-empty!</p>
-</section>
-<section id="usingmeasures" class="level2">
-<h2>Lifting Functions to Measures</h2>
-<p><br />
-<strong>How</strong> shall we tell LiquidHaskell that a list is
-<em>non-empty</em>? Recall the notion of <code>measure</code> previously
-<a href="#vectorbounds">introduced</a> to describe the size of a
-<code>Data.Vector</code>. In that spirit, let’s write a function that
-computes whether a list is not empty:</p>
-<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+          <p><br />
+            <strong>We cannot prove</strong> that the divisor is
+            <code>NonZero</code>, because it <em>can be</em> <code>0</code> – when
+            the list is <em>empty</em>. Thus, we need a way of specifying that the
+            input to <code>avgMany</code> is indeed non-empty!
+          </p>
+        </section>
+        <section id="usingmeasures" class="level2">
+          <h2>Lifting Functions to Measures</h2>
+          <p><br />
+            <strong>How</strong> shall we tell LiquidHaskell that a list is
+            <em>non-empty</em>? Recall the notion of <code>measure</code> previously
+            <a href="#vectorbounds">introduced</a> to describe the size of a
+            <code>Data.Vector</code>. In that spirit, let’s write a function that
+            computes whether a list is not empty:
+          </p>
+          <div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-5" class="programbox">notEmpty       :: [a] -> Bool
-notEmpty []    = False
-notEmpty (_:_) = True</div>
-</div>
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-<p><br />
-<strong>A measure</strong> is a <em>total</em> Haskell function,</p>
-<ol type="1">
-<li>With a <em>single</em> equation per data constructor, and</li>
-<li>Guaranteed to <em>terminate</em>, typically via structural
-recursion.</li>
-</ol>
-<p> We can tell LiquidHaskell to <em>lift</em> a function meeting the
-above requirements into the refinement logic by declaring:</p>
-<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-5" class="programbox">notEmpty :: [a] -> Bool
+              notEmpty [] = False
+              notEmpty (_:_) = True</div>
+          </div>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-6" class="programbox">{-@ measure notEmpty @-}</div>
-</div>
+          <p><br />
+            <strong>A measure</strong> is a <em>total</em> Haskell function,
+          </p>
+          <ol type="1">
+            <li>With a <em>single</em> equation per data constructor, and</li>
+            <li>Guaranteed to <em>terminate</em>, typically via structural
+              recursion.</li>
+          </ol>
+          <p> We can tell LiquidHaskell to <em>lift</em> a function meeting the
+            above requirements into the refinement logic by declaring:</p>
+          <div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
 
-<p><br />
-<strong>Non-Empty Lists</strong> can now be described as the
-<em>subset</em> of plain old Haskell lists <code>[a]</code> for which
-the predicate <code>notEmpty</code> holds</p>
-<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-7" class="programbox">{-@ type NEList a = {v:[a] | notEmpty v} @-}</div>
-</div>
+            <div id="program-6" class="programbox">{-@ measure notEmpty @-}</div>
+          </div>
 
-<p>We can now refine various signatures to establish the safety of the
-list-average function.</p>
-<p><br />
-<strong>Size</strong> returns a non-zero value <em>if</em> the input
-list is not-empty. We capture this condition with an <a
-href="#semantics">implication</a> in the output refinement.</p>
-<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
+          <p><br />
+            <strong>Non-Empty Lists</strong> can now be described as the
+            <em>subset</em> of plain old Haskell lists <code>[a]</code> for which
+            the predicate <code>notEmpty</code> holds
+          </p>
+          <div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-8" class="programbox">{-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}</div>
-</div>
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-<p><br />
-<strong>Average</strong> is only sensible for non-empty lists. Happily,
-we can specify this using the refined <code>NEList</code> type:</p>
-<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-7" class="programbox">{-@ type NEList a = {v:[a] | notEmpty v} @-}</div>
+          </div>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-9" class="programbox">{-@ average :: NEList Int -> Int @-}
-average xs = divide total elems
-  where
-    total  = sum xs
-    elems  = size xs</div>
-</div>
+          <p>We can now refine various signatures to establish the safety of the
+            list-average function.</p>
+          <p><br />
+            <strong>Size</strong> returns a non-zero value <em>if</em> the input
+            list is not-empty. We capture this condition with an <a href="#semantics">implication</a> in the output
+            refinement.
+          </p>
+          <div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
 
-<div id="Average, Maybe" class="hwex">
-<p><br />
-<strong>Exercise: (Average, Maybe): </strong>Fix the code below to
-obtain an alternate variant <code>average'</code> that returns
-<code>Nothing</code> for empty lists:</p>
-<br />
-<br />
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-</div>
-<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-8" class="programbox">{-@ size :: xs:[a] -> {v:Nat | notEmpty xs => v > 0} @-}</div>
+          </div>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-10" class="programbox">average'      :: [Int] -> Maybe Int
-average' xs
-  | ok        = Just $ divide (sum xs) elems
-  | otherwise = Nothing
-  where
-    elems     = size xs
-    ok        = True   -- What expression goes here?</div>
-</div>
+          <p><br />
+            <strong>Average</strong> is only sensible for non-empty lists. Happily,
+            we can specify this using the refined <code>NEList</code> type:
+          </p>
+          <div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
 
-<div id="Debugging Specifications" class="hwex">
-<p><br />
-<strong>Exercise: (Debugging Specifications): </strong>An important
-aspect of formal verifiers like LiquidHaskell is that they help
-establish properties not just of your <em>implementations</em> but
-equally, or more importantly, of your <em>specifications</em>. In that
-spirit, can you explain why the following two variants of
-<code>size</code> are <em>rejected</em> by LiquidHaskell?</p>
-<br />
-<br />
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-</div>
-<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-9" class="programbox">{-@ average :: NEList Int -> Int @-}
+              average xs = divide total elems
+              where
+              total = sum xs
+              elems = size xs</div>
+          </div>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-11" class="programbox">{-@ size1    :: xs:NEList a -> Pos @-}
-size1 []     =  0
-size1 (_:xs) =  1 + size1 xs
+          <div id="Average, Maybe" class="hwex">
+            <p><br />
+              <strong>Exercise: (Average, Maybe): </strong>Fix the code below to
+              obtain an alternate variant <code>average'</code> that returns
+              <code>Nothing</code> for empty lists:
+            </p>
+            <br />
+            <br />
 
-{-@ size2    :: xs:[a] -> {v:Int | notEmpty xs => v > 0} @-}
-size2 []     =  0
-size2 (_:xs) =  1 + size2 xs</div>
-</div>
+          </div>
+          <div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
 
-</section>
-<section id="a-safe-list-api" class="level2">
-<h2>A Safe List API</h2>
-<p>Now that we can talk about non-empty lists, we can ensure the safety
-of various list-manipulating functions which are only well-defined on
-non-empty lists and crash otherwise.</p>
-<p><br />
-<strong>Head and Tail</strong> are two of the canonical
-<em>dangerous</em> functions, that only work on non-empty lists, and
-burn horribly otherwise. We can type them simple as:</p>
-<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-12" class="programbox">{-@ head    :: NEList a -> a @-}
-head (x:_)  = x
-head []     = die "Fear not! 'twill ne'er come to pass"
+            <div id="program-10" class="programbox">average' :: [Int] -> Maybe Int
+              average' xs
+              | ok = Just $ divide (sum xs) elems
+              | otherwise = Nothing
+              where
+              elems = size xs
+              ok = True -- What expression goes here?</div>
+          </div>
 
-{-@ tail    :: NEList a -> [a] @-}
-tail (_:xs) = xs
-tail []     = die "Relaxeth! this too shall ne'er be"</div>
-</div>
+          <div id="Debugging Specifications" class="hwex">
+            <p><br />
+              <strong>Exercise: (Debugging Specifications): </strong>An important
+              aspect of formal verifiers like LiquidHaskell is that they help
+              establish properties not just of your <em>implementations</em> but
+              equally, or more importantly, of your <em>specifications</em>. In that
+              spirit, can you explain why the following two variants of
+              <code>size</code> are <em>rejected</em> by LiquidHaskell?
+            </p>
+            <br />
+            <br />
 
-<p>LiquidHaskell uses the precondition to deduce that the second
-equations are <em>dead code</em>. Of course, this requires us to
-establish that <em>callers</em> of <code>head</code> and
-<code>tail</code> only invoke the respective functions with non-empty
-lists.</p>
-<div id="Safe Head" class="hwex">
-<p><br />
-<strong>Exercise: (Safe Head): </strong>Write down a specification for
-<code>null</code> such that <code>safeHead</code> is verified. Do
-<em>not</em> force <code>null</code> to only take non-empty inputs, that
-defeats the purpose. Instead, its type should say that it works on
-<em>all</em> lists and returns <code>False</code> <em>if and only
-if</em> the input is non-empty.</p>
-<br />
-<br />
+          </div>
+          <div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
 
-</div>
-<p><strong>Hint: </strong>You may want to refresh your memory about
-implies <code>==&gt;</code> and <code>&lt;=&gt;</code> from the <a
-href="#semantics">chapter on logic</a>.</p>
-<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-13" class="programbox">safeHead      :: [a] -> Maybe a
-safeHead xs
-  | null xs   = Nothing
-  | otherwise = Just $ head xs
+            <div id="program-11" class="programbox">{-@ size1 :: xs:NEList a -> Pos @-}
+              size1 [] = 0
+              size1 (_:xs) = 1 + size1 xs
 
-{-@ null      :: [a] -> Bool @-}
-null []       =  True
-null (_:_)    =  False</div>
-</div>
+              {-@ size2 :: xs:[a] -> {v:Int | notEmpty xs => v > 0} @-}
+              size2 [] = 0
+              size2 (_:xs) = 1 + size2 xs</div>
+          </div>
 
-<p>Lets use the above to write a function that chunks sequences into
-non-empty groups of equal elements:</p>
-<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+        </section>
+        <section id="a-safe-list-api" class="level2">
+          <h2>A Safe List API</h2>
+          <p>Now that we can talk about non-empty lists, we can ensure the safety
+            of various list-manipulating functions which are only well-defined on
+            non-empty lists and crash otherwise.</p>
+          <p><br />
+            <strong>Head and Tail</strong> are two of the canonical
+            <em>dangerous</em> functions, that only work on non-empty lists, and
+            burn horribly otherwise. We can type them simple as:
+          </p>
+          <div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-14" class="programbox">{-@ groupEq    :: (Eq a) => [a] -> [NEList a] @-}
-groupEq []     = []
-groupEq (x:xs) = (x:ys) : groupEq zs
-  where
-    (ys, zs)   = span (x ==) xs</div>
-</div>
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-<p>By using the fact that <em>each element</em> in the output returned
-by <code>groupEq</code> is in fact of the form <code>x:ys</code>,
-LiquidHaskell infers that <code>groupEq</code> returns a
-<code>[NEList a]</code> that is, a list of <em>non-empty lists</em>.</p>
-<p><br />
-<strong>To Eliminate Stuttering</strong> from a string, we can use
-<code>groupEq</code> to split the string into blocks of repeating
-<code>Char</code>s, and then just extract the first <code>Char</code>
-from each block:</p>
-<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-12" class="programbox">{-@ head :: NEList a -> a @-}
+              head (x:_) = x
+              head [] = die "Fear not! 'twill ne'er come to pass"
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-15" class="programbox">-- >>> eliminateStutter "ssstringssss liiiiiike thisss"
--- "strings like this"
-eliminateStutter xs = map head $ groupEq xs</div>
-</div>
+              {-@ tail :: NEList a -> [a] @-}
+              tail (_:xs) = xs
+              tail [] = die "Relaxeth! this too shall ne'er be"</div>
+          </div>
 
-<p> LiquidHaskell automatically instantiates the type parameter for
-<code>map</code> in <code>eliminateStutter</code> to
-<code>notEmpty v</code> to deduce that <code>head</code> is only called
-on non-empty lists.</p>
-<p><br />
-<strong>Foldl1</strong> is one of my favorite folds; it uses the first
-element of the sequence as the initial value. Of course, it should only
-be called with non-empty sequences!</p>
-<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+          <p>LiquidHaskell uses the precondition to deduce that the second
+            equations are <em>dead code</em>. Of course, this requires us to
+            establish that <em>callers</em> of <code>head</code> and
+            <code>tail</code> only invoke the respective functions with non-empty
+            lists.
+          </p>
+          <div id="Safe Head" class="hwex">
+            <p><br />
+              <strong>Exercise: (Safe Head): </strong>Write down a specification for
+              <code>null</code> such that <code>safeHead</code> is verified. Do
+              <em>not</em> force <code>null</code> to only take non-empty inputs, that
+              defeats the purpose. Instead, its type should say that it works on
+              <em>all</em> lists and returns <code>False</code> <em>if and only
+                if</em> the input is non-empty.
+            </p>
+            <br />
+            <br />
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-16" class="programbox">{-@ foldl1         :: (a -> a -> a) -> NEList a -> a @-}
-foldl1 f (x:xs)    = foldl f x xs
-foldl1 _ []        = die "foldl1"
+          </div>
+          <p><strong>Hint: </strong>You may want to refresh your memory about
+            implies <code>==&gt;</code> and <code>&lt;=&gt;</code> from the <a href="#semantics">chapter on logic</a>.
+          </p>
+          <div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
 
-foldl              :: (a -> b -> a) -> a -> [b] -> a
-foldl _ acc []     = acc
-foldl f acc (x:xs) = foldl f (f acc x) xs</div>
-</div>
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-<p><br />
-<strong>To Sum</strong> a non-empty list of numbers, we can just perform
-a <code>foldl1</code> with the <code>+</code> operator: Thanks to the
-precondition, LiquidHaskell will prove that the <code>die</code> code is
-indeed dead. Thus, we can write</p>
-<div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-13" class="programbox">safeHead :: [a] -> Maybe a
+              safeHead xs
+              | null xs = Nothing
+              | otherwise = Just $ head xs
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-17" class="programbox">{-@ sum :: (Num a) => NEList a -> a  @-}
-sum []  = die "cannot add up empty list"
-sum xs  = foldl1 (+) xs</div>
-</div>
+              {-@ null :: [a] -> Bool @-}
+              null [] = True
+              null (_:_) = False</div>
+          </div>
 
-<p>Consequently, we can only invoke <code>sum</code> on non-empty lists,
-so:</p>
-<div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
+          <p>Lets use the above to write a function that chunks sequences into
+            non-empty groups of equal elements:</p>
+          <div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-18" class="programbox">sumOk  = sum [1,2,3,4,5]    -- is accepted by LH, but
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-sumBad = sum []             -- is rejected by LH</div>
-</div>
+            <div id="program-14" class="programbox">{-@ groupEq :: (Eq a) => [a] -> [NEList a] @-}
+              groupEq [] = []
+              groupEq (x:xs) = (x:ys) : groupEq zs
+              where
+              (ys, zs) = span (x ==) xs</div>
+          </div>
 
-<div id="Weighted Average" class="hwex">
-<p><br />
-<strong>Exercise: (Weighted Average): </strong>The function below
-computes a weighted average of its input. Unfortunately, LiquidHaskell
-is not very happy about it. Can you figure out why, and fix the code or
-specification appropriately?</p>
-<br />
-<br />
+          <p>By using the fact that <em>each element</em> in the output returned
+            by <code>groupEq</code> is in fact of the form <code>x:ys</code>,
+            LiquidHaskell infers that <code>groupEq</code> returns a
+            <code>[NEList a]</code> that is, a list of <em>non-empty lists</em>.
+          </p>
+          <p><br />
+            <strong>To Eliminate Stuttering</strong> from a string, we can use
+            <code>groupEq</code> to split the string into blocks of repeating
+            <code>Char</code>s, and then just extract the first <code>Char</code>
+            from each block:
+          </p>
+          <div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
 
-</div>
-<div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-19" class="programbox">{-@ wtAverage :: NEList (Pos, Pos) -> Int @-}
-wtAverage wxs = divide totElems totWeight
-  where
-    elems     = map (\(w, x) -> w * x) wxs
-    weights   = map (\(w, _) -> w    ) wxs
-    totElems  = sum elems
-    totWeight = sum weights
-    sum       = foldl1 (+)
+            <div id="program-15" class="programbox">-- >>> eliminateStutter "ssstringssss liiiiiike thisss"
+              -- "strings like this"
+              eliminateStutter xs = map head $ groupEq xs</div>
+          </div>
 
-map           :: (a -> b) -> [a] -> [b]
-map _ []      =  []
-map f (x:xs)  =  f x : map f xs</div>
-</div>
+          <p> LiquidHaskell automatically instantiates the type parameter for
+            <code>map</code> in <code>eliminateStutter</code> to
+            <code>notEmpty v</code> to deduce that <code>head</code> is only called
+            on non-empty lists.
+          </p>
+          <p><br />
+            <strong>Foldl1</strong> is one of my favorite folds; it uses the first
+            element of the sequence as the initial value. Of course, it should only
+            be called with non-empty sequences!
+          </p>
+          <div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
 
-<p><strong>Hint: </strong>On what variables are the errors? How are
-those variables’ values computed? Can you think of a better
-specification for the function(s) doing those computations?</p>
-<div id="Mitchell&#39;s Risers" class="hwex">
-<p><br />
-<strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up
-in many places, and it is rather convenient to have the type system
-track non-emptiness without having to make up special types. Consider
-the <code>risers</code> function, popularized by <a
-href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil
-Mitchell</a>. <code>safeSplit</code> requires its input be non-empty;
-but LiquidHaskell believes that the call inside <code>risers</code>
-fails this requirement. Fix the specification for <code>risers</code> so
-that it is verified.</p>
-<br />
-<br />
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-</div>
-<div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+            <div id="program-16" class="programbox">{-@ foldl1 :: (a -> a -> a) -> NEList a -> a @-}
+              foldl1 f (x:xs) = foldl f x xs
+              foldl1 _ [] = die "foldl1"
 
-  <!-- Verify Source -->
-  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
-          ng-show="isUnknown" ng-click="verifySource()">
-    <span class="glyphicon glyphicon-play"></span>
-  </button>
- 
-  <div id="program-20" class="programbox">{-@ risers       :: (Ord a) => [a] -> [[a]] @-}
-risers           :: (Ord a) => [a] -> [[a]]
-risers []        = []
-risers [x]       = [[x]]
-risers (x:y:etc)
-  | x <= y       = (x:s) : ss
-  | otherwise    = [x] : (s : ss)
-    where
-      (s, ss)    = safeSplit $ risers (y:etc)
+              foldl :: (a -> b -> a) -> a -> [b] -> a
+              foldl _ acc [] = acc
+              foldl f acc (x:xs) = foldl f (f acc x) xs</div>
+          </div>
 
-{-@ safeSplit    :: NEList a -> (a, [a]) @-}
-safeSplit (x:xs) = (x, xs)
-safeSplit _      = die "don't worry, be happy"</div>
-</div>
+          <p><br />
+            <strong>To Sum</strong> a non-empty list of numbers, we can just perform
+            a <code>foldl1</code> with the <code>+</code> operator: Thanks to the
+            precondition, LiquidHaskell will prove that the <code>die</code> code is
+            indeed dead. Thus, we can write
+          </p>
+          <div id="program-pane-17" class="welleditor" style="background:#fff; position:relative">
 
-</section>
-<section id="recap" class="level2">
-<h2>Recap</h2>
-<p>In this chapter we saw how LiquidHaskell lets you</p>
-<ol type="1">
-<li><p><em>Define</em> structural properties of data types,</p></li>
-<li><p><em>Use refinements</em> over these properties to describe key
-invariants that establish, at compile-time, the safety of operations
-that might otherwise fail on unexpected values at run-time, all
-while,</p></li>
-<li><p><em>Working with plain Haskell types</em>, here, Lists, without
-having to <a
-href="http://blog.jbapple.com/2008/01/extra-type-safety-using-polymorphic.html">make
-up new types</a> which can have the unfortunate effect of adding a
-multitude of constructors and conversions which often clutter
-implementations and specifications.</p></li>
-</ol>
-<p> Of course, we can do a lot more with measures, so let’s press
-on!</p>
-</section>
-</section>
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
 
-</div>
-</div>
+            <div id="program-17" class="programbox">{-@ sum :: (Num a) => NEList a -> a @-}
+              sum [] = die "cannot add up empty list"
+              sum xs = foldl1 (+) xs</div>
+          </div>
 
-<div class="hidden">
-<!--Site Meter -->
-  <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
-  <noscript>
-    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
-      target="_top">
-      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
-      alt="Site Meter" border="0"/></a>
-  </noscript>
-  <!-- Copyright (c)2009 Site Meter -->
-</div>
+          <p>Consequently, we can only invoke <code>sum</code> on non-empty lists,
+            so:</p>
+          <div id="program-pane-18" class="welleditor" style="background:#fff; position:relative">
+
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
+
+            <div id="program-18" class="programbox">sumOk = sum [1,2,3,4,5] -- is accepted by LH, but
+
+              sumBad = sum [] -- is rejected by LH</div>
+          </div>
+
+          <div id="Weighted Average" class="hwex">
+            <p><br />
+              <strong>Exercise: (Weighted Average): </strong>The function below
+              computes a weighted average of its input. Unfortunately, LiquidHaskell
+              is not very happy about it. Can you figure out why, and fix the code or
+              specification appropriately?
+            </p>
+            <br />
+            <br />
+
+          </div>
+          <div id="program-pane-19" class="welleditor" style="background:#fff; position:relative">
+
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
+
+            <div id="program-19" class="programbox">{-@ wtAverage :: NEList (Pos, Pos) -> Int @-}
+              wtAverage wxs = divide totElems totWeight
+              where
+              elems = map (\(w, x) -> w * x) wxs
+              weights = map (\(w, _) -> w ) wxs
+              totElems = sum elems
+              totWeight = sum weights
+              sum = foldl1 (+)
+
+              map :: (a -> b) -> [a] -> [b]
+              map _ [] = []
+              map f (x:xs) = f x : map f xs</div>
+          </div>
+
+          <p><strong>Hint: </strong>On what variables are the errors? How are
+            those variables’ values computed? Can you think of a better
+            specification for the function(s) doing those computations?</p>
+          <div id="Mitchell&#39;s Risers" class="hwex">
+            <p><br />
+              <strong>Exercise: (Mitchell's Risers): </strong>Non-empty lists pop up
+              in many places, and it is rather convenient to have the type system
+              track non-emptiness without having to make up special types. Consider
+              the <code>risers</code> function, popularized by <a
+                href="http://neilmitchell.blogspot.com/2008/03/sorting-at-speed.html">Neil
+                Mitchell</a>. <code>safeSplit</code> requires its input be non-empty;
+              but LiquidHaskell believes that the call inside <code>risers</code>
+              fails this requirement. Fix the specification for <code>risers</code> so
+              that it is verified.
+            </p>
+            <br />
+            <br />
+
+          </div>
+          <div id="program-pane-20" class="welleditor" style="background:#fff; position:relative">
+
+            <!-- Verify Source -->
+            <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1" ng-show="isUnknown"
+              ng-click="verifySource()">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
+
+            <div id="program-20" class="programbox">{-@ risers :: (Ord a) => [a] -> [[a]] @-}
+              risers :: (Ord a) => [a] -> [[a]]
+              risers [] = []
+              risers [x] = [[x]]
+              risers (x:y:etc)
+              | x <= y=(x:s) : ss | otherwise=[x] : (s : ss) where (s, ss)=safeSplit $ risers (y:etc) {-@ safeSplit ::
+                NEList a -> (a, [a]) @-}
+                safeSplit (x:xs) = (x, xs)
+                safeSplit _ = die "don't worry, be happy"</div>
+          </div>
+
+        </section>
+        <section id="recap" class="level2">
+          <h2>Recap</h2>
+          <p>In this chapter we saw how LiquidHaskell lets you</p>
+          <ol type="1">
+            <li>
+              <p><em>Define</em> structural properties of data types,</p>
+            </li>
+            <li>
+              <p><em>Use refinements</em> over these properties to describe key
+                invariants that establish, at compile-time, the safety of operations
+                that might otherwise fail on unexpected values at run-time, all
+                while,</p>
+            </li>
+            <li>
+              <p><em>Working with plain Haskell types</em>, here, Lists, without
+                having to <a href="http://blog.jbapple.com/2008/01/extra-type-safety-using-polymorphic.html">make
+                  up new types</a> which can have the unfortunate effect of adding a
+                multitude of constructors and conversions which often clutter
+                implementations and specifications.</p>
+            </li>
+          </ol>
+          <p> Of course, we can do a lot more with measures, so let’s press
+            on!</p>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="hidden">
+    <!--Site Meter -->
+    <script type="text/javascript" src="//s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+    <noscript>
+      <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" target="_top">
+        <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" alt="Site Meter" border="0" /></a>
+    </noscript>
+    <!-- Copyright (c)2009 Site Meter -->
+  </div>
 
 
 
 
 
-<!-- JavaScript below! ============================================== -->
+  <!-- JavaScript below! ============================================== -->
 
-  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
-  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
-  <script src="./js/liquid/tooltip.js"></script> 
-  <script src="./js/liquid/annot.js"></script> 
-  <script src="./js/liquid/config.js"></script> 
+  <script src="./js/ace/mode-haskell.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script>
+  <script src="./js/liquid/annot.js"></script>
+  <script src="./js/liquid/config.js"></script>
   <script src="./js/liquid/liquid.js"></script>
 
   <script type="text/javascript">
-    var queryServerURL = "https://liquid-demo.programming.systems/" ;
+    var queryServerURL = "https://liquidhaskell.goto.ucsd.edu/";
   </script>
-  
-  <!-- rust nav JS --> 
+
+  <!-- rust nav JS -->
   <script type="text/javascript">
     window.playgroundUrl = "";
   </script>
-  
-<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function(event) {
 
- document.getElementById("toggle-nav").onclick = toggleNav;
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function (event) {
 
-  function toggleNav() {
-    var toc         = document.getElementById("toc");
-    var pagewrapper = document.getElementById("page-wrapper");
-    var status      = document.getElementById("checker-status");
+      document.getElementById("toggle-nav").onclick = toggleNav;
 
-    toggleClass(toc,         "mobile-hidden");
-    // toggleClass(status,      "mobile-hidden");
-    toggleClass(pagewrapper, "mobile-hidden");
-  };
+      function toggleNav() {
+        var toc = document.getElementById("toc");
+        var pagewrapper = document.getElementById("page-wrapper");
+        var status = document.getElementById("checker-status");
 
-  function toggleClass(el, className) {
-     // from http://youmightnotneedjquery.com/
-     if (el.classList) {
-       el.classList.toggle(className);
-     } else {
-       var classes = el.className.split(' ');
-       var existingIndex = classes.indexOf(className);
+        toggleClass(toc, "mobile-hidden");
+        // toggleClass(status,      "mobile-hidden");
+        toggleClass(pagewrapper, "mobile-hidden");
+      };
 
-       if (existingIndex >= 0) {
-         classes.splice(existingIndex, 1);
-       } else {
-         classes.push(className);
-       }
-       el.className = classes.join(' ');
-     }
-  }
-});
-</script>
+      function toggleClass(el, className) {
+        // from http://youmightnotneedjquery.com/
+        if (el.classList) {
+          el.classList.toggle(className);
+        } else {
+          var classes = el.className.split(' ');
+          var existingIndex = classes.indexOf(className);
+
+          if (existingIndex >= 0) {
+            classes.splice(existingIndex, 1);
+          } else {
+            classes.push(className);
+          }
+          el.className = classes.join(' ');
+        }
+      }
+    });
+  </script>
 </body>
+
 </html>
