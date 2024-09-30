@@ -8,7 +8,7 @@ toc:            true
 bibliography:   sw.bib
 notitle:        true
 root:           "."
-liquidserver:   "https://liquid-demo.programming.systems/"
+liquidserver:   "https://liquidhaskell.goto.ucsd.edu/index.html"
 pdflink:        "book.pdf"
 version:        13
 ---

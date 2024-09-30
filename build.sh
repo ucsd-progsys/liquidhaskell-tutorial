@@ -19,7 +19,7 @@ mkPDF () {
   PANDOC_TARGET=pbook.pdf stack exec -- pandoc --highlight-style=tango --from=markdown+lhs --bibliography=templates/sw.bib --biblatex --top-level-division=chapter --template=templates/default.latex --filter filters/Figures.hs --filter filters/Latex.hs templates/preamble.lhs templates/bib.lhs dist/pbook.lhs -o dist/pbook.pdf
 }
 
-mkWeb() {
+mkWEB() {
   mkHTML Tutorial_01_Introduction
   mkHTML Tutorial_02_Logic
   mkHTML Tutorial_03_Basic
@@ -45,7 +45,7 @@ mkGITHUB() {
 }
 
 mkdir -p dist
-mkLHS
-mkPDF
+# mkLHS
+# mkPDF
 mkWEB
 mkGITHUB
