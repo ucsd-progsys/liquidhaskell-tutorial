@@ -18,9 +18,11 @@ Thus, **the best way** to do this tutorial is to
 $ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 ```
 
-**Step 2:** Iteratively edit-compile until it _builds_ without any liquid type errors
+**Step 2:** Iteratively edit-compile until it _builds_ without any liquid type errors (you may need to install and run hpack to create the cabal file).
 
 ```bash
+$ cabal v2-install hpack
+$ hpack
 $ cabal v2-build
 ```
 
