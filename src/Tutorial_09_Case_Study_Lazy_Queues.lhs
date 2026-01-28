@@ -14,8 +14,8 @@ invariant with LiquidHaskell.
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--maxparams=3"    @-}
 
-module Tutorial_09_Case_Study_Lazy_Queues 
-  (Queue, insert, remove, emp, realSize) 
+module Tutorial_09_Case_Study_Lazy_Queues
+  (Queue, insert, remove, emp, realSize)
   where
 
 import Prelude hiding (replicate, take, length)

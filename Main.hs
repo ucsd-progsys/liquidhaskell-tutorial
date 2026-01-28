@@ -1,6 +1,6 @@
-module Main where 
+module Main where
 
-import qualified Data.List as L 
+import qualified Data.List as L
 import System.Directory (listDirectory)
 import System.FilePath (addExtension)
 import System.FilePath ((</>))
@@ -21,7 +21,7 @@ hideIgnore file = do
   writeFile tmpFile str
 
 hide :: String -> String
-hide str 
+hide str
   | L.isPrefixOf "{-@ ignore " str = "-- " ++ str
   | L.isPrefixOf "{-@ fail "   str = "-- " ++ str
   | otherwise                      = str

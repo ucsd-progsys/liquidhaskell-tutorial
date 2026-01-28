@@ -10,7 +10,7 @@ the github repository and run locally for best results.
 
 LH is available as a GHC plugin from version 0.8.10.
 
-Thus, **the best way** to do this tutorial is to 
+Thus, **the best way** to do this tutorial is to
 
 **Step 1** Clone this repository,
 
@@ -24,13 +24,13 @@ $ git clone https://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 $ cabal v2-build
 ```
 
-or 
+or
 
 ```
 $ stack build --fast --file-watch
 ```
 
-The above workflow will let you use whatever Haskell tooling you use for your 
+The above workflow will let you use whatever Haskell tooling you use for your
 favorite editor, to automatically display LH errors as well.
 
 ## Contents

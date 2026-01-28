@@ -23,7 +23,7 @@ module Tutorial_12_Case_Study_AVL
   , elems, hasElem, addElem, delElem
   )
   where
-    
+
 import qualified Data.Set as S
 import Prelude hiding (max)
 -- import Language.Haskell.Liquid.Prelude (liquidAssume)

@@ -4,13 +4,13 @@
 [vecspec]:         https://github.com/ucsd-progsys/liquidhaskell/blob/91e1074575ca102df810ea399c5a13063e8c8011/include/Data/Vector.spec
 [vec]:             http://hackage.haskell.org/package/vector
 [agdavec]:         http://code.haskell.org/Agda/examples/Vec.agda
-[ref101]:          /blog/2013/01/01/refinement-types-101.lhs/ 
-[ref102]:          /blog/2013/01/27/refinements-101-reax.lhs/ 
+[ref101]:          /blog/2013/01/01/refinement-types-101.lhs/
+[ref102]:          /blog/2013/01/27/refinements-101-reax.lhs/
 [data-list]:       https://hackage.haskell.org/package/base-4.18.0.0/docs/Data-List.html
 [foldl]:           https://hackage.haskell.org/package/base-4.18.0.0/docs/Data-List.html#v:foldl
 [listtail]:        /blog/2013/01/31/safely-catching-a-list-by-its-tail.lhs/
 [dmlarray]:        https://www.cs.cmu.edu/~fp/papers/pldi98dml.pdf
-[liquid-tutorial]: http://github.com/ucsd-progsys/liquidhaskell-tutorial.git 
+[liquid-tutorial]: http://github.com/ucsd-progsys/liquidhaskell-tutorial.git
 [liquid-emacs]:    https://github.com/ucsd-progsys/liquid-types.el
 [liquid-vim]:      https://github.com/ucsd-progsys/liquid-types.vim
 [liquid-spacemacs]: https://github.com/ucsd-progsys/liquid-types-spacemacs

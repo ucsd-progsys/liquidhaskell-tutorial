@@ -104,7 +104,7 @@ isFigure s    = s `elem` ["figure", "marginfigure"]
 
 makeFigure tgt prefix t r id cls kvs
   = RawBlock (Format tgtTxt) . pad prefix t id cls kvs <$> getCount r id
-    where tgtTxt = T.pack $ show tgt 
+    where tgtTxt = T.pack $ show tgt
 
 -- pad :: Text -> _ -> _ -> _ -> [(Text, Text)]
 pad prefix tplt id cls kvs n
@@ -139,7 +139,7 @@ emptyInfo
 
 getCount r id
   = do info <- readIORef r
-       let idS = T.unpack id 
+       let idS = T.unpack id
        let m  = label info
        let c  = chapter info
        let i  = count info

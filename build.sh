@@ -2,14 +2,14 @@
 
 mkHTML() {
    srcFile=$1
-  
+
    echo "HTML for $srcFile"
 
    PANDOC_TARGET=src/$srcFile.html PANDOC_CODETEMPLATE=../liquid-client/templates/code.template stack exec -- pandoc --from=markdown+lhs+raw_html --to=html5 -s --mathjax --standalone --mathjax --toc --section-divs --filter filters/Codeblock.hs --filter filters/Figures.hs --filter filters/Html.hs --variable=notitle --highlight-style=tango --template=dist/page.template templates/preamble.lhs src/$srcFile.lhs templates/bib.lhs -o src/$srcFile.html
 }
 
 
-mkLHS() { 
+mkLHS() {
    echo "Build single LHS file"
    cat src/Tutorial_01_Introduction.lhs src/Tutorial_02_Logic.lhs src/Tutorial_03_Basic.lhs src/Tutorial_04_Polymorphism.lhs src/Tutorial_05_Datatypes.lhs src/Tutorial_06_Measure_Bool.lhs src/Tutorial_07_Measure_Int.lhs src/Tutorial_08_Measure_Set.lhs src/Tutorial_09_Case_Study_Lazy_Queues.lhs src/Tutorial_10_Case_Study_Associative_Maps.lhs src/Tutorial_11_Case_Study_Pointers.lhs src/Tutorial_12_Case_Study_AVL.lhs > dist/pbook.lhs
 }

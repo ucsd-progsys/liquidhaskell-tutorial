@@ -55,7 +55,7 @@ with modern languages like Go, Python, JavaScript and Lua; and of
 course, they're widely used in Haskell too.
 
 ~~~~~{.ghci}
-ghci> :m +Data.Map 
+ghci> :m +Data.Map
 ghci> let m = fromList [ ("haskell", "lazy")
                        , ("ocaml"  , "eager")]
 
@@ -177,9 +177,9 @@ Getting Started
 As of July 2020, LiquidHaskell, version 0.8.10 onwards, is available
 as a [GHC plugin](https://downloads.haskell.org/~ghc/8.10.1/docs/html/users_guide/extending_ghc.html).
 
-This means, roughly, that you need simply 
+This means, roughly, that you need simply
 
-1. Add LH to your project dependencies, after which 
+1. Add LH to your project dependencies, after which
 2. GHC produces LH type errors whenever you compile the code, so that you can
 3. View errors using your favorite editor's existing Haskell tooling.
 
@@ -255,5 +255,4 @@ be **very** grateful for feedback and suggestions, ideally
 via pull-requests on github.
 
 \noindent Lets begin!
-
 

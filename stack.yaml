@@ -17,4 +17,3 @@ extra-deps:
   - git: https://github.com/ucsd-progsys/liquid-fixpoint
     commit: 1aab5d84e3dd96f3052dd27b92316cbb5254def1
 
-

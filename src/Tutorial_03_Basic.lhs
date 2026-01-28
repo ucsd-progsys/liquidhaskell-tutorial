@@ -76,7 +76,7 @@ nonsense :: Int
 nonsense = one'
   where
   {-@ one' :: Zero @-}
-  one' = 1 
+  one' = 1
 \end{code}
 
 \noindent

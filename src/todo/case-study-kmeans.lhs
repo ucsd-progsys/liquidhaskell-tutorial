@@ -433,4 +433,3 @@ implementation) to verify that KMeans indeed produces at most `k` clusters...
 [demo]:          http://goto.ucsd.edu/~rjhala/liquid/haskell/demo/#?demo=KMeansHelper.hs
 [URL-kmeans]:    http://hackage.haskell.org/package/kmeans
 
-

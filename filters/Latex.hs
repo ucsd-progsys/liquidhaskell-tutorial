@@ -31,7 +31,7 @@ toLaTeX :: Text -> Text -> [Block] -> Text
 toLaTeX cls id                        = wrapLatex cls id . either errHandler (\x -> x) . runPure . writeLaTeX def . Pandoc mempty
   where errHandler = error $ unpack $ mconcat ["toLaTex: ", cls, " ", id]
 
-wrapLatex :: Text -> Text -> Text -> Text 
+wrapLatex :: Text -> Text -> Text -> Text
 wrapLatex "footnotetext" _ str        = T.pack $ printf "\\footnotetext{%s}" (T.unpack str)
 wrapLatex "hwex" name str             = T.pack $ printf "\\begin{hwex}[%s]\n%s\n\\end{hwex}" (T.unpack name) (T.unpack str)
 wrapLatex cls name str                = error $ printf "WrapLatex: %s %s" cls name
@@ -76,7 +76,7 @@ txBlock _ b                  = [b]
 
 expandCodeBlock :: Block -> [Block]
 expandCodeBlock (CodeBlock a s) = CodeBlock a `fmap` tWords s
-  where 
+  where
     tWords = fmap pack . words . unpack
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

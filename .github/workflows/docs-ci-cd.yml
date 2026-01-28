@@ -7,7 +7,7 @@ jobs:
   build-docs-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v22
         with:
           nix_path: nixpkgs=channel:nixos-unstable
@@ -21,7 +21,7 @@ jobs:
           nix-shell --pure --run "make NO_STACK=y html"
           nix-shell --pure --run "make NO_STACK=y pdf"
           cp dist/pbook.pdf _site/book.pdf
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: generated-site
           path: _site
@@ -34,7 +34,7 @@ jobs:
     if: success() && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: generated-site
           path: _site

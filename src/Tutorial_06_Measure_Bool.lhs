@@ -389,5 +389,3 @@ In this chapter we saw how LiquidHaskell lets you
 \noindent
 Of course, we can do a lot more with measures, so let's press on!
 
-
-
